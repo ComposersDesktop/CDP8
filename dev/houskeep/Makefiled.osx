@@ -1,0 +1,34 @@
+#
+#	OSX debug makefile for housekeep  � Richard Dobson, CDP Ltd 2014
+#
+
+CC=gcc
+CFLAGS= -g -Wall -mmacosx-version-min=10.5 -Dunix -I ../include -I ../../include
+SFSYS= ../../lib/libsfsys.a
+CDP2K= ../cdp2k/libcdp2kd.a
+PROG=housekeep
+BINS= main.o ap_house.o channels.o clean.o dump.o dupl.o respec.o sort.o 
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+#
+#	targets
+#
+all:	$(PROG)
+
+$(PROG):	$(BINS)
+	$(CC) $(CFLAGS) $(BINS) -o $(PROG) $(CDP2K) $(SFSYS)
+
+clean:
+	rm -f $(PROG)
+	
+veryclean:	clean
+	rm -f *.o
+
+install:	$(PROG)
+	cp $(PROG) ../Release
+
+#
+#	dependencies
+#
+
+
