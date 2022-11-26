@@ -1,0 +1,35 @@
+#
+#	OSX debug makefile for dirsf � Richard Dobson, CDP Ltd 2014,2022
+#	PVX version
+
+CC=cc
+CDPROOT=../..
+CDPLIB= $(CDPROOT)/lib
+SFINC=../newsfsys
+CFLAGS= -O2 -Wall -mmacosx-version-min=10.8 -Dunix  -DENABLE_PVX -I $(SFINC) -I../newinclude -I $(CDPROOT)/include -L../newsfsys
+PROG= dirsf
+OBJS=	dirsf.o wildcard.o
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+#
+#	targets
+#
+all:	$(PROG)
+
+$(PROG):	dirsf.o wildcard.o
+	$(CC)  $(CFLAGS)  dirsf.o wildcard.o -o $(PROG)  -lsfsys
+
+clean:
+	-rm -f $(OBJS)
+
+veryclean:	clean
+	-rm -f $(PROG)
+
+install:	$(PROG)
+	cp $(PROG) ../Release
+
+#
+#	dependencies
+#
+

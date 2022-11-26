@@ -1,0 +1,42 @@
+#
+#	OSX debug makefile for sfsys (Release 7)  � Richard Dobson, CDP Ltd 2014
+#
+
+CC=gcc
+# add -DVERBOSE to get diagnostic reports to stdout
+# for basic debugging, define DEBUG_MAC
+CDPROOT=../..
+CFLAGS= -g -mmacosx-version-min=10.5 -arch i386 -arch x86_64 -DCDP97 -Dunix -D__MAC__  -DFILE_AMB_SUPPORT -I$(CDPROOT)/include
+
+HDRS=	$(CDPROOT)/include/sfsys.h $(CDPROOT)/include/osbind.h ./sffuncs.h
+OBJS=	sfsys.o snd.o sfdir.o osbind.o props.o
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+#
+#	targets
+#
+all:	libsfsysd.a
+
+
+libsfsysd.a:	$(OBJS)
+#	ar cr sfsys.a $(OBJS)
+	libtool -static -o libsfsysd.a $(OBJS)
+	ranlib libsfsysd.a
+
+clean:
+	rm -f $(OBJS)
+
+veryclean:	clean
+	rm  -f libsfsysd.a
+
+install:	libsfsysd.a 	
+	cp libsfsysd.a ../../lib/libsfsysd.a
+
+#
+#	dependencies
+#
+sfsys.o:	$(HDRS)
+sfdir.o:	$(HDRS)
+snd.o:		$(HDRS)
+osbind.o:	$(HDRS)
