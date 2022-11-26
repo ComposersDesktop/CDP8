@@ -1,0 +1,141 @@
+#
+#	OSX debug makefile for new release 7 programs � Richard Dobson, CDP Ltd 2019
+#
+#
+CC=gcc
+CFLAGS= -g -Wall -mmacosx-version-min=10.9 -Dunix -DDEBUG_MAC  -I ../include -I../../include
+
+SFSYS= ../../lib/libsfsysd.a
+CDP2K= ../../lib/libcdp2kd.a
+
+
+PROGS= cantord ceracud chanphased sfechod filtraged fractured glistend isolated iterfofd iterlined iterlinefd \
+madridd newdelayd newmorphd newsynthd newtexd packetd panoramad rejoind selfsimd shifterd shrinkd silendd \
+specgridsd specsphinxd spectrumd spectwind specvud subtractd superaccud tangentd transitd tremolod tunevaryd
+
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+#
+#	targets
+#
+
+all:	$(PROGS)
+
+cantord:	cantor.o
+	$(CC) $(CFLAGS) cantor.o -o cantord -lm  $(SFSYS) $(CDP2K)
+
+ceracud:	ceracu.o
+	$(CC) $(CFLAGS) ceracu.o -o ceracud -lm  $(SFSYS) $(CDP2K)
+
+chanphased:	chanphase.o
+	$(CC) $(CFLAGS) chanphase.o -o chanphased -lm  $(SFSYS) $(CDP2K)
+
+sfechod:	echo.o
+	$(CC) $(CFLAGS) echo.o -o sfechod -lm  $(SFSYS) $(CDP2K)
+
+filtraged:	filtrage.o
+	$(CC) $(CFLAGS) filtrage.o -o filtraged -lm  $(SFSYS) $(CDP2K)
+
+fractured:	fracture.o
+	$(CC) $(CFLAGS) fracture.o -o fractured -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
+
+glistend:	glisten.o
+	$(CC) $(CFLAGS) glisten.o -o glistend -lm  $(SFSYS) $(CDP2K)
+
+isolated:	isolate.o
+	$(CC) $(CFLAGS) isolate.o -o isolatded -lm  $(SFSYS) $(CDP2K)
+
+iterfofd:	iterfof.o
+	$(CC) $(CFLAGS) iterfof.o -o iterfofd -lm /usr/local/lib/libaaio.a  $(SFSYS) $(CDP2K)
+
+iterlined:	iterline.o
+	$(CC) $(CFLAGS) iterline.o -o iterlined -lm  $(SFSYS) $(CDP2K)
+
+iterlinefd:	iterlinef.o
+	$(CC) $(CFLAGS) iterlinef.o -o iterlinefd -lm  $(SFSYS) $(CDP2K)
+
+madridd:	madrid.o
+	$(CC) $(CFLAGS) madrid.o -o madridd -lm  $(SFSYS) $(CDP2K)
+
+newdelayd:	newdelay.o
+	$(CC) $(CFLAGS) newdelay.o -o newdelayd -lm  $(SFSYS) $(CDP2K)
+
+newmorphd:	newmorph.o
+	$(CC) $(CFLAGS) newmorph.o -o newmorphd -lm  $(SFSYS) $(CDP2K)
+
+newsynthd:	synthesis.o
+	$(CC) $(CFLAGS) synthesis.o -o newsynthd -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
+
+newtexd:	newtex.o
+	$(CC) $(CFLAGS) newtex.o -o newtexd -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
+
+packetd:	packet.o
+	$(CC) $(CFLAGS) packet.o -o packetd -lm  $(SFSYS) $(CDP2K)
+
+panoramad:	panorama.o
+	$(CC) $(CFLAGS) panorama.o -o panoramad -lm  $(SFSYS) $(CDP2K)
+
+rejoind:	rejoin.o
+	$(CC) $(CFLAGS) rejoin.o -o rejoind -lm  $(SFSYS) $(CDP2K)
+
+selfsimd:	selfsim.o
+	$(CC) $(CFLAGS) selfsim.o -o selfsimd -lm  $(SFSYS) $(CDP2K)
+
+shifterd:	shifter.o
+	$(CC) $(CFLAGS) shifter.o -o shifterd -lm  $(SFSYS) $(CDP2K)
+
+shrinkd:	shrink.o
+	$(CC) $(CFLAGS) shrink.o -o shrinkd -lm  $(SFSYS) $(CDP2K)
+
+silendd:	silend.o
+	$(CC) $(CFLAGS) silend.o -o silendd -lm  $(SFSYS) $(CDP2K)
+
+specgridsd:	specgrids.o
+	$(CC) $(CFLAGS) specgrids.o -o specgridsd -lm  $(SFSYS) $(CDP2K)
+
+specsphinxd:	specsphinx.o
+	$(CC) $(CFLAGS) specsphinx.o -o specsphinxd -lm  $(SFSYS) $(CDP2K)
+
+spectrumd:	spectrum.o
+	$(CC) $(CFLAGS) spectrum.o -o spectrumd -lm  $(SFSYS) $(CDP2K)
+
+spectwind:	spectwin.o
+	$(CC) $(CFLAGS) spectwin.o -o spectwind -lm  $(SFSYS) $(CDP2K)
+
+specvud:	specvu.o
+	$(CC) $(CFLAGS) specvu.o -o specvud -lm  $(SFSYS) $(CDP2K)
+
+subtractd:	subtract.o
+	$(CC) $(CFLAGS) subtract.o -o subtractd -lm  $(SFSYS) $(CDP2K)
+
+superaccud:	superaccu.o
+	$(CC) $(CFLAGS) superaccu.o -o superaccud -lm  $(SFSYS) $(CDP2K)
+
+tangentd:	tangent.o
+	$(CC) $(CFLAGS) tangent.o -o tangentd -lm  $(SFSYS) $(CDP2K)
+
+transitd:	transit.o
+	$(CC) $(CFLAGS) transit.o -o transitd -lm  $(SFSYS) $(CDP2K)
+
+tremolod:	tremolo.o
+	$(CC) $(CFLAGS) tremolo.o -o tremolod -lm  $(SFSYS) $(CDP2K)
+
+tunevaryd:	tunevary.o
+	$(CC) $(CFLAGS) tunevary.o -o tunevaryd -lm  $(SFSYS) $(CDP2K)
+
+clean:
+	rm -f $(PROGS)
+
+veryclean:	clean
+	rm -f *.o
+
+install:	all
+	cp $(PROGS) ../Debug
+
+#
+#	dependencies
+#
+$(PROGS): ../include/standalone.h
+
+
