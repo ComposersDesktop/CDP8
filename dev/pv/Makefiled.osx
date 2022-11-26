@@ -1,0 +1,32 @@
+#
+#	OSX debug makefile for pvoc � Richard Dobson, CDP Ltd 2014
+#
+#
+CC=gcc
+CFLAGS= -g -Wall -mmacosx-version-min=10.5 -Dunix -I ../include -I ../../include
+SFSYS= ../../lib/libsfsysd.a
+CDP2K= ../../lib/libcdp2kd.a
+PROG=pvocd
+BINS= main.o ap_pvoc.o mxfft.o pvoc.o 
+ 
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+#
+#	targets
+#
+all:	$(PROG)
+
+$(PROG):	$(BINS)
+	$(CC) $(CFLAGS) $(BINS) -o $(PROG) $(CDP2K) $(SFSYS)
+
+clean:
+	rm -f $(PROG)
+	
+veryclean:	clean
+	rm -f *.o
+
+install:	$(PROG)
+	cp $(PROG) ../Release
+#
+#	dependencies
+#

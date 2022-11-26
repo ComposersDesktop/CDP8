@@ -1,0 +1,37 @@
+# Mingw debug osx Makefile for pvxio2../ 
+
+CC = cc
+#OPT = -O3
+OPT = -g
+
+CFLAGS = $(OPT) -mmacosx-version-min=10.8  -Dunix -D__MAC__ -Wall -Werror=strict-aliasing -I../newinclude
+OBJS=pvfileio.o
+TARGET=libpvxio2d.a
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+all:	$(TARGET)
+
+	 
+$(TARGET): $(OBJS)
+#	ar cr  -o $(TARGET) $(OBJS)
+	libtool -static -o $(TARGET) $(OBJS)
+	ranlib $(TARGET)
+
+clean:
+	rm  -f $(OBJS)
+
+veryclean:	clean
+	rm -f $(TARGET)
+
+install:	$(TARGET)
+	cp $(TARGET) ../../lib
+    
+# dependencies
+
+pvfileio.o:	../newinclude/pvfileio.h ../newinclude/pvdefs.h
+
+
+
+
