@@ -1,0 +1,29 @@
+# OSX debug Makefile for CDP2K program support library � Richard Dobson, CDP Ltd 2014,2022
+# NB this library has no PVOCEX dependencies.
+OPT = -g
+OBJS=cdparse.o dzsetup.o formantsg.o mainfuncs.o parstruct.o readdata.o readfiles.o \
+special.o tkinput.o tklib1.o tklib3.o validate.o writedata.o
+CC=cc
+CFLAGS= $(OPT) -Wall -mmacosx-version-min=10.8  -Dunix -I ../include -I ../../include
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+all:	cdp2k
+
+cdparse.o:	../cdparse/cdparse.c
+	$(CC) $(CFLAGS) -c ../cdparse/cdparse.c
+
+cdp2k:	$(OBJS)
+#	ar -rcs libcdp2kd.a $(OBJS) 
+	libtool -static -o libcdp2kd.a $(OBJS)
+#	ranlib libcdp2kd.a
+
+clean:
+	rm -f *.o
+
+veryclean:	clean
+	rm -f libcdp2kd.a
+
+install:	cdp2k
+	cp libcdp2kd.a ../../lib
