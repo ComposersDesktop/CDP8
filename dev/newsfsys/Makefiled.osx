@@ -1,0 +1,49 @@
+#
+#	OSX debug makefile for newsfsys (with PVOCEX support) (Release 8)  � Richard Dobson, CDP Ltd 2022
+#
+
+CC=cc
+# add -DVERBOSE to get diagnostic reports to stdout
+# for basic debugging, define DEBUG_MAC
+CDPROOT=..
+CFLAGS= -g -mmacosx-version-min=10.8  -Dunix -D__MAC__  -D_DEBUG -DENABLE_PVX -I$(CDPROOT)/newinclude -I../include
+
+HDRS=	$(CDPROOT)/newinclude/sfsys.h $(CDPROOT)/newinclude/osbind.h ./sffuncs.h
+OBJS=	sfsys.o snd.o sfdir.o osbind.o props.o ieee80.o
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+#
+#	targets
+#
+all:	libsfsysd.a
+
+
+libsfsysd.a:	$(OBJS)
+#	ar cr sfsys.a $(OBJS)
+	libtool -static -o libsfsysd.a $(OBJS)
+	ranlib libsfsys.a
+
+clean:
+	rm -f $(OBJS)
+
+veryclean:	clean
+	rm  -f libsfsysd.a
+
+install:	libsfsysd.a 	
+	cp libsfsysd.a ../../lib/libsfsysd.a
+
+
+test:	pvxtest.o libsfsys.a
+	$(CC) $(CFLAGS) pvxtest.o -o pvxtest -L. -L../../lib  -lsfsysd -lpvxio2d
+
+#specnu:	specnu.o
+#	$(CC) $(CFLAGS) specnu.o -o specnu -L. -L../../lib -lsfsysd -lcdp2kd 
+
+#
+#	dependencies
+#
+sfsys.o:	$(HDRS)
+sfdir.o:	$(HDRS)
+snd.o:		$(HDRS)
+osbind.o:	$(HDRS)
