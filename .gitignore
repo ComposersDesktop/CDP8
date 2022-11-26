@@ -1,0 +1,34 @@
+# Intermediate object files
+*.o
+*.os
+*.so
+**/*.a
+*~
+
+
+# libraries and executables
+/lib*.*/
+.libs
+/build/
+/bin
+*.exe
+Release
+.DS_Store
+*.xcodeproj
+
+*.wav
+*.ana
+
+#Generated files if running in-source CMake build
+cmake_install.cmake
+CMakeFiles/
+CMakeCache.txt
+Makefile
+Makefile.*
+cmake_install.cmake
+/cmake_uninstall.cmake
+CTestTestfile.cmake
+CPackConfig.cmake
+CPackSourceConfig.cmake
+/CMakeCache.txt
+Custom.cmake
