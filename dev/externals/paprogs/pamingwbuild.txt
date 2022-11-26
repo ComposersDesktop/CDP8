@@ -1,0 +1,74 @@
+How to buld Portaudio static library for Windows, using MinGW. 
+
+This is required by the audio programs (paplay, pvplay, recsf, listaudevs)
+
+This assumes MinGW is already installed. This has been developed using the standard MinGW distribution; it has not been tested with the 
+Either or both ASIO and Directx support is needed for building the programs.
+
+An unpacked portaudio folder is provided, based on the latest release
+(see http://www.portaudio.com). It has a modified configure.in file to plug gaps in the default 
+portaudio configure setup.
+
+
+1. If ASIO support is desired, obtain the SDK from the Steinberg site (we are not allowed to distribute it ourselves).
+See: http://www.steinberg.net/en/company/developer.html
+
+It is convenient to put the unpacked directory ASIOSDK2 inside the portaudio folder, for ease of reference,
+and especially if it is shared with other projects, but other locations are possible, including /usr/local. 
+See the web page referenced at the bottom of this document.
+
+2. DirectSound support
+
+Unzip dx9mgw.zip into (e.g.) your MinGW home directory. This is the location assumed in the following instructions.
+
+Source of this sdk: http://alleg.sourceforge.net/files/dx9mgw.zip
+(see https://www.allegro.cc/forums/thread/610763)
+
+These examples assume the user name is "Richard". of course, replace this as needed with your MinGW user name
+ 
+Portaudio configure has to be told which APIs to activate, and the paths to the SDKs for those APIs.
+
+cd to the portaudio directory (inside dev/externals/paprogs)
+
+ASIO only configure (NB long lines here):
+
+$ ./configure --with-host_os=mingw --with-winapi=asio --without-jack --enable-shared=no --enable-debug-output=no --with-asiodir=./ASIOSDK2
+
+
+dsound only configure:
+
+$ ./configure --with-host_os=mingw --with-winapi=directx --without-jack --enable-shared=no --enable-debug-output=no --with-dxdir=/home/Richard/dx9mgw 
+
+
+Both (recommended):
+
+$ ./configure --with-host_os=mingw --with-winapi=directx,asio --without-jack --enable-shared=no --enable-debug-output=no --with-dxdir=/home/Richard/dx9mgw --with-asiodir=./ASIOSDK2
+
+Thjis generates the Makefile which we will use to build portaudio
+
+3. Modify the Makefile
+
+Add the define -DPAWIN_USE_WDMKS_DEVICE_INFO to CFLAGS and CXXFLAGS
+
+Add the object file src/os/win/pa_win_wdmks_utils.o  to the OTHER_OJBJS list
+
+
+The standard configure does not set up the exact combination we need, for multichannel device support.
+
+
+
+And finally:
+
+$ make
+
+Note: only the static library libportaudio.a is built.
+The makefiles for the audio programs look for this in the local hidden directory (lib/.libs).
+There is no need to run [sudo] make install, which would overwrite any existing copy.
+
+
+See also here, for an extended discussion of how to build portaudio with MinGW:
+
+https://www.assembla.com/spaces/portaudio/wiki/Notes_about_building_PortAudio_with_MinGW
+
+Richard Dobson Feb 2014
+
