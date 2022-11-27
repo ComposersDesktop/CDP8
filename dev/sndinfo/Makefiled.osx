@@ -1,0 +1,33 @@
+#
+#	OSX debug (with PVOCEX support) Makefile for sndinfo � Richard Dobson, CDP Ltd 2014,2022
+#
+#
+CC=cc
+OPT = -g
+CFLAGS= $(OPT) -Wall -mmacosx-version-min=10.8 -Dunix -I../newinclude -I../include
+LIBDIR = ../../lib
+LIBS = -lsfsysd -lcdp2kd -lpvxio2d
+
+PROG=sndinfo
+BINS= main.o ap_sndinfo.o compare.o musunit.o
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+#
+#	targets
+#
+all:	$(PROG)
+
+$(PROG):	$(BINS)
+	$(CC) $(CFLAGS) $(BINS) -o $(PROG) -L$(LIBDIR) $(LIBS)
+
+clean:
+	rm -f $(PROG)
+	
+veryclean:	clean
+	rm -f *.o
+
+install:	$(PROG)
+	cp $(PROG) ../Release
+#
+#	dependencies
+#
