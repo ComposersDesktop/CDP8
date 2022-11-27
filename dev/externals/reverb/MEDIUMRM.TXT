@@ -1,0 +1,7 @@
+1.0               # Input gain for data file (float)
+0                 # Open Path = 0 Closed Path = 1 (int)
+21   16    5       # Room Dimensions (X,Y,Z) (float)
+0.9              # Reflectivity of walls (float)
+5                 # Number of rooms per dimension, 1 or greater
+12    8    2      # Listener coord (X,Y,Z) (float)
+5    8    2   0 # Source coord and time at coord (X,Y,Z,t) (float)
