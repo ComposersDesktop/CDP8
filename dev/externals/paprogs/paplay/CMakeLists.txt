@@ -1,5 +1,5 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5 -Dunix -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_C_FLAGS "-O2 -Wall -Dunix -fomit-frame-pointer -funroll-loops")
   include_directories ( /Developer/Headers/FlatCarbon )
   find_library(COREAUDIOLIB CoreAudio)
   find_library(AUDIOTOOLBOX AudioToolbox)
@@ -20,7 +20,7 @@ endif()
 
 
 
-link_directories (../../lib ../portaudio/lib/.libs  /usr/local/lib)
+link_directories(../../lib ../portaudio/lib/.libs  /usr/local/lib)
 
 include_directories(../../include ../include ../portaudio/include ../portaudio/src/common /usr/local/include)
 
