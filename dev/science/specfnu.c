@@ -2775,7 +2775,7 @@ int outer_specfnu_loop(int contourcnt,dataptr dz)
     while(passno < 3) {
 /* TEST *
 fprintf(stderr,"passno = %d\n",passno);
-/* TEST */
+* TEST */
 
         //  Which modes skip some of the processing loops?
 
@@ -2890,7 +2890,7 @@ fprintf(stderr,"passno = %d\n",passno);
         fflush(stdout);
 /* TEST *
 fprintf(stderr,"START of OUTER LOOP passno = %d\n",passno);
-/* TEST */
+* TEST */
         sndseekEx(dz->ifd[0],0,0);
         if((exit_status = read_samps(dz->bigfbuf,dz)) < 0)
            return(exit_status);
@@ -2901,7 +2901,7 @@ fprintf(stderr,"START of OUTER LOOP passno = %d\n",passno);
             windows_in_buf = dz->ssampsread/dz->wanted;
 /* TEST *
 fprintf(stderr,"GOING TO INNER LOOP passno = %d\n",passno);
-/* TEST */
+* TEST */
             if((exit_status = new_inner_loop(windows_in_buf,&fmax,passno,limit,&inner_lpcnt,&phase,&times_index,&target,&previouspk,contourcnt,arp_param,&up,minpitch,maxpitch,dz))<0)
                 return(exit_status);
             if(passno == FPROCESS) { // (pass 2)
@@ -2917,7 +2917,7 @@ fprintf(stderr,"GOING TO INNER LOOP passno = %d\n",passno);
                 default:        //  Write analfile output
 /* TEST *
 fprintf(stderr,"WRITING OUTPUT\n");
-/* TEST */
+* TEST */
                     if((exit_status = write_samps(dz->bigfbuf,dz->ssampsread,dz))<0)
                         return(exit_status);
                     break;
@@ -2982,7 +2982,7 @@ fprintf(stderr,"WRITING OUTPUT\n");
         }
 /* TEST *
 fprintf(stderr,"END of outer_loop passno = %d\n",passno);
-/* TEST */
+* TEST */
         if(passno == 0 && dz->mode == F_SYLABTROF) {
             if((exit_status = trof_detect(dz))<0)
                 return(exit_status);
