@@ -1,6 +1,6 @@
 # CMakeLists.txt for newsfsys (Release 8) RWD 2022
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -mmacosx-version-min=10.8  -Dunix -D__MAC__ -DMAC -DENABLE_PVX")
+  set(CMAKE_C_FLAGS "-O2 -Dunix -D__MAC__ -DMAC -DENABLE_PVX")
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -D_X86_ -DWIN32 -D_WIN32 -D__GNUWIN32__ -DENABLE_PVX")
