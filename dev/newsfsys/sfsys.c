@@ -6021,27 +6021,29 @@ sfclose(int sfd)
 # endif
             res = sfgetprop(sfd,"original sampsize",(char*) &origsize,sizeof(int));
             if(res < 0){
+ # ifdef _DEBUG
                 fprintf(stderr,"error from sfgetprop: original sampsize\n");
+# endif
                 return -1;
             }
             else
-                fprintf(stderr, "sfclose: got original sampsize = %d\n",origsize);
+//                fprintf(stderr, "sfclose: got original sampsize = %d\n",origsize);
             
             
             res = sfgetprop(sfd,"original sample rate",(char*) &origrate,sizeof(int));
             if(res < 0){
-                fprintf(stderr,"error from sfgetprop: original samplerate\n");
+//                fprintf(stderr,"error from sfgetprop: original samplerate\n");
                 return -1;
             }
             else
-                fprintf(stderr, "sfclose: got original sample rate = %d\n",origrate);
+ //               fprintf(stderr, "sfclose: got original sample rate = %d\n",origrate);
             res = sfgetprop(sfd,"arate",(char*) &arate,sizeof(float));
             if(res < 0){
-                fprintf(stderr,"error from sfgetprop: arate\n");
+//                fprintf(stderr,"error from sfgetprop: arate\n");
                 return -1;
             }
             else
-                fprintf(stderr, "sfclose: got arate = %f\n",arate);
+//                fprintf(stderr, "sfclose: got arate = %f\n",arate);
             
             res = sfgetprop(sfd,"analwinlen",(char*) &winlen,sizeof(int));
             res = sfgetprop(sfd,"decfactor",(char*) &decfac,sizeof(int));
@@ -6083,7 +6085,9 @@ sfclose(int sfd)
         
 
         if((rc = pvoc_update_closefile(f->pvxfileno,f->pvxprops,&f->fmtchunkEx)) < 0){
+#idef _DEBUG
             fprintf(stderr,"sfclose: can't close pvx file\n");
+#endif
             return -1;
         }
         else {
