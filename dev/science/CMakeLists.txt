@@ -60,7 +60,7 @@ target_link_libraries(cubicspline cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 add_executable(distortt distortt.c)
 target_link_libraries(distortt  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 
-my_install(repeat)
+my_install(distortt)
 
 add_executable(dvdwind dvdwind.c)
 target_link_libraries(dvdwind  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
