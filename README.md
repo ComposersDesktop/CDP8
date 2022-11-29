@@ -1,5 +1,5 @@
 # CDP System Software, Release 8.
-### Version 8.0.1
+### Version 8.0.1 (Beta)
 
 #### Copyright (c) 2022 Composers Desktop Project Ltd
 
