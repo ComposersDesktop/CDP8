@@ -1,13 +1,15 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.8 -Dunix  -fomit-frame-pointer -funroll-loops")
-  set(CMAKE_CXX_FLAGS "-O2 -Wall -mmacosx-version-min=10.8  -Dunix -fomit-frame-pointer -funroll-loops -std=c++11 -stdlib=libc++")
+#-mmacosx-version-min=10.9
+  set(CMAKE_C_FLAGS "-O2 -Wall  -Dunix  -DMAC -DPA_USE_COREAUDIO -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_CXX_FLAGS "-O2 -Wall  -Dunix -DMAC -DPA_USE_COREAUDIO -fomit-frame-pointer -funroll-loops -std=c++11 -stdlib=libc++")
   include_directories ( /Developer/Headers/FlatCarbon )
   find_library(COREAUDIOLIB CoreAudio)
   find_library(AUDIOTOOLBOX AudioToolbox)
   find_library(AULIB AudioUnit)
   find_library(CARBONLIB Carbon)
   #RWD only need this for APPLE?
-  find_library(AAIOLIB names libaaio.a paths /usr/local/lib)
+  link_directories (/usr/local/lib)
+  find_library(AAIOLIB NAMES libaaio.a)
   set(EXTRA_LIBRARIES1 pthread ${AAIOLIB} ${COREAUDIOLIB} ${AUDIOTOOLBOX} ${AULIB} ${CARBONLIB} ${EXTRA_LIBRARIES})
 else()
   if(MINGW)
@@ -20,11 +22,11 @@ else()
   endif()
 endif()
 
-link_directories(../../lib ../portaudio/lib/.libs ../../../sfsys)
+link_directories(../portaudio/lib/.libs ../../lib  ../../../newsfsys ../../../pvxio2)
+# need /usr/local/include here?
+include_directories( /usr/local/include  ../../../newinclude ../include ../portaudio/include ../portaudio/src/common )
 
-include_directories(../../../include ../include ../portaudio/include ../portaudio/src/common /usr/local/include)
-
-add_executable(pvplay pvplay.cpp pvoc2.cpp fmhfuncs.c pvthreads.cpp pvfileio.c mxfft.c)
-target_link_libraries(pvplay portaudio.a sfsys ${EXTRA_LIBRARIES1})
+add_executable(pvplay pvplay.cpp pvoc2.cpp fmhfuncs.c pvthreads.cpp mxfft.c)
+target_link_libraries(pvplay portaudio sfsys pvxio2 ${EXTRA_LIBRARIES1})
 
 my_install(pvplay)
