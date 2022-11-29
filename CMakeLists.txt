@@ -1,4 +1,4 @@
-# RWD development version for newsfsys
+# RWD version for newsfsys with PVOC EX support
 cmake_minimum_required(VERSION 2.8.3)
 
 project (CDP)
@@ -213,7 +213,7 @@ endforeach()
 ##set(LIBCDP_CFLAGS -D__BUILDING_LIBCDP)
 
 include_directories(./dev/include)
-#RWD
+#RWD for PVOCEX support
 include_directories(./dev/newinclude)
 
 #if(WIN32)
@@ -236,13 +236,15 @@ endif()
 
 if(LINUX)
     message(STATUS "Building on Linux")
-    add_definitions(-DCDP97 -Dunix -Dlinux -D_X86_  -DFILE_AMB_SUPPORT)
+    add_definitions( -Dunix -Dlinux -D_X86_  -DFILE_AMB_SUPPORT)
     list(APPEND LIBCDP_LIBS m)
 endif()
 
 if(APPLE)
     message(STATUS "Building on OSX")
-    add_definitions(-mmacosx-version-min=10.8 -Dunix)
+# we - CDP - need the macosx directive to distribute; not wanted for a personal build
+# e.g. -mmacosx-version-min=10.8
+    add_definitions( -Dunix)
     list(APPEND LIBCDP_LIBS m)
 endif()
 
