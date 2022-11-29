@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2020 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -258,13 +258,14 @@
 #define EXTSPEAK    513
 #define ENVSCULPT   514
 #define TREMENV     515
+#define DCFIX       516
 //#define   TOPTAIL     497 //  nOT USEFUL: Tops and tails only where ALL channels fall below gate
 // MAX_PROCESS_NO should be defiend as the maximum number above 
 #ifdef MAX_PROCESS_NO
 #undef MAX_PROCESS_NO
-#define MAX_PROCESS_NO TREMENV
+#define MAX_PROCESS_NO DCFIX
 #else
-#define MAX_PROCESS_NO TREMENV
+#define MAX_PROCESS_NO DCFIX
 #endif
 
 #define MIX_MULTI   (ROTOR) // 1110000000000000 filetype
@@ -505,7 +506,7 @@
    /* ELEMENTS IN PLAYLIST FOR MAKING MULTICHANNEL TEXTURE */
    /********************************************************/
 
-struct soundoutmchan {         
+struct soundoutmchan {
 float *inbuf;
 unsigned long ibufcnt;
 unsigned long st_sstttime;
@@ -629,7 +630,7 @@ typedef struct soundoutmchan *sndoutmchptr;
 #define WRAP_DEFAULT_REVERB_SRCHRANGE (50.0)    /* ??? */
 #define WRAP_DEFAULT_SPLICELEN        (5.0)     /* ??? */
 #define WRAP_MIN_SPLICELEN            (1.0)     /* ??? */
-#define WRAP_DEFAULT_SCATTER          (0.5)     /* ??? */   
+#define WRAP_DEFAULT_SCATTER          (0.5)     /* ??? */
 #define WRAP_DEFAULT_REVERB_DENSITY   (8.0)     /* ??? */
 
 #define WRAP_VELOCITY_FLAG  (0)
@@ -734,10 +735,10 @@ typedef struct soundoutmchan *sndoutmchptr;
 #define MITER_DUR       (1)
 #define MITER_REPEATS   (1)
 #define MITER_DELAY     (2)
-#define MITER_RANDOM    (3)                
-#define MITER_PSCAT     (4)            
-#define MITER_ASCAT     (5)            
-#define MITER_FADE      (6)            
+#define MITER_RANDOM    (3)
+#define MITER_PSCAT     (4)
+#define MITER_ASCAT     (5)
+#define MITER_FADE      (6)
 #define MITER_GAIN      (7)
 #define MITER_RSEED     (8)
 /* internal params */
