@@ -4259,7 +4259,7 @@ int formants_seepks(dataptr dz)
     } else {
         sprintf(temp2,"\n");
         strcat(temp,temp2);
-        fprintf(dz->fp,temp);
+        fprintf(dz->fp,"%s",temp);
     }
     return(FINISHED);
 }
@@ -4617,7 +4617,7 @@ int handle_the_makefilt_special_data(char *str,dataptr dz)
                 is_pitches = 1;
             }
             else {
-                sprintf(errstr,"Invalid Field, Set, or Scale marker (%s) on line %d in file %s\n",linecnt+1,p,str);
+                sprintf(errstr,"Invalid Field, Set, or Scale marker (%d) on line %d in file %s\n",linecnt+1,p,str);
                 return(DATA_ERROR);
             }
         } else {
