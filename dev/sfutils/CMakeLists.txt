@@ -1,5 +1,5 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall -mmacosx-version-min=10.5 -Dunix")
+  set(CMAKE_C_FLAGS "-O2 -Wall -Dunix")
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")
@@ -8,13 +8,13 @@ else()
   endif()
 endif()
 
-link_directories(../cdp2k ../sfsys)
+link_directories(../newsfsys ../pvxio2)
 
-include_directories(../../include ../sfsys)
+include_directories(../newinclude ../newsfsys)
 
 add_executable(dirsf dirsf.c wildcard.c)
 
-target_link_libraries(dirsf cdp2k sfsys ${EXTRA_LIBRARIES})
+target_link_libraries(dirsf sfsys pvxio2 ${EXTRA_LIBRARIES})
 
 my_install(dirsf)
 
