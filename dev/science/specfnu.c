@@ -347,7 +347,7 @@ static int formants_suppress(int inner_lpcnt,dataptr dz);
 static int formants_makefilt(int inner_lpcnt,int *times_index,dataptr dz);
 static int formants_move(int inner_lpcnt,dataptr dz);
 
-static int get_the_formant_sample_points(dataptr dz);
+//static int get_the_formant_sample_points(dataptr dz);
 static int specfnu_preprocess(dataptr dz);
 static int initialise_peakstore(dataptr dz);
 static int get_peaks_and_trofs(int inner_lpcnt,int limit,int *previouspk,dataptr dz);
@@ -3093,7 +3093,7 @@ int new_inner_loop(int windows_in_buf,double *fmax,int passno,int limit,int *inn
 /* TEST *
 if(passno == 2)
 fprintf(stderr,"wc = %d\n",wc);
-/* TEST */
+* TEST */
         if(dz->total_windows==0) {
             if(passno == FPREANAL && dz->mode != F_SYLABTROF)
                 dz->pitches[0] = (float)NOT_PITCH;
@@ -3172,7 +3172,7 @@ fprintf(stderr,"wc = %d\n",wc);
                 return(exit_status);
 /* TEST *
 fprintf(stderr,"END OF new_inner_loop passno = %d inner_lpcnt = %d of %d\n",passno,*inner_lpcnt,dz->wlength);
-/* TEST */
+* TEST */
 
         }
         dz->flbufptr[0] += dz->wanted;
@@ -4617,7 +4617,9 @@ int handle_the_makefilt_special_data(char *str,dataptr dz)
                 is_pitches = 1;
             }
             else {
-                sprintf(errstr,"Invalid Field, Set, or Scale marker (%d) on line %d in file %s\n",linecnt+1,p,str);
+//                sprintf(errstr,"Invalid Field, Set, or Scale marker (%d) on line %d in file %s\n",linecnt+1,p,str);
+                //RWD I think it is meant to say this:
+                sprintf(errstr,"Invalid Field, Set, or Scale marker (%s) on line %d in file %s\n",p,linecnt+1,str);
                 return(DATA_ERROR);
             }
         } else {
@@ -8177,7 +8179,7 @@ int trof_detect(dataptr dz)     //  DOESN'T WORK will have to do it BY HAND : Ne
         }
         return FINISHED;
     }
-    if(trof[0] != 0.0);                                             //  Force trof at time zero                             
+    if(trof[0] != 0.0)                                             //  Force trof at time zero
         fprintf(dz->fp,"%lf\n",0.0);
     for(n = 0;n < trofcnt;n+=2)                                     //  Trof times are in even locations
         fprintf(dz->fp,"%lf\n",trof[n]);
