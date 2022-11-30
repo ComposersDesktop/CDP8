@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * http://www.trevorwishart.co.uk
+ * http://www.composersdesktop.com
+ *
+ This file is part of the CDP System.
+ 
+ The CDP System is free software; you can redistribute it
+ and/or modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ 
+ The CDP System is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with the CDP System; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+ 02111-1307 USA
+ *
+ */
+
 //  COMMENT
 //  Works now for instruments with spectra defined internally
 //  With note-loudness-envelope
@@ -224,7 +248,7 @@ static double cellenv[12]  =   {0.0, 0,
 
 char errstr[2400];
 
-static int testing = 0;
+//static int testing = 0;
 
 int anal_infiles = 1;
 int sloom = 0;
@@ -248,7 +272,7 @@ static int mark_parameter_types(dataptr dz,aplptr ap);
 static int assign_file_data_storage(int infilecnt,dataptr dz);
 static int get_tk_cmdline_word(int *cmdlinecnt,char ***cmdline,char *q);
 static int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz);
-static int get_the_mode_from_cmdline(char *str,dataptr dz);
+//static int get_the_mode_from_cmdline(char *str,dataptr dz);
 static int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt);
 
 static int synthesis_param_preprocess(dataptr dz);
@@ -259,7 +283,7 @@ static int create_synthesizer_sndbufs(dataptr dz);
 static int generate_packet_envelope (dataptr dz);
 static double read_packet_envelope(int kk,double incr,dataptr dz);
 static int modify_packet_envelope(double synth_ctr,double synth_sqz,dataptr dz);
-static double get_frq_with_vibrato(int *init,int n,double onehzincr,double srate,dataptr dz);
+//static double get_frq_with_vibrato(int *init,int n,double onehzincr,double srate,dataptr dz);
 
 static int pretest_the_special_data(char *cmdline,int *inlinecnt,synptr *orchestra,dataptr dz);
 static int setup_the_special_data_for_given_instr(int instrno,double *data,synptr instrument,dataptr dz);

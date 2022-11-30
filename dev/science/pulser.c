@@ -47,7 +47,7 @@
 #include <limits.h>
 
 
-static int testflag;
+//static int testflag;
 
 #if defined unix || defined __GNUC__
 #define round(x) lround((x))
