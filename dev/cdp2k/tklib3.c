@@ -1036,7 +1036,7 @@ int setup_stability_arrays_and_constants(int stability_val,int sval_less_one,dat
     dz->stable->design_score[dz->infile->specenvcnt] = 0;  /* array for designing filter */
     dz->stable->des[dz->infile->specenvcnt] = (desptr)0;
     dz->stable->sbufstore[dz->wanted * dz->iparam[stability_val]] = 0.0f;
-    dz->stable->sbuf[dz->iparam[stability_val]] = 0L;
+    dz->stable->sbuf[dz->iparam[stability_val]] = 0;
     return(FINISHED);
 }
 
@@ -2073,7 +2073,7 @@ void convert_shiftp_vals(dataptr dz)
 /*************************** CREATE_SNDBUFS **************************/
 
 /* 2009 MULTICHANNEL */
-
+/* TW update Nov 2022, correct buflen for large anal chans */
 int create_sndbufs(dataptr dz)
 {
     int n;
@@ -2089,8 +2089,13 @@ int create_sndbufs(dataptr dz)
     if(bigbufsize <=0)
         bigbufsize  = framesize * sizeof(float);
 
-    dz->buflen = (int)(bigbufsize / sizeof(float)); 
-    dz->buflen = (dz->buflen / framesize)  * framesize;
+    dz->buflen = (int)(bigbufsize / sizeof(float));
+    // NEW TW NOV 26 : 2022 -->
+    if(dz->buflen < framesize)
+        dz->buflen = framesize;
+    else
+        // <-- NEW TW NOV 26 : 2022
+        dz->buflen = (dz->buflen / framesize)  * framesize;
     bigbufsize = dz->buflen * sizeof(float);
     if((dz->bigbuf = (float *)malloc(bigbufsize  * dz->bufcnt)) == NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY to create sound buffers.\n");
@@ -2350,6 +2355,8 @@ int get_the_vowels(char *filename,double **times,int **vowels,int *vcnt,dataptr 
     istime = 1;
     while(fgets(temp,200,fp)==temp) {
         q = temp;
+        if(*q == ';')   //  Allow comments in file
+            continue;
         while(get_word_from_string(&q,&p)) {
             if(istime) {
                 if(sscanf(p,"%lf",t)!=1) {
