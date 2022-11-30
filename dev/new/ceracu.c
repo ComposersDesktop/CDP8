@@ -1329,7 +1329,7 @@ int get_lcm(int arraycnt,int *lcm,dataptr dz)
                 m--;
             }
         }
-        n++;
+//       n++;  /* RWD ???? probably don't want this. */
     }
     if(arraycnt == 1) {                     //  If only one value remains,
         *lcm = cycarray[0];                 //  This is the LCM, as all other values (eliminated) were its divisors
