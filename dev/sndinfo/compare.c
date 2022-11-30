@@ -452,10 +452,11 @@ int do_sndinfo(dataptr dz)
             return(GOAL_FAILED);
         }
         /* RWD 2022 this hangs if user supplies anal file */
-        if(dz->infile->filetype == ANALFILE){
-            sprintf(errstr,"This is an anlysis file.\n");
-            return(GOAL_FAILED);
-        }
+        /* now fixed by TW 2022 (tlkib3.c) */
+        //if(dz->infile->filetype == ANALFILE){
+        //    sprintf(errstr,"This is an anlysis file.\n");
+        //    return(GOAL_FAILED);
+        //}
         flbuf = (float *)dz->bigbuf;
         buf   = dz->bigbuf;
         if(!dz->vflag[FORCE_SCAN] && try_header(chans,inverse_sr,dz)==FINISHED)
