@@ -2006,7 +2006,7 @@ int usage2(char *str)
 {
     if(!strcmp(str,"specfnu")) {
         fprintf(stdout,"\n"
-        "USAGE: specfnu specfnu 1-9 inanalfile outfile [params]\n"
+        "USAGE: specfnu specfnu 1-23 inanalfile outfile [params]\n"
         "\n"
         "Modify spectral shape in relation to formant peaks, or show formant data.\n"
         "\n"
