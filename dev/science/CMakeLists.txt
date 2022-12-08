@@ -1,15 +1,17 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall  -Dunix")
+   set(CMAKE_C_FLAGS "-O2 -Wall  -Dunix")
+   link_directories (/usr/local/lib)
+   find_library(AAIOLIB NAMES libaaio.a)
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")
   else()
     set(CMAKE_C_FLAGS "-O2 -Wall -Dlinux -Dunix")
+    link_directories (/usr/local/lib)
+    find_library(AAIOLIB NAMES libaaio.a)
   endif()
 endif()
-#RWD only need this for APPLE?
-link_directories (/usr/local/lib)
-find_library(AAIOLIB NAMES libaaio.a)
+
 
 link_directories(../cdp2k ../newsfsys ../pvxio2)
 
