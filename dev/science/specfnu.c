@@ -1044,11 +1044,13 @@ int handle_the_outfile(int *cmdlinecnt,char ***cmdline,int is_launched,dataptr d
         return(MEMORY_ERROR);
     }
     strcpy(filename,(*cmdline)[0]);
-
-    if(dz->mode == F_SEEPKS || dz->mode == F_SYLABTROF || dz->mode == F_MAKEFILT)
-        force_extension(1,filename);
-    else
-        force_extension(0,filename);
+//RWD this scuppers everyting at the command line, not least a pvx file extension
+    if(sloom){
+        if(dz->mode == F_SEEPKS || dz->mode == F_SYLABTROF || dz->mode == F_MAKEFILT)
+            force_extension(1,filename);
+        else
+            force_extension(0,filename);
+    }
     strcpy(dz->outfilename,filename);
     if(dz->mode == F_SEE) {
         orig_chans = dz->infile->channels;
