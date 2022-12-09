@@ -29,8 +29,6 @@ typedef struct /*waveformatex */{
     WORD  cbSize;
 } WAVEFORMATEX;
 
-# endif
-
 typedef struct {
     WAVEFORMATEX    Format;              /* 18 bytes:  info for renderer as well as for pvoc*/
     union {                              /* 2 bytes*/
@@ -43,7 +41,12 @@ typedef struct {
     
     GUID            SubFormat;          /* 16 bytes*/
 } WAVEFORMATEXTENSIBLE, *PWAVEFORMATEXTENSIBLE;
+#endif
 
+#ifdef _WIN32
+#include <windows.h>
+#include <mmreg.h>
+#endif
 
 typedef struct pvoc_data {              /* 32 bytes*/
     WORD    wWordFormat;                /* pvoc_wordformat */
