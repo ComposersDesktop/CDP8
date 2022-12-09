@@ -35,6 +35,7 @@
  */
 /* RWD: old sfsys functions DEPRECATED and emptied */
 /* RWD Dec 2019  fixed SndCloseEx for int64 comps */
+/* RWD 2022 added PVX support */
 #ifdef _DEBUG
 #include <stdio.h>
 #endif
@@ -745,21 +746,21 @@ sndseekEx(int fd, int dist, int whence)
                 // seems never to be called for CDP ana routines, except for dist= 0
         case SEEK_SET:
             
-            rc = pvoc_seek_mcframe(sf->fd - 1000, frameoffset,SEEK_SET);
+            rc = pvoc_seek_mcframe(pvxid, frameoffset,SEEK_SET);
             //or: if dist==0, use pvoc_rewind()?
             if(rc < 0){
                 return rc;
             }
-            rc =  pvoc_framepos(sf->fd - 1000) * (pvxdata.nAnalysisBins * 2);
+            rc =  pvoc_framepos(pvxid) * (pvxdata.nAnalysisBins * 2);
             break;
             //tell - Ok to use pvoc_framepos, OR can use sndtellEx below
         case SEEK_CUR:
                 // not directly handled in pvfileio.c yet
-                rc = pvoc_seek_mcframe(sf->fd - 1000, frameoffset,SEEK_CUR);
+                rc = pvoc_seek_mcframe(pvxid, frameoffset,SEEK_CUR);
                 if(rc < 0){
                     return rc;
                 }
-                rc =  pvoc_framepos(sf->fd - 1000) * (pvxdata.nAnalysisBins * 2);
+                rc =  pvoc_framepos(pvxid) * (pvxdata.nAnalysisBins * 2);
                 break;
             //end: step back dist samps if negative. We do not allow setting beyond EOF.
         case SEEK_END:
@@ -767,7 +768,7 @@ sndseekEx(int fd, int dist, int whence)
                 if(rc < 0){
                     return rc;
                 }
-                rc =  pvoc_framepos(sf->fd - 1000);     //frames
+                rc =  pvoc_framepos(pvxid);     //frames
                 rc  *= pvxdata.nAnalysisBins * 2;    // samps. caller has to compute nframes
                 break;
         }
@@ -860,7 +861,7 @@ sndtellEx(int fd)
             int32_t nsamps;
             //TODO: sf->fd is sf element, offset by SFDBASE= 1000
             // need to remove that first - how?
-            framepos = pvoc_framepos(sf->fd - 1000);
+            framepos = pvoc_framepos(pvxid);
             if(framepos < 0){
 # ifdef _DEBUG
                 fprintf(stderr,"bad return %d from pvoc_framepos\n",framepos);
@@ -1200,7 +1201,7 @@ fgetfbufEx(float *fp, int n, int sfd,int expect_floats)
         }
         n_frames = n / binsamps;
         // test sfp->samptype too?
-        cnt = pvoc_getframes(sfp->fd - 1000, fp, n_frames);
+        cnt = pvoc_getframes(pvxfd , fp, n_frames);
         if(cnt <= 0)
             cnt = 0; // EOF or error
         else
@@ -1315,7 +1316,7 @@ fputfbufEx(float *fp, int n, int sfd)
         pvxid = get_pvxfd(sfp->fd,&pvxdata);
         if(pvxid < 0){
 # ifdef _DEBUG
-            fprintf(stderr,"fputfbufEx: bad sf id %d\n",pvxid);
+            fprintf(stderr,"fputfbufEx: bad pvx id %d\n",pvxid);
 # endif
             return cnt;
         }
@@ -1340,13 +1341,12 @@ fputfbufEx(float *fp, int n, int sfd)
                 cnt = 0; // EOF or error
             else
                 cnt *= binsamps;
-            //return cnt;
             return binsamps * n_frames;
         }
     }
     
 #endif
-    // std CFDP files from here
+    // std CDP files from here
     
     if(sfp->samptype == SAMP_SHORT) {
         sfd += SNDFDBASE;
