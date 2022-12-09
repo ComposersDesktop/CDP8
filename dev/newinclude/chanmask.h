@@ -43,7 +43,8 @@
 #define SPEAKER_TOP_BACK_LEFT           0x8000
 #define SPEAKER_TOP_BACK_CENTER         0x10000
 #define SPEAKER_TOP_BACK_RIGHT          0x20000
-#define SPEAKER_RESERVED                0x80000000
+#define SPEAKER_RESERVED                0x7FFC0000
+#define SPEAKER_ALL                     0x80000000
 
 /* my extras*/
 #define SPKRS_UNASSIGNED    (0)
