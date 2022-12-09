@@ -134,8 +134,9 @@ static void parse_errno(int err)
 #include <string.h>
 #include <stdint.h>
 
-#if defined _WIN32
+#ifdef _WIN32
 #include <windows.h>
+#include <mmreg.h>
 #endif
 
 #include <fcntl.h>
@@ -143,7 +144,7 @@ static void parse_errno(int err)
 #include <sys/stat.h>
 #if defined(_WIN32) || defined(__SC__) || defined  (__GNUWIN32__)
 #include <io.h>
-extern char*   _fullpath (char*, const char*, size_t);
+//extern char*   _fullpath (char*, const char*, size_t);
 #endif
 #include <errno.h>
 #include <stdio.h>
@@ -155,7 +156,7 @@ extern char*   _fullpath (char*, const char*, size_t);
 /*RWD April 2005 */
 #include "sffuncs.h"
 
-#include <osbind.h>
+#include "osbind.h"
 #ifdef _WIN32
 #include "alias.h"
 #endif
@@ -168,7 +169,7 @@ int CDP_COM_READY = 0;   /*global flag, ah well...(define in alias.h will access
 # endif
 #endif
 
-#include <chanmask.h>
+#include "chanmask.h"
 /* RWD oct 2022 to eliminate pointer aliasing in AIFF srate handling */
 #include "ieee80.h"
 
@@ -429,11 +430,8 @@ enum sndfiletype {
     cdpfile                                 //RWD sfsys98
 };
 
-#ifdef _WIN32
-# ifdef ENABLE_PVX
-#  include "wavdefs.h"
-#  include "pvfileio.h"
-# endif
+#ifdef ENABLE_PVX
+# include "pvfileio.h"
 #endif
 
 //RWD.6.99 NOTE: because of the slight possibility of 32bit int formats, from both file formats,
@@ -3254,7 +3252,7 @@ static int  allocsffile(char *filename)
         free(filename);
         return -1;
     }
-    
+    memset(sf_files[first_i],0,sizeof(struct sf_file));  // RWD defensive etc
     sf_files[first_i]->refcnt = refcnt98;
     
     //sf_files[first_i]->refcnt = 1;          //RWD.6.98 restore this  to restore old behaviour
@@ -4187,6 +4185,7 @@ int sfcreat_formatted(const char *name,  __int64 size,  __int64 *outsize,int cha
             fprintf(stderr,"sfsys: error from pvoc_getpvxprops\n");
         }
         pvoc_set_needsupdate(f->pvxfileno);
+        f->readonly = 0;    /* NB: contols if sfputprop() etc succeeds */
 # ifdef _DEBUG
         assert(f->pvxprops->nAnalysisBins > 0);
 # endif
@@ -6085,7 +6084,7 @@ sfclose(int sfd)
         
 
         if((rc = pvoc_update_closefile(f->pvxfileno,f->pvxprops,&f->fmtchunkEx)) < 0){
-#idef _DEBUG
+#ifdef _DEBUG
             fprintf(stderr,"sfclose: can't close pvx file\n");
 #endif
             return -1;
