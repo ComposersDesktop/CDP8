@@ -1,0 +1,265 @@
+CDPR8 programs: current active list.
+
+
+asciiget - print contents of text file to std output (console) 
+           as list of characters with ASCII decimal code.
+           [NOT IN SOUNDLOOM]
+
+bounce  - "Bounce" a sound (Accelerating repeats, decaying in level).
+     USAGE:
+bounce bounce inf outf count startgap shorten endlevel ewarp [-smin] [-e] [-c]
+
+     [use "shorten" carefully, as multiplier. e.g. 0.95 appropriate, 0.1 not![
+     
+brownian - [multichan] Generate texture of sampled elements following brownian motion in pitch and space.
+
+     [ COMPLEX, 2 modes;  - aimed at m/c outputs ]
+     
+caltrain - [pvoc] -  Generates version of source with upper spectral channels time-blurred.
+
+cascade [multichan] - Successive segments of src are repeat-echoed, and echosets superimposed on src.
+
+     [COMPLEX: 10 modes]
+     
+clicknew - make clicktrack using times listed in textfile.
+
+clip -      Mode 1: Clip signal at specified level.
+            Mode 2: Clip half-waveforms at specified fraction.
+            
+    [hard digital clipping, then normalised to infile level]
+    
+crumble [multichan] - Project a MONO source on all channels of multichan output, then segment it,
+                  and distribute the segments over smaller and smaller groups of channels.
+                  [2 modes, 8ch or 16ch]
+                  [COMPLEX: almost all params time-variable]
+                  
+
+crystal [multichan] -  Generate N snd-events based on position of N vertices of a crystal,
+          Then rotate crystal in 3-d space, and generate another group of N events, etc.    
+          [COMPLEX: modes set no of output channels; text data file]
+          
+cubicspline [pvoc] - Generate smoothed curve from input data re spectrum
+            input and output are spectrum data files
+            
+            [need to know how to use output data file...]
+ 
+ distcut [wavesets] -  Cut sound into elements with falling envelope.
+                     [ multiple outfiles, each has N wavesets] 
+            
+distmark [wavesets] - Interpolate between waveset-groups at marked points in MONO soundfile.
+                   In Mode 2 interpolate within ALTERNATE marked blocks.
+                  [uses data file input]
+                  
+                  
+distmore [wavesets] - multiple distortion processes: bright   double   segsbkwd   segszig
+                bright [3 modes]: Reorders sound segments in order of average zero-crossing rate
+                double: Doubles (quadruples etc.) frq of each waveset
+                segsbkwd [9 modes]: Reverses certain (sets of) segments
+                segszig [3 modes]: 
+                     MODE1     Zigzags across tail segments of a soundfile while playing it.
+                     MODES 2&3 Zigzag across entire soundfile.
+                    [MODE 1 uses text data file]
+                   [very much aimed at speech processing: consonant + vowel etc]
+                   [minimal ref in Soundloom - needs checking if supported]
+                   
+distrep [wavesets] - Mode 1: TIMESTRETCH FILE BY REPEATING 'WAVECYCLES'
+                    Mode 2: REPEAT 'WAVECYCLES' BUT THEN CYCLES SKIP TO AVOID TIMESTRETCH 
+                    
+distshift [wavesets] - Mode 1: Shift alternate (groups of) half-wavecycles forward in time
+                        (wrapping back around zero-time if pushed beyond sound end).
+                       Mode 2: Swap alternate half-wavecycle(group)s.
+                    
+distwarp [wavesets] -   Mode 1: warp-multiplier increments samplewise.
+                        Mode 2: warp-multiplier increments wavesetwise.
+                        [ NOT IN SOUNDLOOM]
+                        
+dvdwind - Shorten a sound by read, skip, read, skip procedure.
+
+envcut - [2 modes] - Cut sound into elements with falling envelope.
+                    [multiple outfiles]
+                  
+envspeak [12 modes, plus another 12 with same variation] - Process speech "syllables".
+                    [NOT IN SOUNDLOOM]
+
+flatten - Equalise level of sound elements in mono src.
+            [usage implies application to speech src syllables]
+            
+flutter [multichan] - Distribute a loudness tremulation around a multichannel output
+                    [uses input data text file]
+                    
+fractal - Create fractalised version of sound
+        [usage warning should be taken seriously - program can create extremely long outfiles!]
+
+fturanal [pvoc] -  AUTOMATIC FEATURE EXTRACTION
+         -  anal [3 modes]: Extract spectral features from an analysis file: output to textfile.
+         -  synth [10 modes]: Use spectral features data to reassemble MONO source file.
+         [NOT IN SOUNDLOOM]
+         
+ hover2  -   move through a file, zigzag reading it at a given frequency,
+            reading back and forth from a zero-crossing,
+            then outputting same data inverted,
+            to form symmetrical zero-centred waveforms at each read.
+            
+     
+motor - [9 modes] - Create fast (inner) pulse-stream, within slower (outer) pulsed-enveloping.
+            Under every outer-pulse, set of inner events cut successively from input src(s)
+            as the outer-envelope rises, then in reverse order as it falls.
+            Outer-pulse, shortened by "PRATIO", must hold at least 2 inner-pulses.
+            [COMPLEX: many flag options, text data file]
+            
+multiosc - [synthesis] - Usage suggests FM-style chain of oscs
+            MODE 1 Oscillation of oscillation.
+            MODE 2 Oscillation of oscillation of oscillation.
+            MODE 3 Oscillation of oscillation of oscillation of oscillation.
+            
+            [maybe not complete FM: usage shows time-variable freqs, but not amps - NEEDS CHECKING]
+            [ also: danger of clipping - output is max amp always]
+            [minimal in SOUNDLOOM, just recognised and in the list ]
+
+multisynth - [synthesis] [stereo/multichan] Synthesize several sound-streams from a score.
+            [fixed, small set of instruments; some strange restrictions!]
+            [ NB: this is included by Soundloom]
+            
+newscales  - [synthesis] ??? additive synth? datafiles for notelist and harmonic spectrum.
+            [NOT IN SOUNDLOOM]
+            
+onset [multichan] - Return the succession of sound-onsets in each channel of a multichannel file.
+                    USAGE:   onset onset infile outtextfile
+                    [ = Utility function for Soundloom?]
+                    
+pairex [multichan] - Extract any pair of channels from a multichannel sound.
+                    [ utility prog for Soundloom: "channelx" etc more suitable for cmdline use ]
+                    
+partition [wavesets] [2 modes] - Partition mono sound file into disjunct files
+                in blocks defined by groups of wavesets, or by duration.
+                
+phasor - [ quasi multichan] Introduce [mostly extreme] phasing into signal : Takes a MONO input file.
+           will output multiple mono files, or mix to stereo (or whatever).
+           Interesting - not to be compared with a "standard" phaser effect!.
+            
+pulser - [some multichan] GENERATE STREAMS OF PULSES
+                USAGE: pulser NAME (mode) [infile] outfile parameters: 
+                where NAME can be  pulser|multi| synth
+                [COMPLEX] each is elaborate, multiple params, options.
+                
+quirk - [wavesets] - Distort signal by raising sample values to a power.
+                    [ 'power' can be < 1]
+                    
+refocus - [enveloping] - For a set of sounds to be mixed, generate corresponding set of envelopes
+                        which bring each sound in turn into focus (louder than others)
+                        at a specified timestep.
+                        These envelopes can them be applied to the sounds before the final mix is made.
+                        
+repair - [multichan] - Join a list of mono sounds into stereo, 4-channel or etc outputs.
+            [seems to be used by Soundloom in "batch" processes, may not be represented directly in gui]
+            [ similar territory to 'interlx']
+            
+repeater [3 modes] - Play source, with specified elements repeating.
+                     MODE 3	produces dimming, accelerating output, like bouncing object.
+                     [a sort of algorithmic delay line system?]
+                     
+rotate - [multichan?] USAGE:  rotate centre-x centry-y angle points [-s]
+            generates data list of x/y coordinates - mainly for Soundloom?
+            
+scramble [wavesets] [14 modes] - Scramble order of waveset in src.
+
+sorter - [5 modes] - Chop mono source into elements then reorganise by loudness, or duration
+                     [COMPLEX? many flag options. may be difficult to relate results to parameters etc]
+                     
+specanal [pvoc] [10 modes] - Generate various types of analysis data, or filter data from sound.
+                     [in effect, a custom version of pvoc to generate data files for gui display
+                     Modes 2-6 generate sets of text outfiles, 1 for each analysis window from input
+                        (except first - zeroed - window).
+                     These can be used to run a "movie" of the data in Soundloom.
+                     Modes 7-10 generate 1 textfile, a MIDI list, or a MIDI varibank filterdata file.
+                     [implication: varibank data can be used to create a vocoder]
+                     [COMPLEX? cmd users may find text data files intractable, 
+                       better just to use standard pvoc for analysis]
+                       
+specav [pvoc] [3 modes] - FIND AVERAGE SPECTRUM OF A SOUND OR OF SEVERAL SOUNDS
+                            OR
+                        EXTRACT CHANGING SPECTRUM OF SINGLE ANALYSIS FILE AS LIST OF TEXTFILES
+                        [Output is textfile(s), so assume primarily tool for Soundloom.]
+                        
+specenv [pvoc]  -  Get the spectral envelope of file 2 and apply it to file 1.
+                    Process equivalent to format extraction + formant impose/replace
+                    but allows for larger spectral windows.
+                    [so probably very similar to Csound "pvscross" etc]
+                    
+specfnu [pvoc] [23 modes] - Modify spectral shape in relation to formant peaks, or show formant data.
+                    [COMPLEX - each mode elaborate, large no of flag options etc.]
+                    
+                    
+specfold [pvoc] [3 Modes] -  Fold|invert|randomize [part of] the spectrum
+
+spectstr [pvoc] - TIME-STRETCHING OF INFILE, SUPPRESSING ARTEFACTS WHEN STRETCH IS > 1.0
+                     
+spectune [pvoc][6 modes] - Find (most prominent) pitch in input file
+                        then transpose input file to ....
+                        1: nearest tempered pitch.
+                        2: nearest of pitches listed in "tuning" file.
+                        3: nearest pitch, or its octave equivalents, listed in "tuning" file.
+                        4: Report the pitch found : no sound output.
+                        5: Tune sound to a given (possibly time-varying) pedal pitch and its harmonics.
+                        6: Report median pitch in all segments indicated.
+                        
+ speculate [pvoc] -     Generates versions of source with channel data progressively permuted.
+                        Using bell-ringing "Plain Bob" type channel-swapping sequence. 
+                        [WARNING: creates a LOT of output files! E.g. could be 60 or more.] 
+                        
+  spike   -   Envelope the input sound to spike at the peak.
+              [for single spike, ramp up to then down from.]
+              [could be used in combination with pitch shift to create Doppler effect.]       
+
+  spin [multichan] - Spin two wide stereo-image across a 5-channel-wide sound image
+                        (with possible doppler pitch-shift of the moving edges). 
+                        output options 'stereo' [3 modes]
+                                        'quad' [2 modes]
+                        both actually offer n-channel options.
+                        
+splinter [4 modes] - Creates splinters by repeating & shrinking selected waveset-group in sound.
+                    Either splinters repeat before merging with orig snd at time-in-src specified.
+                    OR original sound plays up to selected time, then splinters,
+                    
+ strands [3 modes] - Generate pitch-data for several streams (or the combined sound itself)
+                    where total pitch-tessitura divided into equal-sized pitch-BANDS
+                    and each band made of pitch-line THREADS, cycling around one-another
+                    pitchwise, within the band, IF twist strays from zero.
+                    Strands in adjacent bands spiral in opposite directions. 
+                    Long 2-page usage message!
+             
+stutter           - Slice src (e.g. speech) into elements (e.g. words or syllables).
+                Cut segments from elements, always cutting from element start.
+                Play these in a random order (with possible intervening silence).
+                [ requires data file: list of times at which to slice src into elements.
+                   Minimum timestep between times (MT) = 0.016 secs. ]
+                   
+suppress  [pvoc]  - Suppress the most prominent partials in selected frequency band 
+                    [requires 'timeslots' data file of time pairs wherein partials are suppressed.] 
+                    
+synspline [synthesis] - Synthesis from waveforms made by smoothly joining randomly generated points.
+
+tesselate [multichan] - Create repeating-pattern-with-shift in space and time.
+                        Each (mono) source repeated on pair(s) of channels,
+                        But with slightly different delay in the paired channels.
+                        [multiple mono infiles, multichan outfile (>=2)]
+                        [ data file input, has to match infile count, etc ]
+
+tostereo  [multichan] - Cause stereo file to start mixed-to-mono and then diverge to real stereo.
+                       [outfile chans can be > 2, i.e. stereo across arbitrary pair of channels ]
+                       
+ts     [synthesis]   -  Treat data in time-series format (list of numbers) as a soundwave plot.
+                     - modes are 'oscil' or 'trace'
+                     oscil: looks like, in effect, a waveform drawing facility 
+                     trace: Treat data in time-series format (list of numbers) 
+                            as the pitch-trace of some defined waveform [additive harmonic data]. 
+                            
+tweet   [3 modes]    - Replace FOFs in vocal sound by synthetic tweets or (mode 3) noise.
+                       input data file 'pitchdata' suggested got from 'repitch getpitch 2'.
+                       
+verges               - Play source, with specified brief moments glissing up or down.
+                     [requires data file with times of 'verge-attacks']  
+
+                
+
+            

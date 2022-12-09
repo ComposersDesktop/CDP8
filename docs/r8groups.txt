@@ -1,0 +1,143 @@
+CDP Release 8 programs - core groups
+
+[any programs not listed here fall into a general group of "misc" processing tools, some as background utility programs for Soundloom]
+
+
+1. Synthesis.
+
+General note: CDP hitherto has essentially limited pure synthesis processes 
+to the generation of basic signals ("synth", "newsynth").
+
+Release 8  introduces a number of new tools, all idiosyncratic one way and another,
+extending to note and rudimentary score-based composition. 
+We suggest they should all be regarded as R&D tools, maybe production of raw 
+source material, rather than anything that would directly form or contribute to a
+completed piece. However, for developers they may provide opportunities for 
+custom adaptations and extensions.
+
+
+ * clicknew:    make clicktrack using times listed in textfile.
+ 
+ * multiosc:    FM-style chain of sines, four "operators". Limited envelope control.
+ 
+ * multisynth:  Synthesize several sound-streams from a score. 
+                Targetted at multichannel projects, but stereo also supported.
+   
+ * newscales:   Basic note generation using a fixed spectrum, no enveloping. 
+                The program name suggests it is used for simple "scale" generation, 
+                e.g. for experimental tunings.
+
+ * newsynth:    Updated for R8, new mode "fractally arrayed spikes" 
+               
+ * pulser, Mode 3 "synth": generate wave-packets with fixed or varying spectrum.
+ 
+ * synspline:   Synthesis from waveforms made by smoothly joining 
+                randomly generated points.
+                
+ *  ts:         waveform generation/plot using time-series data, 
+                as in "drawing" a waveform. Should this be called "Fairlight"?
+                
+ 
+ 2.  Waveset distortion processes.
+ 
+ * distcut:    Cut sound into elements (multiple outfiles) with falling envelope. 
+ 
+ * distmark:   Interpolate between waveset groups.
+ 
+ * distmore:   multiple new distortion processes. Mostly aimed at speech processing.
+ 
+ * distrep:    waveset-based timestretching.
+ 
+ * distshift:  literally, shift groups of half-wavecycles in time.
+ 
+ ( * distwarp:  warp wavecycles. Not in Soundloom)
+ 
+ * partition:   partition infile into multiple files by waveset blocks.
+ 
+ * quirk:       raise samples to a power (<>1), based on wavecycles.
+ 
+ * scramble:    scramble order of wavesets in infile. 14 processes.
+
+
+ * splinter:	Creates splinters by repeating & shrinking selected waveset-group in sound.
+		Either splinters repeat before merging with orig snd at time-in-src specified.
+		OR original sound plays up to selected time, then splinters.
+ 
+ See also clip mode 2 (half-waveforms)
+ 
+ 3. Pvoc/amp/freq analysis/transformation tools. Several of these appear to be 
+    primarily tools for Soundloom data display.
+ 
+ * caltrain:    time-blur upper partials.
+ 
+ * cubicspline: (datafile only): smooth amp/freq data points to make spectrum.
+ 
+
+* specanal:     custom (complex) version of pvoc, generate data files, e.g. 
+                    to visualise spectrum.
+                
+* specav:       average spectrum, output multiple spectrum datafiles.
+
+* specenv:      spectral envelop transfer, probably like classic "pvcross".
+
+* specfnu:      large complex progtam to process formants, spectral shape.
+
+*specfold:      fold/invert/randomize part of the spectrum.
+
+*spectstr:      time-stretching.
+
+*spectune:      find and manipulate pitches in input file. 
+                Options to map to pitch data in "tuning file".
+                
+*speculate:     permutations of channel data, creates large number of outfiles.
+
+*suppress:      suppress most prominent partials in chosen freq band.
+
+
+4. Multichannel tools. Primarily for discrete surround, e.g. 8 or even 16 chans. 
+                        Many support simple stereo too.
+                        
+* brownian:     generate texture of [short} sampled elements, based on brownian motion.
+
+* cascade:      segments of source repeat-echoed,a ccumulated. many options.
+
+* crumble:      project mono source to all chans, plus segmentation etc. 
+                Complex, output either 8 chans or 16 chans(!).
+                
+* crystal:      based on model of crystal ( regular polyhedron?), with 3d rotations.
+
+* multisynth:   (see above), includes multichan options.
+
+* onset:        find successive onsets in m/c file. May be utility for Soundloom.
+
+* pairex:       extract arbitrary pair of chans from m/c file.
+
+* pulser:       (see above) streams of pulses, some m/c options.
+
+* repair:       join mono sounds into stereo/multichan outputs. so name = 're-pair".
+
+* rotate:       generate list of x/y coordinates - for Soundloom?
+
+* spin:         spin stereo image across m/c stage, usage msg a bit ambiguous, 
+                seems to offer general n-chan options, 
+                while also specifying stereo, quad, 5-chan.
+                
+*tesselate:     repeating and shifting patterns (in space, time). outchans >= 2.
+
+*tremenv :      tremolo a sound, width narrowed, after peak.
+
+
+5. Speech processing.
+
+These explicitly reference syllables, etc, in their usage messages.
+
+*distmore:      (see above) Mode USAGE msgs cite application to vowels/consonants. 
+
+*envspeak:      Process speech "syllables".
+                [NOT IN SOUNDLOOM]
+                
+*flatten:       equalise sound elements. Usage implies application to syllables etc.
+
+* stutter:      slice source into elements (e.g. words or syllables).
+ 
+ 
