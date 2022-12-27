@@ -21,4 +21,18 @@
 	Boston, MA 02110-1301 USA
 	
 
-More details to come!
+What's New?
+
+* approximately 80 new programs/processes by Trevor Wishart. See details in the [docs](./docs) folder.
+*  majority already available for use in Soundloom 17.0.4.
+*  includes new programs for multichannel (<= 8 channels) production, waveset distortion, speech/voice processing.
+*  ***PVOCEX*** (.pvx) analysis file support for all pvoc-related programs. This is the standard phase vocoder analysis file format used in Csound. See also the downloadable utilities (Mac, Win32), with example files, in the companion PVXTOOLS distribution:
+*  play program **pvplay** will play  mono/stereo .pvx files.
+*  classic CDP directory utility **dirsf** now recognises .pvx files with format details.
+
+What's needed?
+
+* Users to build, test, ask questions, report bugs!
+
+
+[updated 27/12/2022]
