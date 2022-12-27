@@ -113,7 +113,8 @@ char paramstr[6000];
 
 int sloom = 1;
 int sloombatch = 0;
-const char* cdp_version = "6.2.0";
+/* was 6.2.0; RWD Dec 22, new TW fix for specfnu, default param setting */
+const char* cdp_version = "6.2.1";
 
 /******************************* MAIN/CDPARAMS *******************************/
 
@@ -8259,7 +8260,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]   = 10.0;
             ap->lo[COL_LO]  = 0.0;
             ap->hi[COL_LO]  = 10000.0;
-            ap->lo[COL_HI]  = 0.0;
+            ap->lo[COL_HI]  = 50.0;
             ap->hi[COL_HI]  = 10000.0;
             ap->lo[COLRATE] = -50.0;
             ap->hi[COLRATE] = 50.0;
@@ -8271,7 +8272,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]   = 10.0;
             ap->lo[COL_LO]  = 0.0;
             ap->hi[COL_LO]  = 10000.0;
-            ap->lo[COL_HI]  = 0.0;
+            ap->lo[COL_HI]  = 50.0;
             ap->hi[COL_HI]  = 10000.0;
             ap->lo[COLRATE] = -50.0;
             ap->hi[COLRATE] = 50.0;
@@ -8283,7 +8284,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]   = 10.0;
             ap->lo[COL_LO]  = 0.0;
             ap->hi[COL_LO]  = 10000.0;
-            ap->lo[COL_HI]  = 0.0;
+            ap->lo[COL_HI]  = 50.0;
             ap->hi[COL_HI]  = 10000.0;
             ap->lo[COLRATE] = -50.0;
             ap->hi[COLRATE] = 50.0;
@@ -8295,7 +8296,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]   = 10.0;
             ap->lo[COL_LO]  = 0.0;
             ap->hi[COL_LO]  = 10000.0;
-            ap->lo[COL_HI]  = 0.0;
+            ap->lo[COL_HI]  = 50.0;
             ap->hi[COL_HI]  = 10000.0;
             ap->lo[COLRATE] = -50.0;
             ap->hi[COLRATE] = 50.0;
@@ -8307,7 +8308,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]    = 10.0;
             ap->lo[COL_LO]   = 0.0;
             ap->hi[COL_LO]   = 10000.0;
-            ap->lo[COL_HI]   = 0.0;
+            ap->lo[COL_HI]   = 50.0;
             ap->hi[COL_HI]   = 10000.0;
             ap->lo[COLRATE]  = -50.0;
             ap->hi[COLRATE]  = 50.0;
@@ -8325,7 +8326,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]    = 10.0;
             ap->lo[COL_LO]   = 0.0;
             ap->hi[COL_LO]   = 10000.0;
-            ap->lo[COL_HI]   = 0.0;
+            ap->lo[COL_HI]   = 50.0;
             ap->hi[COL_HI]   = 10000.0;
             ap->lo[COLRATE]  = -50.0;
             ap->hi[COLRATE]  = 50.0;
@@ -8339,7 +8340,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]    = 10.0;
             ap->lo[COL_LO]   = 0.0;
             ap->hi[COL_LO]   = 10000.0;
-            ap->lo[COL_HI]   = 0.0;
+            ap->lo[COL_HI]   = 50.0;
             ap->hi[COL_HI]   = 10000.0;
             ap->lo[COLRATE]  = -50.0;
             ap->hi[COLRATE]  = 50.0;
@@ -8357,7 +8358,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]     = 10.0;
             ap->lo[COL_LO]    = 0.0;
             ap->hi[COL_LO]    = 10000.0;
-            ap->lo[COL_HI]    = 0.0;
+            ap->lo[COL_HI]    = 50.0;
             ap->hi[COL_HI]    = 10000.0;
             ap->lo[COLRATE]   = -50.0;
             ap->hi[COLRATE]   = 50.0;
@@ -8373,7 +8374,7 @@ int filetype,int linecnt,double duration,aplptr ap)
             ap->hi[FGAIN]   = 10.0;
             ap->lo[COL_LO]  = 0.0;
             ap->hi[COL_LO]  = 10000.0;
-            ap->lo[COL_HI]  = 0.0;
+            ap->lo[COL_HI]  = 50.0;
             ap->hi[COL_HI]  = 10000.0;
             ap->lo[COLRATE] = -50.0;
             ap->hi[COLRATE] = 50.0;
@@ -8877,7 +8878,7 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
         default_val[PS_TIME] = 0.0;     /* time */
         break;
     case(ONEFORM_GET):
-        default_val[0]  = duration/2,0;
+        default_val[0]  = duration/2.0;
         break;
     case(ONEFORM_PUT):
         default_val[FORM_FTOP] = nyquist;
@@ -8928,7 +8929,7 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
         default_val[0] = CONCERT_A;
         default_val[1] = 0.01;
         if(mode > 1)
-            default_val[2] = duration/2,0;
+            default_val[2] = duration/2.0;
         break;
     case(SPECROSS):  
         default_val[PICH_RNGE]   = 1.0;
@@ -10333,35 +10334,35 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
             default_val[COLINT]  = 1.0;
             default_val[FGAIN]   = 1.0;
             default_val[COL_LO]  = 0.0;
-            default_val[COL_HI]  = 0.0;
+            default_val[COL_HI]  = 2000.0;
             default_val[COLRATE] = 0.0;
             break;
         case(F_TRANS):
             default_val[COLFLT]  = 1.0;
             default_val[FGAIN]   = 1.0;
             default_val[COL_LO]  = 0.0;
-            default_val[COL_HI]  = 0.0;
+            default_val[COL_HI]  = 2000.0;
             default_val[COLRATE] = 0.0;
             break;
         case(F_FRQSHIFT):
             default_val[COLFLT]  = 100.0;
             default_val[FGAIN]   = 1.0;
             default_val[COL_LO]  = 0.0;
-            default_val[COL_HI]  = 0.0;
+            default_val[COL_HI]  = 2000.0;
             default_val[COLRATE] = 0.0;
             break;
         case(F_RESPACE):
             default_val[COLFLT]  = 10.0;
             default_val[FGAIN]   = 1.0;
             default_val[COL_LO]  = 0.0;
-            default_val[COL_HI]  = 0.0;
+            default_val[COL_HI]  = 2000.0;
             default_val[COLRATE] = 0.0;
             break;
         case(F_PINVERT):
             default_val[COLFLT]   = 60;
             default_val[FGAIN]    = 1.0;
             default_val[COL_LO]   = 0.0;
-            default_val[COL_HI]   = 0.0;
+            default_val[COL_HI]   = 2000.0;
             default_val[COLRATE]  = 0.0;
             default_val[COLLOPCH] = SPEC_MIDIMIN;
             default_val[COLHIPCH] = MIDIMAX;
@@ -10371,7 +10372,7 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
             default_val[EXAGRANG] = 1.0;
             default_val[FGAIN]    = 1.0;
             default_val[COL_LO]   = 0.0;
-            default_val[COL_HI]   = 0.0;
+            default_val[COL_HI]   = 2000.0;
             default_val[COLRATE]  = 0.0;
             default_val[COLLOPCH] = SPEC_MIDIMIN;
             default_val[COLHIPCH] = MIDIMAX;
@@ -10379,7 +10380,7 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
         case(F_PQUANT):
             default_val[FGAIN]    = 1.0;
             default_val[COL_LO]   = 0.0;
-            default_val[COL_HI]   = 0.0;
+            default_val[COL_HI]   = 2000.0;
             default_val[COLRATE]  = 0.0;
             default_val[COLLOPCH] = SPEC_MIDIMIN;
             default_val[COLHIPCH] = MIDIMAX;
@@ -10389,7 +10390,7 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
             default_val[FSLEW]     = 1.0;
             default_val[FGAIN]     = 1.0;
             default_val[COL_LO]    = 0.0;
-            default_val[COL_HI]    = 0.0;
+            default_val[COL_HI]    = 2000.0;
             default_val[COLRATE]   = 0.0;
             default_val[COLLOPCH]  = SPEC_MIDIMIN;
             default_val[COLHIPCH]  = MIDIMAX;
@@ -10398,7 +10399,7 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
             default_val[COLFLT]  = 0.1;
             default_val[FGAIN]   = 1.0;
             default_val[COL_LO]  = 0.0;
-            default_val[COL_HI]  = 0.0;
+            default_val[COL_HI]  = 2000.0;
             default_val[COLRATE] = 0.0;
             break;
         case(F_SINUS):
