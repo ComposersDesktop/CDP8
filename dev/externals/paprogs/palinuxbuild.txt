@@ -1,0 +1,30 @@
+palinuxbuild.txt:
+
+Portaudio is required by the audio programs (paplay, pvplay, recsf, listaudevs).
+
+
+The audio program CMake makefiles assume availability and use of both alsa and jack.
+
+download the latest v19 stable release from: http://files.portaudio.com/download.html
+
+To build, unpack pa--tgz in situ; this will create a portaudio directory. 
+
+ 
+Run configure with these options:
+
+./configure --with-alsa --with-jack
+
+Then run make as usual to build, 
+
+Do not perform 'make install' unless you are happy for it to replace your current system portaudio libs.
+
+The CDP makefiles look for the local lib/.libs folder for libportaudio.a
+
+
+
+
+
+
+
+
+
