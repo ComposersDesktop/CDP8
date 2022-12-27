@@ -45,6 +45,9 @@
 #ifdef unix
 #define round(x) lround((x))
 #endif
+#ifndef HUGE
+#define HUGE 3.40282347e+38F
+#endif
 
 #define minstep scalefact
 #define stepstorecnt rampbrksize
