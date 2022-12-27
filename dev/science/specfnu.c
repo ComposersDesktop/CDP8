@@ -61,6 +61,9 @@
 #ifdef unix
 #define round lround
 #endif
+#ifndef HUGE
+#define HUGE 3.40282347e+38F
+#endif
 
 #define VIEWSCALE       (1.0e3)                 //  Multiplier enabling pvoc amplitudes to be easily read in any on-screen debug print
 
@@ -295,7 +298,7 @@ int anal_infiles = 1;
 int sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "8.0.0";
+const char* cdp_version = "8.0.1";
 
 /* CDP LIBRARY FUNCTIONS TRANSFERRED HERE */
 
@@ -469,7 +472,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt, k;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     int contourcnt = 0;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
@@ -572,7 +575,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -1383,7 +1386,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = 0.0;
@@ -1400,7 +1403,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = 0.0;
@@ -1417,7 +1420,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = 0.0;
@@ -1434,7 +1437,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = .0;
@@ -1451,7 +1454,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = 0.0;
@@ -1477,7 +1480,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = 0.0;
@@ -1497,7 +1500,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = 0.0;
@@ -1523,7 +1526,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = 0.0;
@@ -1546,7 +1549,7 @@ int setup_the_param_ranges_and_defaults(dataptr dz)
         ap->default_val[COL_LO] = 0.0;
         ap->lo[COL_HI] =  50.0;
         ap->hi[COL_HI] =  10000.0;
-        ap->default_val[COL_HI] = 0.0;
+        ap->default_val[COL_HI] = 2000.0;
         ap->lo[COLRATE] = -50.0;
         ap->hi[COLRATE] =  50.0;
         ap->default_val[COLRATE] = 0.0;

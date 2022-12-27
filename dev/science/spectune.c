@@ -69,6 +69,9 @@
 #ifdef unix
 #define round lround
 #endif
+#ifndef HUGE
+#define HUGE 3.40282347e+38F
+#endif
 
 #define  searchsize rampbrksize
 
