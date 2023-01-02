@@ -50,38 +50,38 @@ extern "C" {
 
 
 //typedef enum {wave,analysis,formant,transposition,pitch} wavetype;
-//typedef enum {SHORT8,SHORT16,FLOAT32}					sampletype;
-//typedef enum format {WAVE,AIFF}							fileformat;
+//typedef enum {SHORT8,SHORT16,FLOAT32}                 sampletype;
+//typedef enum format {WAVE,AIFF}                           fileformat;
 
 typedef enum {
-	UNKNOWN = 0,		//RWD added
-	TEXTFILE,			//(1)	
-	SNDFILE,			//(2)
-	ANALFILE,			//(3)
-	PITCHFILE,			//(4)
-	TRANSPOSFILE,		//(5)
-	FORMANTFILE			//(6)
-} tw_filetype; 					//TW version used in SPEC, GSPEC
+    UNKNOWN = 0,        //RWD added
+    TEXTFILE,           //(1)   
+    SNDFILE,            //(2)
+    ANALFILE,           //(3)
+    PITCHFILE,          //(4)
+    TRANSPOSFILE,       //(5)
+    FORMANTFILE         //(6)
+} tw_filetype;                  //TW version used in SPEC, GSPEC
 
 
 #ifdef NOTDEF
 
 typedef struct sfprops 
 {
-	long		srate;
-	long		chans;
-	wavetype	type;
-	sampletype	samptype;		//RWD 07:97
-	fileformat	format;			//RWD.04.98
-	long		origsize;
-	long		origrate;
-	long		origchans;		/* pitch, formant,transpos only */
-	int			specenvcnt;		/* formants only */	
-	float		arate;
-	int			winlen;			// aka Mlen
-	int			decfac;			// aka Dfac
-	//double chan_width;		//see, for example, spechoru.c
-	//double half_chan_width;
+    long        srate;
+    long        chans;
+    wavetype    type;
+    sampletype  samptype;       //RWD 07:97
+    fileformat  format;         //RWD.04.98
+    long        origsize;
+    long        origrate;
+    long        origchans;      /* pitch, formant,transpos only */
+    int         specenvcnt;     /* formants only */ 
+    float       arate;
+    int         winlen;         // aka Mlen
+    int         decfac;         // aka Dfac
+    //double chan_width;        //see, for example, spechoru.c
+    //double half_chan_width;
 } SFPROPS;
 
 #endif
@@ -90,31 +90,31 @@ typedef struct sfprops
 //TW version from specg2.h
 
 #ifdef __cplusplus
-struct fileprops {		// may not need this anywhere else...
-	long	srate;
-	long   	channels;
-	tw_filetype filetype;		 		
-	long   	stype;
-	long   	origstype; 		/* float files ony from here downwars */
-	long   	origrate;	
-	long   	origchans;	/* pitch, formant,transpos only */
-	int	specenvcnt;	/* formants only */
-	float  	arate;
-	int    	Mlen;
-	int    	Dfac;
-	fileprops();		  //constructor from spec.cpp
-	virtual ~fileprops();
-	const fileprops& operator=(const fileprops &);
-	int operator==(const fileprops &) const;
+struct fileprops {      // may not need this anywhere else...
+    long    srate;
+    long    channels;
+    tw_filetype filetype;               
+    long    stype;
+    long    origstype;      /* float files ony from here downwars */
+    long    origrate;   
+    long    origchans;  /* pitch, formant,transpos only */
+    int specenvcnt; /* formants only */
+    float   arate;
+    int     Mlen;
+    int     Dfac;
+    fileprops();          //constructor from spec.cpp
+    virtual ~fileprops();
+    const fileprops& operator=(const fileprops &);
+    int operator==(const fileprops &) const;
 };
 
-typedef struct fileprops *fileptr;		  // probably embed whole struct (or class?)
+typedef struct fileprops *fileptr;        // probably embed whole struct (or class?)
 
 //these are only semi_object-oriented...should be derived from sffile class...
 //TODO: reconvert read funcs to use pointer to props
 BOOL sfheadread(int fd,SFPROPS &props);
 BOOL sndheadread(int fd,SFPROPS &props);
-BOOL sfwave_headwrite(int fd,const SFPROPS &props);		//const...
+BOOL sfwave_headwrite(int fd,const SFPROPS &props);     //const...
 #endif
 
 extern char *props_errstr;
