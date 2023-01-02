@@ -155,6 +155,10 @@ my_install(repeater)
 #target_link_libraries(rhymorph2  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 #my_install(rhymorph2)
 
+add_executable(rotor rotor.c)
+target_link_libraries(rotor  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+my_install(rotor)
+
 add_executable(scramble scramble.c)
 target_link_libraries(scramble  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 
@@ -210,11 +214,7 @@ target_link_libraries(splinter  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(splinter)
 
 add_executable(strands strands.c)
-if(MINGW)
-target_link_libraries(strands  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
-else()
 target_link_libraries(strands  cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
-endif()
 
 my_install(strands)
 
@@ -233,13 +233,10 @@ target_link_libraries(synspline  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 
 my_install(synspline)
 
-add_executable(newsynth synthesis.c)
-if(MINGW)
-target_link_libraries(newsynth  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
-else()
-target_link_libraries(newsynth  cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
-endif()
-my_install(newsynth)
+add_executable(synthesis synthesis.c)
+target_link_libraries(synthesis  cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
+
+my_install(synthesis)
 
 add_executable(tesselate tesselate.c)
 target_link_libraries(tesselate  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
