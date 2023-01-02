@@ -1,8 +1,8 @@
-# RWD development for newsfsys testing
 find_library(ALSA_LIBRARY alsa)
 
 add_subdirectory(cdp2k)
 add_subdirectory(newsfsys)
+add_subdirectory(pvxio2)
 add_subdirectory(blur)
 add_subdirectory(cdparams)
 add_subdirectory(cdparams_other)
@@ -41,7 +41,7 @@ add_subdirectory(submix)
 add_subdirectory(synth)
 add_subdirectory(tabedit)
 add_subdirectory(texture)
-add_subdirectory(externals)
 add_subdirectory(standnew)
 add_subdirectory(science)
+add_subdirectory(externals)
 
