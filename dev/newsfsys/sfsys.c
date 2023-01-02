@@ -4156,7 +4156,25 @@ int sfcreat_formatted(const char *name,  __int64 size,  __int64 *outsize,int cha
         return -1;
     }
     if(gettypefromname98(name) == pvxfile){
+        //need to get source (CDP) stype into file header
+        int pv_stype = STYPE_16;
         int rc = 0;
+        
+        switch(stype) {
+            case INT2424:
+            case INT2024:
+                pv_stype = STYPE_24;
+                break;
+            case INT2432:
+            case INT_32:
+                pv_stype = STYPE_32;
+                break;
+            case FLOAT32:
+                pv_stype = STYPE_IEEE_FLOAT;
+                break;
+            default:
+                break;
+        }
         
         f->filetype = pvxfile;
         // setup property block
@@ -4168,7 +4186,7 @@ int sfcreat_formatted(const char *name,  __int64 size,  __int64 *outsize,int cha
         f->proplim = 2000; /* bytes; arbitrary. each putprop call checks this */
         f->pvxprops = calloc(1,sizeof(PVOCDATA));
         // init what we can, rely on file close to complete header via SFPROPS etc
-        rc = pvoc_createfile(name,channels - 2,0,1,PVOC_AMP_FREQ,0,STYPE_IEEE_FLOAT, PVOC_HANN,0.0,NULL,0);
+        rc = pvoc_createfile(name,channels - 2,0,1,PVOC_AMP_FREQ,0,pv_stype, PVOC_HANN,0.0,NULL,0);
         if(rc < 0){
 # ifdef _DEBUG
             fprintf(stderr,"sfsys: pvoc_createfile failed: %s\n", pvoc_errorstr());
@@ -6018,6 +6036,7 @@ sfclose(int sfd)
 # ifdef _DEBUG
             assert(f->pvxprops->nAnalysisBins > 0);
 # endif
+            //ERROR! for pvx we want to get this from Format.wBitsPerSample 
             res = sfgetprop(sfd,"original sampsize",(char*) &origsize,sizeof(int));
             if(res < 0){
  # ifdef _DEBUG
@@ -6073,7 +6092,7 @@ sfclose(int sfd)
 
             f->fmtchunkEx.Format.nSamplesPerSec = origrate;
             f->fmtchunkEx.Format.nChannels = 1;
-            f->fmtchunkEx.Format.wBitsPerSample = 32;
+//            f->fmtchunkEx.Format.wBitsPerSample = 32;
             f->fmtchunkEx.Format.wFormatTag = WAVE_FORMAT_EXTENSIBLE;
             f->fmtchunkEx.Format.nBlockAlign = f->fmtchunkEx.Format.nChannels * sizeof(float);
             f->fmtchunkEx.Format.nAvgBytesPerSec =f->fmtchunkEx.Format.nBlockAlign * f->fmtchunkEx.Format.nSamplesPerSec;
@@ -6559,7 +6578,7 @@ sfputprop(int sfd, char *propname, char *src, int size)
                 break;
             case(SAMP_BYTE):
                 rsferrno = ESFBADPARAM;
-                rsferrstr = "8-bit files not supportewd for writing";
+                rsferrstr = "8-bit files not supported for writing";
                 return -1;
             default:
                 rsferrno = ESFBADPARAM;

@@ -512,6 +512,7 @@ sndopenEx(const char *fn,int auto_scale, int access)
 }
 
 /* RWD PVX note: this is the form called by CDP for ANAL files */
+/* Also, NB stype  is according to the SAMP_* list, gets converted by sampsize[] for sf routines as here */
 int
 sndcreat_formatted(const char *fn, int size, int stype,int channels,
                                    int srate,cdp_create_mode mode)
@@ -529,6 +530,9 @@ sndcreat_formatted(const char *fn, int size, int stype,int channels,
     sf->samptype = stype;
 
     /*RWD NB sampsize[]  - no slot for 24bit size yet*/
+    /* ALSO: at this stage, CDP still assumes 32bits if an analysis file, no "original sampsize" info yet -
+       we have to rely on sfputprop("original sampsize" being set by program
+     */
     /* if pvx file, sets sffile->pvxfileno (which may be 0 ), but returns sf id (which may be 1) */
     if((sf->fd = sfcreat_formatted(fn, size*sampsize[stype], (__int64 *)0,channels,srate,
                     stype,mode)) < 0) {
@@ -764,7 +768,7 @@ sndseekEx(int fd, int dist, int whence)
                 break;
             //end: step back dist samps if negative. We do not allow setting beyond EOF.
         case SEEK_END:
-                rc = pvoc_seek_mcframe(sf->fd - 1000, frameoffset,SEEK_END);
+                rc = pvoc_seek_mcframe(pvxid, frameoffset,SEEK_END);
                 if(rc < 0){
                     return rc;
                 }
