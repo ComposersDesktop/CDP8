@@ -1123,17 +1123,29 @@ static int32_t pvoc_updateheader(int ofd)
 #ifdef _DEBUG
         fprintf(stderr,"updating in pvoc_update_header()\n");
 #endif
+        WORD validbits;
+        
         pos = lseek(files[ofd]->fd,files[ofd]->fmtchunkoffset,SEEK_SET);
         if(pos != files[ofd]->fmtchunkoffset){
             pv_errstr = "\npvsys: seek error updating fmt data";
             return 0;
         }
+        
         pos = write_fmt(files[ofd]->fd,files[ofd]->do_byte_reverse,&(files[ofd]->fmtdata));
         if(pos != SIZEOF_WFMTEX){
             pv_errstr = "\npvsys: write error updating fmt data";
             return 0;
         }
+        // need to update validbits in case we need it, at least make it sensible
+        // this should have been updated earlier
+        validbits = files[ofd]->fmtdata.wBitsPerSample;
+        if(files[ofd]->do_byte_reverse)
+            validbits = REVWBYTES(validbits);
         
+        if(write(files[ofd]->fd,(char *) &validbits,sizeof(WORD)) != sizeof(WORD)){
+            pv_errstr = "\npvsys: error writing extended fmt chunk";
+            return 0;
+        }
         pos = lseek(files[ofd]->fd,files[ofd]->propsoffset,SEEK_SET);
         if(pos != files[ofd]->propsoffset){
             pv_errstr = "\npvsys: seek error updating pvx data";
