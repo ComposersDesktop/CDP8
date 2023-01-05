@@ -233,10 +233,10 @@ target_link_libraries(synspline  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 
 my_install(synspline)
 
-add_executable(synthesis synthesis.c)
-target_link_libraries(synthesis  cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
+add_executable(newsynth synthesis.c)
+target_link_libraries(newsynth  cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
 
-my_install(synthesis)
+my_install(newsynth)
 
 add_executable(tesselate tesselate.c)
 target_link_libraries(tesselate  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
