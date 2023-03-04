@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2020 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -167,13 +167,13 @@ int main(int argc,char *argv[])
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-                      
+
     if(!sloom) {
         if(argc == 1) {
-            usage1();   
+            usage1();
             return(FAILED);
         } else if(argc == 2) {
-            usage2(argv[1]);    
+            usage2(argv[1]);
             return(FAILED);
         }
         if((exit_status = make_initial_cmdline_check(&argc,&argv))<0) {     // CDP LIB
@@ -359,25 +359,25 @@ int application_init(dataptr dz)
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
-        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
             return(exit_status);
     }
     brkcnt = tipc;
     if(brkcnt>0) {
-        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
             return(exit_status);
     }
     if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
-        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
-        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
             return(exit_status);
-    }                                                      
-    if((exit_status = mark_parameter_types(dz,ap))<0)     
+    }
+    if((exit_status = mark_parameter_types(dz,ap))<0)
             return(exit_status);
     
     // establish_infile_constants() replaced by
@@ -405,7 +405,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     }
     if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -987,7 +987,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 
     if(true_cnt)
         cnt = true_cnt;
-    *cmdlinecnt = 0;        
+    *cmdlinecnt = 0;
 
     while(cnt < argc) {
         if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
@@ -1179,7 +1179,7 @@ int usage3(char *str1,char *str2)
 int allocate_buffer(dataptr dz)
 {
     dz->buflen = dz->wanted;
-    if((dz->bigfbuf = (float*) malloc(dz->buflen * sizeof(float)))==NULL) {  
+    if((dz->bigfbuf = (float*) malloc(dz->buflen * sizeof(float)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for sound buffers.\n");
         return(MEMORY_ERROR);
     }
@@ -1530,7 +1530,7 @@ int locate_peaks_in_subwindow(double lofrq,double hifrq,float *medianarray,int *
                     peakcnt++;
                 }
             }
-            k++;
+//            k++;
         }
     }
     return peakcnt;
@@ -1614,7 +1614,7 @@ void eliminate_duplicated_frqs(float *peakfrq,float *peakamp,int *len)
             } else
                 m++;
         }
-        n++;
+ //       n++;
     }
 }           
 
@@ -1741,7 +1741,7 @@ int stream_peaks(float *peakfrq,float *peakamp,float *maxpeakfrq,float *lastmaxp
         k = 0;                                          //  from the existing peak frqs
         for(n=0;n<peakcnt;n++)  {
             if(instream[k] == n) {                      //  If this peak(n) has been assigned to stream k
-                streampeakfrq[k] = peakfrq[n];          //  assign peak frq and amp to that stream                  
+                streampeakfrq[k] = peakfrq[n];          //  assign peak frq and amp to that stream
                 streampeakamp[k] = peakamp[n];                  
                 if(++k >= maxpeakcnt)                   //  and get next stream
                     break;
@@ -1835,7 +1835,7 @@ int get_initial_data(float *maxwinamp,int *peakcnt,int *maxpeakcnt,int *firstmax
         switch(dz->mode) {
         case(1):        //  SET UP NORMAL STREAMING 
             peaknos[wcnt] = *peakcnt;           //  Store number of peaks in each window
-            if(*peakcnt > *maxpeakcnt) {        
+            if(*peakcnt > *maxpeakcnt) {
                 *maxpeakcnt = *peakcnt;
                 *firstmax = wcnt;
                 for(k=0;k<*peakcnt;k++) {       //  Stores frqs of peaks in (1st) window with max no. of peaks
