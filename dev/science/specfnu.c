@@ -575,7 +575,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-//    ap = dz->application;
+ //   ap = dz->application;
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -1602,7 +1602,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -1627,7 +1627,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_the_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -3466,16 +3466,20 @@ int check_specfnu_param_validity_and_consistency(dataptr dz)
         if(dz->vflag[SQZ_EXI])
             dz->retain_unpitched_data_for_deletion = 1;
         break;
+#if 0
     case(F_NEGATE):
+
         if(dz->vflag[NEG_XNH] && dz->vflag[NEG_KHM]) {
             sprintf(errstr,"SUPPRESS NON-HARMONICS WITH SUPPRESS-HARMONICS WILL PRODUCE ZERO SIGNAL LEVEL.\n");
             return DATA_ERROR;
         }
         if(dz->vflag[NEG_XNH] || dz->vflag[NEG_KHM])
             dz->fundamental = 1;
+
         if(dz->vflag[NEG_EXI])
             dz->retain_unpitched_data_for_deletion = 1;
         break;
+#endif
     case(F_MOVE):
         if(dz->vflag[MOV_XNH] && dz->vflag[MOV_KHM]) {
             sprintf(errstr,"SUPPRESS NON-HARMONICS WITH SUPPRESS-HARMONICS WILL PRODUCE ZERO SIGNAL LEVEL.\n");
@@ -4172,19 +4176,19 @@ int formants_see(dataptr dz)
 }
 
 /********************* FORMANTS_SEE *************************/
-
+ 
 int formants_seepks(dataptr dz)
 {
     int n, k, pad, trofcnt = 0, peakcnt = 0, rising = 0, done = 0, vc = 0, localmaxat = 0, localminat = 0;
-    double lastamp, thismaxamp = 0.0, thisminamp = 0.0, localmax,localmin;
+    double lastamp, localmax, localmin;
     char temp[200], temp2[200];
     temp[0] = ENDOFSTR;
     lastamp = dz->specenvfrq[0];
     for(n=0;n<dz->specenvcnt;n++) {
         switch(n) {
         case(0):
-            thismaxamp = dz->specenvamp[n];
-            thisminamp = dz->specenvamp[n];
+ //           thismaxamp = dz->specenvamp[n];
+ //           thisminamp = dz->specenvamp[n];
             break;
         case(1):
             if(dz->specenvamp[n] > lastamp) {
@@ -4194,16 +4198,16 @@ int formants_seepks(dataptr dz)
                     strcat(temp2," ");
                 strcat(temp,temp2);
                 trofcnt++;
-                thismaxamp = dz->specenvamp[n];
+//                thismaxamp = dz->specenvamp[n];
                 rising = 1;
             } else {
-                thisminamp = dz->specenvamp[n];
+//                thisminamp = dz->specenvamp[n];
                 rising = 0;
             }
         default:
             if(rising) {
                 if(dz->specenvamp[n] > lastamp)
-                    thismaxamp = dz->specenvamp[n];
+                   /* thismaxamp = dz->specenvamp[n]  */;
                 else {
                     localmax = -HUGE;
                     for(k = 0;k < dz->formant_bands; k++, vc+=2) {
@@ -4218,12 +4222,12 @@ int formants_seepks(dataptr dz)
                         strcat(temp2," ");
                     strcat(temp,temp2);
                     peakcnt++;
-                    thisminamp = dz->specenvamp[n];
+//                    thisminamp = dz->specenvamp[n];
                     rising = 0;
                 }
             } else {    //  falling
                 if(dz->specenvamp[n] < lastamp)
-                    thisminamp = dz->specenvamp[n];
+                    /* thisminamp = dz->specenvamp[n] */;
                 else {
                     localmin = HUGE;
                     for(k = 0;k < dz->formant_bands; k++, vc+=2) {
@@ -4244,7 +4248,7 @@ int formants_seepks(dataptr dz)
                         for(k = 0;k < pad;k++)
                             strcat(temp2," ");
                         strcat(temp,temp2);
-                        thisminamp = dz->specenvamp[n];
+//                        thisminamp = dz->specenvamp[n];
                         rising = 1;
                     }
                 }
@@ -5011,7 +5015,7 @@ int handle_the_makefilt_special_data(char *str,dataptr dz)
 
 int handle_the_pquantise_special_data(char *str,dataptr dz)
 {
-    int exit_status, is_hs = -1, is_thf = 0, is_pitches = 0, is_scale = 0, is_elacs = 0, scale_division = 12, entrycnt = 0, pitchsort = 0;
+    int exit_status, is_hs = -1, is_thf = 0, is_scale = 0, is_elacs = 0, scale_division = 12, entrycnt = 0, pitchsort = 0;
     int cntpitches = 0, linecnt, pitchpos, oct1pitchpos, step, n, m, done, mindiffat, nubincnt;
     double dummy = 0.0, reference_pitch = 60.0, ratio, octstep, nextpitch, mindiff, thisdiff, nupitch, pseudoct_size = 12.0;
     double trueoct_cnt, semitone_len, thispitch, octfoot, lasttime = 0.0;
@@ -5041,23 +5045,23 @@ int handle_the_pquantise_special_data(char *str,dataptr dz)
             strip_end_space(p);
             if(strcmp(p,"#HS") == 0) {
                 is_hs = 1;
-                is_pitches = 1;
+//                is_pitches = 1;
             } else if(strcmp(p,"#HF") == 0) {
                 is_hs = 0;
-                is_pitches = 1;
+//                is_pitches = 1;
             } else if(strcmp(p,"#SCALE") == 0) {
                 is_hs = 0;
                 is_scale = 1;
-                is_pitches = 1;
+//                is_pitches = 1;
             } else if(strcmp(p,"#ELACS") == 0) {
                 is_hs = 0;
                 is_elacs = 1;
-                is_pitches = 1;
+//                is_pitches = 1;
             } else if(strcmp(p,"#THF") == 0) {
                 is_hs = 0;
                 is_thf = 1;
                 dz->timedhf = 1;
-                is_pitches = 1;
+//                is_pitches = 1;
             }
             else {
                 sprintf(errstr,"Invalid Field, Set, or Scale marker (%s) on line %d in file %s\n",p,linecnt+1,str);
@@ -5494,7 +5498,7 @@ int build_filter(int times_index,dataptr dz)
 {
     int n, j, k, z, pch, amp, filtercnt, this_time, next_time, target, get_below = 0, pitchcnt, newpitch, filtlinelen;
     int maxcnt;
-    double maxfiltamp = 0.0, maxamp = 0.0, starttime, endtime, lasttime = 0.0, tempval, minpitch;
+    double maxfiltamp = 0.0, maxamp = 0.0, starttime, lasttime = 0.0, tempval, minpitch;
     double *binpitch = dz->parray[PBINPCH], *binamp = dz->parray[PBINAMP];
     double *filtpch = dz->parray[LOCALPCH], *filtamp = dz->parray[LOCALAMP];
     double *pchstore = dz->parray[FILTPICH], *ampstore = dz->parray[FILTAMP];
@@ -5706,7 +5710,7 @@ fprintf(stderr,"\n");
         
         for(this_time = 0,next_time = 1; this_time < dz->timeblokcnt; this_time++,next_time++) {    
             starttime = ftimes[this_time] * dz->frametime;
-            endtime   = ftimes[next_time] * dz->frametime;          //  There are (say) 5 times and 4 stores
+ //           endtime   = ftimes[next_time] * dz->frametime;          //  There are (say) 5 times and 4 stores
             storepos  = this_time * blokcnt;
 
             filtline[0] = (float)starttime;
@@ -7756,7 +7760,7 @@ int exclude_non_harmonics(dataptr dz)
     switch(dz->mode) {
     case(F_NARROW):   if(dz->vflag[NRW_XNH])        dz->xclude_nonh = 1;    break;
     case(F_SQUEEZE):  if(dz->vflag[SQZ_XNH])        dz->xclude_nonh = 1;    break;
-    case(F_NEGATE):   if(dz->vflag[NEG_XNH])        dz->xclude_nonh = 1;    break;
+//    case(F_NEGATE):   if(dz->vflag[NEG_XNH])        dz->xclude_nonh = 1;    break;
     case(F_MOVE):     if(dz->vflag[MOV_XNH])        dz->xclude_nonh = 1;    break;
     case(F_MOVE2):    if(dz->vflag[MOV2_XNH])       dz->xclude_nonh = 1;    break;
     case(F_INVERT):   if(dz->vflag[INVERT_XNH])     dz->xclude_nonh = 1;    break;
@@ -8027,7 +8031,7 @@ int suppress_harmonics(dataptr dz)
     switch(dz->mode) {
     case(F_MOVE):   if(dz->vflag[MOV_KHM])      suppress_h = 1; break;
     case(F_MOVE2):  if(dz->vflag[MOV2_KHM])     suppress_h = 1; break;
-    case(F_NEGATE): if(dz->vflag[NEG_KHM])      suppress_h = 1; break;
+//    case(F_NEGATE): if(dz->vflag[NEG_KHM])      suppress_h = 1; break;
     case(F_INVERT): if(dz->vflag[INVERT_KHM])   suppress_h = 1; break;
     case(F_NARROW): if(dz->vflag[NRW_KHM])      suppress_h = 1; break;
     case(F_SQUEEZE):if(dz->vflag[SQZ_KHM])      suppress_h = 1; break;
@@ -8049,7 +8053,7 @@ int trof_detect(dataptr dz)     //  DOESN'T WORK will have to do it BY HAND : Ne
     double *level = dz->parray[P_PRETOTAMP];
     double lev, lastlev = 0.0, maxlevel, rise, endtroftime, endtrofgap, maxval;
     double lastpeak, lastlastpeak, pk_to_pre_trof, pk_to_post_trof;
-    int n, tim, val, lasttim, lastval, up_cnt = 0, dn_cnt = 0, trofcnt = 0, lasttrofcnt, endtrofat, lasttrofat, thistrofat = 0, thispeak;
+    int n, tim, val, lasttim, lastval, up_cnt = 0, dn_cnt = 0, trofcnt = 0, endtrofat, lasttrofat, thistrofat = 0, thispeak;
     int k;
     double *trof;
 
@@ -8113,7 +8117,7 @@ int trof_detect(dataptr dz)     //  DOESN'T WORK will have to do it BY HAND : Ne
 
     lasttim = 0;
     lastval = 1;
-    lasttrofcnt = trofcnt;
+//    lasttrofcnt = trofcnt;
     for(tim=2,val=3;tim<trofcnt;tim+=2,val+=2) {
         if(trof[tim] - trof[lasttim] < MIN_SYLLAB_DUR) {
             if(trof[val] <= trof[lastval]) {
@@ -9149,9 +9153,8 @@ double pitch_quantise(double thismidi,double *pstt, double *pend,dataptr dz)
 int pitch_smooth(dataptr dz) 
 {
     int exit_status, min_wcnt;
-    float previouspitch;
-    
-    previouspitch = -1;
+//    float previouspitch;  
+//    previouspitch = -1;
 
     if(dz->vflag[Q_ORNAMENTS])
         min_wcnt = (int)round(ORNAMENT_DUR/dz->frametime);
