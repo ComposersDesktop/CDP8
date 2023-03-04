@@ -631,6 +631,7 @@ int32_t pvoc_openfile(const char *filename,PVOCDATA *data,WAVEFORMATEX *fmt)
     pfile->do_byte_reverse = !byte_order(); 
     pfile->readonly = 1;
     pfile->needsupdate = 0;   // just to state it explicitly!
+    pfile->to_delete = 0;
     files[i] = pfile;
 
     if(!pvoc_readheader(i,&wfpx)){
