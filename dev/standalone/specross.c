@@ -81,18 +81,18 @@ char errstr[2400];
 const char* cdp_version = "7.1.0";
 
 /* extern */ int sloom = 0;
-/* extern */ int	sloombatch = 0;
+/* extern */ int    sloombatch = 0;
 /* extern */ int anal_infiles = 1;
 /* extern */ int is_converted_to_stereo = -1;
 
 /* CDP LIBRARY FUNCTIONS TRANSFERRED HERE */
 
-static int 	set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist);
+static int  set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist);
 static int  set_vflgs(aplptr ap,char *optflags,int optcnt,char *optlist,
-				char *varflags,int vflagcnt, int vparamcnt,char *varlist);
-static int 	setup_parameter_storage_and_constants(int storage_cnt,dataptr dz);
-static int	initialise_is_int_and_no_brk_constants(int storage_cnt,dataptr dz);
-static int	mark_parameter_types(dataptr dz,aplptr ap);
+                char *varflags,int vflagcnt, int vparamcnt,char *varlist);
+static int  setup_parameter_storage_and_constants(int storage_cnt,dataptr dz);
+static int  initialise_is_int_and_no_brk_constants(int storage_cnt,dataptr dz);
+static int  mark_parameter_types(dataptr dz,aplptr ap);
 static int  establish_application(dataptr dz);
 static int  application_init(dataptr dz);
 static int  initialise_vflags(dataptr dz);
@@ -125,145 +125,145 @@ static int  handle_the_extra_infiles(char ***cmdline,int *cmdlinecnt,dataptr dz)
 
 int main(int argc,char *argv[])
 {
-	int exit_status;
-/*	FILE *fp   = NULL; */
-	dataptr dz = NULL;
-//	char *special_data_string = NULL;
-	char **cmdline;
-	int  cmdlinecnt;
-	aplptr ap;
-	int is_launched = FALSE;
+    int exit_status;
+/*  FILE *fp   = NULL; */
+    dataptr dz = NULL;
+//  char *special_data_string = NULL;
+    char **cmdline;
+    int  cmdlinecnt;
+    aplptr ap;
+    int is_launched = FALSE;
 
-						/* CHECK FOR SOUNDLOOM */
+                        /* CHECK FOR SOUNDLOOM */
 //TW UPDATE
-	if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
-		fprintf(stdout,"%s\n",cdp_version);
-		fflush(stdout);
-		return 0;
-	}
-	if((sloom = sound_loom_in_use(&argc,&argv)) > 1) {
-		sloom = 0;
-		sloombatch = 1;
-	}
-	if(sflinit("cdp")){
-		sfperror("cdp: initialisation\n");
-		return(FAILED);
-	}
+    if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
+        fprintf(stdout,"%s\n",cdp_version);
+        fflush(stdout);
+        return 0;
+    }
+    if((sloom = sound_loom_in_use(&argc,&argv)) > 1) {
+        sloom = 0;
+        sloombatch = 1;
+    }
+    if(sflinit("cdp")){
+        sfperror("cdp: initialisation\n");
+        return(FAILED);
+    }
 
-						  /* SET UP THE PRINCIPLE DATASTRUCTURE */
-	if((exit_status = establish_datastructure(&dz))<0) {
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
+                          /* SET UP THE PRINCIPLE DATASTRUCTURE */
+    if((exit_status = establish_datastructure(&dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
 
-	if(!sloom) {
-						  /* INITIAL CHECK OF CMDLINE DATA */
-		if((exit_status = make_initial_cmdline_check(&argc,&argv))<0) {
-			print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-			return(FAILED);
-		}
-		cmdline    = argv;	/* GET PRE_DATA, ALLOCATE THE APPLICATION, CHECK FOR EXTRA INFILES */
-		cmdlinecnt = argc;
+    if(!sloom) {
+                          /* INITIAL CHECK OF CMDLINE DATA */
+        if((exit_status = make_initial_cmdline_check(&argc,&argv))<0) {
+            print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+            return(FAILED);
+        }
+        cmdline    = argv;  /* GET PRE_DATA, ALLOCATE THE APPLICATION, CHECK FOR EXTRA INFILES */
+        cmdlinecnt = argc;
 // get_process_and_mode_from_cmdline -->
-		if (!strcmp(argv[0],"partials")) {		
-			dz->process = SPECROSS;
-			dz->mode = 0;
-		} else
-			usage1();
-		cmdline++;
-		cmdlinecnt--;
-		// THERE IS NO MODE WITH THIS PROGRAM
-		// setup_particular_application =
-		if((exit_status = setup_specross_application(dz))<0) {
-			print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-			return(FAILED);
-		}
-		if((exit_status = count_and_allocate_for_infiles(cmdlinecnt,cmdline,dz))<0) {
-			print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-			return(FAILED);
-		}
-	} else {
-		//parse_TK_data() =
-		if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {  	/* includes setup_particular_application()      */
-			exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);/* and cmdlinelength check = sees extra-infiles */
-			return(exit_status);		 
-		}
-	}
-	ap = dz->application;
+        if (!strcmp(argv[0],"partials")) {      
+            dz->process = SPECROSS;
+            dz->mode = 0;
+        } else
+            usage1();
+        cmdline++;
+        cmdlinecnt--;
+        // THERE IS NO MODE WITH THIS PROGRAM
+        // setup_particular_application =
+        if((exit_status = setup_specross_application(dz))<0) {
+            print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+            return(FAILED);
+        }
+        if((exit_status = count_and_allocate_for_infiles(cmdlinecnt,cmdline,dz))<0) {
+            print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+            return(FAILED);
+        }
+    } else {
+        //parse_TK_data() =
+        if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {     /* includes setup_particular_application()      */
+            exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);/* and cmdlinelength check = sees extra-infiles */
+            return(exit_status);         
+        }
+    }
+    ap = dz->application;
 
-	// parse_infile_and_hone_type() = 
-	if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
-		exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
-	// setup_param_ranges_and_defaults = MOVED IN THIS CASE ONLY TO LATER
+    // parse_infile_and_hone_type() = 
+    if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
+        exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
+    // setup_param_ranges_and_defaults = MOVED IN THIS CASE ONLY TO LATER
 
-					/* OPEN FIRST INFILE AND STORE DATA, AND INFORMATION, APPROPRIATELY */
+                    /* OPEN FIRST INFILE AND STORE DATA, AND INFORMATION, APPROPRIATELY */
 
-	if((exit_status = open_the_first_infile(cmdline[0],dz))<0) {	
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);	
-		return(FAILED);
-	}
-	cmdlinecnt--;
-	cmdline++;
-	
-	if((exit_status = handle_the_extra_infiles(&cmdline,&cmdlinecnt,dz))<0) {
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);		
-		return(FAILED);
-	}
-	if((exit_status = setup_specross_param_ranges_and_defaults(dz))<0) {
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
-	// FOR display_virutal_time 
-	dz->tempsize = dz->insams[1];
-	// handle_outfile
-	if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,is_launched,dz))<0) {
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
+    if((exit_status = open_the_first_infile(cmdline[0],dz))<0) {    
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);  
+        return(FAILED);
+    }
+    cmdlinecnt--;
+    cmdline++;
+    
+    if((exit_status = handle_the_extra_infiles(&cmdline,&cmdlinecnt,dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);      
+        return(FAILED);
+    }
+    if((exit_status = setup_specross_param_ranges_and_defaults(dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
+    // FOR display_virutal_time 
+    dz->tempsize = dz->insams[1];
+    // handle_outfile
+    if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,is_launched,dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
 
-	// handle_formants
-	// handle_formant_quiksearch
-	// handle_special_data
- 	if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {		// CDP LIB
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
-	// check_param_validity_and_consistency = 
-	if((exit_status = check_consistency_of_pitch_params(dz))<0) {
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
+    // handle_formants
+    // handle_formant_quiksearch
+    // handle_special_data
+    if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {      // CDP LIB
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
+    // check_param_validity_and_consistency = 
+    if((exit_status = check_consistency_of_pitch_params(dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
 
- 	is_launched = TRUE;
+    is_launched = TRUE;
 
-	if((exit_status = allocate_triple_buffer(dz))<0){
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
-	// param_preprocess = 
-	if((exit_status = specpitch_preprocess(dz))<0){
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
-	// spec_process_file
-	if((exit_status = spectral_interp_on_pitch(dz))<0) {
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
+    if((exit_status = allocate_triple_buffer(dz))<0){
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
+    // param_preprocess = 
+    if((exit_status = specpitch_preprocess(dz))<0){
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
+    // spec_process_file
+    if((exit_status = spectral_interp_on_pitch(dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
 
-	if((exit_status = complete_output(dz))<0) {
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-		return(FAILED);
-	}
-	exit_status = print_messages_and_close_sndfiles(FINISHED,is_launched,dz);
-	free(dz);
-	return(SUCCEEDED);
+    if((exit_status = complete_output(dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        return(FAILED);
+    }
+    exit_status = print_messages_and_close_sndfiles(FINISHED,is_launched,dz);
+    free(dz);
+    return(SUCCEEDED);
 }
 
 /**********************************************
-		REPLACED CDP LIB FUNCTIONS
+        REPLACED CDP LIB FUNCTIONS
 **********************************************/
 
 
@@ -271,17 +271,17 @@ int main(int argc,char *argv[])
 
 int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist)
 {
-	ap->special_data   = (char)special_data;	   
-	ap->param_cnt      = (char)paramcnt;
-	ap->max_param_cnt  = (char)maxparamcnt;
-	if(ap->max_param_cnt>0) {
-		if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {	
-			sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
-			return(MEMORY_ERROR);
-		}
-		strcpy(ap->param_list,paramlist); 
-	}
-	return(FINISHED);
+    ap->special_data   = (char)special_data;       
+    ap->param_cnt      = (char)paramcnt;
+    ap->max_param_cnt  = (char)maxparamcnt;
+    if(ap->max_param_cnt>0) {
+        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {    
+            sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
+            return(MEMORY_ERROR);
+        }
+        strcpy(ap->param_list,paramlist); 
+    }
+    return(FINISHED);
 }
 
 /****************************** SET_VFLGS *********************************/
@@ -289,94 +289,94 @@ int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char
 int set_vflgs
 (aplptr ap,char *optflags,int optcnt,char *optlist,char *varflags,int vflagcnt, int vparamcnt,char *varlist)
 {
-	ap->option_cnt 	 = (char) optcnt;			/*RWD added cast */
-	if(optcnt) {
-		if((ap->option_list = (char *)malloc((size_t)(optcnt+1)))==NULL) {
-			sprintf(errstr,"INSUFFICIENT MEMORY: for option_list\n");
-			return(MEMORY_ERROR);
-		}
-		strcpy(ap->option_list,optlist);
-		if((ap->option_flags = (char *)malloc((size_t)(optcnt+1)))==NULL) {
-			sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
-			return(MEMORY_ERROR);
-		}
-		strcpy(ap->option_flags,optflags); 
-	}
-	ap->vflag_cnt = (char) vflagcnt;		   
-	ap->variant_param_cnt = (char) vparamcnt;
-	if(vflagcnt) {
-		if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
-			sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
-			return(MEMORY_ERROR);
-		}
-		strcpy(ap->variant_list,varlist);		
-		if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
-			sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
-			return(MEMORY_ERROR);
-		}
-		strcpy(ap->variant_flags,varflags);
+    ap->option_cnt   = (char) optcnt;           /*RWD added cast */
+    if(optcnt) {
+        if((ap->option_list = (char *)malloc((size_t)(optcnt+1)))==NULL) {
+            sprintf(errstr,"INSUFFICIENT MEMORY: for option_list\n");
+            return(MEMORY_ERROR);
+        }
+        strcpy(ap->option_list,optlist);
+        if((ap->option_flags = (char *)malloc((size_t)(optcnt+1)))==NULL) {
+            sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
+            return(MEMORY_ERROR);
+        }
+        strcpy(ap->option_flags,optflags); 
+    }
+    ap->vflag_cnt = (char) vflagcnt;           
+    ap->variant_param_cnt = (char) vparamcnt;
+    if(vflagcnt) {
+        if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
+            sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
+            return(MEMORY_ERROR);
+        }
+        strcpy(ap->variant_list,varlist);       
+        if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
+            sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
+            return(MEMORY_ERROR);
+        }
+        strcpy(ap->variant_flags,varflags);
 
-	}
-	return(FINISHED);
+    }
+    return(FINISHED);
 }
 
 /***************************** APPLICATION_INIT **************************/
 
 int application_init(dataptr dz)
 {
-	int exit_status;
-	int storage_cnt, n;
-	int tipc, brkcnt;
-	aplptr ap = dz->application;
-	if(ap->vflag_cnt>0)
-		initialise_vflags(dz);	  
-	tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
-	ap->total_input_param_cnt = (char)tipc;
-	if(tipc>0) {
-		if((exit_status = setup_input_param_range_stores(tipc,ap))<0)			  
-			return(exit_status);
-		if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)		  
-			return(exit_status);
-		if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)	  
-			return(exit_status);
-	}
-	brkcnt = tipc;
-	if(brkcnt>0) {
-		if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)			  
-			return(exit_status);
-	}
-	if((storage_cnt = tipc + ap->internal_param_cnt)>0) {		  
-		if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)	  
-			return(exit_status);
-		if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)	  
-			return(exit_status);
-	}													   
- 	if((exit_status = mark_parameter_types(dz,ap))<0)	  
-			return(exit_status);
-	
-	// establish_infile_constants() replaced by
-		dz->infilecnt = -2;	/* flags 2 or more */
-	// establish_bufptrs_and_extra_buffers
-	dz->extra_bufcnt =  0; 
-	dz->bptrcnt = 5; 	
-	// setup_internal_arrays_and_array_pointers()
-	dz->fptr_cnt = 2;
-	dz->array_cnt = 5;
-	if((dz->fptr = (float  **)malloc(dz->fptr_cnt * sizeof(float *)))==NULL) {
-		sprintf(errstr,"INSUFFICIENT MEMORY for internal float-pointer arrays.\n");
-		return(MEMORY_ERROR);
-	}
-	if(dz->array_cnt > 0) {  
-		if((dz->parray  = (double **)malloc(dz->array_cnt * sizeof(double *)))==NULL) {
-			sprintf(errstr,"INSUFFICIENT MEMORY for internal double arrays.\n");
-			return(MEMORY_ERROR);
-		}
-		for(n=0;n<dz->array_cnt;n++)
-			dz->parray[n] = NULL;
-	}
-	for(n=0;n<dz->fptr_cnt;n++)
-		dz->fptr[n] = NULL;
-	return establish_spec_bufptrs_and_extra_buffers(dz);
+    int exit_status;
+    int storage_cnt, n;
+    int tipc, brkcnt;
+    aplptr ap = dz->application;
+    if(ap->vflag_cnt>0)
+        initialise_vflags(dz);    
+    tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
+    ap->total_input_param_cnt = (char)tipc;
+    if(tipc>0) {
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+            return(exit_status);
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+            return(exit_status);
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+            return(exit_status);
+    }
+    brkcnt = tipc;
+    if(brkcnt>0) {
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+            return(exit_status);
+    }
+    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+            return(exit_status);
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+            return(exit_status);
+    }                                                      
+    if((exit_status = mark_parameter_types(dz,ap))<0)     
+            return(exit_status);
+    
+    // establish_infile_constants() replaced by
+        dz->infilecnt = -2; /* flags 2 or more */
+    // establish_bufptrs_and_extra_buffers
+    dz->extra_bufcnt =  0; 
+    dz->bptrcnt = 5;    
+    // setup_internal_arrays_and_array_pointers()
+    dz->fptr_cnt = 2;
+    dz->array_cnt = 5;
+    if((dz->fptr = (float  **)malloc(dz->fptr_cnt * sizeof(float *)))==NULL) {
+        sprintf(errstr,"INSUFFICIENT MEMORY for internal float-pointer arrays.\n");
+        return(MEMORY_ERROR);
+    }
+    if(dz->array_cnt > 0) {  
+        if((dz->parray  = (double **)malloc(dz->array_cnt * sizeof(double *)))==NULL) {
+            sprintf(errstr,"INSUFFICIENT MEMORY for internal double arrays.\n");
+            return(MEMORY_ERROR);
+        }
+        for(n=0;n<dz->array_cnt;n++)
+            dz->parray[n] = NULL;
+    }
+    for(n=0;n<dz->fptr_cnt;n++)
+        dz->fptr[n] = NULL;
+    return establish_spec_bufptrs_and_extra_buffers(dz);
 }
 
 /********************** SETUP_PARAMETER_STORAGE_AND_CONSTANTS ********************/
@@ -384,818 +384,818 @@ int application_init(dataptr dz)
 
 int setup_parameter_storage_and_constants(int storage_cnt,dataptr dz)
 {
-	if((dz->param       = (double *)calloc(storage_cnt, sizeof(double)))==NULL) {
-		sprintf(errstr,"setup_parameter_storage_and_constants(): 1\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->iparam      = (int    *)calloc(storage_cnt, sizeof(int)   ))==NULL) {
-		sprintf(errstr,"setup_parameter_storage_and_constants(): 2\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->is_int      = (char   *)calloc(storage_cnt, sizeof(char)))==NULL) {
-		sprintf(errstr,"setup_parameter_storage_and_constants(): 3\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->no_brk      = (char   *)calloc(storage_cnt, sizeof(char)))==NULL) {
-		sprintf(errstr,"setup_parameter_storage_and_constants(): 5\n");
-		return(MEMORY_ERROR);
-	}
-	return(FINISHED);
+    if((dz->param       = (double *)calloc(storage_cnt, sizeof(double)))==NULL) {
+        sprintf(errstr,"setup_parameter_storage_and_constants(): 1\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->iparam      = (int    *)calloc(storage_cnt, sizeof(int)   ))==NULL) {
+        sprintf(errstr,"setup_parameter_storage_and_constants(): 2\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->is_int      = (char   *)calloc(storage_cnt, sizeof(char)))==NULL) {
+        sprintf(errstr,"setup_parameter_storage_and_constants(): 3\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->no_brk      = (char   *)calloc(storage_cnt, sizeof(char)))==NULL) {
+        sprintf(errstr,"setup_parameter_storage_and_constants(): 5\n");
+        return(MEMORY_ERROR);
+    }
+    return(FINISHED);
 }
 
 /************** INITIALISE_IS_INT_AND_NO_BRK_CONSTANTS *****************/
 
 int initialise_is_int_and_no_brk_constants(int storage_cnt,dataptr dz)
 {
-	int n;
-	for(n=0;n<storage_cnt;n++) {
-		dz->is_int[n] = (char)0;
-		dz->no_brk[n] = (char)0;
-	}
-	return(FINISHED);
+    int n;
+    for(n=0;n<storage_cnt;n++) {
+        dz->is_int[n] = (char)0;
+        dz->no_brk[n] = (char)0;
+    }
+    return(FINISHED);
 }
 
 /***************************** MARK_PARAMETER_TYPES **************************/
 
 int mark_parameter_types(dataptr dz,aplptr ap)
 {
-	int n, m;							/* PARAMS */
-	for(n=0;n<ap->max_param_cnt;n++) {
-		switch(ap->param_list[n]) {
-		case('0'):	break; /* dz->is_active[n] = 0 is default */
-		case('i'):	dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;dz->no_brk[n] = (char)1; break;
-		case('I'):	dz->is_active[n] = (char)1;	dz->is_int[n] = (char)1; 						 break;
-		case('d'):	dz->is_active[n] = (char)1;							dz->no_brk[n] = (char)1; break;
-		case('D'):	dz->is_active[n] = (char)1;	/* normal case: double val or brkpnt file */	 break;
-		default:
-			sprintf(errstr,"Programming error: invalid parameter type in mark_parameter_types()\n");
-			return(PROGRAM_ERROR);
-		}
-	}						 		/* OPTIONS */
-	for(n=0,m=ap->max_param_cnt;n<ap->option_cnt;n++,m++) {
-		switch(ap->option_list[n]) {
-		case('i'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;	dz->no_brk[m] = (char)1; break;
-		case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1; 						 break;
-		case('d'): dz->is_active[m] = (char)1; 							dz->no_brk[m] = (char)1; break;
-		case('D'): dz->is_active[m] = (char)1;	/* normal case: double val or brkpnt file */	 break;
-		default:
-			sprintf(errstr,"Programming error: invalid option type in mark_parameter_types()\n");
-			return(PROGRAM_ERROR);
-		}
-	}								/* VARIANTS */
-	for(n=0,m=ap->max_param_cnt + ap->option_cnt;n < ap->variant_param_cnt; n++, m++) {
-		switch(ap->variant_list[n]) {
-		case('0'): break;
-		case('i'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;	dz->no_brk[m] = (char)1; break;
-		case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;	 						 break;
-		case('d'): dz->is_active[m] = (char)1; 							dz->no_brk[m] = (char)1; break;
-		case('D'): dz->is_active[m] = (char)1; /* normal case: double val or brkpnt file */		 break;
-		default:
-			sprintf(errstr,"Programming error: invalid variant type in mark_parameter_types()\n");
-			return(PROGRAM_ERROR);
-		}
-	}								/* INTERNAL */
-	for(n=0,
-	m=ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt; n<ap->internal_param_cnt; n++,m++) {
-		switch(ap->internal_param_list[n]) {
-		case('0'):  break;	 /* dummy variables: variables not used: but important for internal paream numbering!! */
-		case('i'):	dz->is_int[m] = (char)1;	dz->no_brk[m] = (char)1;	break;
-		case('d'):								dz->no_brk[m] = (char)1;	break;
-		default:
-			sprintf(errstr,"Programming error: invalid internal param type in mark_parameter_types()\n");
-			return(PROGRAM_ERROR);
-		}
-	}
-	return(FINISHED);
+    int n, m;                           /* PARAMS */
+    for(n=0;n<ap->max_param_cnt;n++) {
+        switch(ap->param_list[n]) {
+        case('0'):  break; /* dz->is_active[n] = 0 is default */
+        case('i'):  dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;dz->no_brk[n] = (char)1; break;
+        case('I'):  dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;                         break;
+        case('d'):  dz->is_active[n] = (char)1;                         dz->no_brk[n] = (char)1; break;
+        case('D'):  dz->is_active[n] = (char)1; /* normal case: double val or brkpnt file */     break;
+        default:
+            sprintf(errstr,"Programming error: invalid parameter type in mark_parameter_types()\n");
+            return(PROGRAM_ERROR);
+        }
+    }                               /* OPTIONS */
+    for(n=0,m=ap->max_param_cnt;n<ap->option_cnt;n++,m++) {
+        switch(ap->option_list[n]) {
+        case('i'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1; dz->no_brk[m] = (char)1; break;
+        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                          break;
+        case('d'): dz->is_active[m] = (char)1;                          dz->no_brk[m] = (char)1; break;
+        case('D'): dz->is_active[m] = (char)1;  /* normal case: double val or brkpnt file */     break;
+        default:
+            sprintf(errstr,"Programming error: invalid option type in mark_parameter_types()\n");
+            return(PROGRAM_ERROR);
+        }
+    }                               /* VARIANTS */
+    for(n=0,m=ap->max_param_cnt + ap->option_cnt;n < ap->variant_param_cnt; n++, m++) {
+        switch(ap->variant_list[n]) {
+        case('0'): break;
+        case('i'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1; dz->no_brk[m] = (char)1; break;
+        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                          break;
+        case('d'): dz->is_active[m] = (char)1;                          dz->no_brk[m] = (char)1; break;
+        case('D'): dz->is_active[m] = (char)1; /* normal case: double val or brkpnt file */      break;
+        default:
+            sprintf(errstr,"Programming error: invalid variant type in mark_parameter_types()\n");
+            return(PROGRAM_ERROR);
+        }
+    }                               /* INTERNAL */
+    for(n=0,
+    m=ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt; n<ap->internal_param_cnt; n++,m++) {
+        switch(ap->internal_param_list[n]) {
+        case('0'):  break;   /* dummy variables: variables not used: but important for internal paream numbering!! */
+        case('i'):  dz->is_int[m] = (char)1;    dz->no_brk[m] = (char)1;    break;
+        case('d'):                              dz->no_brk[m] = (char)1;    break;
+        default:
+            sprintf(errstr,"Programming error: invalid internal param type in mark_parameter_types()\n");
+            return(PROGRAM_ERROR);
+        }
+    }
+    return(FINISHED);
 }
 
 /***************************** ESTABLISH_APPLICATION **************************/
 
 int establish_application(dataptr dz)
 {
-	aplptr ap;
-	if((dz->application = (aplptr)malloc(sizeof (struct applic)))==NULL) {
-		sprintf(errstr,"establish_application()\n");
-		return(MEMORY_ERROR);
-	}
-	ap = dz->application;
-	memset((char *)ap,0,sizeof(struct applic));
-	return(FINISHED);
+    aplptr ap;
+    if((dz->application = (aplptr)malloc(sizeof (struct applic)))==NULL) {
+        sprintf(errstr,"establish_application()\n");
+        return(MEMORY_ERROR);
+    }
+    ap = dz->application;
+    memset((char *)ap,0,sizeof(struct applic));
+    return(FINISHED);
 }
 
 /************************* INITIALISE_VFLAGS *************************/
 
 int initialise_vflags(dataptr dz)
 {
-	int n;
-	if((dz->vflag  = (char *)malloc(dz->application->vflag_cnt * sizeof(char)))==NULL) {
-		sprintf(errstr,"INSUFFICIENT MEMORY: vflag store,\n");
-		return(MEMORY_ERROR);
-	}
-	for(n=0;n<dz->application->vflag_cnt;n++)
-		dz->vflag[n]  = FALSE;
-	return FINISHED;
+    int n;
+    if((dz->vflag  = (char *)malloc(dz->application->vflag_cnt * sizeof(char)))==NULL) {
+        sprintf(errstr,"INSUFFICIENT MEMORY: vflag store,\n");
+        return(MEMORY_ERROR);
+    }
+    for(n=0;n<dz->application->vflag_cnt;n++)
+        dz->vflag[n]  = FALSE;
+    return FINISHED;
 }
 
 /************************* SETUP_INPUT_PARAM_DEFAULTVALS *************************/
 
 int setup_input_param_defaultval_stores(int tipc,aplptr ap)
 {
-	int n;
-	if((ap->default_val = (double *)malloc(tipc * sizeof(double)))==NULL) {
-		sprintf(errstr,"INSUFFICIENT MEMORY for application default values store\n");
-		return(MEMORY_ERROR);
-	}
-	for(n=0;n<tipc;n++)
-		ap->default_val[n] = 0.0;
-	return(FINISHED);
+    int n;
+    if((ap->default_val = (double *)malloc(tipc * sizeof(double)))==NULL) {
+        sprintf(errstr,"INSUFFICIENT MEMORY for application default values store\n");
+        return(MEMORY_ERROR);
+    }
+    for(n=0;n<tipc;n++)
+        ap->default_val[n] = 0.0;
+    return(FINISHED);
 }
 
 /***************************** SETUP_AND_INIT_INPUT_PARAM_ACTIVITY **************************/
 
 int setup_and_init_input_param_activity(dataptr dz,int tipc)
 {
-	int n;
-	if((dz->is_active = (char   *)malloc((size_t)tipc))==NULL) {
-		sprintf(errstr,"setup_and_init_input_param_activity()\n");
-		return(MEMORY_ERROR);
-	}
-	for(n=0;n<tipc;n++)
-		dz->is_active[n] = (char)0;
-	return(FINISHED);
+    int n;
+    if((dz->is_active = (char   *)malloc((size_t)tipc))==NULL) {
+        sprintf(errstr,"setup_and_init_input_param_activity()\n");
+        return(MEMORY_ERROR);
+    }
+    for(n=0;n<tipc;n++)
+        dz->is_active[n] = (char)0;
+    return(FINISHED);
 }
 
 /************************* SETUP_SPECROSS_APPLICATION *******************/
 
 int setup_specross_application(dataptr dz)
 {
-	int exit_status;
-	aplptr ap;
-	if((exit_status = establish_application(dz))<0)		// GLOBAL
-		return(FAILED);
-	ap = dz->application;
-	// SEE parstruct FOR EXPLANATION of next 2 functions
-	if((exit_status = set_param_data(ap,0   ,9,9,"dididdddD"      ))<0)
-		return(FAILED);
-	if((exit_status = set_vflgs(ap,  "",0,""  ,"ap"   ,2,0,"00"   ))<0)
-		return(FAILED);
-	// THERE IS NO NEED TO set_formant_flags in this case....
-	// Following only needed if internal params are linked to dz structure
-	if((exit_status = set_internalparam_data("d",ap))<0)
-		return(FAILED);
-	// set_legal_infile_structure -->
-	dz->has_otherfile = FALSE;
-	// assign_process_logic -->
-	dz->input_data_type = TWO_ANALFILES;
-	dz->process_type	= BIG_ANALFILE;	
-	dz->outfiletype  	= ANALFILE_OUT;
-	return application_init(dz);	//GLOBAL
+    int exit_status;
+    aplptr ap;
+    if((exit_status = establish_application(dz))<0)     // GLOBAL
+        return(FAILED);
+    ap = dz->application;
+    // SEE parstruct FOR EXPLANATION of next 2 functions
+    if((exit_status = set_param_data(ap,0   ,9,9,"dididdddD"      ))<0)
+        return(FAILED);
+    if((exit_status = set_vflgs(ap,  "",0,""  ,"ap"   ,2,0,"00"   ))<0)
+        return(FAILED);
+    // THERE IS NO NEED TO set_formant_flags in this case....
+    // Following only needed if internal params are linked to dz structure
+    if((exit_status = set_internalparam_data("d",ap))<0)
+        return(FAILED);
+    // set_legal_infile_structure -->
+    dz->has_otherfile = FALSE;
+    // assign_process_logic -->
+    dz->input_data_type = TWO_ANALFILES;
+    dz->process_type    = BIG_ANALFILE; 
+    dz->outfiletype     = ANALFILE_OUT;
+    return application_init(dz);    //GLOBAL
 }
 
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{	
-	int n;
-	if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
-		sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->brkptr   = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
-		sprintf(errstr,"setup_and_init_input_brktable_constants(): 6\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->brksize  = (int    *)malloc(brkcnt * sizeof(int)))==NULL) {
-		sprintf(errstr,"setup_and_init_input_brktable_constants(): 2\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
-		sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-		return(MEMORY_ERROR);												  
-	}
-	if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
-		sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->lastval  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
-		sprintf(errstr,"setup_and_init_input_brktable_constants(): 5\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->brkinit  = (int     *)malloc(brkcnt * sizeof(int)))==NULL) {
-		sprintf(errstr,"setup_and_init_input_brktable_constants(): 7\n");
-		return(MEMORY_ERROR);
-	}
-	for(n=0;n<brkcnt;n++) {
-		dz->brk[n]     = NULL;
-		dz->brkptr[n]  = NULL;
-		dz->brkinit[n] = 0;
-		dz->brksize[n] = 0;
-	}
-	return(FINISHED);
+{   
+    int n;
+    if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
+        sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->brkptr   = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
+        sprintf(errstr,"setup_and_init_input_brktable_constants(): 6\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->brksize  = (int    *)malloc(brkcnt * sizeof(int)))==NULL) {
+        sprintf(errstr,"setup_and_init_input_brktable_constants(): 2\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
+        sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
+        return(MEMORY_ERROR);                                                 
+    }
+    if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
+        sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->lastval  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
+        sprintf(errstr,"setup_and_init_input_brktable_constants(): 5\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->brkinit  = (int     *)malloc(brkcnt * sizeof(int)))==NULL) {
+        sprintf(errstr,"setup_and_init_input_brktable_constants(): 7\n");
+        return(MEMORY_ERROR);
+    }
+    for(n=0;n<brkcnt;n++) {
+        dz->brk[n]     = NULL;
+        dz->brkptr[n]  = NULL;
+        dz->brkinit[n] = 0;
+        dz->brksize[n] = 0;
+    }
+    return(FINISHED);
 }
 
 /************************* PARSE_INFILE_AND_CHECK_TYPE *******************/
 
 int parse_infile_and_check_type(char **cmdline,dataptr dz)
 {
-	int exit_status;
-	infileptr infile_info;
-	if(!sloom) {
-		if((infile_info = (infileptr)malloc(sizeof(struct filedata)))==NULL) {
-			sprintf(errstr,"INSUFFICIENT MEMORY for infile structure to test file data.");
-			return(MEMORY_ERROR);
-		} else if((exit_status = cdparse(cmdline[0],infile_info))<0) {
-			sprintf(errstr,"Failed tp parse input file %s\n",cmdline[0]);
-			return(PROGRAM_ERROR);
-		} else if(infile_info->filetype != ANALFILE)  {
-			sprintf(errstr,"File %s is not of correct type\n",cmdline[0]);
-			return(DATA_ERROR);
-		} else if((exit_status = copy_parse_info_to_main_structure(infile_info,dz))<0) {
-			sprintf(errstr,"Failed to copy file parsing information\n");
-			return(PROGRAM_ERROR);
-		}
-		free(infile_info);
-	}
-	if((exit_status = set_chunklens_and_establish_windowbufs(dz))<0)
-		return(exit_status);
-	return(FINISHED);
+    int exit_status;
+    infileptr infile_info;
+    if(!sloom) {
+        if((infile_info = (infileptr)malloc(sizeof(struct filedata)))==NULL) {
+            sprintf(errstr,"INSUFFICIENT MEMORY for infile structure to test file data.");
+            return(MEMORY_ERROR);
+        } else if((exit_status = cdparse(cmdline[0],infile_info))<0) {
+            sprintf(errstr,"Failed tp parse input file %s\n",cmdline[0]);
+            return(PROGRAM_ERROR);
+        } else if(infile_info->filetype != ANALFILE)  {
+            sprintf(errstr,"File %s is not of correct type\n",cmdline[0]);
+            return(DATA_ERROR);
+        } else if((exit_status = copy_parse_info_to_main_structure(infile_info,dz))<0) {
+            sprintf(errstr,"Failed to copy file parsing information\n");
+            return(PROGRAM_ERROR);
+        }
+        free(infile_info);
+    }
+    if((exit_status = set_chunklens_and_establish_windowbufs(dz))<0)
+        return(exit_status);
+    return(FINISHED);
 }
 
 /************************* SETUP_SPECROSS_PARAM_RANGES_AND_DEFAULTS *******************/
 
 int setup_specross_param_ranges_and_defaults(dataptr dz)
 {
-	int exit_status;
-	aplptr ap = dz->application;
-	// set_param_ranges()
-	ap->total_input_param_cnt = (char)(ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt);
-	// setup_input_param_range_stores()
-	if((exit_status = setup_input_param_range_stores(ap->total_input_param_cnt,ap))<0)
-		return(FAILED);
-	// get_param_ranges()
-	ap->lo[PICH_RNGE]   		= 0.0;
-	ap->hi[PICH_RNGE]   		= 6.0;
-	ap->default_val[PICH_RNGE]	= 1.0;
-	ap->lo[PICH_VALID]  		= 0.0;
-	ap->hi[PICH_VALID]  		= (double)min(dz->wlength,dz->insams[1]/dz->wanted);;
-	ap->default_val[PICH_VALID]	= (double)BLIPLEN;
-	ap->lo[PICH_SRATIO] 		= 0.0;
-	ap->hi[PICH_SRATIO] 		= SIGNOIS_MAX;
-	ap->default_val[PICH_SRATIO]= SILENCE_RATIO;
-	ap->lo[PICH_MATCH]  		= 1.0;
-	ap->hi[PICH_MATCH]  		= (double)MAXIMI;
-	ap->default_val[PICH_MATCH]	= (double)ACCEPTABLE_MATCH;
-	ap->lo[PICH_HILM]   		= SPEC_MINFRQ;
-	ap->hi[PICH_HILM]   		= dz->nyquist/MAXIMI;
-	ap->default_val[PICH_HILM]	= dz->nyquist/MAXIMI;
-	ap->lo[PICH_LOLM]   		= SPEC_MINFRQ;
-	ap->hi[PICH_LOLM]   		= dz->nyquist/MAXIMI;
-	ap->default_val[PICH_LOLM]	= SPEC_MINFRQ;
-	ap->lo[PICH_THRESH]   		= 0.0;
-	ap->hi[PICH_THRESH]   		= 1.0;
-	ap->default_val[PICH_THRESH]= .02;
-	ap->lo[SPCMPLEV]   			= 0.0;
-	ap->hi[SPCMPLEV]   			= 1.0;
-	ap->default_val[SPCMPLEV]	= 1.0;
-	ap->lo[SPECHINT]   			= 0.0;
-	ap->hi[SPECHINT]   			= 1.0;
-	ap->default_val[SPECHINT]	= 1.0;
-	dz->maxmode = 0;
-	if(!sloom)
-		put_default_vals_in_all_params(dz);
-	return(FINISHED);
-	// initialise_param_values()
-	return(FINISHED);
+    int exit_status;
+    aplptr ap = dz->application;
+    // set_param_ranges()
+    ap->total_input_param_cnt = (char)(ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt);
+    // setup_input_param_range_stores()
+    if((exit_status = setup_input_param_range_stores(ap->total_input_param_cnt,ap))<0)
+        return(FAILED);
+    // get_param_ranges()
+    ap->lo[PICH_RNGE]           = 0.0;
+    ap->hi[PICH_RNGE]           = 6.0;
+    ap->default_val[PICH_RNGE]  = 1.0;
+    ap->lo[PICH_VALID]          = 0.0;
+    ap->hi[PICH_VALID]          = (double)min(dz->wlength,dz->insams[1]/dz->wanted);;
+    ap->default_val[PICH_VALID] = (double)BLIPLEN;
+    ap->lo[PICH_SRATIO]         = 0.0;
+    ap->hi[PICH_SRATIO]         = SIGNOIS_MAX;
+    ap->default_val[PICH_SRATIO]= SILENCE_RATIO;
+    ap->lo[PICH_MATCH]          = 1.0;
+    ap->hi[PICH_MATCH]          = (double)MAXIMI;
+    ap->default_val[PICH_MATCH] = (double)ACCEPTABLE_MATCH;
+    ap->lo[PICH_HILM]           = SPEC_MINFRQ;
+    ap->hi[PICH_HILM]           = dz->nyquist/MAXIMI;
+    ap->default_val[PICH_HILM]  = dz->nyquist/MAXIMI;
+    ap->lo[PICH_LOLM]           = SPEC_MINFRQ;
+    ap->hi[PICH_LOLM]           = dz->nyquist/MAXIMI;
+    ap->default_val[PICH_LOLM]  = SPEC_MINFRQ;
+    ap->lo[PICH_THRESH]         = 0.0;
+    ap->hi[PICH_THRESH]         = 1.0;
+    ap->default_val[PICH_THRESH]= .02;
+    ap->lo[SPCMPLEV]            = 0.0;
+    ap->hi[SPCMPLEV]            = 1.0;
+    ap->default_val[SPCMPLEV]   = 1.0;
+    ap->lo[SPECHINT]            = 0.0;
+    ap->hi[SPECHINT]            = 1.0;
+    ap->default_val[SPECHINT]   = 1.0;
+    dz->maxmode = 0;
+    if(!sloom)
+        put_default_vals_in_all_params(dz);
+    return(FINISHED);
+    // initialise_param_values()
+    return(FINISHED);
 }
 
 /********************************* PARSE_SLOOM_DATA *********************************/
 
 int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,dataptr dz)
 {
-	int exit_status;
-	int cnt = 1, infilecnt;
-	int filesize, insams, inbrksize;
-	double dummy;
-	int true_cnt = 0;
-	aplptr ap;
+    int exit_status;
+    int cnt = 1, infilecnt;
+    int filesize, insams, inbrksize;
+    double dummy;
+    int true_cnt = 0;
+    aplptr ap;
 
-	while(cnt<=PRE_CMDLINE_DATACNT) {
-		if(cnt > argc) {
-			sprintf(errstr,"Insufficient data sent from TK\n");
-			return(DATA_ERROR);
-		}
-		switch(cnt) {
-		case(1):	
-			if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
-				sprintf(errstr,"Cannot read process no. sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
+    while(cnt<=PRE_CMDLINE_DATACNT) {
+        if(cnt > argc) {
+            sprintf(errstr,"Insufficient data sent from TK\n");
+            return(DATA_ERROR);
+        }
+        switch(cnt) {
+        case(1):    
+            if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
+                sprintf(errstr,"Cannot read process no. sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
 
-		case(2):	
-			if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
-				sprintf(errstr,"Cannot read mode no. sent from TK\n");
-				return(DATA_ERROR);
-			}
-			if(dz->mode > 0)
-				dz->mode--;
-			//setup_particular_application() =
-			if((exit_status = setup_specross_application(dz))<0)
-				return(exit_status);
-			ap = dz->application;
-			break;
+        case(2):    
+            if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
+                sprintf(errstr,"Cannot read mode no. sent from TK\n");
+                return(DATA_ERROR);
+            }
+            if(dz->mode > 0)
+                dz->mode--;
+            //setup_particular_application() =
+            if((exit_status = setup_specross_application(dz))<0)
+                return(exit_status);
+            ap = dz->application;
+            break;
 
-		case(3):	
-			if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
-				sprintf(errstr,"Cannot read infilecnt sent from TK\n");
-				return(DATA_ERROR);
-			}
-			if(infilecnt < 1) {
-				true_cnt = cnt + 1;
-				cnt = PRE_CMDLINE_DATACNT;	/* force exit from loop after assign_file_data_storage */
-			}
-			if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
-				return(exit_status);
-			break;
-		case(INPUT_FILETYPE+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
-				sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_FILESIZE+4):	
-			if(sscanf(argv[cnt],"%d",&filesize)!=1) {
-				sprintf(errstr,"Cannot read infilesize sent from TK\n");
-				return(DATA_ERROR);
-			}
-			dz->insams[0] = filesize;	
-			break;
-		case(INPUT_INSAMS+4):	
-			if(sscanf(argv[cnt],"%d",&insams)!=1) {
-				sprintf(errstr,"Cannot read insams sent from TK\n");
-				return(DATA_ERROR);
-			}
-			dz->insams[0] = insams;	
-			break;
-		case(INPUT_SRATE+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
-				sprintf(errstr,"Cannot read srate sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_CHANNELS+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
-				sprintf(errstr,"Cannot read channels sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_STYPE+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
-				sprintf(errstr,"Cannot read stype sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_ORIGSTYPE+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
-				sprintf(errstr,"Cannot read origstype sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_ORIGRATE+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
-				sprintf(errstr,"Cannot read origrate sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_MLEN+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
-				sprintf(errstr,"Cannot read Mlen sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_DFAC+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
-				sprintf(errstr,"Cannot read Dfac sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_ORIGCHANS+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
-				sprintf(errstr,"Cannot read origchans sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_SPECENVCNT+4):	
-			if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
-				sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
-				return(DATA_ERROR);
-			}
-			dz->specenvcnt = dz->infile->specenvcnt;
-			break;
-		case(INPUT_WANTED+4):	
-			if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
-				sprintf(errstr,"Cannot read wanted sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_WLENGTH+4):	
-			if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
-				sprintf(errstr,"Cannot read wlength sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_OUT_CHANS+4):	
-			if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
-				sprintf(errstr,"Cannot read out_chans sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-			/* RWD these chanegs to samps - tk will have to deal with that! */
-		case(INPUT_DESCRIPTOR_BYTES+4):	
-			if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
-				sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_IS_TRANSPOS+4):	
-			if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
-				sprintf(errstr,"Cannot read is_transpos sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_COULD_BE_TRANSPOS+4):	
-			if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
-				sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_COULD_BE_PITCH+4):	
-			if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
-				sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_DIFFERENT_SRATES+4):	
-			if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
-				sprintf(errstr,"Cannot read different_srates sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_DUPLICATE_SNDS+4):	
-			if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
-				sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_BRKSIZE+4):	
-			if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
-				sprintf(errstr,"Cannot read brksize sent from TK\n");
-				return(DATA_ERROR);
-			}
-			if(inbrksize > 0) {
-				switch(dz->input_data_type) {
-				case(WORDLIST_ONLY):
-					break;
-				case(PITCH_AND_PITCH):
-				case(PITCH_AND_TRANSPOS):
-				case(TRANSPOS_AND_TRANSPOS):
-					dz->tempsize = inbrksize;
-					break;
-				case(BRKFILES_ONLY):
-				case(UNRANGED_BRKFILE_ONLY):
-				case(DB_BRKFILES_ONLY):
-				case(ALL_FILES):
-				case(ANY_NUMBER_OF_ANY_FILES):
-					if(dz->extrabrkno < 0) {
-						sprintf(errstr,"Storage location number for brktable not established by CDP.\n");
-						return(DATA_ERROR);
-					}
-					if(dz->brksize == NULL) {
-						sprintf(errstr,"CDP has not established storage space for input brktable.\n");
-						return(PROGRAM_ERROR);
-					}
-					dz->brksize[dz->extrabrkno]	= inbrksize;
-					break;
-				default:
-					sprintf(errstr,"TK sent brktablesize > 0 for input_data_type [%d] not using brktables.\n",
-					dz->input_data_type);
-					return(PROGRAM_ERROR);
-				}
-				break;
-			}
-			break;
-		case(INPUT_NUMSIZE+4):	
-			if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
-				sprintf(errstr,"Cannot read numsize sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_LINECNT+4):	
-			if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
-				sprintf(errstr,"Cannot read linecnt sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_ALL_WORDS+4):	
-			if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
-				sprintf(errstr,"Cannot read all_words sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_ARATE+4):	
-			if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
-				sprintf(errstr,"Cannot read arate sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_FRAMETIME+4):	
-			if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
-				sprintf(errstr,"Cannot read frametime sent from TK\n");
-				return(DATA_ERROR);
-			}
-			dz->frametime = (float)dummy;
-			break;
-		case(INPUT_WINDOW_SIZE+4):	
-			if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
-				sprintf(errstr,"Cannot read window_size sent from TK\n");
-					return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_NYQUIST+4):	
-			if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
-				sprintf(errstr,"Cannot read nyquist sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_DURATION+4):	
-			if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
-				sprintf(errstr,"Cannot read duration sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_MINBRK+4):	
-			if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
-				sprintf(errstr,"Cannot read minbrk sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_MAXBRK+4):	
-			if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
-				sprintf(errstr,"Cannot read maxbrk sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_MINNUM+4):	
-			if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
-				sprintf(errstr,"Cannot read minnum sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		case(INPUT_MAXNUM+4):	
-			if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
-				sprintf(errstr,"Cannot read maxnum sent from TK\n");
-				return(DATA_ERROR);
-			}
-			break;
-		default:
-			sprintf(errstr,"case switch item missing: parse_sloom_data()\n");
-			return(PROGRAM_ERROR);
-		}
-		cnt++;
-	}
-	if(cnt!=PRE_CMDLINE_DATACNT+1) {
-		sprintf(errstr,"Insufficient pre-cmdline params sent from TK\n");
-		return(DATA_ERROR);
-	}
+        case(3):    
+            if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
+                sprintf(errstr,"Cannot read infilecnt sent from TK\n");
+                return(DATA_ERROR);
+            }
+            if(infilecnt < 1) {
+                true_cnt = cnt + 1;
+                cnt = PRE_CMDLINE_DATACNT;  /* force exit from loop after assign_file_data_storage */
+            }
+            if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
+                return(exit_status);
+            break;
+        case(INPUT_FILETYPE+4): 
+            if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
+                sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_FILESIZE+4): 
+            if(sscanf(argv[cnt],"%d",&filesize)!=1) {
+                sprintf(errstr,"Cannot read infilesize sent from TK\n");
+                return(DATA_ERROR);
+            }
+            dz->insams[0] = filesize;   
+            break;
+        case(INPUT_INSAMS+4):   
+            if(sscanf(argv[cnt],"%d",&insams)!=1) {
+                sprintf(errstr,"Cannot read insams sent from TK\n");
+                return(DATA_ERROR);
+            }
+            dz->insams[0] = insams; 
+            break;
+        case(INPUT_SRATE+4):    
+            if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
+                sprintf(errstr,"Cannot read srate sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_CHANNELS+4): 
+            if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
+                sprintf(errstr,"Cannot read channels sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_STYPE+4):    
+            if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
+                sprintf(errstr,"Cannot read stype sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_ORIGSTYPE+4):    
+            if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
+                sprintf(errstr,"Cannot read origstype sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_ORIGRATE+4): 
+            if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
+                sprintf(errstr,"Cannot read origrate sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_MLEN+4): 
+            if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
+                sprintf(errstr,"Cannot read Mlen sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_DFAC+4): 
+            if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
+                sprintf(errstr,"Cannot read Dfac sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_ORIGCHANS+4):    
+            if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
+                sprintf(errstr,"Cannot read origchans sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_SPECENVCNT+4):   
+            if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
+                sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
+                return(DATA_ERROR);
+            }
+            dz->specenvcnt = dz->infile->specenvcnt;
+            break;
+        case(INPUT_WANTED+4):   
+            if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
+                sprintf(errstr,"Cannot read wanted sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_WLENGTH+4):  
+            if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
+                sprintf(errstr,"Cannot read wlength sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_OUT_CHANS+4):    
+            if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
+                sprintf(errstr,"Cannot read out_chans sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+            /* RWD these chanegs to samps - tk will have to deal with that! */
+        case(INPUT_DESCRIPTOR_BYTES+4): 
+            if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
+                sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_IS_TRANSPOS+4):  
+            if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
+                sprintf(errstr,"Cannot read is_transpos sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_COULD_BE_TRANSPOS+4):    
+            if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
+                sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_COULD_BE_PITCH+4):   
+            if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
+                sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_DIFFERENT_SRATES+4): 
+            if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
+                sprintf(errstr,"Cannot read different_srates sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_DUPLICATE_SNDS+4):   
+            if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
+                sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_BRKSIZE+4):  
+            if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
+                sprintf(errstr,"Cannot read brksize sent from TK\n");
+                return(DATA_ERROR);
+            }
+            if(inbrksize > 0) {
+                switch(dz->input_data_type) {
+                case(WORDLIST_ONLY):
+                    break;
+                case(PITCH_AND_PITCH):
+                case(PITCH_AND_TRANSPOS):
+                case(TRANSPOS_AND_TRANSPOS):
+                    dz->tempsize = inbrksize;
+                    break;
+                case(BRKFILES_ONLY):
+                case(UNRANGED_BRKFILE_ONLY):
+                case(DB_BRKFILES_ONLY):
+                case(ALL_FILES):
+                case(ANY_NUMBER_OF_ANY_FILES):
+                    if(dz->extrabrkno < 0) {
+                        sprintf(errstr,"Storage location number for brktable not established by CDP.\n");
+                        return(DATA_ERROR);
+                    }
+                    if(dz->brksize == NULL) {
+                        sprintf(errstr,"CDP has not established storage space for input brktable.\n");
+                        return(PROGRAM_ERROR);
+                    }
+                    dz->brksize[dz->extrabrkno] = inbrksize;
+                    break;
+                default:
+                    sprintf(errstr,"TK sent brktablesize > 0 for input_data_type [%d] not using brktables.\n",
+                    dz->input_data_type);
+                    return(PROGRAM_ERROR);
+                }
+                break;
+            }
+            break;
+        case(INPUT_NUMSIZE+4):  
+            if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
+                sprintf(errstr,"Cannot read numsize sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_LINECNT+4):  
+            if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
+                sprintf(errstr,"Cannot read linecnt sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_ALL_WORDS+4):    
+            if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
+                sprintf(errstr,"Cannot read all_words sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_ARATE+4):    
+            if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
+                sprintf(errstr,"Cannot read arate sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_FRAMETIME+4):    
+            if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
+                sprintf(errstr,"Cannot read frametime sent from TK\n");
+                return(DATA_ERROR);
+            }
+            dz->frametime = (float)dummy;
+            break;
+        case(INPUT_WINDOW_SIZE+4):  
+            if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
+                sprintf(errstr,"Cannot read window_size sent from TK\n");
+                    return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_NYQUIST+4):  
+            if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
+                sprintf(errstr,"Cannot read nyquist sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_DURATION+4): 
+            if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
+                sprintf(errstr,"Cannot read duration sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_MINBRK+4):   
+            if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
+                sprintf(errstr,"Cannot read minbrk sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_MAXBRK+4):   
+            if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
+                sprintf(errstr,"Cannot read maxbrk sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_MINNUM+4):   
+            if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
+                sprintf(errstr,"Cannot read minnum sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        case(INPUT_MAXNUM+4):   
+            if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
+                sprintf(errstr,"Cannot read maxnum sent from TK\n");
+                return(DATA_ERROR);
+            }
+            break;
+        default:
+            sprintf(errstr,"case switch item missing: parse_sloom_data()\n");
+            return(PROGRAM_ERROR);
+        }
+        cnt++;
+    }
+    if(cnt!=PRE_CMDLINE_DATACNT+1) {
+        sprintf(errstr,"Insufficient pre-cmdline params sent from TK\n");
+        return(DATA_ERROR);
+    }
 
-	if(true_cnt)
-		cnt = true_cnt;
-	*cmdlinecnt = 0;		
+    if(true_cnt)
+        cnt = true_cnt;
+    *cmdlinecnt = 0;        
 
-	while(cnt < argc) {
-		if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
-			return(exit_status);
-		cnt++;
-	}
-	return(FINISHED);
+    while(cnt < argc) {
+        if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
+            return(exit_status);
+        cnt++;
+    }
+    return(FINISHED);
 }
 
 /********************************* GET_TK_CMDLINE_WORD *********************************/
 
 int get_tk_cmdline_word(int *cmdlinecnt,char ***cmdline,char *q)
 {
-	if(*cmdlinecnt==0) {
-		if((*cmdline = (char **)malloc(sizeof(char *)))==NULL)	{
-			sprintf(errstr,"INSUFFICIENT MEMORY for TK cmdline array.\n");
-			return(MEMORY_ERROR);
-		}
-	} else {
-		if((*cmdline = (char **)realloc(*cmdline,((*cmdlinecnt)+1) * sizeof(char *)))==NULL)	{
-			sprintf(errstr,"INSUFFICIENT MEMORY for TK cmdline array.\n");
-			return(MEMORY_ERROR);
-		}
-	}
-	if(((*cmdline)[*cmdlinecnt] = (char *)malloc((strlen(q) + 1) * sizeof(char)))==NULL)	{
-		sprintf(errstr,"INSUFFICIENT MEMORY for TK cmdline item %d.\n",(*cmdlinecnt)+1);
-		return(MEMORY_ERROR);
-	}
-	strcpy((*cmdline)[*cmdlinecnt],q);
-	(*cmdlinecnt)++;
-	return(FINISHED);
+    if(*cmdlinecnt==0) {
+        if((*cmdline = (char **)malloc(sizeof(char *)))==NULL)  {
+            sprintf(errstr,"INSUFFICIENT MEMORY for TK cmdline array.\n");
+            return(MEMORY_ERROR);
+        }
+    } else {
+        if((*cmdline = (char **)realloc(*cmdline,((*cmdlinecnt)+1) * sizeof(char *)))==NULL)    {
+            sprintf(errstr,"INSUFFICIENT MEMORY for TK cmdline array.\n");
+            return(MEMORY_ERROR);
+        }
+    }
+    if(((*cmdline)[*cmdlinecnt] = (char *)malloc((strlen(q) + 1) * sizeof(char)))==NULL)    {
+        sprintf(errstr,"INSUFFICIENT MEMORY for TK cmdline item %d.\n",(*cmdlinecnt)+1);
+        return(MEMORY_ERROR);
+    }
+    strcpy((*cmdline)[*cmdlinecnt],q);
+    (*cmdlinecnt)++;
+    return(FINISHED);
 }
 
 /****************************** ASSIGN_FILE_DATA_STORAGE *********************************/
 
 int assign_file_data_storage(int infilecnt,dataptr dz)
 {
-	int exit_status;
-	int no_sndfile_system_files = FALSE;
-	dz->infilecnt = infilecnt;
-	if((exit_status = allocate_filespace(dz))<0)
-		return(exit_status);
-	if(no_sndfile_system_files)
-		dz->infilecnt = 0;
-	return(FINISHED);
+    int exit_status;
+    int no_sndfile_system_files = FALSE;
+    dz->infilecnt = infilecnt;
+    if((exit_status = allocate_filespace(dz))<0)
+        return(exit_status);
+    if(no_sndfile_system_files)
+        dz->infilecnt = 0;
+    return(FINISHED);
 }
 
 /************************** OPEN_THE_FIRST_INFILE *****************************/
 
 int open_the_first_infile(char *filename,dataptr dz)
 {
-	if((dz->ifd[0] = sndopenEx(filename,0,CDP_OPEN_RDONLY)) < 0) {
-		sprintf(errstr,"Failure to open file %s for input.\n",filename);
-		return(SYSTEM_ERROR);
-	}
-	if(dz->infilecnt<=0 || dz->infile->filetype!=ANALFILE) {
-		sprintf(errstr,"%s is wrong type of file for this process.\n",filename);
-		return(DATA_ERROR);
-	}
-	dz->samps_left = dz->insams[0];
-	return(FINISHED);
+    if((dz->ifd[0] = sndopenEx(filename,0,CDP_OPEN_RDONLY)) < 0) {
+        sprintf(errstr,"Failure to open file %s for input.\n",filename);
+        return(SYSTEM_ERROR);
+    }
+    if(dz->infilecnt<=0 || dz->infile->filetype!=ANALFILE) {
+        sprintf(errstr,"%s is wrong type of file for this process.\n",filename);
+        return(DATA_ERROR);
+    }
+    dz->samps_left = dz->insams[0];
+    return(FINISHED);
 }
 
 /************************ HANDLE_THE_EXTRA_INFILES *********************/
 
 int handle_the_extra_infiles(char ***cmdline,int *cmdlinecnt,dataptr dz)
 {
-					/* OPEN ANY FURTHER INFILES, CHECK COMPATIBILITY, STORE DATA AND INFO */
-	int  exit_status, n;
-	char *filename;
+                    /* OPEN ANY FURTHER INFILES, CHECK COMPATIBILITY, STORE DATA AND INFO */
+    int  exit_status, n;
+    char *filename;
 
-	if(dz->infilecnt > 1) {
-		for(n=1;n<dz->infilecnt;n++) {
-			filename = (*cmdline)[0];
-			if((exit_status = handle_other_infile(n,filename,dz))<0)
-				return(exit_status);
-			(*cmdline)++;
-			(*cmdlinecnt)--;
-		}
-	} else {
-		sprintf(errstr,"Insufficient input files for this process\n");
-		return(DATA_ERROR);
-	}
-	return(FINISHED);
+    if(dz->infilecnt > 1) {
+        for(n=1;n<dz->infilecnt;n++) {
+            filename = (*cmdline)[0];
+            if((exit_status = handle_other_infile(n,filename,dz))<0)
+                return(exit_status);
+            (*cmdline)++;
+            (*cmdlinecnt)--;
+        }
+    } else {
+        sprintf(errstr,"Insufficient input files for this process\n");
+        return(DATA_ERROR);
+    }
+    return(FINISHED);
 }
 
 /************************ HANDLE_THE_OUTFILE *********************/
 
 int handle_the_outfile(int *cmdlinecnt,char ***cmdline,int is_launched,dataptr dz)
 {
-	char *filename = NULL;
-	int n;
-	int stype = SAMP_FLOAT;
+    char *filename = NULL;
+    int n;
+    int stype = SAMP_FLOAT;
 
-	if(sloom) {
-		filename = (*cmdline)[0];
-	} else {
-		if(*cmdlinecnt<=0) {
-			sprintf(errstr,"Insufficient cmdline parameters.\n");
-			return(USAGE_ONLY);
-		}
-		filename = (*cmdline)[0];
-		if(filename[0]=='-' && filename[1]=='f') {
-			sprintf(errstr,"-f flag used incorrectly on command line (output is not a sound file).\n");
-			return(USAGE_ONLY);
-		}
-		if(file_has_invalid_startchar(filename) || value_is_numeric(filename)) {
-			sprintf(errstr,"Outfile name %s has invalid start character(s) or looks too much like a number.\n",filename);
-			return(DATA_ERROR);
-		}
-	}
-	dz->true_outfile_stype = stype;
-	dz->outfilesize = dz->insams[1];	/* With specros, outfile is always size of 2nd infile */
-	if((dz->ofd = sndcreat_formatted(filename,dz->outfilesize,stype,
-			dz->infile->channels,dz->infile->srate,CDP_CREATE_NORMAL)) < 0) {
-		sprintf(errstr,"Cannot open output file %s\n", filename);
-		return(DATA_ERROR);
-	}
-	dz->outchans = dz->infile->channels;
-	dz->needpeaks = 1;
-	dz->outpeaks = (CHPEAK *) malloc(sizeof(CHPEAK) * dz->outchans);
-	if(dz->outpeaks==NULL)
-		return MEMORY_ERROR;
-	dz->outpeakpos = (unsigned int *) malloc(sizeof(unsigned int) * dz->outchans);
-	if(dz->outpeakpos==NULL)
-		return MEMORY_ERROR;
-	for(n=0;n < dz->outchans;n++){
-		dz->outpeaks[n].value = 0.0f;
-		dz->outpeaks[n].position = 0;
-		dz->outpeakpos[n] = 0;
-	}
-	strcpy(dz->outfilename,filename);	   
-	(*cmdline)++;
-	(*cmdlinecnt)--;
-	return(FINISHED);
+    if(sloom) {
+        filename = (*cmdline)[0];
+    } else {
+        if(*cmdlinecnt<=0) {
+            sprintf(errstr,"Insufficient cmdline parameters.\n");
+            return(USAGE_ONLY);
+        }
+        filename = (*cmdline)[0];
+        if(filename[0]=='-' && filename[1]=='f') {
+            sprintf(errstr,"-f flag used incorrectly on command line (output is not a sound file).\n");
+            return(USAGE_ONLY);
+        }
+        if(file_has_invalid_startchar(filename) || value_is_numeric(filename)) {
+            sprintf(errstr,"Outfile name %s has invalid start character(s) or looks too much like a number.\n",filename);
+            return(DATA_ERROR);
+        }
+    }
+    dz->true_outfile_stype = stype;
+    dz->outfilesize = dz->insams[1];    /* With specros, outfile is always size of 2nd infile */
+    if((dz->ofd = sndcreat_formatted(filename,dz->outfilesize,stype,
+            dz->infile->channels,dz->infile->srate,CDP_CREATE_NORMAL)) < 0) {
+        sprintf(errstr,"Cannot open output file %s\n", filename);
+        return(DATA_ERROR);
+    }
+    dz->outchans = dz->infile->channels;
+    dz->needpeaks = 1;
+    dz->outpeaks = (CHPEAK *) malloc(sizeof(CHPEAK) * dz->outchans);
+    if(dz->outpeaks==NULL)
+        return MEMORY_ERROR;
+    dz->outpeakpos = (unsigned int *) malloc(sizeof(unsigned int) * dz->outchans);
+    if(dz->outpeakpos==NULL)
+        return MEMORY_ERROR;
+    for(n=0;n < dz->outchans;n++){
+        dz->outpeaks[n].value = 0.0f;
+        dz->outpeaks[n].position = 0;
+        dz->outpeakpos[n] = 0;
+    }
+    strcpy(dz->outfilename,filename);      
+    (*cmdline)++;
+    (*cmdlinecnt)--;
+    return(FINISHED);
 }
 
 /************ CHECK_CONSISTENCY_OF_PITCH_PARAMS *************/
 
 int check_consistency_of_pitch_params(dataptr dz)
 {
-	if(dz->param[PICH_HILM] <= dz->param[PICH_LOLM]) {
-		sprintf(errstr,"Impossible pitch range specified.\n");
-		return(USER_ERROR);
-	}
-	return(FINISHED);
+    if(dz->param[PICH_HILM] <= dz->param[PICH_LOLM]) {
+        sprintf(errstr,"Impossible pitch range specified.\n");
+        return(USER_ERROR);
+    }
+    return(FINISHED);
 }
 
 /************************** SPECPITCH_PREPROCESS ******************************/
 
 int specpitch_preprocess(dataptr dz)
 {
-   	dz->param[PICH_RNGE] = pow(SEMITONE_INTERVAL,fabs(dz->param[PICH_RNGE])); 
-	/* convert dB to gain */		
-	dz->param[PICH_SRATIO] /= 20.0;
-	dz->param[PICH_SRATIO] = pow(10.0,dz->param[PICH_SRATIO]);
-	dz->param[PICH_SRATIO] = 1.0/dz->param[PICH_SRATIO];
+    dz->param[PICH_RNGE] = pow(SEMITONE_INTERVAL,fabs(dz->param[PICH_RNGE])); 
+    /* convert dB to gain */        
+    dz->param[PICH_SRATIO] /= 20.0;
+    dz->param[PICH_SRATIO] = pow(10.0,dz->param[PICH_SRATIO]);
+    dz->param[PICH_SRATIO] = 1.0/dz->param[PICH_SRATIO];
 
-	if((dz->pitches = (float *)malloc(dz->wlength * sizeof(float)))==NULL) {
-		sprintf(errstr,"INSUFFICIENT MEMORY for pitches array.\n");
-		return(MEMORY_ERROR);
-	}
-	if((dz->pitches2 = (float *)malloc((dz->insams[1]/dz->wanted) * sizeof(float)))==NULL) {
-		sprintf(errstr,"INSUFFICIENT MEMORY for pitches array.\n");
-		return(MEMORY_ERROR);
-	}
-	initrand48();		
-	dz->param[PICH_PICH2] = 0.0;
-	return setup_ring(dz);
+    if((dz->pitches = (float *)malloc(dz->wlength * sizeof(float)))==NULL) {
+        sprintf(errstr,"INSUFFICIENT MEMORY for pitches array.\n");
+        return(MEMORY_ERROR);
+    }
+    if((dz->pitches2 = (float *)malloc((dz->insams[1]/dz->wanted) * sizeof(float)))==NULL) {
+        sprintf(errstr,"INSUFFICIENT MEMORY for pitches array.\n");
+        return(MEMORY_ERROR);
+    }
+    initrand48();       
+    dz->param[PICH_PICH2] = 0.0;
+    return setup_ring(dz);
 }
 
 /******************************** USAGE ********************************/
 
 int usage1(void)
 {
-	sprintf(errstr,
-	"INTERPOLATE PARTIALS OF PITCHED SRC1 TOWARDS THOSE OF PITCHED SRC 2\n"
-	"USAGE: specross partials analfile1 analfile2 outanalfile\n"
-	"       tuning minwin signois harmcnt lo ho thresh level interp\n");
-	return(USAGE_ONLY);
+    sprintf(errstr,
+    "INTERPOLATE PARTIALS OF PITCHED SRC1 TOWARDS THOSE OF PITCHED SRC 2\n"
+    "USAGE: specross partials analfile1 analfile2 outanalfile\n"
+    "       tuning minwin signois harmcnt lo ho thresh level interp\n");
+    return(USAGE_ONLY);
 }
 
 int usage2(char *str)
 {
-	if(!strcmp(str,"partials")) {
-		fprintf(stdout,
-		"USAGE: specross partials analfile1 analfile2 outanalfile\n"
-	    "       tuning minwin signois harmcnt lo hi thresh level interp [-a -p]\n"
-		"\n"
-		"INTERPOLATE PARTIALS OF PITCHED SRC2 TOWARDS THOSE OF PITCHED SRC 1\n"
-		"TUNING   Range(semitones) within which harmonics 'in tune' (Default 1)\n"
-		"MINWIN   Minimum number of adjacent windows that must be pitched,\n"
-		"         for a pitch-value to be registered (Default %d).\n"
-		"SIGNOIS  Signal to noise ratio, in decibels. (Default %.0lfdB)\n"
-		"         Windows  > signois dB below maximum level in sound, assumed\n"
-		"         to be noise, & any detected pitch is assumed spurious.\n"
-		"HARMCNT  Number of the %d loudest peaks in spectrum which must be\n"
-		"         harmonics to confirm sound is pitched: Default %d.\n"
-		"LO       Lowest acceptable frq for a pitch (Default  %.0lfHz).\n"
-		"HI       Highest acceptable frq for valid pitch  (Default nyquist/%d).\n"
-		"THRESH   Min acceptable level of any partial found, if it is to be used\n"
-		"         in reconstructed spectrum (level relative to loudest partial)\n" 
-		"LEVEL    level of output (default 1.0). Use if reapplying infile1\n"
-		"         to several infile2s, whose relative level is important.\n"
-		"INTERP   Interp between file2 and file1: can vary through time\n"
-		"         (brkpnt time vals will be scaled to duration of infil1).\n"
-		"-a       Retain loudness countour file2, under file1 contour,\n"
-		"-p       Extend 1st stable pitch of file1 to start of file.\n",
-		BLIPLEN,SILENCE_RATIO,MAXIMI,ACCEPTABLE_MATCH,MINPITCH,MAXIMI);
-	} else
-		fprintf(stdout,"Unknown option '%s'\n",str);
-	return(USAGE_ONLY);
+    if(!strcmp(str,"partials")) {
+        fprintf(stdout,
+        "USAGE: specross partials analfile1 analfile2 outanalfile\n"
+        "       tuning minwin signois harmcnt lo hi thresh level interp [-a -p]\n"
+        "\n"
+        "INTERPOLATE PARTIALS OF PITCHED SRC2 TOWARDS THOSE OF PITCHED SRC 1\n"
+        "TUNING   Range(semitones) within which harmonics 'in tune' (Default 1)\n"
+        "MINWIN   Minimum number of adjacent windows that must be pitched,\n"
+        "         for a pitch-value to be registered (Default %d).\n"
+        "SIGNOIS  Signal to noise ratio, in decibels. (Default %.0lfdB)\n"
+        "         Windows  > signois dB below maximum level in sound, assumed\n"
+        "         to be noise, & any detected pitch is assumed spurious.\n"
+        "HARMCNT  Number of the %d loudest peaks in spectrum which must be\n"
+        "         harmonics to confirm sound is pitched: Default %d.\n"
+        "LO       Lowest acceptable frq for a pitch (Default  %.0lfHz).\n"
+        "HI       Highest acceptable frq for valid pitch  (Default nyquist/%d).\n"
+        "THRESH   Min acceptable level of any partial found, if it is to be used\n"
+        "         in reconstructed spectrum (level relative to loudest partial)\n" 
+        "LEVEL    level of output (default 1.0). Use if reapplying infile1\n"
+        "         to several infile2s, whose relative level is important.\n"
+        "INTERP   Interp between file2 and file1: can vary through time\n"
+        "         (brkpnt time vals will be scaled to duration of infil1).\n"
+        "-a       Retain loudness countour file2, under file1 contour,\n"
+        "-p       Extend 1st stable pitch of file1 to start of file.\n",
+        BLIPLEN,SILENCE_RATIO,MAXIMI,ACCEPTABLE_MATCH,MINPITCH,MAXIMI);
+    } else
+        fprintf(stdout,"Unknown option '%s'\n",str);
+    return(USAGE_ONLY);
 }
 
 int usage3(char *str1,char *str2)
 {
-	sprintf(errstr,"Insufficient parameters on command line.\n");
-	return(USAGE_ONLY);
+    sprintf(errstr,"Insufficient parameters on command line.\n");
+    return(USAGE_ONLY);
 }
 
 /************************* redundant functions: to ensure libs compile OK *******************/
 
 int assign_process_logic(dataptr dz)
 {
-	return(FINISHED);
+    return(FINISHED);
 }
 
 void set_legal_infile_structure(dataptr dz)
@@ -1203,565 +1203,565 @@ void set_legal_infile_structure(dataptr dz)
 
 int set_legal_internalparam_structure(int process,int mode,aplptr ap)
 {
-	return(FINISHED);
+    return(FINISHED);
 }
 
 int get_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 {
-	return(FINISHED);
+    return(FINISHED);
 }
 
 int setup_internal_arrays_and_array_pointers(dataptr dz)
 {
-	return(FINISHED);
+    return(FINISHED);
 }
 
 int establish_bufptrs_and_extra_buffers(dataptr dz)
 {
-	return(FINISHED);
+    return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz)	
+int read_special_data(char *str,dataptr dz) 
 {
-	return(FINISHED);
+    return(FINISHED);
 }
 
 int inner_loop
 (int *peakscore,int *descnt,int *in_start_portion,int *least,int *pitchcnt,int windows_in_buf,dataptr dz)
 {
-	return(FINISHED);
+    return(FINISHED);
 }
 
 /******************************** SPECTRAL_INTERP_ON_PITCH ********************************/
 
 int spectral_interp_on_pitch(dataptr dz)
 {
-	int exit_status;
-	int atk_window;
-	float minfrq = (float)dz->chwidth;
-	char z1[8],z2[8];
-	int minpitch = (int)ceil(unchecked_hztomidi(dz->chwidth));
-	int oct = (minpitch/12) - 5;
-	minpitch %= 12;
-	switch(minpitch) {
-	case(0):	strcpy(z1,"C");		break;
-	case(1):	strcpy(z1,"C#");	break;
-	case(2):	strcpy(z1,"D");		break;
-	case(3):	strcpy(z1,"D#");	break;
-	case(4):	strcpy(z1,"E");		break;
-	case(5):	strcpy(z1,"F");		break;
-	case(6):	strcpy(z1,"F#");	break;
-	case(7):	strcpy(z1,"G");		break;
-	case(8):	strcpy(z1,"G#");	break;
-	case(9):	strcpy(z1,"A");		break;
-	case(10):	strcpy(z1,"A#");	break;
-	case(11):	strcpy(z1,"B");		break;
-	}
-	sprintf(z2,"%d",oct);
-	strcat(z1,z2);
-	fprintf(stdout,"INFO: Minimum pitch resolvable at this channel count = %s (C0 = middle C)\n",z1);
-//	fprintf(stdout,"INFO: Extracting pitch and harmonics from source 1.\n");
-	fflush(stdout);
-	if((exit_status = extract_pitch_and_harmonics(0,minfrq,dz)) < 0)	/* get harmonic data for src 1 */
-		return(exit_status);
-	atk_window = get_atk_time(dz->fptr[0],dz->itemcnt,dz);
-	if(atk_window >= dz->insams[1]/dz->wanted) {
-		sprintf(errstr,"Attack time on 1st source is at or beyond end of 2nd.\n");
-		return(GOAL_FAILED);
-	}
-//	fprintf(stdout,"INFO: Extracting pitch and harmonics from source 2.\n");
-//	fflush(stdout);
-	if((exit_status = extract_pitch_and_harmonics(1,minfrq,dz)) < 0)	/* get harmonic data for src 2 */
-		return(exit_status);											/* pitchdata (and windowcnt) replaces data of 1st file */
-//	fprintf(stdout,"INFO: Interpolating harmonics.\n");
-//	fflush(stdout);
-	if((exit_status = interp_spectra(atk_window,dz))<0)
-		return(exit_status);
-	return(FINISHED);
+    int exit_status;
+    int atk_window;
+    float minfrq = (float)dz->chwidth;
+    char z1[8],z2[8];
+    int minpitch = (int)ceil(unchecked_hztomidi(dz->chwidth));
+    int oct = (minpitch/12) - 5;
+    minpitch %= 12;
+    switch(minpitch) {
+    case(0):    strcpy(z1,"C");     break;
+    case(1):    strcpy(z1,"C#");    break;
+    case(2):    strcpy(z1,"D");     break;
+    case(3):    strcpy(z1,"D#");    break;
+    case(4):    strcpy(z1,"E");     break;
+    case(5):    strcpy(z1,"F");     break;
+    case(6):    strcpy(z1,"F#");    break;
+    case(7):    strcpy(z1,"G");     break;
+    case(8):    strcpy(z1,"G#");    break;
+    case(9):    strcpy(z1,"A");     break;
+    case(10):   strcpy(z1,"A#");    break;
+    case(11):   strcpy(z1,"B");     break;
+    }
+    sprintf(z2,"%d",oct);
+    strcat(z1,z2);
+    fprintf(stdout,"INFO: Minimum pitch resolvable at this channel count = %s (C0 = middle C)\n",z1);
+//  fprintf(stdout,"INFO: Extracting pitch and harmonics from source 1.\n");
+    fflush(stdout);
+    if((exit_status = extract_pitch_and_harmonics(0,minfrq,dz)) < 0)    /* get harmonic data for src 1 */
+        return(exit_status);
+    atk_window = get_atk_time(dz->fptr[0],dz->itemcnt,dz);
+    if(atk_window >= dz->insams[1]/dz->wanted) {
+        sprintf(errstr,"Attack time on 1st source is at or beyond end of 2nd.\n");
+        return(GOAL_FAILED);
+    }
+//  fprintf(stdout,"INFO: Extracting pitch and harmonics from source 2.\n");
+//  fflush(stdout);
+    if((exit_status = extract_pitch_and_harmonics(1,minfrq,dz)) < 0)    /* get harmonic data for src 2 */
+        return(exit_status);                                            /* pitchdata (and windowcnt) replaces data of 1st file */
+//  fprintf(stdout,"INFO: Interpolating harmonics.\n");
+//  fflush(stdout);
+    if((exit_status = interp_spectra(atk_window,dz))<0)
+        return(exit_status);
+    return(FINISHED);
 }
 
 /*********************** EXTRACT_PITCH_AND_HARMONICS ***********************/
 
 int extract_pitch_and_harmonics(int fileno,double minfrq,dataptr dz)
 {
-	int exit_status, firstwindow = 1, maxharmonics = 0, z;
-	int wins_in_buf, bigarraysize = 0, check, n, m, wlen, maxwlen;
-	float *thishratios, *pichstor;
-	float lastfrq;
-	if(fileno == 0) {
-		pichstor = dz->pitches;
-		wlen = dz->wlength;
-	} else {
-		pichstor = dz->pitches2;
-		wlen = dz->insams[1]/dz->wanted;
-	}
-	z = 2 + fileno;
-	maxwlen = max(dz->wlength,dz->insams[1]/dz->wanted);
-	if((dz->parray[z] = (double *)malloc(maxwlen * sizeof(double)))==NULL) {
-		sprintf(errstr,"No memory to store evelope of file %d.\n",fileno + 1);
-		return(MEMORY_ERROR);
-	}
-	memset((char *)(dz->parray[z]),0,maxwlen * sizeof(double));
-	dz->total_samps_read = 0;
-	dz->total_windows = 0;
-	dz->samps_left = dz->insams[fileno];
-	while(dz->samps_left > 0) {
-		if((dz->ssampsread = fgetfbufEx(dz->bigfbuf, dz->buflen,dz->ifd[fileno],0)) < 0) {
-			sprintf(errstr,"Can't read samples from input soundfile %d\n",fileno+1);
-			return(SYSTEM_ERROR);
-		}
-		dz->samps_left -= dz->ssampsread;	
-		dz->total_samps_read += dz->ssampsread;
-		
-		wins_in_buf = dz->ssampsread / dz->wanted; 	
-		dz->flbufptr[0] = dz->bigfbuf;
-		for(n=0;n<wins_in_buf;n++) {
-			if(firstwindow) {
-				pichstor[n] = (float)NOT_PITCH;
-				firstwindow = 0;
-			} else {
-				if((exit_status = specpitch(pichstor,dz))<0)
-					return(exit_status);
-				if(pichstor[dz->total_windows] >= minfrq)
-					maxharmonics = max(maxharmonics,(int)floor(dz->nyquist/pichstor[dz->total_windows]));
-			}
-			dz->parray[z][dz->total_windows] = 0.0;	/* store loudness of window */
-			for(m = 0;m<dz->wanted;m+=2)
-				dz->parray[z][dz->total_windows] += dz->flbufptr[0][m];
-			dz->flbufptr[0] += dz->wanted;
-			dz->total_windows++;
-		}
-	}
-	if(dz->vflag[STABLE_PITCH] && fileno == 0) {
-		if((exit_status = extend_stable_pitch_to_start(dz))<0) {
-			fprintf(stdout,"INFO: No stable pitch found.\n");
-			fflush(stdout);
-		}
-	}
-	if(maxharmonics == 0) {
-		sprintf(errstr,"No pitch found in source %d.\n",fileno+1);
-		return(DATA_ERROR);
-	}
-	if(fileno == 0)
-		dz->itemcnt = maxharmonics;
-	else
-		dz->unspecified_filecnt = maxharmonics;		/* spare structure variable used */
+    int exit_status, firstwindow = 1, maxharmonics = 0, z;
+    int wins_in_buf, bigarraysize = 0, check, n, m, wlen, maxwlen;
+    float *thishratios, *pichstor;
+    float lastfrq;
+    if(fileno == 0) {
+        pichstor = dz->pitches;
+        wlen = dz->wlength;
+    } else {
+        pichstor = dz->pitches2;
+        wlen = dz->insams[1]/dz->wanted;
+    }
+    z = 2 + fileno;
+    maxwlen = max(dz->wlength,dz->insams[1]/dz->wanted);
+    if((dz->parray[z] = (double *)malloc(maxwlen * sizeof(double)))==NULL) {
+        sprintf(errstr,"No memory to store evelope of file %d.\n",fileno + 1);
+        return(MEMORY_ERROR);
+    }
+    memset((char *)(dz->parray[z]),0,maxwlen * sizeof(double));
+    dz->total_samps_read = 0;
+    dz->total_windows = 0;
+    dz->samps_left = dz->insams[fileno];
+    while(dz->samps_left > 0) {
+        if((dz->ssampsread = fgetfbufEx(dz->bigfbuf, dz->buflen,dz->ifd[fileno],0)) < 0) {
+            sprintf(errstr,"Can't read samples from input soundfile %d\n",fileno+1);
+            return(SYSTEM_ERROR);
+        }
+        dz->samps_left -= dz->ssampsread;   
+        dz->total_samps_read += dz->ssampsread;
+        
+        wins_in_buf = dz->ssampsread / dz->wanted;  
+        dz->flbufptr[0] = dz->bigfbuf;
+        for(n=0;n<wins_in_buf;n++) {
+            if(firstwindow) {
+                pichstor[n] = (float)NOT_PITCH;
+                firstwindow = 0;
+            } else {
+                if((exit_status = specpitch(pichstor,dz))<0)
+                    return(exit_status);
+                if(pichstor[dz->total_windows] >= minfrq)
+                    maxharmonics = max(maxharmonics,(int)floor(dz->nyquist/pichstor[dz->total_windows]));
+            }
+            dz->parray[z][dz->total_windows] = 0.0; /* store loudness of window */
+            for(m = 0;m<dz->wanted;m+=2)
+                dz->parray[z][dz->total_windows] += dz->flbufptr[0][m];
+            dz->flbufptr[0] += dz->wanted;
+            dz->total_windows++;
+        }
+    }
+    if(dz->vflag[STABLE_PITCH] && fileno == 0) {
+        if((exit_status = extend_stable_pitch_to_start(dz))<0) {
+            fprintf(stdout,"INFO: No stable pitch found.\n");
+            fflush(stdout);
+        }
+    }
+    if(maxharmonics == 0) {
+        sprintf(errstr,"No pitch found in source %d.\n",fileno+1);
+        return(DATA_ERROR);
+    }
+    if(fileno == 0)
+        dz->itemcnt = maxharmonics;
+    else
+        dz->unspecified_filecnt = maxharmonics;     /* spare structure variable used */
 
-		/* CREATE ARRAY TO STORE HARMONIC-RATIOS DATA */
+        /* CREATE ARRAY TO STORE HARMONIC-RATIOS DATA */
 
-	for(n=0;n<wlen;n++) {
-		check = bigarraysize;
-		bigarraysize += maxharmonics * sizeof(float);
-		if(bigarraysize < check) {
-			sprintf(errstr,"Memory size for source 1 too large for integer arithmetic.\n");
-			return(MEMORY_ERROR);
-		}
-	}
-	if((dz->fptr[fileno] = (float *)malloc(bigarraysize))==NULL) {
-		sprintf(errstr,"Insufficient memory to store spectral data of source %d\n",fileno+1);
-		return(MEMORY_ERROR);
-	}
-	memset((char *)dz->fptr[fileno],0,bigarraysize);	/* Default all harmonic amplitudes to zero */
+    for(n=0;n<wlen;n++) {
+        check = bigarraysize;
+        bigarraysize += maxharmonics * sizeof(float);
+        if(bigarraysize < check) {
+            sprintf(errstr,"Memory size for source 1 too large for integer arithmetic.\n");
+            return(MEMORY_ERROR);
+        }
+    }
+    if((dz->fptr[fileno] = (float *)malloc(bigarraysize))==NULL) {
+        sprintf(errstr,"Insufficient memory to store spectral data of source %d\n",fileno+1);
+        return(MEMORY_ERROR);
+    }
+    memset((char *)dz->fptr[fileno],0,bigarraysize);    /* Default all harmonic amplitudes to zero */
 
-		/* USE PITCH INFO TO EXTRACT AMPLITUDES OF HARMONICS IN EACH WINDOW */
-	
-	thishratios = dz->fptr[fileno];
+        /* USE PITCH INFO TO EXTRACT AMPLITUDES OF HARMONICS IN EACH WINDOW */
+    
+    thishratios = dz->fptr[fileno];
     if((sndseekEx(dz->ifd[fileno],0,0)<0)){        
         sprintf(errstr,"sndseek() failed\n");
         return SYSTEM_ERROR;
     }
-	dz->total_samps_read = 0;
-	dz->total_windows = 0;
-	dz->samps_left = dz->insams[fileno];
-	while(dz->samps_left > 0) {
-		if((dz->ssampsread = fgetfbufEx(dz->bigfbuf, dz->buflen,dz->ifd[fileno],0)) < 0) {
-			sprintf(errstr,"Can't read samples from input soundfile %d.\n",fileno + 1);
-			return(SYSTEM_ERROR);
-		}
-		dz->samps_left -= dz->ssampsread;	
-		dz->total_samps_read += dz->ssampsread;
+    dz->total_samps_read = 0;
+    dz->total_windows = 0;
+    dz->samps_left = dz->insams[fileno];
+    while(dz->samps_left > 0) {
+        if((dz->ssampsread = fgetfbufEx(dz->bigfbuf, dz->buflen,dz->ifd[fileno],0)) < 0) {
+            sprintf(errstr,"Can't read samples from input soundfile %d.\n",fileno + 1);
+            return(SYSTEM_ERROR);
+        }
+        dz->samps_left -= dz->ssampsread;   
+        dz->total_samps_read += dz->ssampsread;
 
-		wins_in_buf = dz->ssampsread / dz->wanted; 	
-		dz->flbufptr[0] = dz->bigfbuf;
-		for(n=0;n<wins_in_buf;n++) {
-			if(pichstor[dz->total_windows] >= minfrq)
-				extract_harmonic_contour(pichstor[dz->total_windows],thishratios,dz);
-			thishratios += maxharmonics;
-			dz->flbufptr[0] += dz->wanted;
-			dz->total_windows++;
-		}
-	}
-	lastfrq  = (float)NOT_PITCH;	/* i.e. no pitch yet found */
+        wins_in_buf = dz->ssampsread / dz->wanted;  
+        dz->flbufptr[0] = dz->bigfbuf;
+        for(n=0;n<wins_in_buf;n++) {
+            if(pichstor[dz->total_windows] >= minfrq)
+                extract_harmonic_contour(pichstor[dz->total_windows],thishratios,dz);
+            thishratios += maxharmonics;
+            dz->flbufptr[0] += dz->wanted;
+            dz->total_windows++;
+        }
+    }
+    lastfrq  = (float)NOT_PITCH;    /* i.e. no pitch yet found */
 
-			/* INTERPOLATE PITCH AND HRATIOS THROUGH UNPITCHED AREAS */
+            /* INTERPOLATE PITCH AND HRATIOS THROUGH UNPITCHED AREAS */
 
-	pitch_and_harms_interp(maxharmonics,minfrq,dz->fptr[fileno],pichstor,wlen,fileno,dz);
-	return FINISHED;
-}	
+    pitch_and_harms_interp(maxharmonics,minfrq,dz->fptr[fileno],pichstor,wlen,fileno,dz);
+    return FINISHED;
+}   
 
 /*********************** PITCH_AND_HARMS_INTERP ***********************/
 
-  			/* INTERPOLATE PITCH AND HRATIOS THROUGH UNPITCHED AREAS */
+            /* INTERPOLATE PITCH AND HRATIOS THROUGH UNPITCHED AREAS */
 int pitch_and_harms_interp(int maxharmonics,double minfrq,float *hratios,float *pichstor,int wlen,int fileno,dataptr dz)
 {
-	int n, m, k, i, j, startharms, endharms, winstep;
-	float startharm, endharm, lastfrq = (float)NOT_PITCH;	/* i.e. no pitch yet found */
-	double endpitch, lastpitch, pitchstep, thispitch, interp, harmstep;
+    int n, m, k, i, j, startharms, endharms, winstep;
+    float startharm, endharm, lastfrq = (float)NOT_PITCH;   /* i.e. no pitch yet found */
+    double endpitch, lastpitch, pitchstep, thispitch, interp, harmstep;
 
-	for(n=0,m=0;n<dz->total_windows;n++,m+=maxharmonics) {
-		if(pichstor[n] < minfrq) {		/* NO PITCH IN THIS WINDOW */
-			if(lastfrq < minfrq)	/* No pitch, so far, in sound */
-				continue;
-			else {					/* Previous window had a valid pitch */
-				startharms = m - maxharmonics;	/* start of hratios in previous (pitched) window */
-				k = n + 1;
-				while(k < wlen) {		/* Search forward for next valid pitch */
-					if(pichstor[k] < minfrq)
-						k++;
-					else
-						break;
-				}
-				if(k == wlen) {			/* No more pitched windows before end of snd */
-					while(n < wlen) {	/* Copy previous pitch + hratios into all last windows */
-						pichstor[n] = lastfrq;
+    for(n=0,m=0;n<dz->total_windows;n++,m+=maxharmonics) {
+        if(pichstor[n] < minfrq) {      /* NO PITCH IN THIS WINDOW */
+            if(lastfrq < minfrq)    /* No pitch, so far, in sound */
+                continue;
+            else {                  /* Previous window had a valid pitch */
+                startharms = m - maxharmonics;  /* start of hratios in previous (pitched) window */
+                k = n + 1;
+                while(k < wlen) {       /* Search forward for next valid pitch */
+                    if(pichstor[k] < minfrq)
+                        k++;
+                    else
+                        break;
+                }
+                if(k == wlen) {         /* No more pitched windows before end of snd */
+                    while(n < wlen) {   /* Copy previous pitch + hratios into all last windows */
+                        pichstor[n] = lastfrq;
 //NEW : ONLY INTERP MARMONICS IN 1ST SOUND: NO PITCH IN Snd2 = HARMONICS ZERO
-						if(fileno==0) {
-							for(i = 0; i < maxharmonics; i++) {
-								hratios[m] = hratios[startharms + i];
-								m++;
-							}
-						}
-						n++;
-					}
-				} else {						/* Interpolate between last valid pitch and next */
-					winstep   = k - n + 1;
-					endpitch  = unchecked_hztomidi(pichstor[k]); 
-					lastpitch = unchecked_hztomidi(lastfrq);
-					pitchstep = (endpitch - lastpitch)/(double)winstep;
-					thispitch = lastpitch;
-					endharms  = k * maxharmonics;
-					for(j = 1; n < k; n++,j++) {	/* j counts interp steps, n continues to count pitches */
-						interp = (double)j/(double)winstep;
-						thispitch += pitchstep;
-						pichstor[n] = (float)miditohz(thispitch);	/* interpolated pitch */
+                        if(fileno==0) {
+                            for(i = 0; i < maxharmonics; i++) {
+                                hratios[m] = hratios[startharms + i];
+                                m++;
+                            }
+                        }
+                        n++;
+                    }
+                } else {                        /* Interpolate between last valid pitch and next */
+                    winstep   = k - n + 1;
+                    endpitch  = unchecked_hztomidi(pichstor[k]); 
+                    lastpitch = unchecked_hztomidi(lastfrq);
+                    pitchstep = (endpitch - lastpitch)/(double)winstep;
+                    thispitch = lastpitch;
+                    endharms  = k * maxharmonics;
+                    for(j = 1; n < k; n++,j++) {    /* j counts interp steps, n continues to count pitches */
+                        interp = (double)j/(double)winstep;
+                        thispitch += pitchstep;
+                        pichstor[n] = (float)miditohz(thispitch);   /* interpolated pitch */
 //NEW : ONLY INTERP MARMONICS IN 1ST SOUND
-						if(fileno==0) {
-							for(i = 0; i < maxharmonics; i++) {		/* interpolate between hratios */
-								if(fileno==0) {
-									startharm  = hratios[startharms + i];
-									endharm    = hratios[endharms   + i];
-									harmstep   = (endharm - startharm) * interp;
-									hratios[m] = (float)(startharm + harmstep);
-									m++;								/* m counts hratios */
-								}
-							}
-						}
-					}
-					lastfrq = pichstor[k];				/* Remember last valid pitch */
-				}
-			}
-		} else {	/* FOUND VALID PITCH */
-			if(lastfrq < minfrq) {					/* no pitch previously found, This is first found */
-				for(k = 0,j = 0; k < n; k++,j += maxharmonics) {
-					pichstor[k] = pichstor[n];			/* copy current pitch into all previous windows */
+                        if(fileno==0) {
+                            for(i = 0; i < maxharmonics; i++) {     /* interpolate between hratios */
+                                if(fileno==0) {
+                                    startharm  = hratios[startharms + i];
+                                    endharm    = hratios[endharms   + i];
+                                    harmstep   = (endharm - startharm) * interp;
+                                    hratios[m] = (float)(startharm + harmstep);
+                                    m++;                                /* m counts hratios */
+                                }
+                            }
+                        }
+                    }
+                    lastfrq = pichstor[k];              /* Remember last valid pitch */
+                }
+            }
+        } else {    /* FOUND VALID PITCH */
+            if(lastfrq < minfrq) {                  /* no pitch previously found, This is first found */
+                for(k = 0,j = 0; k < n; k++,j += maxharmonics) {
+                    pichstor[k] = pichstor[n];          /* copy current pitch into all previous windows */
 //NEW : ONLY INTERP MARMONICS IN 1ST SOUND
-					if(fileno==0) {
-						for(i=0;i < maxharmonics;i++)	/* copy current hratios into all previous windows */
-							hratios[j+i] = hratios[m+i];
-					}
-				}
-			}
-			lastfrq = pichstor[n];						/* Remember last valid pitch */
-		}
-	}
-	return FINISHED;
+                    if(fileno==0) {
+                        for(i=0;i < maxharmonics;i++)   /* copy current hratios into all previous windows */
+                            hratios[j+i] = hratios[m+i];
+                    }
+                }
+            }
+            lastfrq = pichstor[n];                      /* Remember last valid pitch */
+        }
+    }
+    return FINISHED;
 }
 
 /*********************** EXTRACT_HARMONIC_CONTOUR ***************************/
 
-#define EIGHT_OVER_SEVEN	(1.142857143)
+#define EIGHT_OVER_SEVEN    (1.142857143)
 
 int extract_harmonic_contour(float fundamental,float *thishratios,dataptr dz)
 {
-	int harmno, n, cc, vc, try_again, all_finished, valid_amps;
-	double partialfrq, maxamp, frqratio, normdval;
-	float frq, amp;
-	dz->clength	= dz->wanted / 2;
-	harmno = 0;
-	partialfrq = fundamental * (harmno+1);
-	thishratios[harmno] = 0.0;
-	all_finished = 0;
-	for(cc = 0, vc = 0; cc < dz->clength; cc++, vc += 2) {
-		frq = dz->flbufptr[0][FREQ];
-		amp = dz->flbufptr[0][AMPP];
-		try_again = 1;
-		while(try_again) {
-			try_again = 0;
-			if(frq <= partialfrq) {
-				frqratio = partialfrq / fabs(frq);
-				if(frqratio < EIGHT_OVER_SEVEN)					/* if approx equal to harmonic frq */
-					thishratios[harmno] = 
-					(float)max((double)amp,thishratios[harmno]);/* store max amp val found for this harmonic */
-																/* else, in between valid harmonic values */
-			} else {
-				frqratio = fabs(frq) / partialfrq;					/* ELSE frq > partialfrq */
-				if(frqratio < EIGHT_OVER_SEVEN)	{				/* if approx equal to harmonic frq */
-					thishratios[harmno] = 
-					(float)max((double)amp,thishratios[harmno]);/* store max amp val found for this harmonic */
-				} else {
-					harmno++;									/* else move to next harmonic */
-					thishratios[harmno] = 0.0;
-					partialfrq = fundamental * (harmno + 1); 
-					if(partialfrq >= dz->nyquist) {				/* if no more harmonics, break */
-						harmno--;
-						all_finished = 1;
-						break;
-					}
-					try_again = 1;
-				}
-			}
-		}
-		if(all_finished)
-			break;
-	}
-	maxamp = 0.0;
-	for(n = 0;n<=harmno;n++)
-		maxamp = max((double)thishratios[n],maxamp);			/* Find loudest partial */
-	if(maxamp <= FLTERR) {										/* If no significant level */
-		for(n = 0;n<=harmno;n++)								/* set all partials to zero */
-			thishratios[n] = 0.0f;
-	}
-	valid_amps = 0;
-	for(n = 0;n<=harmno;n++) {
-		normdval = thishratios[n]/maxamp; 
-		if(normdval < dz->param[PICH_THRESH])				/* if partial below threshold */
-			thishratios[n] = 0.0f;							/* set it to zero */
-	}
-	return FINISHED;
+    int harmno, n, cc, vc, try_again, all_finished, valid_amps;
+    double partialfrq, maxamp, frqratio, normdval;
+    float frq, amp;
+    dz->clength = dz->wanted / 2;
+    harmno = 0;
+    partialfrq = fundamental * (harmno+1);
+    thishratios[harmno] = 0.0;
+    all_finished = 0;
+    for(cc = 0, vc = 0; cc < dz->clength; cc++, vc += 2) {
+        frq = dz->flbufptr[0][FREQ];
+        amp = dz->flbufptr[0][AMPP];
+        try_again = 1;
+        while(try_again) {
+            try_again = 0;
+            if(frq <= partialfrq) {
+                frqratio = partialfrq / fabs(frq);
+                if(frqratio < EIGHT_OVER_SEVEN)                 /* if approx equal to harmonic frq */
+                    thishratios[harmno] = 
+                    (float)max((double)amp,thishratios[harmno]);/* store max amp val found for this harmonic */
+                                                                /* else, in between valid harmonic values */
+            } else {
+                frqratio = fabs(frq) / partialfrq;                  /* ELSE frq > partialfrq */
+                if(frqratio < EIGHT_OVER_SEVEN) {               /* if approx equal to harmonic frq */
+                    thishratios[harmno] = 
+                    (float)max((double)amp,thishratios[harmno]);/* store max amp val found for this harmonic */
+                } else {
+                    harmno++;                                   /* else move to next harmonic */
+                    thishratios[harmno] = 0.0;
+                    partialfrq = fundamental * (harmno + 1); 
+                    if(partialfrq >= dz->nyquist) {             /* if no more harmonics, break */
+                        harmno--;
+                        all_finished = 1;
+                        break;
+                    }
+                    try_again = 1;
+                }
+            }
+        }
+        if(all_finished)
+            break;
+    }
+    maxamp = 0.0;
+    for(n = 0;n<=harmno;n++)
+        maxamp = max((double)thishratios[n],maxamp);            /* Find loudest partial */
+    if(maxamp <= FLTERR) {                                      /* If no significant level */
+        for(n = 0;n<=harmno;n++)                                /* set all partials to zero */
+            thishratios[n] = 0.0f;
+    }
+    valid_amps = 0;
+    for(n = 0;n<=harmno;n++) {
+        normdval = thishratios[n]/maxamp; 
+        if(normdval < dz->param[PICH_THRESH])               /* if partial below threshold */
+            thishratios[n] = 0.0f;                          /* set it to zero */
+    }
+    return FINISHED;
 }
 
 /****************************** SPECPITCH *******************************
  *
- * (1)	Ignore partials below low limit of pitch.
+ * (1)  Ignore partials below low limit of pitch.
  * (2)  If this channel data is louder than any existing piece of data in ring.
- *		(Ring data is ordered loudness-wise)...
- * (3)	If this freq is too close to an existing frequency..
- * (4)	and if it is louder than that existing frequency data..
- * (5)	Substitute in in the ring.
- * (6)	Otherwise, (its a new frq) insert it into the ring.
+ *      (Ring data is ordered loudness-wise)...
+ * (3)  If this freq is too close to an existing frequency..
+ * (4)  and if it is louder than that existing frequency data..
+ * (5)  Substitute in in the ring.
+ * (6)  Otherwise, (its a new frq) insert it into the ring.
  */
  
 int specpitch(float *pichstor,dataptr dz)
 {
-	int exit_status;
-	int vc;
-	chvptr here, there, *partials;
-	float minamp;
-	double loudest_partial_frq, nextloudest_partial_frq, lo_loud_partial, hi_loud_partial;	
-	if((partials = (chvptr *)malloc(MAXIMI * sizeof(chvptr)))==NULL) {
-		sprintf(errstr,"INSUFFICIENT MEMORY for partials array.\n");
-		return(MEMORY_ERROR);
-	}
-	if((exit_status = initialise_ring_vals(MAXIMI,-1.0,dz))<0)
-		return(exit_status);
-	if((exit_status = rectify_frqs(dz->flbufptr[0],dz))<0)
-		return(exit_status);
-	for(vc=0;vc<dz->wanted;vc+=2) {
-		here = dz->ringhead;
-		if(dz->flbufptr[0][FREQ] > dz->param[PICH_LOLM]) {  			/* 1 */
-			do {								
-				if(dz->flbufptr[0][AMPP] > here->val) {			   	/* 2 */
-					if((exit_status = close_to_frq_already_in_ring(&there,(double)dz->flbufptr[0][FREQ],dz))<0)
-						return(exit_status);
-					if(exit_status==TRUE) {
-						if(dz->flbufptr[0][AMPP] > there->val) {		/* 4 */
-							if((exit_status = substitute_in_ring(vc,here,there,dz))<0) /* 5 */
-								return(exit_status);
-						}
-					} else	{										/* 6 */
-						if((exit_status = insert_in_ring(vc,here,dz))<0)
-							return(exit_status);
-					}				
-					break;
-				}
-			} while((here = here->next)!=dz->ringhead);
-		}
-	}
-	loudest_partial_frq     = dz->flbufptr[0][dz->ringhead->loc + 1];
-	nextloudest_partial_frq = dz->flbufptr[0][dz->ringhead->next->loc + 1];
-	if(loudest_partial_frq < nextloudest_partial_frq) {
-		lo_loud_partial = loudest_partial_frq;
-		hi_loud_partial = nextloudest_partial_frq;
-	} else {
-		lo_loud_partial = nextloudest_partial_frq;
-		hi_loud_partial = loudest_partial_frq;
-	}
-	if((exit_status = put_ring_frqs_in_ascending_order(&partials,&minamp,dz))<0)
-		return(exit_status);
-	if((exit_status = found_pitch(partials,lo_loud_partial,hi_loud_partial,minamp,dz))<0)
-		return(exit_status);
-	if(exit_status==TRUE && dz->param[PICH_PICH2]>=MINPITCH)
-		pichstor[dz->total_windows] = (float)dz->param[PICH_PICH2];
-	else
-		pichstor[dz->total_windows] = (float)NOT_PITCH;
-	return smooth_spurious_octave_leaps(pichstor,dz->total_windows,minamp,dz);
+    int exit_status;
+    int vc;
+    chvptr here, there, *partials;
+    float minamp;
+    double loudest_partial_frq, nextloudest_partial_frq, lo_loud_partial, hi_loud_partial;  
+    if((partials = (chvptr *)malloc(MAXIMI * sizeof(chvptr)))==NULL) {
+        sprintf(errstr,"INSUFFICIENT MEMORY for partials array.\n");
+        return(MEMORY_ERROR);
+    }
+    if((exit_status = initialise_ring_vals(MAXIMI,-1.0,dz))<0)
+        return(exit_status);
+    if((exit_status = rectify_frqs(dz->flbufptr[0],dz))<0)
+        return(exit_status);
+    for(vc=0;vc<dz->wanted;vc+=2) {
+        here = dz->ringhead;
+        if(dz->flbufptr[0][FREQ] > dz->param[PICH_LOLM]) {              /* 1 */
+            do {                                
+                if(dz->flbufptr[0][AMPP] > here->val) {             /* 2 */
+                    if((exit_status = close_to_frq_already_in_ring(&there,(double)dz->flbufptr[0][FREQ],dz))<0)
+                        return(exit_status);
+                    if(exit_status==TRUE) {
+                        if(dz->flbufptr[0][AMPP] > there->val) {        /* 4 */
+                            if((exit_status = substitute_in_ring(vc,here,there,dz))<0) /* 5 */
+                                return(exit_status);
+                        }
+                    } else  {                                       /* 6 */
+                        if((exit_status = insert_in_ring(vc,here,dz))<0)
+                            return(exit_status);
+                    }               
+                    break;
+                }
+            } while((here = here->next)!=dz->ringhead);
+        }
+    }
+    loudest_partial_frq     = dz->flbufptr[0][dz->ringhead->loc + 1];
+    nextloudest_partial_frq = dz->flbufptr[0][dz->ringhead->next->loc + 1];
+    if(loudest_partial_frq < nextloudest_partial_frq) {
+        lo_loud_partial = loudest_partial_frq;
+        hi_loud_partial = nextloudest_partial_frq;
+    } else {
+        lo_loud_partial = nextloudest_partial_frq;
+        hi_loud_partial = loudest_partial_frq;
+    }
+    if((exit_status = put_ring_frqs_in_ascending_order(&partials,&minamp,dz))<0)
+        return(exit_status);
+    if((exit_status = found_pitch(partials,lo_loud_partial,hi_loud_partial,minamp,dz))<0)
+        return(exit_status);
+    if(exit_status==TRUE && dz->param[PICH_PICH2]>=MINPITCH)
+        pichstor[dz->total_windows] = (float)dz->param[PICH_PICH2];
+    else
+        pichstor[dz->total_windows] = (float)NOT_PITCH;
+    return smooth_spurious_octave_leaps(pichstor,dz->total_windows,minamp,dz);
 }
 
 /**************************** CLOSE_TO_FRQ_ALREADY_IN_RING *******************************/
 
 int close_to_frq_already_in_ring(chvptr *there,double frq1,dataptr dz)
 {
-#define EIGHT_OVER_SEVEN	(1.142857143)
+#define EIGHT_OVER_SEVEN    (1.142857143)
 
-	double frq2, frqratio;
-	*there = dz->ringhead;
-	do {
-		if((*there)->val > 0.0) {
-			frq2 = dz->flbufptr[0][(*there)->loc + 1];
-			if(frq1 > frq2)
-				frqratio = frq1/frq2;
-			else
-			    frqratio = frq2/frq1;
-			if(frqratio < EIGHT_OVER_SEVEN)
-				return(TRUE);
-		}
-	} while((*there = (*there)->next) != dz->ringhead);
-	return(FALSE);
+    double frq2, frqratio;
+    *there = dz->ringhead;
+    do {
+        if((*there)->val > 0.0) {
+            frq2 = dz->flbufptr[0][(*there)->loc + 1];
+            if(frq1 > frq2)
+                frqratio = frq1/frq2;
+            else
+                frqratio = frq2/frq1;
+            if(frqratio < EIGHT_OVER_SEVEN)
+                return(TRUE);
+        }
+    } while((*there = (*there)->next) != dz->ringhead);
+    return(FALSE);
 }
 
 /******************************* SUBSITUTE_IN_RING **********************/
 
 int substitute_in_ring(int vc,chvptr here,chvptr there,dataptr dz)
 {
-	chvptr spare, previous;
-	if(here!=there) {
-		if(there==dz->ringhead) {
-			sprintf(errstr,"IMPOSSIBLE! in substitute_in_ring()\n");
-			return(PROGRAM_ERROR);
-		}
-		spare = there;
-		there->next->last = there->last; /* SPLICE REDUNDANT STRUCT FROM RING */
-		there->last->next = there->next;
-		previous = here->last;
-		previous->next = spare;			/* SPLICE ITS ADDRESS-SPACE BACK INTO RING */
-		spare->last = previous;			/* IMMEDIATELY BEFORE HERE */
-		here->last = spare;
-		spare->next = here;
-		if(here==dz->ringhead)			/* IF HERE IS RINGHEAD, MOVE RINGHEAD */
-			dz->ringhead = spare;
-		here = spare;					/* POINT TO INSERT LOCATION */
-	}
-	here->val = dz->flbufptr[0][AMPP]; 	/* IF here==there */
-	here->loc = vc;	    				/* THIS WRITES OVER VAL IN EXISTING RING LOCATION */
-	return(FINISHED);
+    chvptr spare, previous;
+    if(here!=there) {
+        if(there==dz->ringhead) {
+            sprintf(errstr,"IMPOSSIBLE! in substitute_in_ring()\n");
+            return(PROGRAM_ERROR);
+        }
+        spare = there;
+        there->next->last = there->last; /* SPLICE REDUNDANT STRUCT FROM RING */
+        there->last->next = there->next;
+        previous = here->last;
+        previous->next = spare;         /* SPLICE ITS ADDRESS-SPACE BACK INTO RING */
+        spare->last = previous;         /* IMMEDIATELY BEFORE HERE */
+        here->last = spare;
+        spare->next = here;
+        if(here==dz->ringhead)          /* IF HERE IS RINGHEAD, MOVE RINGHEAD */
+            dz->ringhead = spare;
+        here = spare;                   /* POINT TO INSERT LOCATION */
+    }
+    here->val = dz->flbufptr[0][AMPP];  /* IF here==there */
+    here->loc = vc;                     /* THIS WRITES OVER VAL IN EXISTING RING LOCATION */
+    return(FINISHED);
 }
 
 /*************************** INSERT_IN_RING ***************************/
 
 int insert_in_ring(int vc, chvptr here, dataptr dz)
 {
-	chvptr previous, newend, spare;
-	if(here==dz->ringhead) {
-		dz->ringhead = dz->ringhead->last;
-		spare = dz->ringhead;
-	} else {
-		if(here==dz->ringhead->last)
-			spare = here;
-		else {
-			spare  = dz->ringhead->last;
-			newend = dz->ringhead->last->last; 	/* cut ENDADR (spare) out of ring */
-			dz->ringhead->last = newend;
-			newend->next = dz->ringhead;
-			previous = here->last;
-			here->last = spare;					/* reuse spare address at new loc by */ 
-			spare->next = here;  				/* inserting it back into ring before HERE */
-			previous->next = spare;
-			spare->last = previous;
-		}
-	}
-	spare->val = dz->flbufptr[0][vc];			/* Store new val in spare ring location */
-	spare->loc = vc;
-	return(FINISHED);
+    chvptr previous, newend, spare;
+    if(here==dz->ringhead) {
+        dz->ringhead = dz->ringhead->last;
+        spare = dz->ringhead;
+    } else {
+        if(here==dz->ringhead->last)
+            spare = here;
+        else {
+            spare  = dz->ringhead->last;
+            newend = dz->ringhead->last->last;  /* cut ENDADR (spare) out of ring */
+            dz->ringhead->last = newend;
+            newend->next = dz->ringhead;
+            previous = here->last;
+            here->last = spare;                 /* reuse spare address at new loc by */ 
+            spare->next = here;                 /* inserting it back into ring before HERE */
+            previous->next = spare;
+            spare->last = previous;
+        }
+    }
+    spare->val = dz->flbufptr[0][vc];           /* Store new val in spare ring location */
+    spare->loc = vc;
+    return(FINISHED);
 }
 
 /************************** PUT_RING_FRQS_IN_ASCENDING_ORDER **********************/
 
 int put_ring_frqs_in_ascending_order(chvptr **partials,float *minamp,dataptr dz)
 {
-	int k;
-	chvptr start, ggot, here = dz->ringhead;
-	float minpitch;
-	*minamp = (float)MAXFLOAT;
-	for(k=0;k<MAXIMI;k++) {
-		if((*minamp = min(dz->flbufptr[0][here->loc],*minamp))>=(float)MAXFLOAT) {
-			sprintf(errstr,"Problem with amplitude out of range: put_ring_frqs_in_ascending_order()\n");
-			return(PROGRAM_ERROR);
-		}
-		(here->loc)++;		/* CHANGE RING TO POINT TO FRQS, not AMPS */
-		here->val = dz->flbufptr[0][here->loc];
-		here = here->next;
-	}
-	here = dz->ringhead;
-	minpitch = dz->flbufptr[0][here->loc];
-	for(k=1;k<MAXIMI;k++) {
-		start = ggot = here;
-		while((here = here->next)!=start) {		/* Find lowest frq */
-			if(dz->flbufptr[0][here->loc] < minpitch) {	
-				minpitch = dz->flbufptr[0][here->loc];
-				ggot = here;
-			}
-		}
-		(*partials)[k-1] = ggot;				/* Save its address */
-		here = ggot->next;						/* Move to next ring site */
-		minpitch = dz->flbufptr[0][here->loc];	/* Preset minfrq to val there */
-		ggot->last->next = here;				/* Unlink ringsite ggot */
-		here->last = ggot->last;
-	}
-	(*partials)[k-1] = here;	     			/* Remaining ringsite is maximum */
+    int k;
+    chvptr start, ggot, here = dz->ringhead;
+    float minpitch;
+    *minamp = (float)MAXFLOAT;
+    for(k=0;k<MAXIMI;k++) {
+        if((*minamp = min(dz->flbufptr[0][here->loc],*minamp))>=(float)MAXFLOAT) {
+            sprintf(errstr,"Problem with amplitude out of range: put_ring_frqs_in_ascending_order()\n");
+            return(PROGRAM_ERROR);
+        }
+        (here->loc)++;      /* CHANGE RING TO POINT TO FRQS, not AMPS */
+        here->val = dz->flbufptr[0][here->loc];
+        here = here->next;
+    }
+    here = dz->ringhead;
+    minpitch = dz->flbufptr[0][here->loc];
+    for(k=1;k<MAXIMI;k++) {
+        start = ggot = here;
+        while((here = here->next)!=start) {     /* Find lowest frq */
+            if(dz->flbufptr[0][here->loc] < minpitch) { 
+                minpitch = dz->flbufptr[0][here->loc];
+                ggot = here;
+            }
+        }
+        (*partials)[k-1] = ggot;                /* Save its address */
+        here = ggot->next;                      /* Move to next ring site */
+        minpitch = dz->flbufptr[0][here->loc];  /* Preset minfrq to val there */
+        ggot->last->next = here;                /* Unlink ringsite ggot */
+        here->last = ggot->last;
+    }
+    (*partials)[k-1] = here;                    /* Remaining ringsite is maximum */
 
-	here = dz->ringhead = (*partials)[0];   	/* Reconstruct ring */
-	for(k=1;k<MAXIMI;k++) {
-		here->next = (*partials)[k];
-		(*partials)[k]->last = here;
-		here = here->next;
-	}
-	here->next = dz->ringhead;					/* Close up ring */
-	dz->ringhead->last = here;
-	return(FINISHED);
+    here = dz->ringhead = (*partials)[0];       /* Reconstruct ring */
+    for(k=1;k<MAXIMI;k++) {
+        here->next = (*partials)[k];
+        (*partials)[k]->last = here;
+        here = here->next;
+    }
+    here->next = dz->ringhead;                  /* Close up ring */
+    dz->ringhead->last = here;
+    return(FINISHED);
 }
 
-/******************************	 FOUND_PITCH **************************/
+/******************************  FOUND_PITCH **************************/
 
 #define MAXIMUM_PARTIAL (64)
 
 int found_pitch(chvptr *partials,double lo_loud_partial,double hi_loud_partial,float minamp,dataptr dz)
 {
-	int n, m, k, maximi_less_one = MAXIMUM_PARTIAL - 1, endd = 0;
-	double whole_number_ratio, comparison_frq;
-	for(n=1;n<maximi_less_one;n++) {
-		for(m=n+1;m<MAXIMUM_PARTIAL;m++) {	/* NOV 7 */
-			whole_number_ratio = (double)m/(double)n;
-			comparison_frq     = lo_loud_partial * whole_number_ratio;
-			if(equivalent_pitches(comparison_frq,hi_loud_partial,dz))
-				endd = (MAXIMUM_PARTIAL/m) * n;		/* explanation at foot of file */
-			else if(comparison_frq > hi_loud_partial)
-				break;
-			for(k=n;k<=endd;k+=n) {
-				dz->param[PICH_PICH2] = lo_loud_partial/(double)k;
-				if(dz->param[PICH_PICH2]>dz->param[PICH_HILM])
-					continue;
-				if(dz->param[PICH_PICH2]<dz->param[PICH_LOLM])
-					break;
-				if(is_peak_at(dz->param[PICH_PICH2],0,minamp,dz)){
-					if(dz->iparam[PICH_MATCH] <= 2)
-						return TRUE;
-					else if(enough_partials_are_harmonics(partials,dz))
-						return TRUE;
-				}
-			}
-		}
-	}
-	return(FALSE);
+    int n, m, k, maximi_less_one = MAXIMUM_PARTIAL - 1, endd = 0;
+    double whole_number_ratio, comparison_frq;
+    for(n=1;n<maximi_less_one;n++) {
+        for(m=n+1;m<MAXIMUM_PARTIAL;m++) {  /* NOV 7 */
+            whole_number_ratio = (double)m/(double)n;
+            comparison_frq     = lo_loud_partial * whole_number_ratio;
+            if(equivalent_pitches(comparison_frq,hi_loud_partial,dz))
+                endd = (MAXIMUM_PARTIAL/m) * n;     /* explanation at foot of file */
+            else if(comparison_frq > hi_loud_partial)
+                break;
+            for(k=n;k<=endd;k+=n) {
+                dz->param[PICH_PICH2] = lo_loud_partial/(double)k;
+                if(dz->param[PICH_PICH2]>dz->param[PICH_HILM])
+                    continue;
+                if(dz->param[PICH_PICH2]<dz->param[PICH_LOLM])
+                    break;
+                if(is_peak_at(dz->param[PICH_PICH2],0,minamp,dz)){
+                    if(dz->iparam[PICH_MATCH] <= 2)
+                        return TRUE;
+                    else if(enough_partials_are_harmonics(partials,dz))
+                        return TRUE;
+                }
+            }
+        }
+    }
+    return(FALSE);
 }
 
 
@@ -1769,73 +1769,73 @@ int found_pitch(chvptr *partials,double lo_loud_partial,double hi_loud_partial,f
 
 int smooth_spurious_octave_leaps(float *pichstor,int pitchno,float minamp,dataptr dz)
 {
-#define ALMOST_TWO	        (1.75)
+#define ALMOST_TWO          (1.75)
 
-	double thispitch = pichstor[pitchno];
-	double startpitch, lastpitch;
-	int k = 0;
-	if(pitchno<=0)
-		return(FINISHED);
-	lastpitch = pichstor[pitchno-1];
-	if(lastpitch > dz->param[PICH_LOLM] && thispitch > dz->param[PICH_LOLM]) {	/* OCTAVE ADJ HERE */
-		if(thispitch > lastpitch) {		/* OCTAVE ADJ FORWARDS */
-			startpitch = thispitch;
-			while(thispitch/lastpitch > ALMOST_TWO)
-				thispitch /= 2.0;
-			if(thispitch!=startpitch) {
-				if(thispitch < dz->param[PICH_LOLM])
-					return(FINISHED);
-				if(is_peak_at(thispitch,0L,minamp,dz))				
-					pichstor[pitchno] = (float)thispitch;
-				else 
-					pichstor[pitchno] = (float)startpitch;
-			}
-			return(FINISHED);
-		} else {
-			while(pitchno>=1) {			/* OCTAVE ADJ BCKWARDS */
-				k++;
-				if((thispitch = pichstor[pitchno--])<dz->param[PICH_LOLM])
-					return(FINISHED);
-				if((lastpitch = pichstor[pitchno])<dz->param[PICH_LOLM])
-					return(FINISHED);
-				startpitch = lastpitch;
-				while(lastpitch/thispitch > ALMOST_TWO)
-					lastpitch /= 2.0;
-				if(lastpitch!=startpitch) {
-					if(lastpitch < dz->param[PICH_LOLM])
-						return(FINISHED);
-					if(is_peak_at(lastpitch,k,minamp,dz))					
-						pichstor[pitchno] = (float)lastpitch;
-					else 
-						pichstor[pitchno] = (float)startpitch;
-				}
-			}
-		}
-	}
-	return(FINISHED);
+    double thispitch = pichstor[pitchno];
+    double startpitch, lastpitch;
+    int k = 0;
+    if(pitchno<=0)
+        return(FINISHED);
+    lastpitch = pichstor[pitchno-1];
+    if(lastpitch > dz->param[PICH_LOLM] && thispitch > dz->param[PICH_LOLM]) {  /* OCTAVE ADJ HERE */
+        if(thispitch > lastpitch) {     /* OCTAVE ADJ FORWARDS */
+            startpitch = thispitch;
+            while(thispitch/lastpitch > ALMOST_TWO)
+                thispitch /= 2.0;
+            if(thispitch!=startpitch) {
+                if(thispitch < dz->param[PICH_LOLM])
+                    return(FINISHED);
+                if(is_peak_at(thispitch,0L,minamp,dz))              
+                    pichstor[pitchno] = (float)thispitch;
+                else 
+                    pichstor[pitchno] = (float)startpitch;
+            }
+            return(FINISHED);
+        } else {
+            while(pitchno>=1) {         /* OCTAVE ADJ BCKWARDS */
+                k++;
+                if((thispitch = pichstor[pitchno--])<dz->param[PICH_LOLM])
+                    return(FINISHED);
+                if((lastpitch = pichstor[pitchno])<dz->param[PICH_LOLM])
+                    return(FINISHED);
+                startpitch = lastpitch;
+                while(lastpitch/thispitch > ALMOST_TWO)
+                    lastpitch /= 2.0;
+                if(lastpitch!=startpitch) {
+                    if(lastpitch < dz->param[PICH_LOLM])
+                        return(FINISHED);
+                    if(is_peak_at(lastpitch,k,minamp,dz))                   
+                        pichstor[pitchno] = (float)lastpitch;
+                    else 
+                        pichstor[pitchno] = (float)startpitch;
+                }
+            }
+        }
+    }
+    return(FINISHED);
 }
 
 /**************************** EQUIVALENT_PITCHES *************************/
 
 int equivalent_pitches(double frq1, double frq2, dataptr dz)
 {
-	double ratio;
-	int   iratio;
-	double intvl;
+    double ratio;
+    int   iratio;
+    double intvl;
 
-	ratio = frq1/frq2;
-	iratio = round(ratio);
+    ratio = frq1/frq2;
+    iratio = round(ratio);
 
-	if(iratio!=1)
-		return(FALSE);
+    if(iratio!=1)
+        return(FALSE);
 
-	if(ratio > iratio)
-		intvl = ratio/(double)iratio;
-	else
-		intvl = (double)iratio/ratio;
-	if(intvl > dz->param[PICH_RNGE])	
-		return FALSE;
-	return TRUE;
+    if(ratio > iratio)
+        intvl = ratio/(double)iratio;
+    else
+        intvl = (double)iratio/ratio;
+    if(intvl > dz->param[PICH_RNGE])    
+        return FALSE;
+    return TRUE;
 }
 
 /*************************** IS_PEAK_AT ***************************/
@@ -1844,251 +1844,251 @@ int equivalent_pitches(double frq1, double frq2, dataptr dz)
 
 int is_peak_at(double frq,int window_offset,float minamp,dataptr dz)
 {
-	float *thisbuf;
-	int cc, vc, searchtop, searchbot;
-	if(window_offset) {								/* BAKTRAK ALONG BIGBUF, IF NESS */
-		if((thisbuf = dz->flbufptr[0] - (window_offset * dz->wanted)) < dz->bigfbuf)
-			return(FALSE);
-	}else
-		thisbuf = dz->flbufptr[0];
-	cc = (int)((frq + dz->halfchwidth)/dz->chwidth);		 /* TRUNCATE */
-	searchtop = min(dz->clength,cc + CHANSCAN + 1);
-	searchbot = max(0,cc - CHANSCAN);
-	for(cc = searchbot ,vc = searchbot*2; cc < searchtop; cc++, vc += 2) {
-		if(!equivalent_pitches((double)thisbuf[vc+1],frq,dz))
-			continue;
-		if(thisbuf[vc] < minamp * PEAK_LIMIT)
-			continue;
-		if(local_peak(cc,frq,thisbuf,dz))		
-			return TRUE;
-	}
-	return FALSE;
+    float *thisbuf;
+    int cc, vc, searchtop, searchbot;
+    if(window_offset) {                             /* BAKTRAK ALONG BIGBUF, IF NESS */
+        if((thisbuf = dz->flbufptr[0] - (window_offset * dz->wanted)) < dz->bigfbuf)
+            return(FALSE);
+    }else
+        thisbuf = dz->flbufptr[0];
+    cc = (int)((frq + dz->halfchwidth)/dz->chwidth);         /* TRUNCATE */
+    searchtop = min(dz->clength,cc + CHANSCAN + 1);
+    searchbot = max(0,cc - CHANSCAN);
+    for(cc = searchbot ,vc = searchbot*2; cc < searchtop; cc++, vc += 2) {
+        if(!equivalent_pitches((double)thisbuf[vc+1],frq,dz))
+            continue;
+        if(thisbuf[vc] < minamp * PEAK_LIMIT)
+            continue;
+        if(local_peak(cc,frq,thisbuf,dz))       
+            return TRUE;
+    }
+    return FALSE;
 }
 
 /**************************** ENOUGH_PARTIALS_ARE_HARMONICS *************************/
 
 int enough_partials_are_harmonics(chvptr *partials,dataptr dz)
 {
-	int n, good_match = 0;
-	double thisfrq;
-	for(n=0;n<MAXIMI;n++) {
-		if((thisfrq = dz->flbufptr[0][partials[n]->loc]) < dz->param[PICH_PICH2])
-			continue;
-		if(is_a_harmonic(thisfrq,dz->param[PICH_PICH2],dz)){		
-			if(++good_match >= dz->iparam[PICH_MATCH])
-				return TRUE;
-		}
-	}
-	return FALSE;
+    int n, good_match = 0;
+    double thisfrq;
+    for(n=0;n<MAXIMI;n++) {
+        if((thisfrq = dz->flbufptr[0][partials[n]->loc]) < dz->param[PICH_PICH2])
+            continue;
+        if(is_a_harmonic(thisfrq,dz->param[PICH_PICH2],dz)){        
+            if(++good_match >= dz->iparam[PICH_MATCH])
+                return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 /**************************** IS_A_HARMONIC *************************/
 
 int is_a_harmonic(double frq1,double frq2,dataptr dz)
 {
-	double ratio = frq1/frq2;
-	int   iratio = round(ratio);
-	double intvl;
+    double ratio = frq1/frq2;
+    int   iratio = round(ratio);
+    double intvl;
 
-	ratio = frq1/frq2;
-	iratio = round(ratio);
+    ratio = frq1/frq2;
+    iratio = round(ratio);
 
-	if(ratio > iratio)
-		intvl = ratio/(double)iratio;
-	else
-		intvl = (double)iratio/ratio;
-	if(intvl > dz->param[PICH_RNGE])
-		return(FALSE);
-	return(TRUE);
+    if(ratio > iratio)
+        intvl = ratio/(double)iratio;
+    else
+        intvl = (double)iratio/ratio;
+    if(intvl > dz->param[PICH_RNGE])
+        return(FALSE);
+    return(TRUE);
 }
 
 /***************************** LOCAL_PEAK **************************/
 
 int local_peak(int thiscc,double frq, float *thisbuf, dataptr dz)
 {
-	int thisvc = thiscc * 2;
-	int cc, vc, searchtop, searchbot;
-	double frqtop = frq * SEMITONE_INTERVAL;
-	double frqbot = frq / SEMITONE_INTERVAL;
-	searchtop = (int)((frqtop + dz->halfchwidth)/dz->chwidth);		/* TRUNCATE */
-	searchtop = min(dz->clength,searchtop + PEAKSCAN + 1);
-	searchbot = (int)((frqbot + dz->halfchwidth)/dz->chwidth);		/* TRUNCATE */
-	searchbot = max(0,searchbot - PEAKSCAN);
-	for(cc = searchbot ,vc = searchbot*2; cc < searchtop; cc++, vc += 2) {
-		if(thisbuf[thisvc] < thisbuf[vc])
-			return(FALSE);
-	}
-	return(TRUE);
+    int thisvc = thiscc * 2;
+    int cc, vc, searchtop, searchbot;
+    double frqtop = frq * SEMITONE_INTERVAL;
+    double frqbot = frq / SEMITONE_INTERVAL;
+    searchtop = (int)((frqtop + dz->halfchwidth)/dz->chwidth);      /* TRUNCATE */
+    searchtop = min(dz->clength,searchtop + PEAKSCAN + 1);
+    searchbot = (int)((frqbot + dz->halfchwidth)/dz->chwidth);      /* TRUNCATE */
+    searchbot = max(0,searchbot - PEAKSCAN);
+    for(cc = searchbot ,vc = searchbot*2; cc < searchtop; cc++, vc += 2) {
+        if(thisbuf[thisvc] < thisbuf[vc])
+            return(FALSE);
+    }
+    return(TRUE);
 }
 
 /***************************** GET_ATK_TIME *****************************/
 
 int get_atk_time(float *hratios,int maxharmonics,dataptr dz)
 {
-	int i;
-	int n, m = 0, maxloc = 0;
-	double sum, maxsum = 0.0, atk_time, duration1;
+    int i;
+    int n, m = 0, maxloc = 0;
+    double sum, maxsum = 0.0, atk_time, duration1;
 
-	for(n = 0;n<dz->total_windows;n++) {
-		sum = 0.0;
-		for(i = 0; i <maxharmonics;i++)
-			sum += hratios[m++];
-		if(sum > maxsum) {
-			maxsum = sum;
-			maxloc = n;
-		}
-	}
-	atk_time = maxloc * dz->frametime;
-	duration1 = (dz->insams[1]/dz->wanted) * dz->frametime;
-	fprintf(stdout,"INFO: Attack time of 1st sound at %.3lf secs\n",atk_time);
-	if((atk_time > dz->duration/2.0) && (atk_time > duration1/2.0))
-		fprintf(stdout,"WARNING: Attack time of 1st sound not close to start of sound (duration %.3lf secs).\n",dz->duration);
-	fflush(stdout);
-	return maxloc;
+    for(n = 0;n<dz->total_windows;n++) {
+        sum = 0.0;
+        for(i = 0; i <maxharmonics;i++)
+            sum += hratios[m++];
+        if(sum > maxsum) {
+            maxsum = sum;
+            maxloc = n;
+        }
+    }
+    atk_time = maxloc * dz->frametime;
+    duration1 = (dz->insams[1]/dz->wanted) * dz->frametime;
+    fprintf(stdout,"INFO: Attack time of 1st sound at %.3lf secs\n",atk_time);
+    if((atk_time > dz->duration/2.0) && (atk_time > duration1/2.0))
+        fprintf(stdout,"WARNING: Attack time of 1st sound not close to start of sound (duration %.3lf secs).\n",dz->duration);
+    fflush(stdout);
+    return maxloc;
 }
 
 /***************************** INTERP_SPECTRA *****************************/
 
 int interp_spectra(int atk_window,dataptr dz)
 {
-	int exit_status;
-	int outwinno, wins0, wins1, endlen0, endlen1;
-	double time = 0.0,postatk_ratio;
+    int exit_status;
+    int outwinno, wins0, wins1, endlen0, endlen1;
+    double time = 0.0,postatk_ratio;
 
-	if((sndseekEx(dz->ifd[1],0,0)<0)){        
+    if((sndseekEx(dz->ifd[1],0,0)<0)){        
         sprintf(errstr,"sndseek() failed\n");
         return SYSTEM_ERROR;
     }
-	dz->total_samps_read = 0;
-	dz->total_windows = 0;
-	dz->samps_left = dz->insams[1];
-	dz->flbufptr[0] = dz->bigfbuf;
-	wins0 = dz->insams[0]/dz->wanted;
-	wins1 = dz->insams[1]/dz->wanted;
-	endlen0 = wins0 - atk_window;
-	endlen1 = wins1 - atk_window;
-	if(dz->vflag[AMP_SCALING]) {
-		if((exit_status = amplitude_scaling(atk_window,dz))<0)
-			return(exit_status);
-	}
-	postatk_ratio = (double)endlen0/(double)endlen1;
-	while(dz->samps_left > 0) {
-		if((dz->ssampsread = fgetfbufEx(dz->bigfbuf, dz->wanted,dz->ifd[1],0)) < 0) {
-			sprintf(errstr,"Can't reread samples to do spectral interpolation.\n");
-			return(SYSTEM_ERROR);
-		}
-		dz->samps_left -= dz->ssampsread;	
-		dz->total_samps_read += dz->ssampsread;
-		if(dz->brksize[SPECHINT]) {
-			if((exit_status = read_value_from_brktable(time,SPECHINT,dz))<0)
-				return(exit_status);
-			time += dz->frametime;
-		}
-		if(dz->total_windows > 0) {	/* Skip Window 0, no significant data */
+    dz->total_samps_read = 0;
+    dz->total_windows = 0;
+    dz->samps_left = dz->insams[1];
+    dz->flbufptr[0] = dz->bigfbuf;
+    wins0 = dz->insams[0]/dz->wanted;
+    wins1 = dz->insams[1]/dz->wanted;
+    endlen0 = wins0 - atk_window;
+    endlen1 = wins1 - atk_window;
+    if(dz->vflag[AMP_SCALING]) {
+        if((exit_status = amplitude_scaling(atk_window,dz))<0)
+            return(exit_status);
+    }
+    postatk_ratio = (double)endlen0/(double)endlen1;
+    while(dz->samps_left > 0) {
+        if((dz->ssampsread = fgetfbufEx(dz->bigfbuf, dz->wanted,dz->ifd[1],0)) < 0) {
+            sprintf(errstr,"Can't reread samples to do spectral interpolation.\n");
+            return(SYSTEM_ERROR);
+        }
+        dz->samps_left -= dz->ssampsread;   
+        dz->total_samps_read += dz->ssampsread;
+        if(dz->brksize[SPECHINT]) {
+            if((exit_status = read_value_from_brktable(time,SPECHINT,dz))<0)
+                return(exit_status);
+            time += dz->frametime;
+        }
+        if(dz->total_windows > 0) { /* Skip Window 0, no significant data */
 
-			if(	dz->total_windows <= atk_window)	/* Before attack, do straight interp */
-				outwinno = dz->total_windows;
-			else {									/* After attack, ratio of durations of tails must be considered */
-				outwinno = round((dz->total_windows - atk_window) * postatk_ratio);
-				if((outwinno += atk_window) >= wins0)
-					outwinno = wins0 - 1;
-			}
-			spec_interp(outwinno,dz);
-		}
-		if((exit_status = write_samps(dz->flbufptr[0],dz->wanted,dz))<0)
-			return(exit_status);
-		dz->total_windows++;
-	}
-	return(FINISHED);
+            if( dz->total_windows <= atk_window)    /* Before attack, do straight interp */
+                outwinno = dz->total_windows;
+            else {                                  /* After attack, ratio of durations of tails must be considered */
+                outwinno = round((dz->total_windows - atk_window) * postatk_ratio);
+                if((outwinno += atk_window) >= wins0)
+                    outwinno = wins0 - 1;
+            }
+            spec_interp(outwinno,dz);
+        }
+        if((exit_status = write_samps(dz->flbufptr[0],dz->wanted,dz))<0)
+            return(exit_status);
+        dz->total_windows++;
+    }
+    return(FINISHED);
 }
 
 /***************************** SPEC_INTERP *****************************/
 
 int spec_interp(int outwinno,dataptr dz)
 {
-	int harmno = 0, cc, vc, gotpartial, try_again, all_finished = 0;
-	float amp, frq, newlevel;
-	double partialfrq, frqratio, fundamental = dz->pitches2[dz->total_windows];
+    int harmno = 0, cc, vc, gotpartial, try_again, all_finished = 0;
+    float amp, frq, newlevel;
+    double partialfrq, frqratio, fundamental = dz->pitches2[dz->total_windows];
 
-	partialfrq = fundamental * (harmno + 1);
-	for(cc = 0, vc = 0; cc < dz->clength; cc++, vc += 2) {
-		gotpartial = 0;
-		frq = dz->flbufptr[0][FREQ];
-		amp = dz->flbufptr[0][AMPP];
-		try_again = 1;
-		while(try_again) {
-			try_again = 0;
-			if(frq <= partialfrq) {
-				frqratio = partialfrq / fabs(frq);
-				if(frqratio < EIGHT_OVER_SEVEN) {	/* if approx equal to harmonic frq, got a partial */
-					if((newlevel = get_newlevel(outwinno,harmno,AMPP,dz)) > 0.0) {
-						dz->flbufptr[0][AMPP] = newlevel;
-						gotpartial = 1;
-					}
-				}
-			} else {
-				frqratio = fabs(frq) / partialfrq;					/* ELSE frq > partialfrq */
-				if(frqratio < EIGHT_OVER_SEVEN)	{				/* if approx equal to harmonic frq */
-					if((newlevel = get_newlevel(outwinno,harmno,AMPP,dz)) > 0.0) {
-						dz->flbufptr[0][AMPP] = newlevel;
-						gotpartial = 1;
-					}
-				} else {
-					harmno++;									/* else move to next harmonic */
-					partialfrq = fundamental * (harmno + 1); 
-					if(partialfrq >= dz->nyquist) {				/* if no more harmonics, break */
-						harmno--;
-						all_finished = 1;
-						break;
-					}
-					try_again = 1;
-				}
-			}
-		}
-		if(!gotpartial)						/* Zero non-partial data */
-			dz->flbufptr[0][AMPP] = 0.0;
-		if(all_finished) {					/* In no more partials, zero rest of channels */
-			while(cc < dz->clength) {
-				dz->flbufptr[0][AMPP] = 0.0;
-				cc ++;
-				vc += 2;
-			}
-			break;
-		}
-	}
-	return FINISHED;
+    partialfrq = fundamental * (harmno + 1);
+    for(cc = 0, vc = 0; cc < dz->clength; cc++, vc += 2) {
+        gotpartial = 0;
+        frq = dz->flbufptr[0][FREQ];
+        amp = dz->flbufptr[0][AMPP];
+        try_again = 1;
+        while(try_again) {
+            try_again = 0;
+            if(frq <= partialfrq) {
+                frqratio = partialfrq / fabs(frq);
+                if(frqratio < EIGHT_OVER_SEVEN) {   /* if approx equal to harmonic frq, got a partial */
+                    if((newlevel = get_newlevel(outwinno,harmno,AMPP,dz)) > 0.0) {
+                        dz->flbufptr[0][AMPP] = newlevel;
+                        gotpartial = 1;
+                    }
+                }
+            } else {
+                frqratio = fabs(frq) / partialfrq;                  /* ELSE frq > partialfrq */
+                if(frqratio < EIGHT_OVER_SEVEN) {               /* if approx equal to harmonic frq */
+                    if((newlevel = get_newlevel(outwinno,harmno,AMPP,dz)) > 0.0) {
+                        dz->flbufptr[0][AMPP] = newlevel;
+                        gotpartial = 1;
+                    }
+                } else {
+                    harmno++;                                   /* else move to next harmonic */
+                    partialfrq = fundamental * (harmno + 1); 
+                    if(partialfrq >= dz->nyquist) {             /* if no more harmonics, break */
+                        harmno--;
+                        all_finished = 1;
+                        break;
+                    }
+                    try_again = 1;
+                }
+            }
+        }
+        if(!gotpartial)                     /* Zero non-partial data */
+            dz->flbufptr[0][AMPP] = 0.0;
+        if(all_finished) {                  /* In no more partials, zero rest of channels */
+            while(cc < dz->clength) {
+                dz->flbufptr[0][AMPP] = 0.0;
+                cc ++;
+                vc += 2;
+            }
+            break;
+        }
+    }
+    return FINISHED;
 }
 
 /***************************** GET_NEWLEVEL ********************************/
 
 float get_newlevel(int outwinno,int harmno,int ampchan,dataptr dz)
 {
-	double src1level, src2level, diff, newlevel, scalefact;
-	int loc;
-									/* For source 1 */
-	if(harmno >= dz->itemcnt)		/* if harmonic number higher than max harmlevel stored */
-		src1level = 0.0;			/* set level to zero */
-	else {							/* otherwise get level of this harmonic from store */
-		loc   = (outwinno * dz->itemcnt) + harmno;
-		src1level = dz->fptr[0][loc];
-		src1level *= dz->param[SPCMPLEV];
-	}								/* simil for source 2 */
-	if(harmno >= dz->unspecified_filecnt)
-		src2level = 0.0;
-	else {
-		loc   = (dz->total_windows * dz->unspecified_filecnt) + harmno;
-		src2level = dz->fptr[1][loc];
-	}
-	if(src2level <= 0.0)			/* If src2 (to be transformed) has a zero level harmonic, return ZERO output */
-		return 0.0;
-	diff = (src1level - src2level) * dz->param[SPECHINT];	/* Interpolate between levels of harmonics */
-	newlevel = src2level + diff;
+    double src1level, src2level, diff, newlevel, scalefact;
+    int loc;
+                                    /* For source 1 */
+    if(harmno >= dz->itemcnt)       /* if harmonic number higher than max harmlevel stored */
+        src1level = 0.0;            /* set level to zero */
+    else {                          /* otherwise get level of this harmonic from store */
+        loc   = (outwinno * dz->itemcnt) + harmno;
+        src1level = dz->fptr[0][loc];
+        src1level *= dz->param[SPCMPLEV];
+    }                               /* simil for source 2 */
+    if(harmno >= dz->unspecified_filecnt)
+        src2level = 0.0;
+    else {
+        loc   = (dz->total_windows * dz->unspecified_filecnt) + harmno;
+        src2level = dz->fptr[1][loc];
+    }
+    if(src2level <= 0.0)            /* If src2 (to be transformed) has a zero level harmonic, return ZERO output */
+        return 0.0;
+    diff = (src1level - src2level) * dz->param[SPECHINT];   /* Interpolate between levels of harmonics */
+    newlevel = src2level + diff;
 //ENV_SCALING
-	scalefact = dz->parray[2][dz->total_windows];	/* scaling is applied when interp val is 1*/
-													/* scaling is NOT applied when interp is zero */
-	scalefact = 1.0 + ((scalefact - 1.0) * dz->param[SPECHINT]);
-	newlevel *= scalefact;
-	return (float)((dz->flbufptr[0][ampchan] * newlevel)/src2level);	/* derive new level from existing level */
+    scalefact = dz->parray[2][dz->total_windows];   /* scaling is applied when interp val is 1*/
+                                                    /* scaling is NOT applied when interp is zero */
+    scalefact = 1.0 + ((scalefact - 1.0) * dz->param[SPECHINT]);
+    newlevel *= scalefact;
+    return (float)((dz->flbufptr[0][ampchan] * newlevel)/src2level);    /* derive new level from existing level */
 }
 
 
@@ -2096,320 +2096,320 @@ float get_newlevel(int outwinno,int harmno,int ampchan,dataptr dz)
 
 int read_data_from_interp_file(char *filename,dataptr dz)
 {
-	int cnt;
-	int n, m;
-	char temp[200], *p;
-	double val, lasttime = -1.0, duration, ratio;
-	if((dz->fp = fopen(filename,"r"))==NULL) {
-		sprintf(errstr,"Cannot open datafile %s\n",filename);
-		return(DATA_ERROR);
-	}
-	cnt = 0;
-	while(fgets(temp,200,dz->fp)!=NULL) {
-		p = temp;
-		if(*p == ';')	//	Allow comments in file
-			continue;
-		while(get_float_from_within_string(&p,&val))
-			cnt++;
-	}
-	if(cnt == 0) {
-		sprintf(errstr,"No data in file %s\n",filename);
-		return(DATA_ERROR);
-	}
-	if(!EVEN(cnt)) {
-		sprintf(errstr,"Values incorrectly paired in file %s\n",filename);
-		return(DATA_ERROR);
-	}
-	if((dz->brk[SPECHINT] = (double *)malloc(cnt * sizeof(double)))==NULL) {
-		sprintf(errstr,"Insufficient memory to store interp file data.\n");
-		return(MEMORY_ERROR);
-	}
-	fseek(dz->fp,0,0);
-	cnt = 0;
-	while(fgets(temp,200,dz->fp)!=NULL) {
-		p = temp;
-		if(*p == ';')	//	Allow comments in file
-			continue;
-		while(get_float_from_within_string(&p,&val)) {
-			if(EVEN(cnt)) {
-				if(cnt == 0) {
-					if(val != 0.0) {
-						sprintf(errstr,"First time in brkfile %s must be zero\n",filename);
-						return(DATA_ERROR);
-					}
-				} else if(val <= lasttime) {
-					sprintf(errstr,"Times do not advance at line %d in file %s\n",cnt+1,filename);
-					return(DATA_ERROR);
-				}
-				lasttime = val;
-			} else {
-				if(val < 0.0 || val > 1.0) {
-					sprintf(errstr,"Values out of range (0-1) at line %d in file %s\n",cnt+1,filename);
-					return(DATA_ERROR);
-				}
-			}
-			dz->brk[SPECHINT][cnt] = (float)val;
-		}
-	}
-	dz->brksize[SPECHINT] = cnt/2;
-	if(dz->brksize[SPECHINT] == 1) {
-		dz->param[SPECHINT] = dz->brk[SPECHINT][1];
-		free(dz->brk[SPECHINT]);
-		dz->brksize[SPECHINT] = 0;
-		return FINISHED;
-	}
-	duration = (dz->insams[1]/dz->wanted) * dz->frametime;
-	ratio = duration/lasttime;
-	for(n=0,m=0;n<dz->brksize[SPECHINT];n++,m+=2)		/* Scale interp file to duration of source */
-		dz->brk[SPECHINT][m] *= ratio;
-	return FINISHED;
+    int cnt;
+    int n, m;
+    char temp[200], *p;
+    double val, lasttime = -1.0, duration, ratio;
+    if((dz->fp = fopen(filename,"r"))==NULL) {
+        sprintf(errstr,"Cannot open datafile %s\n",filename);
+        return(DATA_ERROR);
+    }
+    cnt = 0;
+    while(fgets(temp,200,dz->fp)!=NULL) {
+        p = temp;
+        if(*p == ';')   //  Allow comments in file
+            continue;
+        while(get_float_from_within_string(&p,&val))
+            cnt++;
+    }
+    if(cnt == 0) {
+        sprintf(errstr,"No data in file %s\n",filename);
+        return(DATA_ERROR);
+    }
+    if(!EVEN(cnt)) {
+        sprintf(errstr,"Values incorrectly paired in file %s\n",filename);
+        return(DATA_ERROR);
+    }
+    if((dz->brk[SPECHINT] = (double *)malloc(cnt * sizeof(double)))==NULL) {
+        sprintf(errstr,"Insufficient memory to store interp file data.\n");
+        return(MEMORY_ERROR);
+    }
+    fseek(dz->fp,0,0);
+    cnt = 0;
+    while(fgets(temp,200,dz->fp)!=NULL) {
+        p = temp;
+        if(*p == ';')   //  Allow comments in file
+            continue;
+        while(get_float_from_within_string(&p,&val)) {
+            if(EVEN(cnt)) {
+                if(cnt == 0) {
+                    if(val != 0.0) {
+                        sprintf(errstr,"First time in brkfile %s must be zero\n",filename);
+                        return(DATA_ERROR);
+                    }
+                } else if(val <= lasttime) {
+                    sprintf(errstr,"Times do not advance at line %d in file %s\n",cnt+1,filename);
+                    return(DATA_ERROR);
+                }
+                lasttime = val;
+            } else {
+                if(val < 0.0 || val > 1.0) {
+                    sprintf(errstr,"Values out of range (0-1) at line %d in file %s\n",cnt+1,filename);
+                    return(DATA_ERROR);
+                }
+            }
+            dz->brk[SPECHINT][cnt] = (float)val;
+        }
+    }
+    dz->brksize[SPECHINT] = cnt/2;
+    if(dz->brksize[SPECHINT] == 1) {
+        dz->param[SPECHINT] = dz->brk[SPECHINT][1];
+        free(dz->brk[SPECHINT]);
+        dz->brksize[SPECHINT] = 0;
+        return FINISHED;
+    }
+    duration = (dz->insams[1]/dz->wanted) * dz->frametime;
+    ratio = duration/lasttime;
+    for(n=0,m=0;n<dz->brksize[SPECHINT];n++,m+=2)       /* Scale interp file to duration of source */
+        dz->brk[SPECHINT][m] *= ratio;
+    return FINISHED;
 }
 
 /************************************ AMPLITUDE_SCALING ******************************
  *
  *  How this works:
- *	Calculate envelope of snd1 and snd2.
- *	Calculate peaks in envelope of snd2.
- *	Scaling multiplies loudness of snd 1 by normalised level in snd2.
- *	In this way, the envelope contour of snd2 is shaped by the level of snd 1,
+ *  Calculate envelope of snd1 and snd2.
+ *  Calculate peaks in envelope of snd2.
+ *  Scaling multiplies loudness of snd 1 by normalised level in snd2.
+ *  In this way, the envelope contour of snd2 is shaped by the level of snd 1,
  *  so e.g. if snd 1 drops grad in level , but snd2  fluctuates,
- *	scaling will force the fluctuations to drop gradiaully in overall level, in way snd1 does.
+ *  scaling will force the fluctuations to drop gradiaully in overall level, in way snd1 does.
  *
- *	The idea is to maintain the amplitude fluctations of snd2 under the gross env of sound1.
+ *  The idea is to maintain the amplitude fluctations of snd2 under the gross env of sound1.
  */
 
 #define SIGNOIS_SPEC (1500.0)
-#define SPEC_ENV_RATIO (10)	/* number of analwindows in an envelope window */
+#define SPEC_ENV_RATIO (10) /* number of analwindows in an envelope window */
 
 int amplitude_scaling(int atk_window,dataptr dz)
 {
-	double *window_level0 = dz->parray[2];
-	double *window_level1 = dz->parray[3];
-	double maxenvval, minenvval, step, here, val, valdiff, ratio;
-	double scale_at_last_peak, scale_at_this_peak, scalestep, scalehere,snd1maxlevel;
-	int wlen0, wlen1, posttail_wlen0, posttail_wlen1, z, m, k, n, lastn, envlen, peakcnt, peakstep, maxwlen, peakno;
-	int *peak;
-	int gotpeak;
+    double *window_level0 = dz->parray[2];
+    double *window_level1 = dz->parray[3];
+    double maxenvval, minenvval, step, here, val, valdiff, ratio;
+    double scale_at_last_peak, scale_at_this_peak, scalestep, scalehere,snd1maxlevel;
+    int wlen0, wlen1, posttail_wlen0, posttail_wlen1, z, m, k, n, lastn, envlen, peakcnt, peakstep, maxwlen, peakno;
+    int *peak;
+    int gotpeak;
 
-	/* ENVELOPE OF 1st SND */
-	wlen0  = dz->insams[0]/dz->wanted;
-	wlen1 = dz->insams[1]/dz->wanted;
+    /* ENVELOPE OF 1st SND */
+    wlen0  = dz->insams[0]/dz->wanted;
+    wlen1 = dz->insams[1]/dz->wanted;
 
-	maxwlen = max(wlen0,wlen1);
-	if((dz->parray[4] = (double *)malloc(maxwlen * sizeof(double)))==NULL) {
-		sprintf(errstr,"Insufficient memory for amplitude-scaling.\n");
-		return(MEMORY_ERROR);
-	}	
+    maxwlen = max(wlen0,wlen1);
+    if((dz->parray[4] = (double *)malloc(maxwlen * sizeof(double)))==NULL) {
+        sprintf(errstr,"Insufficient memory for amplitude-scaling.\n");
+        return(MEMORY_ERROR);
+    }   
 
-	maxenvval = 0.0;
-	for(n=0;n<wlen0;n++) 
-		maxenvval = max(maxenvval,window_level0[n]);
-	minenvval  = maxenvval/SIGNOIS_SPEC;
-		/* Zero v. quiet windowsums */
-	for(n=0;n<wlen0;n++)  {
-		if(window_level0[n] < minenvval)
-			window_level0[n] = 0.0;
-	}
-		/* Scale to size of other Snd */
+    maxenvval = 0.0;
+    for(n=0;n<wlen0;n++) 
+        maxenvval = max(maxenvval,window_level0[n]);
+    minenvval  = maxenvval/SIGNOIS_SPEC;
+        /* Zero v. quiet windowsums */
+    for(n=0;n<wlen0;n++)  {
+        if(window_level0[n] < minenvval)
+            window_level0[n] = 0.0;
+    }
+        /* Scale to size of other Snd */
 
-	posttail_wlen0 = wlen0 - atk_window;
-	posttail_wlen1 = wlen1 - atk_window;
+    posttail_wlen0 = wlen0 - atk_window;
+    posttail_wlen1 = wlen1 - atk_window;
 
-	step = (double)posttail_wlen0/(double)posttail_wlen1;
-	here = (double)atk_window;
-	dz->parray[4][0] = window_level0[0];
-	k = atk_window;
-	lastn = atk_window;
-	if(step >= 1.0) {
-		while(here < (double)wlen0) {
-			here += step;
-			n = (int)floor(here);
-			val = window_level0[lastn];
-			for(z = lastn;z<= n;z++)		
-				val = max(window_level0[z],val);
-			dz->parray[4][k] = val;
-			lastn = n;
-			if(++k >= wlen1)
-				break;
-		}
-	} else {
-		while(here < (double)wlen0) {
-			here += step;
-			n = (int)floor(here);
-			m = (int)ceil(here);
-			if(m==n)
-				dz->parray[4][k] = window_level0[m];
-			else {
-				valdiff = window_level0[m] - window_level0[n];
-				ratio   = (int)round(here - (double)n);	
-				valdiff *= ratio;
-				dz->parray[4][k] = window_level0[n] + valdiff;
-			}
-			if(++k >= wlen1)
-				break;
-		}
-	}
-	memcpy((char *)window_level0,(char *)dz->parray[4],wlen1 * sizeof(double));
-	
-		/* Get envelope of spectrum */
-	envlen = wlen1/SPEC_ENV_RATIO;
-	if(envlen * SPEC_ENV_RATIO < wlen1)
-		envlen++;
-	if((dz->parray[0] = (double *)malloc(envlen * sizeof(double)))==NULL) {
-		sprintf(errstr,"No memory for envelope of file 1.\n");
-		return(MEMORY_ERROR);
-	}
-	snd1maxlevel = 0.0;
-	for(n=0,k=0;n<wlen1;n+=SPEC_ENV_RATIO,k++)  {
-		maxenvval = 0.0;
-		if(n+SPEC_ENV_RATIO >= wlen1) {
-			for(m=n;m<wlen1;m++) 
-				maxenvval = max(maxenvval,window_level0[m]);
-		} else {			
-			for(m=0;m<SPEC_ENV_RATIO;m++) 
-				maxenvval = max(maxenvval,window_level0[n+m]);
-		}
-		dz->parray[0][k] = maxenvval;
-		snd1maxlevel = max(snd1maxlevel,maxenvval);
-	}
-	
-	/* ENVELOPE OF 2nd SND */
-	maxenvval = 0.0;
-	for(n=0;n<wlen1;n++) 
-		maxenvval = max(maxenvval,window_level1[n]);
-	minenvval  = maxenvval/SIGNOIS_SPEC;
-		/* Zero v. quiet windowsums */
-	for(n=0;n<wlen1;n++)  {
-		if(window_level1[n] < minenvval)
-			window_level1[n] = 0.0;
-	}
-	if((dz->parray[1] = (double *)malloc(envlen * sizeof(double)))==NULL) {
-		sprintf(errstr,"No memory for envelope of file 2.\n");
-		return(MEMORY_ERROR);
-	}
-	for(n=0,k=0;n<wlen1;n+=SPEC_ENV_RATIO,k++)  {
-		maxenvval = 0.0;
-		if(n+SPEC_ENV_RATIO >= wlen1) {
-			for(m=n;m<wlen1;m++) 
-				maxenvval = max(maxenvval,window_level1[m]);
-		} else {			
-			for(m=0;m<SPEC_ENV_RATIO;m++) 
-				maxenvval = max(maxenvval,window_level1[n+m]);
-		}
-		dz->parray[1][k] = maxenvval;
-	}
-	/* Get peaks in 2nd snd */
-	if((peak = (int *)malloc(k * sizeof(int)))==NULL) {
-		sprintf(errstr,"No memory for envelope peaks.\n");
-		return(MEMORY_ERROR);
-	}
-	peakno = 0;
-	gotpeak = 0;
-	for(n = 1;n<envlen;n++) {
-		if(!gotpeak) {
-			if(dz->parray[1][n] < dz->parray[1][n-1]) {
-				peak[peakno++] = (int)(n-1);
-				gotpeak = 1;
-			}
-		} else {
-			if(dz->parray[1][n] > dz->parray[1][n-1])
-				gotpeak = 0;
-		}
-		n++;
-	}
-	if((peakcnt = peakno) == 0) {
-		for(n=0;n<maxwlen;n++)	/* SET WINDOW SCALING TO 1.0 */
-			window_level0[n] = 1.0;
-		return(FINISHED);
-	}
+    step = (double)posttail_wlen0/(double)posttail_wlen1;
+    here = (double)atk_window;
+    dz->parray[4][0] = window_level0[0];
+    k = atk_window;
+    lastn = atk_window;
+    if(step >= 1.0) {
+        while(here < (double)wlen0) {
+            here += step;
+            n = (int)floor(here);
+            val = window_level0[lastn];
+            for(z = lastn;z<= n;z++)        
+                val = max(window_level0[z],val);
+            dz->parray[4][k] = val;
+            lastn = n;
+            if(++k >= wlen1)
+                break;
+        }
+    } else {
+        while(here < (double)wlen0) {
+            here += step;
+            n = (int)floor(here);
+            m = (int)ceil(here);
+            if(m==n)
+                dz->parray[4][k] = window_level0[m];
+            else {
+                valdiff = window_level0[m] - window_level0[n];
+                ratio   = (int)round(here - (double)n); 
+                valdiff *= ratio;
+                dz->parray[4][k] = window_level0[n] + valdiff;
+            }
+            if(++k >= wlen1)
+                break;
+        }
+    }
+    memcpy((char *)window_level0,(char *)dz->parray[4],wlen1 * sizeof(double));
+    
+        /* Get envelope of spectrum */
+    envlen = wlen1/SPEC_ENV_RATIO;
+    if(envlen * SPEC_ENV_RATIO < wlen1)
+        envlen++;
+    if((dz->parray[0] = (double *)malloc(envlen * sizeof(double)))==NULL) {
+        sprintf(errstr,"No memory for envelope of file 1.\n");
+        return(MEMORY_ERROR);
+    }
+    snd1maxlevel = 0.0;
+    for(n=0,k=0;n<wlen1;n+=SPEC_ENV_RATIO,k++)  {
+        maxenvval = 0.0;
+        if(n+SPEC_ENV_RATIO >= wlen1) {
+            for(m=n;m<wlen1;m++) 
+                maxenvval = max(maxenvval,window_level0[m]);
+        } else {            
+            for(m=0;m<SPEC_ENV_RATIO;m++) 
+                maxenvval = max(maxenvval,window_level0[n+m]);
+        }
+        dz->parray[0][k] = maxenvval;
+        snd1maxlevel = max(snd1maxlevel,maxenvval);
+    }
+    
+    /* ENVELOPE OF 2nd SND */
+    maxenvval = 0.0;
+    for(n=0;n<wlen1;n++) 
+        maxenvval = max(maxenvval,window_level1[n]);
+    minenvval  = maxenvval/SIGNOIS_SPEC;
+        /* Zero v. quiet windowsums */
+    for(n=0;n<wlen1;n++)  {
+        if(window_level1[n] < minenvval)
+            window_level1[n] = 0.0;
+    }
+    if((dz->parray[1] = (double *)malloc(envlen * sizeof(double)))==NULL) {
+        sprintf(errstr,"No memory for envelope of file 2.\n");
+        return(MEMORY_ERROR);
+    }
+    for(n=0,k=0;n<wlen1;n+=SPEC_ENV_RATIO,k++)  {
+        maxenvval = 0.0;
+        if(n+SPEC_ENV_RATIO >= wlen1) {
+            for(m=n;m<wlen1;m++) 
+                maxenvval = max(maxenvval,window_level1[m]);
+        } else {            
+            for(m=0;m<SPEC_ENV_RATIO;m++) 
+                maxenvval = max(maxenvval,window_level1[n+m]);
+        }
+        dz->parray[1][k] = maxenvval;
+    }
+    /* Get peaks in 2nd snd */
+    if((peak = (int *)malloc(k * sizeof(int)))==NULL) {
+        sprintf(errstr,"No memory for envelope peaks.\n");
+        return(MEMORY_ERROR);
+    }
+    peakno = 0;
+    gotpeak = 0;
+    for(n = 1;n<envlen;n++) {
+        if(!gotpeak) {
+            if(dz->parray[1][n] < dz->parray[1][n-1]) {
+                peak[peakno++] = (int)(n-1);
+                gotpeak = 1;
+            }
+        } else {
+            if(dz->parray[1][n] > dz->parray[1][n-1])
+                gotpeak = 0;
+        }
+//      n++;
+    }
+    if((peakcnt = peakno) == 0) {
+        for(n=0;n<maxwlen;n++)  /* SET WINDOW SCALING TO 1.0 */
+            window_level0[n] = 1.0;
+        return(FINISHED);
+    }
 
-	/* Get scaling ratio */
-	peakno = 0;
-	/* go from peak to peak:  where is snd1 atk_window in relation to peaks in snd2 */
-	if(atk_window > last_window_in_peak(peak[0])) {
-		while(last_window_in_peak(peak[peakno]) < atk_window) {
-			peakno++;
-			if(peakno >= peakcnt) {
-				for(n=0;n<maxwlen;n++)	/* SET WINDOW SCALING TO 1.0 */
-					window_level0[n] = 1.0;
-				return(FINISHED);
-			}
-		}
-	}
+    /* Get scaling ratio */
+    peakno = 0;
+    /* go from peak to peak:  where is snd1 atk_window in relation to peaks in snd2 */
+    if(atk_window > last_window_in_peak(peak[0])) {
+        while(last_window_in_peak(peak[peakno]) < atk_window) {
+            peakno++;
+            if(peakno >= peakcnt) {
+                for(n=0;n<maxwlen;n++)  /* SET WINDOW SCALING TO 1.0 */
+                    window_level0[n] = 1.0;
+                return(FINISHED);
+            }
+        }
+    }
 
-	for(n=0;n<atk_window;n++)
-		dz->parray[2][n] = 1.0;	/* Set scaling, as far as atk_window, to 1: snd2 dominates up to atk moment */
-	peakno++;					/* get next peak */
-	n = peak[peakno];			/* Calc scaling, as far as the peak-at-end-of-peakstep-containing-atk_window */
-	scale_at_last_peak = 1.0;	/* Start at full level of src0, at the attack window */
-	scale_at_this_peak = dz->parray[1][n]/snd1maxlevel;	/* End scaled by normalised level of snd2 */
-	peakstep = (n * SPEC_ENV_RATIO) - atk_window;		/* scaling gradually changes from one to the other */
-	scalestep = (scale_at_this_peak - scale_at_last_peak)/peakstep;
-	for(k = atk_window,m = 0; k < n * SPEC_ENV_RATIO; k++,m++) {
-		scalehere = scale_at_last_peak + (m * scalestep);
-		window_level0[k] *= scalehere * window_level1[k];	/* window_level0 contains level of snd1: level multiplied by normd level of snd2 */
-	}
-	lastn = n;
-	peakno++;
-	while (peakno < peakcnt) {		/* CALC SCALING from peak-to-peak over all subsequent windows */
-		n = peak[peakno];
-		scale_at_last_peak = dz->parray[1][lastn]/snd1maxlevel;
-		scale_at_this_peak = dz->parray[1][n]/snd1maxlevel;
-		peakstep = (n - lastn) * SPEC_ENV_RATIO;
-		scalestep = (scale_at_this_peak - scale_at_last_peak)/peakstep;
-		for(k = lastn * SPEC_ENV_RATIO,m = 0; k < n * SPEC_ENV_RATIO; k++,m++) {
-			scalehere = scale_at_last_peak + (m * scalestep) * window_level1[k];
-			window_level0[k] *= scalehere * window_level1[k];
-		}
-		lastn = n;
-		peakno++;
-	}
-	n = envlen;					/* CALC SCALING from Final to peak to end of file (assume scaled to zero) */
-	scale_at_last_peak = dz->parray[1][lastn]/snd1maxlevel;
-	scale_at_this_peak = 0.0;
-	peakstep = wlen1 - (lastn * SPEC_ENV_RATIO);
-	scalestep = (scale_at_this_peak - scale_at_last_peak)/peakstep;
-	for(k = lastn * SPEC_ENV_RATIO,m = 0; k < wlen1; k++,m++) {
-		scalehere = scale_at_last_peak + (m * scalestep) * window_level1[k];
-		window_level0[k] *= scalehere * window_level1[k];
-	}
-	/* Now the amplitude scaling is in dz->parray[2] */
-	return FINISHED;
+    for(n=0;n<atk_window;n++)
+        dz->parray[2][n] = 1.0; /* Set scaling, as far as atk_window, to 1: snd2 dominates up to atk moment */
+    peakno++;                   /* get next peak */
+    n = peak[peakno];           /* Calc scaling, as far as the peak-at-end-of-peakstep-containing-atk_window */
+    scale_at_last_peak = 1.0;   /* Start at full level of src0, at the attack window */
+    scale_at_this_peak = dz->parray[1][n]/snd1maxlevel; /* End scaled by normalised level of snd2 */
+    peakstep = (n * SPEC_ENV_RATIO) - atk_window;       /* scaling gradually changes from one to the other */
+    scalestep = (scale_at_this_peak - scale_at_last_peak)/peakstep;
+    for(k = atk_window,m = 0; k < n * SPEC_ENV_RATIO; k++,m++) {
+        scalehere = scale_at_last_peak + (m * scalestep);
+        window_level0[k] *= scalehere * window_level1[k];   /* window_level0 contains level of snd1: level multiplied by normd level of snd2 */
+    }
+    lastn = n;
+    peakno++;
+    while (peakno < peakcnt) {      /* CALC SCALING from peak-to-peak over all subsequent windows */
+        n = peak[peakno];
+        scale_at_last_peak = dz->parray[1][lastn]/snd1maxlevel;
+        scale_at_this_peak = dz->parray[1][n]/snd1maxlevel;
+        peakstep = (n - lastn) * SPEC_ENV_RATIO;
+        scalestep = (scale_at_this_peak - scale_at_last_peak)/peakstep;
+        for(k = lastn * SPEC_ENV_RATIO,m = 0; k < n * SPEC_ENV_RATIO; k++,m++) {
+            scalehere = scale_at_last_peak + (m * scalestep) * window_level1[k];
+            window_level0[k] *= scalehere * window_level1[k];
+        }
+        lastn = n;
+        peakno++;
+    }
+    n = envlen;                 /* CALC SCALING from Final to peak to end of file (assume scaled to zero) */
+    scale_at_last_peak = dz->parray[1][lastn]/snd1maxlevel;
+    scale_at_this_peak = 0.0;
+    peakstep = wlen1 - (lastn * SPEC_ENV_RATIO);
+    scalestep = (scale_at_this_peak - scale_at_last_peak)/peakstep;
+    for(k = lastn * SPEC_ENV_RATIO,m = 0; k < wlen1; k++,m++) {
+        scalehere = scale_at_last_peak + (m * scalestep) * window_level1[k];
+        window_level0[k] *= scalehere * window_level1[k];
+    }
+    /* Now the amplitude scaling is in dz->parray[2] */
+    return FINISHED;
 }
 
 /************************************ LAST_WINDOW_IN_PEAK ******************************/
 
 int last_window_in_peak(int peak)
-{	
-	int win_start = peak * SPEC_ENV_RATIO;
-	int win_end   = win_start + SPEC_ENV_RATIO - 1;
-	return win_end;
+{   
+    int win_start = peak * SPEC_ENV_RATIO;
+    int win_end   = win_start + SPEC_ENV_RATIO - 1;
+    return win_end;
 }
 
 /************************************ EXTEND_STABLE_PITCH_TO_START ******************************/
 
-#define STABILITY_INTERVAL  (5)		/* pitch is stable when it remains within STABILITY_INTERVAL semitones */
-#define STABILITY_WINDOWS   (3)		/* pitch is stable if remains within interval for STABILITY_WINDOWS windows */
+#define STABILITY_INTERVAL  (5)     /* pitch is stable when it remains within STABILITY_INTERVAL semitones */
+#define STABILITY_WINDOWS   (3)     /* pitch is stable if remains within interval for STABILITY_WINDOWS windows */
 
 int extend_stable_pitch_to_start(dataptr dz)
 {
-	int stability_cnt = 0;
-	int n, k;
-	double stability1 = pow(2,(double)STABILITY_INTERVAL/SEMITONES_PER_OCTAVE);
-	double stability2 = 1.0/stability1, ratio;
-	for(n=1;n<dz->itemcnt;n++) {
-		ratio = dz->pitches[n]/dz->pitches[n-1];
-		if(ratio <= stability1 && ratio >= stability2)
-			stability_cnt++;
-		else
-			stability_cnt = 0;
-		if(stability_cnt >= STABILITY_WINDOWS) {
-			for(k = 0;k < n-4;k++) 
-				dz->pitches[k] = dz->pitches[n-3];
-			fprintf(stdout,"INFO: Stable pitch found at %lf\n",(n-3) * dz->frametime);
-			fflush(stdout);
-			return FINISHED;
-		}
-	}
-	return GOAL_FAILED;
+    int stability_cnt = 0;
+    int n, k;
+    double stability1 = pow(2,(double)STABILITY_INTERVAL/SEMITONES_PER_OCTAVE);
+    double stability2 = 1.0/stability1, ratio;
+    for(n=1;n<dz->itemcnt;n++) {
+        ratio = dz->pitches[n]/dz->pitches[n-1];
+        if(ratio <= stability1 && ratio >= stability2)
+            stability_cnt++;
+        else
+            stability_cnt = 0;
+        if(stability_cnt >= STABILITY_WINDOWS) {
+            for(k = 0;k < n-4;k++) 
+                dz->pitches[k] = dz->pitches[n-3];
+            fprintf(stdout,"INFO: Stable pitch found at %lf\n",(n-3) * dz->frametime);
+            fflush(stdout);
+            return FINISHED;
+        }
+    }
+    return GOAL_FAILED;
 }
