@@ -180,7 +180,7 @@ static int32_t write_pvocdata(int32_t fd,int32_t byterev,const PVOCDATA *pData)
         
         ssamp.fsamp = pData->fWindowParam;
         //dwval = * ( int32_t *) &(pData->fWindowParam);
-        revdwval = REVDWBYTES(ssamp.lsamp);
+        ssamp.lsamp = REVDWBYTES(ssamp.lsamp);
         //dwval = REVDWBYTES(dwval);
         //data.fWindowParam = * (float *) &dwval;
         data.fWindowParam = ssamp.fsamp;
