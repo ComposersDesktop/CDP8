@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -377,7 +377,7 @@ int make_next_gobo_name_and_number(int *gobo_number, int *goboname_len, char **c
 
 int check_progno(int *progno, int system_update)
 {
-    int is_new = 0;
+//    int is_new = 0;
     if(system_update) {
 
 /* TEST */
@@ -388,7 +388,7 @@ int check_progno(int *progno, int system_update)
             fprintf(stdout,"INFO: If you do not do this, the gobo data for program %d will be overwritten!!\n",MAX_PROCESS_NO);
             fflush(stdout);
 
-            is_new = 1;
+//            is_new = 1;
         }
 //      if((*progno >= MIN_TEMPROC_AREA) && (*progno <= MAX_TEMPROC_AREA)) {
 //          if(is_new)
@@ -413,7 +413,7 @@ int check_progno(int *progno, int system_update)
     } else {
         if(*progno == 0) {
             *progno = MAX_TEMP_PROCESS_NO;
-            is_new = 1;
+//            is_new = 1;
         }
 //      if((*progno > MAX_TEMPROC_AREA) || (*progno < MIN_TEMPROC_AREA)) {
 //          if(is_new)
