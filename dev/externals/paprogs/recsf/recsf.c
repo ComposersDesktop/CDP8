@@ -41,7 +41,7 @@
 #endif
 
 #ifdef unix
-
+#include <aaio.h>
 #include <sys/types.h>
 #include <sys/timeb.h>
 #endif
