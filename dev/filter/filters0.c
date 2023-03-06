@@ -80,7 +80,7 @@ int filter_process(dataptr dz)
     int filter_tail = 0, tail_extend = 0, was_tail_extend = 0, bufspace;
 // NEW MAY 2012
     int do_norm = 0, chans = dz->infile->channels, sndendset = 0;
-    double inmaxsamp = 0.0, outmaxsamp = 0.0, maxsamp;
+    double inmaxsamp = 0.0, outmaxsamp = 0.0, maxsamp = 0.0;
     float *buf = dz->sampbuf[0];
     int n, m, k, sndend = 0;
     int framend, framestart, framesize = F_SECSIZE, framecnt = dz->buflen/framesize;
