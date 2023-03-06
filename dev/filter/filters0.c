@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -79,7 +79,7 @@ int filter_process(dataptr dz)
     int exit_status = FINISHED;
     int filter_tail = 0, tail_extend = 0, was_tail_extend = 0, bufspace;
 // NEW MAY 2012
-    int do_norm = 0, chans = dz->infile->channels, sndendset = 0, gotend = 0;
+    int do_norm = 0, chans = dz->infile->channels, sndendset = 0;
     double inmaxsamp = 0.0, outmaxsamp = 0.0, maxsamp;
     float *buf = dz->sampbuf[0];
     int n, m, k, sndend = 0;
@@ -88,11 +88,11 @@ int filter_process(dataptr dz)
     case(FLTBANKV):
         if(dz->vflag[2])
             do_norm = 1;
-            break;
+        break;
     case(FLTBANKV2):
         if(dz->vflag[1])
             do_norm = 1;
-            break;
+        break;
     case(FLTBANKN):
         do_norm = 1;
         break;
@@ -244,7 +244,6 @@ int filter_process(dataptr dz)
         sndend      = 0;
         tail_extend = 0;
         was_tail_extend = 0;
-        gotend      = 0;
         fprintf(stdout,"INFO: Running filter.\n");
         fflush(stdout);
     }
@@ -1294,7 +1293,7 @@ int my_modulus(int x,int y)
 
 int newfval2(double *fbrk,double *hbrk,dataptr dz)
 {
-    int n, m, k, z, timepoint, nextrow;
+    int n, m, k, timepoint, nextrow;
     int entrycnt = dz->iparam[FLT_ENTRYCNT];
     int wordcnt  = dz->iparam[FLT_WORDCNT];
     int hentrycnt = dz->iparam[HRM_ENTRYCNT];
@@ -1368,7 +1367,6 @@ int newfval2(double *fbrk,double *hbrk,dataptr dz)
         }
     }
     for(k=0;k<dz->iparam[FLT_CNT];k+=dz->iparam[FLT_HARMCNT]) {
-        z = 0;
         for(m=0; m < dz->iparam[FLT_HARMCNT];m++) { /* calc vals for partials from basefrq vals */
             dz->parray[FLT_INFRQ][k+m] = dz->parray[FLT_INFRQ][k] * dz->parray[HARM_FRQ_CALC][m];
             dz->parray[FLT_INAMP][k+m] = dz->parray[FLT_INAMP][k] * dz->parray[HARM_AMP_CALC][m];
