@@ -39,7 +39,7 @@
 #include <sfsys.h>
 
 /* RWD added do_clip, peak (later, sort out nChans PEAK stuff... */
-static void gain(int samples,double multiplier,double maxnoclip,long *numclipped,
+static void gain(int samples,double multiplier,double maxnoclip,int *numclipped,
                  int do_clip,double *peak,dataptr dz);
 static int find_max(double *maxfound,dataptr dz);
 static int  find_maximum(int infile,int *maxloc,int *maxrep,double *maxsamp,dataptr dz);
@@ -243,7 +243,7 @@ int find_max(double *maxfound,dataptr dz)
 /**************************** MAXSAMP ***************************/
 
 void find_maxsamp(double *maxfound,dataptr dz)
-{   register long i;
+{   register int i;
     double k;
     float *buffer = dz->sampbuf[0];
     for(i = 0; i < dz->ssampsread; i++) {
