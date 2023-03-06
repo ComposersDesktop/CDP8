@@ -1,4 +1,4 @@
-
+          
 /* pvfileio.c */
 /* pvocex format test routines*/
 /* Initial version RWD May 2000.
@@ -160,7 +160,7 @@ static int32_t write_pvocdata(int32_t fd,int32_t byterev,const PVOCDATA *pData)
 #endif
 
     if(byterev){
-        int32_t revdwval;
+//        int32_t revdwval;
         PVOCDATA data;
         SND_SAMP ssamp;
         data.wWordFormat = REVWBYTES(pData->wWordFormat);
