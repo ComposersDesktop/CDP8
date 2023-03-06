@@ -78,10 +78,10 @@ static int  init_brkpnts
  double *nextgain,double *gain_step,double *gain_incr,int *nextbrk_sampno,int paramno,int brksize,dataptr dz);
 static int  advance_brkpnts
 (double starttime,double *gain,double *endbrk,double **nextbrk,double *nextgain,
- double *gain_step,double *gain_incr,long *nextbrk_sampno,dataptr dz);
+ double *gain_step,double *gain_incr,int *nextbrk_sampno,dataptr dz);
 static int  simple_envel_processing
 (int *samps_left_to_process,double starttime,double *endbrk,double **nextbrk,double *nextgain,
- int *sampno,double *gain,double *gain_step,double *gain_incr,long *nextbrk_sampno,int chan,float *maxobuf,dataptr dz);
+ int *sampno,double *gain,double *gain_step,double *gain_incr,int *nextbrk_sampno,int chan,float *maxobuf,dataptr dz);
 static int  do_mono_envelope
 (int samp_cnt,double starttime,double *endbrk,double **nextbrk,double *nextgain,
  int *sampno,double *gain,double *gain_step,double *gain_incr,int *nextbrk_sampno,float *maxobuf,dataptr dz);
@@ -1113,7 +1113,7 @@ int read_ssamps(int samps_to_read,int *samps_left_to_process,int chan,dataptr dz
 
 /******************************** DO_SIMPLE_READ **********************************/
 
-int do_simple_read(long *samps_left_to_process,long buflen,int chan,dataptr dz)
+int do_simple_read(int *samps_left_to_process,int buflen,int chan,dataptr dz)
 {
     int exit_status;
     if(*samps_left_to_process < buflen * 2)
@@ -1125,7 +1125,7 @@ int do_simple_read(long *samps_left_to_process,long buflen,int chan,dataptr dz)
 
 /**************************** OTHER_READ_SAMPS *****************************/
 
-int other_read_samps(long samps_to_read,int fileid,int bufno,dataptr dz)
+int other_read_samps(int samps_to_read,int fileid,int bufno,dataptr dz)
 {
     if((dz->ssampsread = fgetfbufEx(dz->sampbuf[bufno],samps_to_read,fileid,0)) < 0) {
         sprintf(errstr,"Can't read samps from input soundfile: other_read_samps()\n");
