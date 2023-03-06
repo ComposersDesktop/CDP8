@@ -916,7 +916,7 @@ int create_grain_sndbufs(dataptr dz)
         sprintf(errstr,"buffer pointers not allocated: create_grain_sndbufs()\n");
         return(PROGRAM_ERROR);
     }
-    bigbufsize = (int)Malloc(-1);
+    bigbufsize = (int) (size_t ) Malloc(-1);
 
     dz->buflen = bigbufsize / sizeof(float);
 
@@ -954,7 +954,7 @@ int create_ssss_sndbufs(dataptr dz)
         sprintf(errstr,"buffer pointers not allocated: create_grain_sndbufs()\n");
         return(PROGRAM_ERROR);
     }
-    bigbufsize = (int)Malloc(-1);
+    bigbufsize = (int)(size_t) Malloc(-1);
     dz->buflen = bigbufsize/sizeof(float);
     bigbufsize = dz->buflen * sizeof(float);
     bigsize = dz->insams[0] * sizeof(float);
