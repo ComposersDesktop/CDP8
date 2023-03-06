@@ -42,11 +42,14 @@
 #include <stdlib.h>
 #include <osbind.h>
 #if defined __GNUWIN32__ || defined unix
-#include <ctype.h>
-#include <sys/types.h>
-#include <limits.h>
-#include <sys/time.h>
-#include <unistd.h>
+# include <ctype.h>
+# include <sys/types.h>
+# include <limits.h>
+# include <sys/time.h>  // for gettimeofday()
+# ifdef linux
+#  include <time.h>     // for time()
+# endif
+# include <unistd.h>
 #endif
 
 #ifdef __GNUWIN32__
