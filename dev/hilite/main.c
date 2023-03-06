@@ -62,7 +62,7 @@ int main(int argc,char *argv[])
 //  char *special_data_string = NULL;
     char **cmdline;
     int  cmdlinecnt;
-//    aplptr ap;
+    aplptr ap;
     int *valid = NULL;
     int is_launched = FALSE;
     int  validcnt;
