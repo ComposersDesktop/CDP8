@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -549,9 +549,9 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
             *output,        /* pointer to start of output buffer */
             *anal,          /* pointer to start of analysis buffer */
             *syn,           /* pointer to start of synthesis buffer */
-            *banal,         /* pointer to anal[1] (for FFT calls) */
+//            *banal,         /* pointer to anal[1] (for FFT calls) */
             *bsyn,          /* pointer to syn[1]  (for FFT calls) */
-            *nextIn,        /* pointer to next empty word in input */
+//            *nextIn,        /* pointer to next empty word in input */
             *nextOut,       /* pointer to next empty word in output */
             *analWindow,    /* pointer to center of analysis window */
             *synWindow,     /* pointer to center of synthesis window */
@@ -578,12 +578,12 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
             nI = 0,         /* current input (analysis) sample */
             nO,             /* current output (synthesis) sample */
             nMaxOut;        /* last output (synthesis) sample */
-    int isr,            /* sampling rate */
+    int /*isr,*/            /* sampling rate */
             endsamp = VERY_BIG_INT;
 
     float   mag,            /* magnitude of analysis data */
             phase,          /* phase of analysis data */
-            RoverTwoPi,     /* R/D divided by 2*Pi */
+//            RoverTwoPi,     /* R/D divided by 2*Pi */
             TwoPioverR,     /* 2*Pi divided by R/I */
             F = (float)0,   /* fundamental frequency (determines pvoc_chans) */
             sum,            /* scale factor for renormalizing windows */
@@ -620,7 +620,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
         }
     }
 
-    isr      = origrate;
+//    isr      = origrate;
     M        = Mlen;
     D        = Dfac;
     R        = ((float) D * arate);
@@ -745,7 +745,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
     if(!pvoc_float_array(ibuflen,&input))
         return(0);
 
-    nextIn = input;
+//    nextIn = input;
 
     /* set up output buffer:  nextOut always points to the next word
         to be shifted out.  The shift is simulated by writing the
@@ -764,7 +764,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
 
     if(!pvoc_float_array(pvoc_chans+2,&anal))
         return(0);
-    banal = anal + 1;
+//    banal = anal + 1;
 
     if(!pvoc_float_array(N2+1,&oldInPhase))
         return(0);
@@ -796,7 +796,7 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
     outCount = 0;
     rIn  = (float)(R/(float)D);
     rOut = (float)(R/(float)I);
-    RoverTwoPi = (float)(rIn/TWOPI);
+//    RoverTwoPi = (float)(rIn/TWOPI);
     TwoPioverR = (float)(TWOPI/rOut);
     nI = -(analWinLen / D) * D; /* input time (in samples) */
     nO = nI;                    /* output time (in samples) */
