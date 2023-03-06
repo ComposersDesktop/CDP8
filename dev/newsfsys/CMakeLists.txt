@@ -17,4 +17,4 @@ else()
    set(SFSYS_SRCS sfsys.c snd.c sfdir.c osbind.c props.c ieee80.c pvfileio.c)
 endif()
 
-add_library(newsfsys ${SFSYS_SRCS})
+add_library(sfsys ${SFSYS_SRCS})
