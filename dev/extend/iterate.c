@@ -809,10 +809,10 @@ int new_iter(int cnt,int passno, double *gain,int local_write_start,int inmsamps
             }
         } else {
             for(i=0; i < inmsampsize; i++) {
-            if(iterating)
-                z = outbuf[j] + (inbuf[i] * thisgain);
-            else
-                z = outbuf[j] + inbuf[i];
+                if(iterating)
+                    z = outbuf[j] + (inbuf[i] * thisgain);
+                else
+                    z = outbuf[j] + inbuf[i];
                 outbuf[j++] = (float)z;
             }
         }
@@ -2002,10 +2002,10 @@ int iter(int cnt,int passno, double *gain,int local_write_start,int inmsampsize,
             }
         } else {
             for(i=0; i < inmsampsize; i++) {
-            if(iterating)
-                z = outbuf[j] + (inbuf[i] * thisgain);
-            else
-                z = outbuf[j] + inbuf[i];
+                if(iterating)
+                    z = outbuf[j] + (inbuf[i] * thisgain);
+                else
+                    z = outbuf[j] + inbuf[i];
                 outbuf[j++] = (float)z;
             }
         }
