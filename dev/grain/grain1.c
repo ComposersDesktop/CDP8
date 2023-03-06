@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2020 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -1910,7 +1910,7 @@ int *is_first_grain,int is_last_grain,int chans,int crosbuf,dataptr dz)
 
 int timestretch_iterative(dataptr dz)
 {
-    int exit_status, do_slow, do_regu;
+    int exit_status, do_slow = 0, do_regu;
     float *ibuf = dz->sampbuf[0];
     float *obuf = dz->sampbuf[1];
 //  double *peak = dz->parray[0]; 
@@ -1928,7 +1928,7 @@ int timestretch_iterative(dataptr dz)
     float val, nextval;
     double z = (dz->param[RRR_END] - dz->param[RRR_START]) * dz->param[RRR_REPET];
     double starttime_of_iter, davg_step;
-    int total_slolen, total_slo_incr, slo_incr, min_step, j, avg_step, gap, maxsamp;
+    int total_slolen, total_slo_incr, slo_incr, min_step, j, avg_step, gap, maxsamp = 0;
     int *seg_step = NULL, *seg_len = NULL;
     int thiselementcnt, regusegscnt, okcnt, *seg_ok = NULL;
 

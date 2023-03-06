@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2020 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -16,7 +16,7 @@
  GNU Lesser General Public License for more details.
  
  You should have received a copy of the GNU Lesser General Public
- License aint with the CDP System; if not, write to the Free Software
+ License along with the CDP System; if not, write to the Free Software
  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
  02111-1307 USA
  *
@@ -366,7 +366,7 @@ void convert_sampletime_to_samplegap(dataptr dz)
             fflush(stdout);
         } else {
             dz->parray[GR_SYNCTIME][0] = (double)dz->iparam[GR_ABS_SPLICELEN];
-            fprintf(stdout,"WARNING: All grain times offset by %lf secs (%ld samps) to allow for startsplice\n",
+            fprintf(stdout,"WARNING: All grain times offset by %lf secs (%d samps) to allow for startsplice\n",
             (double)(lval/dz->infile->channels)/(double)dz->infile->srate,lval);
             fflush(stdout);
         }
