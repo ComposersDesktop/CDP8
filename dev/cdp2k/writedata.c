@@ -127,7 +127,7 @@ int headwrite(int ofd,dataptr dz)
     int   exit_status;
     int   isenv = 1;
     int  property_marker = 1;
-    int  samptype, srate, channels;
+//    int  samptype, srate, channels;
     float window_size = 0.0f;
 
     if(!(dz->process == PVOC_ANAL || dz->process == PVOC_EXTRACT || dz->process == PVOC_SYNTH)) {
@@ -178,9 +178,9 @@ int headwrite(int ofd,dataptr dz)
         sndputprop(ofd,"channels", (char *)&(dz->outfile->channels), sizeof(int));
         break;
     case(ENVFILE_OUT):  
-        samptype = SAMP_FLOAT;
-        srate = round(SECS_TO_MS/dz->outfile->window_size);
-        channels = 1;
+ //       samptype = SAMP_FLOAT;
+ //       srate = round(SECS_TO_MS/dz->outfile->window_size);
+ //       channels = 1;
         window_size = dz->outfile->window_size;
 /* JUNE 2004
         if(sndputprop(ofd,"sample rate", (char *)&srate, sizeof(int)) < 0){
