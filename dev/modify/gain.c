@@ -158,7 +158,7 @@ int gain_process(dataptr dz)
 
 /************************** GAIN *******************************/
 
-void gain(long samples,double multiplier,double maxnoclip,long *numclipped,
+void gain(int samples,double multiplier,double maxnoclip,int *numclipped,
           int do_clip,double *peak,dataptr dz)
 {
     int i;
@@ -351,7 +351,7 @@ int balance(double mratio,dataptr dz)
 
 /***************************** FIND_MAXIMUM ************************/
 
-int find_maximum(int infile,long *maxloc,long *maxrep,double *maxsamp,dataptr dz)
+int find_maximum(int infile,int *maxloc,int *maxrep,double *maxsamp,dataptr dz)
 {
     int  ssampsread, last_total_ssampsread = 0, total_samps_read = 0;
     float *buffer = dz->sampbuf[0];
@@ -371,7 +371,7 @@ int find_maximum(int infile,long *maxloc,long *maxrep,double *maxsamp,dataptr dz
 
 /***************************** GET_MAX ************************/
 
-void get_max(double *maxsamp,long ssampsread,long last_total_ssampsread, long *maxloc, long *maxrep,dataptr dz)
+void get_max(double *maxsamp,int ssampsread,int last_total_ssampsread, int *maxloc, int *maxrep,dataptr dz)
 {
     register int n;
     float thisamp;
@@ -540,7 +540,7 @@ int do_multifile_loudness(dataptr dz)
     dz->ifd[0] = orig_ifd;
     /*RWD*/
     if(clipsamps && (numclipped > 0))
-        sprintf(errstr, "WARNING: %ld samples were clipped.\n", numclipped);
+        sprintf(errstr, "WARNING: %d samples were clipped.\n", numclipped);
     dz->peak_fval = peak_val;
     /*will get written to header automatically*/
     return(FINISHED);
@@ -550,7 +550,7 @@ int do_multifile_loudness(dataptr dz)
 //TW NEW FUNCTION, updated for floatsams and new-style clipping detection
 /********************** GAINENV ***************************/
 
-int gainenv(int samples,int *last_total,double maxnoclip,long *numclipped,int do_clip,double *peak,dataptr dz)
+int gainenv(int samples,int *last_total,double maxnoclip,int *numclipped,int do_clip,double *peak,dataptr dz)
 {
     int exit_status;
     register int i;
