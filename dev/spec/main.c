@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -58,7 +58,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int *valid = NULL;
     int is_launched = FALSE;
     int  validcnt;
@@ -119,7 +119,7 @@ int main(int argc,char *argv[])
         }
     }
 
-    ap = dz->application;
+//    ap = dz->application;
 
 /*********************************************************************************************************************
        cmdline[0]                         2 vals                              ACTIVE         
