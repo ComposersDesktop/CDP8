@@ -1335,7 +1335,7 @@ int do_specenv(dataptr dz)
                 cnt--;                                          //  speccentrefrq-hi            x x   x  *|   x   x     cnt = 3
                 dn_specfrq = dz->spececentrfrq[cnt];            //  speccentrefrq-lo            x x   |  *x   x   x     cnt = 2
                 diff = up_specfrq - dn_specfrq;                 //  cnt of centres              0 1  ~2~ ~3~  4   5     
-                ratio = (frq - dn_specfrq)/diff;                //                                      \
+                ratio = (frq - dn_specfrq)/diff;                //                                      /
                                                                 //  count of HIampval (below)     0   1  ~2~  3   4
                                                                 //  HIamp                         a   a   A   a   a     cnt = 2 (for hiamp)
             }
