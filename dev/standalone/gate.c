@@ -5,20 +5,20 @@
  *
  This file is part of the CDP System.
 
-    The CDP System is free software; you can redistribute it
-    and/or modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+ The CDP System is free software; you can redistribute it
+ and/or modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
 
-    The CDP System is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU Lesser General Public License for more details.
+ The CDP System is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with the CDP System; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-    02111-1307 USA
+ You should have received a copy of the GNU Lesser General Public
+ License along with the CDP System; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+ 02111-1307 USA
  *
  */
 
@@ -55,10 +55,10 @@
 char errstr[2400];
 
 int anal_infiles = 1;
-int sloom = 0;
+int     sloom = 0;
 int sloombatch = 0;
 
-const char* cdp_version = "7.1.1";
+const char* cdp_version = "7.1.0";
 
 //CDP LIB REPLACEMENTS
 static int check_gate_param_validity_and_consistency(dataptr dz);
@@ -91,14 +91,14 @@ int main(int argc,char *argv[])
     char **cmdline;
     int  cmdlinecnt;
     int n;
-    aplptr ap;
+    //aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
         fflush(stdout);
         return 0;
     }
-                        /* CHECK FOR SOUNDLOOM */
+    /* CHECK FOR SOUNDLOOM */
     if((sloom = sound_loom_in_use(&argc,&argv)) > 1) {
         sloom = 0;
         sloombatch = 1;
@@ -107,22 +107,22 @@ int main(int argc,char *argv[])
         sfperror("cdp: initialisation\n");
         return(FAILED);
     }
-                          /* SET UP THE PRINCIPAL DATASTRUCTURE */
-    if((exit_status = establish_datastructure(&dz))<0) {                    // CDP LIB
+    /* SET UP THE PRINCIPLE DATASTRUCTURE */
+    if((exit_status = establish_datastructure(&dz))<0) {                                    // CDP LIB
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
     if(!sloom) {
         if(argc == 1) {
-            usage1();   
+            usage1();
             return(FAILED);
         } else if(argc == 2) {
-            usage2(argv[1]);    
+            usage2(argv[1]);
             return(FAILED);
         }
     }
     if(!sloom) {
-        if((exit_status = make_initial_cmdline_check(&argc,&argv))<0) {     // CDP LIB
+        if((exit_status = make_initial_cmdline_check(&argc,&argv))<0) {         // CDP LIB
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
@@ -144,7 +144,7 @@ int main(int argc,char *argv[])
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
-        if((exit_status = count_and_allocate_for_infiles(cmdlinecnt,cmdline,dz))<0) {       // CDP LIB
+        if((exit_status = count_and_allocate_for_infiles(cmdlinecnt,cmdline,dz))<0) {           // CDP LIB
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
@@ -152,12 +152,12 @@ int main(int argc,char *argv[])
         //parse_TK_data() =
         if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-            return(exit_status);         
+            return(exit_status);
         }
     }
-    ap = dz->application;
+    //ap = dz->application;
 
-    // parse_infile_and_hone_type() = 
+    // parse_infile_and_hone_type() =
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -167,7 +167,7 @@ int main(int argc,char *argv[])
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-    // open_first_infile        CDP LIB
+    // open_first_infile            CDP LIB
     if((exit_status = open_first_infile(cmdline[0],dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -175,22 +175,22 @@ int main(int argc,char *argv[])
     cmdlinecnt--;
     cmdline++;
 
-//  handle_extra_infiles() : redundant
-    // handle_outfile() = 
+    //      handle_extra_infiles() : redundant
+    // handle_outfile() =
     if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
 
-//  handle_formants()           redundant
-//  handle_formant_quiksearch() redundant
-//  handle_special_data()       redundant
- 
-    if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {      // CDP LIB
+    //      handle_formants()                       redundant
+    //      handle_formant_quiksearch()     redundant
+    //      handle_special_data()           redundant
+
+    if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {              // CDP LIB
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-//  check_param_validity_and_consistency....
+    //      check_param_validity_and_consistency....
     if((exit_status = check_gate_param_validity_and_consistency(dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -209,27 +209,27 @@ int main(int argc,char *argv[])
         dz->sampbuf[n] = dz->sbufptr[n] = (float *)0;
     dz->sampbuf[n] = (float *)0;
 
-    if((exit_status = create_sndbufs(dz))<0) {                          // CDP LIB
+    if((exit_status = create_sndbufs(dz))<0) {                                                      // CDP LIB
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-    //param_preprocess()                        redundant
+    //param_preprocess()                                            redundant
     //spec_process_file =
     if((exit_status = gate(dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-    if((exit_status = complete_output(dz))<0) {                                     // CDP LIB
+    if((exit_status = complete_output(dz))<0) {                                                                             // CDP LIB
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-    exit_status = print_messages_and_close_sndfiles(FINISHED,is_launched,dz);       // CDP LIB
+    exit_status = print_messages_and_close_sndfiles(FINISHED,is_launched,dz);               // CDP LIB
     free(dz);
     return(SUCCEEDED);
 }
 
 /**********************************************
-        REPLACED CDP LIB FUNCTIONS
+                REPLACED CDP LIB FUNCTIONS
 **********************************************/
 
 
@@ -255,7 +255,7 @@ int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char
 int set_vflgs
 (aplptr ap,char *optflags,int optcnt,char *optlist,char *varflags,int vflagcnt, int vparamcnt,char *varlist)
 {
-    ap->option_cnt   = (char) optcnt;           /*RWD added cast */
+    ap->option_cnt   = (char) optcnt;                       /*RWD added cast */
     if(optcnt) {
         if((ap->option_list = (char *)malloc((size_t)(optcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for option_list\n");
@@ -281,6 +281,7 @@ int set_vflgs
             return(MEMORY_ERROR);
         }
         strcpy(ap->variant_flags,varflags);
+
     }
     return(FINISHED);
 }
@@ -294,7 +295,7 @@ int application_init(dataptr dz)
     int tipc, brkcnt;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
-        initialise_vflags(dz);    
+        initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
@@ -312,8 +313,6 @@ int application_init(dataptr dz)
             return(exit_status);
     }
     if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
-/* RWD debugging hack */
-        storage_cnt *= 4;
         if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
         if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
@@ -329,7 +328,7 @@ int application_init(dataptr dz)
 }
 
 /********************** SETUP_PARAMETER_STORAGE_AND_CONSTANTS ********************/
-/* RWD malloc changed to calloc; helps debug version run as release! */
+/* RWD mallo changed to calloc; helps debug verison run as release! */
 
 int setup_parameter_storage_and_constants(int storage_cnt,dataptr dz)
 {
@@ -368,48 +367,48 @@ int initialise_is_int_and_no_brk_constants(int storage_cnt,dataptr dz)
 
 int mark_parameter_types(dataptr dz,aplptr ap)
 {
-    int n, m;                           /* PARAMS */
+    int n, m;                                                       /* PARAMS */
     for(n=0;n<ap->max_param_cnt;n++) {
         switch(ap->param_list[n]) {
-        case('0'):  break; /* dz->is_active[n] = 0 is default */
-        case('i'):  dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;dz->no_brk[n] = (char)1; break;
-        case('I'):  dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;                         break;
-        case('d'):  dz->is_active[n] = (char)1;                         dz->no_brk[n] = (char)1; break;
-        case('D'):  dz->is_active[n] = (char)1; /* normal case: double val or brkpnt file */     break;
+        case('0'):      break; /* dz->is_active[n] = 0 is default */
+        case('i'):      dz->is_active[n] = (char)1; dz->is_int[n] = (char)1;dz->no_brk[n] = (char)1; break;
+        case('I'):      dz->is_active[n] = (char)1;     dz->is_int[n] = (char)1;                                                 break;
+        case('d'):      dz->is_active[n] = (char)1;                                                     dz->no_brk[n] = (char)1; break;
+        case('D'):      dz->is_active[n] = (char)1;     /* normal case: double val or brkpnt file */     break;
         default:
             sprintf(errstr,"Programming error: invalid parameter type in mark_parameter_types()\n");
             return(PROGRAM_ERROR);
         }
-    }                               /* OPTIONS */
+    }                                                               /* OPTIONS */
     for(n=0,m=ap->max_param_cnt;n<ap->option_cnt;n++,m++) {
         switch(ap->option_list[n]) {
         case('i'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1; dz->no_brk[m] = (char)1; break;
-        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                          break;
-        case('d'): dz->is_active[m] = (char)1;                          dz->no_brk[m] = (char)1; break;
+        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                                                  break;
+        case('d'): dz->is_active[m] = (char)1;                                                  dz->no_brk[m] = (char)1; break;
         case('D'): dz->is_active[m] = (char)1;  /* normal case: double val or brkpnt file */     break;
         default:
             sprintf(errstr,"Programming error: invalid option type in mark_parameter_types()\n");
             return(PROGRAM_ERROR);
         }
-    }                               /* VARIANTS */
+    }                                                               /* VARIANTS */
     for(n=0,m=ap->max_param_cnt + ap->option_cnt;n < ap->variant_param_cnt; n++, m++) {
         switch(ap->variant_list[n]) {
         case('0'): break;
         case('i'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1; dz->no_brk[m] = (char)1; break;
-        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                          break;
-        case('d'): dz->is_active[m] = (char)1;                          dz->no_brk[m] = (char)1; break;
-        case('D'): dz->is_active[m] = (char)1; /* normal case: double val or brkpnt file */      break;
+        case('I'): dz->is_active[m] = (char)1; dz->is_int[m] = (char)1;                                                  break;
+        case('d'): dz->is_active[m] = (char)1;                                                  dz->no_brk[m] = (char)1; break;
+        case('D'): dz->is_active[m] = (char)1; /* normal case: double val or brkpnt file */              break;
         default:
             sprintf(errstr,"Programming error: invalid variant type in mark_parameter_types()\n");
             return(PROGRAM_ERROR);
         }
-    }                               /* INTERNAL */
+    }                                                               /* INTERNAL */
     for(n=0,
-    m=ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt; n<ap->internal_param_cnt; n++,m++) {
+            m=ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt; n<ap->internal_param_cnt; n++,m++) {
         switch(ap->internal_param_list[n]) {
-        case('0'):  break;   /* dummy variables: variables not used: but important for internal paream numbering!! */
-        case('i'):  dz->is_int[m] = (char)1;    dz->no_brk[m] = (char)1;    break;
-        case('d'):                              dz->no_brk[m] = (char)1;    break;
+        case('0'):  break;       /* dummy variables: variables not used: but important for internal paream numbering!! */
+        case('i'):      dz->is_int[m] = (char)1;        dz->no_brk[m] = (char)1;        break;
+        case('d'):                                                              dz->no_brk[m] = (char)1;        break;
         default:
             sprintf(errstr,"Programming error: invalid internal param type in mark_parameter_types()\n");
             return(PROGRAM_ERROR);
@@ -435,7 +434,7 @@ int handle_the_outfile(int *cmdlinecnt,char ***cmdline,dataptr dz)
             return(DATA_ERROR);
         }
     }
-    strcpy(dz->outfilename,filename);      
+    strcpy(dz->outfilename,filename);
     if((exit_status = create_sized_outfile(filename,dz))<0)
         return(exit_status);
     (*cmdline)++;
@@ -505,7 +504,7 @@ int setup_gate_application(dataptr dz)
 {
     int exit_status;
     aplptr ap;
-    if((exit_status = establish_application(dz))<0)     // GLOBAL
+    if((exit_status = establish_application(dz))<0)         // GLOBAL
         return(FAILED);
     ap = dz->application;
     // SEE parstruct FOR EXPLANATION of next 2 functions
@@ -518,10 +517,10 @@ int setup_gate_application(dataptr dz)
     // assign_process_logic -->
     dz->input_data_type = SNDFILES_ONLY;
     if(dz->mode == 0)
-        dz->process_type    = EQUAL_SNDFILE;    
+        dz->process_type        = EQUAL_SNDFILE;
     else
-        dz->process_type    = UNEQUAL_SNDFILE;  
-    dz->outfiletype     = SNDFILE_OUT;
+        dz->process_type        = UNEQUAL_SNDFILE;
+    dz->outfiletype         = SNDFILE_OUT;
     return application_init(dz);    //GLOBAL
 }
 
@@ -565,14 +564,12 @@ int setup_gate_param_ranges_and_defaults(dataptr dz)
     if((exit_status = setup_input_param_range_stores(ap->total_input_param_cnt,ap))<0)
         return(FAILED);
     // get_param_ranges()
-    ap->lo[0]   = -96.0;
-    ap->hi[0]   = 0.0;
-    ap->default_val[0]  = 0.001;
-/*  RWD 2023: no second param in this program.
-    ap->lo[1]   = 4.0;
-    ap->hi[1]   = dz->duration * SECS_TO_MS;
+    ap->lo[0]       = -96.0;
+    ap->hi[0]       = 0.0;
+    ap->default_val[0]      = 0.001;
+    ap->lo[1]       = 4.0;
+    ap->hi[1]       = dz->duration * SECS_TO_MS;
     ap->default_val[1] = 4.0;
-*/
     dz->maxmode = 2;
     if(!sloom)
         put_default_vals_in_all_params(dz);
@@ -588,7 +585,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+    //aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -610,31 +607,31 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             }
             if(dz->mode > 0)
                 dz->mode--;
-            //setup_particular_application()=
+            //setup_particular_application() =
             if((exit_status = setup_gate_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+            //ap = dz->application;
             break;
 
-        case(3):    
+        case(3):
             if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
                 sprintf(errstr,"Cannot read infilecnt sent from TK\n");
                 return(DATA_ERROR);
             }
             if(infilecnt < 1) {
                 true_cnt = cnt + 1;
-                cnt = PRE_CMDLINE_DATACNT;  /* force exit from loop after assign_file_data_storage */
+                cnt = PRE_CMDLINE_DATACNT;      /* force exit from loop after assign_file_data_storage */
             }
             if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
                 return(exit_status);
             break;
-        case(INPUT_FILETYPE+4): 
+        case(INPUT_FILETYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
                 sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FILESIZE+4): 
+        case(INPUT_FILESIZE+4):
             if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
@@ -646,7 +643,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams; 
+            dz->insams[0] = insams;
             break;
         case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
@@ -785,11 +782,11 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                         sprintf(errstr,"CDP has not established storage space for input brktable.\n");
                         return(PROGRAM_ERROR);
                     }
-                    dz->brksize[dz->extrabrkno] = inbrksize;
+                    dz->brksize[dz->extrabrkno]     = inbrksize;
                     break;
                 default:
                     sprintf(errstr,"TK sent brktablesize > 0 for input_data_type [%d] not using brktables.\n",
-                    dz->input_data_type);
+                            dz->input_data_type);
                     return(PROGRAM_ERROR);
                 }
                 break;
@@ -829,7 +826,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
         case(INPUT_WINDOW_SIZE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
                 sprintf(errstr,"Cannot read window_size sent from TK\n");
-                    return(DATA_ERROR);
+                return(DATA_ERROR);
             }
             break;
         case(INPUT_NYQUIST+4):
@@ -1012,13 +1009,13 @@ double dbtolevel(double val)
     if(isneg)
         val = 1.0/val;
     return(val);
-}   
+}
 
 /********************************************************************************************/
 
 int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 {
-    if(!strcmp(prog_identifier_from_cmdline,"gate"))                dz->process = NEWGATE;
+    if(!strcmp(prog_identifier_from_cmdline,"gate"))                                dz->process = NEWGATE;
     else {
         sprintf(errstr,"Unknown program identification string '%s'\n",prog_identifier_from_cmdline);
         return(USAGE_ONLY);
@@ -1029,7 +1026,7 @@ int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{   
+{
     int n;
     if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
@@ -1074,17 +1071,17 @@ int usage2(char *str)
 {
     if(!strcmp(str,"gate")) {
         fprintf(stderr,
-        "USAGE:\n"
-        "gate gate mode infile outfile gatelevel\n"
-        "\n"
-        "Remove low-level sound from signal.\n"
-        "\n"
-        "GATELEVEL  level below which sound is to be removed (Range 0 to -96 dB).\n"
-        "\n"
-        "Mode 1: low level sound replaced by silence.\n"
-        "\n"
-        "Mode 2: low level sound edited out (output is shorter)\n"
-        "\n");
+                "USAGE:\n"
+                "gate gate mode infile outfile gatelevel\n"
+                "\n"
+                "Remove low-level sound from signal.\n"
+                "\n"
+                "GATELEVEL  level below which sound is to be removed (Range 0 to -96 dB).\n"
+                "\n"
+                "Mode 1: low level sound replaced by silence.\n"
+                "\n"
+                "Mode 2: low level sound edited out (output is shorter)\n"
+                "\n");
     } else
         fprintf(stdout,"Unknown option '%s'\n",str);
     return(USAGE_ONLY);
@@ -1101,7 +1098,7 @@ int usage3(char *str1,char *str2)
 int gate(dataptr dz)
 {
     int exit_status, chans = dz->infile->channels, gateit, done;
-    int splicelen, cnt = 0, k, j, atend; 
+    int splicelen, cnt = 0, k, j, atend;
     float *ibuf = dz->sampbuf[0], *obuf = dz->sampbuf[1];
     double level, incr;
     int pos, opos, z, arraysize, *cut, startbuf, startsamp, n, m, cutstart, cutend, len;
@@ -1127,9 +1124,11 @@ int gate(dataptr dz)
         for(n=0;n<dz->ssampsread;n+=chans) {
             gateit = 1;
             for(k=0;k<chans;k++) {
-                if(fabs(ibuf[n+k]) > dz->param[0])
+                // **** THIS NEEDS TO BE FIXED ****
+                if(fabs(ibuf[n+k]) > dz->param[0]) {
                     gateit = 0;
                     break;
+                }
             }
             if(!gateit)
                 continue;
@@ -1197,7 +1196,7 @@ int gate(dataptr dz)
     opos = 0;
     done = 0;
     for(z=0; z < cnt; z += 2) {
-        for(m = startsamp;m < cut[z];pos++,opos++,m++) {    /* write ungated sound */
+        for(m = startsamp;m < cut[z];pos++,opos++,m++) {        /* write ungated sound */
             if(opos >= dz->buflen) {
                 if((exit_status = write_samps(obuf,dz->buflen,dz))<0)
                     return(exit_status);
@@ -1209,6 +1208,7 @@ int gate(dataptr dz)
                     return(exit_status);
                 pos = 0;
             }
+
             obuf[opos] = ibuf[pos];
         }
         if(dz->ssampsread > 0) {
@@ -1237,7 +1237,7 @@ int gate(dataptr dz)
                 }
             } else {
                 level = 1.0;
-                for(j = 0;j<splicelen;j++,pos+=chans,opos+=chans) { /* do downsplice */
+                for(j = 0;j<splicelen;j++,pos+=chans,opos+=chans) {     /* do downsplice */
                     if(opos >= dz->buflen) {
                         if((exit_status = write_samps(obuf,dz->buflen,dz))<0)
                             return(exit_status);
@@ -1264,7 +1264,7 @@ int gate(dataptr dz)
                 atend = 1;
             zeroend = cut[z+1] - (splicelen * chans);
             zeroendinbuf = zeroend - startbuf;
-            while(pos < zeroendinbuf) {                 /* do zeros */
+            while(pos < zeroendinbuf) {                                     /* do zeros */
                 if(opos >= dz->buflen) {
                     if((exit_status = write_samps(obuf,dz->buflen,dz))<0)
                         return(exit_status);
@@ -1300,13 +1300,13 @@ int gate(dataptr dz)
                         return(exit_status);
                     pos = 0;
                 }
-                if(atend) {                                     /* zero end */
+                if(atend) {                                                                             /* zero end */
                     if(dz->mode == 0) {
                         for(k=0;k<chans;k++)
                             obuf[opos+k] = 0.0f;
                         opos += chans;
                     }
-                } else {                                        /* do upsplice */
+                } else {                                                                                /* do upsplice */
                     for(k=0;k<chans;k++)
                         obuf[opos+k] = (float)(ibuf[pos+k] * level);
                     opos += chans;
@@ -1333,7 +1333,7 @@ int gate(dataptr dz)
                 pos = 0;
             }
         }
-    } 
+    }
     if(opos > 0) {
         if((exit_status = write_samps(obuf,opos,dz))<0)
             return(exit_status);
@@ -1366,7 +1366,6 @@ int get_the_mode_from_cmdline(char *str,dataptr dz)
         fprintf(stderr,"Program mode value [%d] is out of range [1 - %d].\n",dz->mode,dz->maxmode);
         return(USAGE_ONLY);
     }
-    dz->mode--;     /* CHANGE TO INTERNAL REPRESENTATION OF MODE NO */
+    dz->mode--;             /* CHANGE TO INTERNAL REPRESENTATION OF MODE NO */
     return(FINISHED);
 }
-

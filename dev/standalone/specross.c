@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -131,7 +131,7 @@ int main(int argc,char *argv[])
 //  char *special_data_string = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
 
                         /* CHECK FOR SOUNDLOOM */
@@ -189,7 +189,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//   ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -677,7 +677,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -702,7 +702,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_specross_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -1287,7 +1287,7 @@ int extract_pitch_and_harmonics(int fileno,double minfrq,dataptr dz)
     int exit_status, firstwindow = 1, maxharmonics = 0, z;
     int wins_in_buf, bigarraysize = 0, check, n, m, wlen, maxwlen;
     float *thishratios, *pichstor;
-    float lastfrq;
+//    float lastfrq;
     if(fileno == 0) {
         pichstor = dz->pitches;
         wlen = dz->wlength;
@@ -1391,7 +1391,7 @@ int extract_pitch_and_harmonics(int fileno,double minfrq,dataptr dz)
             dz->total_windows++;
         }
     }
-    lastfrq  = (float)NOT_PITCH;    /* i.e. no pitch yet found */
+//    lastfrq  = (float)NOT_PITCH;    /* i.e. no pitch yet found */
 
             /* INTERPOLATE PITCH AND HRATIOS THROUGH UNPITCHED AREAS */
 
@@ -1483,7 +1483,7 @@ int pitch_and_harms_interp(int maxharmonics,double minfrq,float *hratios,float *
 
 int extract_harmonic_contour(float fundamental,float *thishratios,dataptr dz)
 {
-    int harmno, n, cc, vc, try_again, all_finished, valid_amps;
+    int harmno, n, cc, vc, try_again, all_finished /*, valid_amps */;
     double partialfrq, maxamp, frqratio, normdval;
     float frq, amp;
     dz->clength = dz->wanted / 2;
@@ -1531,7 +1531,7 @@ int extract_harmonic_contour(float fundamental,float *thishratios,dataptr dz)
         for(n = 0;n<=harmno;n++)                                /* set all partials to zero */
             thishratios[n] = 0.0f;
     }
-    valid_amps = 0;
+//    valid_amps = 0;
     for(n = 0;n<=harmno;n++) {
         normdval = thishratios[n]/maxamp; 
         if(normdval < dz->param[PICH_THRESH])               /* if partial below threshold */
@@ -2007,14 +2007,14 @@ int interp_spectra(int atk_window,dataptr dz)
 int spec_interp(int outwinno,dataptr dz)
 {
     int harmno = 0, cc, vc, gotpartial, try_again, all_finished = 0;
-    float amp, frq, newlevel;
+    float /*amp,*/ frq, newlevel;
     double partialfrq, frqratio, fundamental = dz->pitches2[dz->total_windows];
 
     partialfrq = fundamental * (harmno + 1);
     for(cc = 0, vc = 0; cc < dz->clength; cc++, vc += 2) {
         gotpartial = 0;
         frq = dz->flbufptr[0][FREQ];
-        amp = dz->flbufptr[0][AMPP];
+ //       amp = dz->flbufptr[0][AMPP];
         try_again = 1;
         while(try_again) {
             try_again = 0;
