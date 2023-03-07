@@ -115,7 +115,7 @@ static int init_shadbits(int shadowsize,int *shshsize,char **shadbits);
 static int geths(noteptr thisnote,double **hs,int *hsnotecnt);
 static int gethf(noteptr thisnote,double **hf,int *hfnotecnt);
 static int gen_hs(double **hf,double **hs, int *hsnotecnt, int hfnotecnt);
-static int chekrepeat(noteptr thisnote,double lastpitch);
+// static int chekrepeat(noteptr thisnote,double lastpitch);
 static void set_shadbit(int k,char *shadbits);
 static int  geths_lobnd(double thispitch,double *hs,int hsnotecnt);
 static int  gethfnote(double thispitch,double *hf,int *hfnotecnt);
