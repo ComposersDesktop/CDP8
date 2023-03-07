@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -178,7 +178,7 @@ int do_simple_hftexture(dataptr dz)
     double thishftime,nexthftime,thishstime,nexthstime,thisamp,thisdur;
     unsigned char thisinstr;
     int hf_cnt = 1, hfnotecnt = 0;
-    int hs_cnt = 1, hsnotecnt = 0, repeated = 0;
+    int hs_cnt = 1, hsnotecnt = 0 /*, repeated = 0 */;
     int hfdatacnt = 0;
     double *hft, pptop, ppbot;
     double *hs = (double *)0, *hf = (double *)0;
@@ -196,7 +196,7 @@ int do_simple_hftexture(dataptr dz)
             return(exit_status);
     }
     while(tsetnote!=(noteptr)0) {                   /* 3 */
-        repeated  =  chekrepeat(tsetnote,lastpitch);
+//        repeated  =  chekrepeat(tsetnote,lastpitch);
         lastpitch = tsetnote->pitch;                                                    
         thistime  = (double)tsetnote->ntime;        /* 5 */
         if((exit_status = read_values_from_all_existing_brktables(thistime,dz))<0)
@@ -259,7 +259,7 @@ int do_clumped_hftexture(dataptr dz)
     double gprange = 0.0,gpdense = 0.0,multiplier = 0.0;
     double *notestor=NULL;
     int hfgpranglo=0,hfgpranghi=0;
-    int hs_cnt = 1, hsnotecnt = 0, repeated = 0;
+    int hs_cnt = 1, hsnotecnt = 0 /*, repeated = 0 */;
     int hfdatacnt = 0, hfrange = 0, gpsize,shshsize = 0;
     int phrno = 0, n=0,  hsindex=0, starthsindex=0, hfchanged=0;
     int hsi=0, starthsi = 0, endhsi=0;
@@ -309,7 +309,7 @@ int do_clumped_hftexture(dataptr dz)
     }
     while(tsetnote!=(noteptr)0) {
         if(!(texflag & IS_ORNATE)) {
-            repeated =  chekrepeat(tsetnote,lastpitch);
+ //           repeated =  chekrepeat(tsetnote,lastpitch);
             lastpitch = tsetnote->pitch;
         }
         tsettime = thistime = (double)tsetnote->ntime;
