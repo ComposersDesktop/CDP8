@@ -69,9 +69,9 @@ target_link_libraries(distshift  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(distshift)
 
 # OUT?
- add_executable(distwarp distwarp.c)
- target_link_libraries(distwarp  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
- my_install(distwarp)
+# add_executable(distwarp distwarp.c)
+# target_link_libraries(distwarp  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+# my_install(distwarp)
 
 add_executable(envcut envcut.c)
 target_link_libraries(envcut  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
