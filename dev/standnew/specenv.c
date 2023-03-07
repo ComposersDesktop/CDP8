@@ -1,3 +1,27 @@
+/*
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
+ * http://www.trevorwishart.co.uk
+ * http://www.composersdesktop.com
+ *
+ This file is part of the CDP System.
+ 
+ The CDP System is free software; you can redistribute it
+ and/or modify it under the terms of the GNU Lesser General Public
+ License as published by the Free Software Foundation; either
+ version 2.1 of the License, or (at your option) any later version.
+ 
+ The CDP System is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU Lesser General Public License for more details.
+ 
+ You should have received a copy of the GNU Lesser General Public
+ License along with the CDP System; if not, write to the Free Software
+ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+ 02111-1307 USA
+ *
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <structures.h>
@@ -88,7 +112,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -144,7 +168,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -682,7 +706,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -707,7 +731,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_specenv_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -1311,7 +1335,7 @@ int do_specenv(dataptr dz)
                 cnt--;                                          //  speccentrefrq-hi            x x   x  *|   x   x     cnt = 3
                 dn_specfrq = dz->spececentrfrq[cnt];            //  speccentrefrq-lo            x x   |  *x   x   x     cnt = 2
                 diff = up_specfrq - dn_specfrq;                 //  cnt of centres              0 1  ~2~ ~3~  4   5     
-                ratio = (frq - dn_specfrq)/diff;                //                                      |
+                ratio = (frq - dn_specfrq)/diff;                //                                      \
                                                                 //  count of HIampval (below)     0   1  ~2~  3   4
                                                                 //  HIamp                         a   a   A   a   a     cnt = 2 (for hiamp)
             }

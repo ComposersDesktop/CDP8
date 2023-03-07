@@ -1,15 +1,16 @@
 if(APPLE)
   set(CMAKE_C_FLAGS "-O2 -Wall -Dunix")
+  link_directories (/usr/local/lib)
+  find_library(AAIOLIB NAMES libaaio.a)
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")
   else()
     set(CMAKE_C_FLAGS "-O2 -Wall -Dlinux -Dunix")
+    link_directories (/usr/local/lib)
+    find_library(AAIOLIB NAMES libaaio.a)
   endif()
 endif()
-#RWD only need this for APPLE?
-link_directories (/usr/local/lib)
-find_library(AAIOLIB NAMES libaaio.a)
 
 link_directories(../cdp2k ../newsfsys ../pvxio2)
 
@@ -67,10 +68,10 @@ target_link_libraries(distshift  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 
 my_install(distshift)
 
-# OUT
-# add_executable(distwarp distwarp.c)
-# target_link_libraries(distwarp  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
-# my_install(distwarp)
+# OUT?
+ add_executable(distwarp distwarp.c)
+ target_link_libraries(distwarp  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+ my_install(distwarp)
 
 add_executable(envcut envcut.c)
 target_link_libraries(envcut  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
@@ -93,13 +94,12 @@ my_install(envspeak)
 
 add_executable(fractal fractal.c)
 target_link_libraries(fractal cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
-
 my_install(fractal)
 
-# OUT
-#add_executable(fturanal fturanal.c)
-#target_link_libraries(fturanal cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
-#my_install(fturanal)
+# OUT ?
+add_executable(fturanal fturanal.c)
+target_link_libraries(fturanal cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+my_install(fturanal)
 
 # headview.c ?
 

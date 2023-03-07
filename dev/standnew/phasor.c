@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -115,7 +115,7 @@ int main(int argc,char *argv[])
     int  cmdlinecnt;
     int n, maxshiftslen = 0, offsetwrap = 0;
     double maxoffset = 0.0;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -173,7 +173,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -635,7 +635,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -660,7 +660,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_phasor_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//           ap = dz->application;
             break;
 
         case(3):    
@@ -1304,7 +1304,7 @@ int calculate_phase_shifts(double time, int *phaseshiftcnt, dataptr dz)
     int exit_status;
     double srate = (double)dz->infile->srate, maxphaseshift, minphaseshift, thismax, posoffset, sum, error;
     double *sampincr;
-    int midway, quartway, threequartway, n, k, j;
+    int midway, quartway,/* threequartway,*/ n, k, j;
     if((exit_status = read_values_from_all_existing_brktables(time,dz))<0)
         return exit_status;
     maxphaseshift = dz->param[PHASOR_SHIFT];
@@ -1314,7 +1314,7 @@ int calculate_phase_shifts(double time, int *phaseshiftcnt, dataptr dz)
         (*phaseshiftcnt)++;                             //  phaseshift arrays must have a multiple-of-4 entries
     midway = (*phaseshiftcnt)/2;                        //  midpoint of arrays
     quartway = midway/2;
-    threequartway = midway + quartway;
+//    threequartway = midway + quartway;
     for(n = 0; n < dz->iparam[PHASOR_STREAMS]-1;n++) {  //  Set max-shift for this stream
         sum = 0.0;
         thismax = min(maxphaseshift,(n+1) * minphaseshift);
