@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -227,9 +227,9 @@ int make_outfile(int del,char *filename)
 {
     int samplen, total_windowsgot_got, samps_remain;
     int got, sampsgot, windowsgot, bufcnt;
-    int channelstoshow, done_display, changrpcnt;
+    int channelstoshow, done_display /*, changrpcnt*/;
     float *rbuf;
-    double channelmax;
+//    double channelmax;
     int n, displayed_channel_cnt, channel_cnt, totchans;
     
     if((samplen  = sndsizeEx(ifd))<0) {     /* FIND SIZE OF FILE */
@@ -279,8 +279,8 @@ int make_outfile(int del,char *filename)
                     break;
                 }
             }
-            changrpcnt = 0;                         /* count of set-of-channels to group together for display */
-            channelmax = 0.0;
+//            changrpcnt = 0;                         /* count of set-of-channels to group together for display */
+//            channelmax = 0.0;
             for(channel_cnt=0;channel_cnt < startchan;channel_cnt++) {
                 if(del) {
                     osambuf[obufcnt++] = rbuf[bufcnt++];
