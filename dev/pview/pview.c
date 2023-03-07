@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -175,7 +175,7 @@ int make_textfile(char *filename)
     int sampsgot, n, m, zoomfact;
     double gpsample0, gpsample1;
     int total_samps_got;
-    int gpcnt, sampout, sampouttrue;
+    int gpcnt, sampout /*, sampouttrue */;
 
     /*RWD*/
     int linecount = 0;
@@ -297,7 +297,7 @@ int make_textfile(char *filename)
                     fflush(stdout);
                     return -1;
                 }
-                sampouttrue = (short)round(gpsample1);
+//                sampouttrue = (short)round(gpsample1);
                 sampout = (short)round(gpsample1 * FLOATSTEREOSCALE);
                 
                 linecount++;
