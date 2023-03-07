@@ -269,7 +269,7 @@ int application_init(dataptr dz)
 {
     int exit_status;
     int storage_cnt;
-    int tipc, brkcnt;
+    int tipc /*, brkcnt */;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
         initialise_vflags(dz);    
@@ -283,7 +283,7 @@ int application_init(dataptr dz)
         if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
             return(exit_status);
     }
-    brkcnt = tipc;
+//    brkcnt = tipc;
 
     if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
         if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
@@ -298,7 +298,7 @@ int application_init(dataptr dz)
 }
 
 /********************** SETUP_PARAMETER_STORAGE_AND_CONSTANTS ********************/
-/* RWD mallo changed to calloc; helps debug verison run as release! */
+/* RWD malloc changed to calloc; helps debug version run as release! */
 
 int setup_parameter_storage_and_constants(int storage_cnt,dataptr dz)
 {
@@ -483,7 +483,7 @@ int setup_and_init_input_param_activity(dataptr dz,int tipc)
     return(FINISHED);
 }
 
-/************************* SETUP_SPECTRUM_APPLICATION *******************/
+/************************* SETUP_FILTRAGE_APPLICATION *******************/
 
 int setup_filtrage_application(dataptr dz)
 {
