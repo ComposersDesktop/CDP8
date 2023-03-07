@@ -92,6 +92,14 @@ target_link_libraries(newmorph cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 
 my_install(newmorph)
 
+add_executable(newsynth synthesis.c)
+if(MINGW)
+target_link_libraries(newsynth cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+else()
+target_link_libraries(newsynth ${AAIOLIB} cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+endif()
+my_install(newsynth)
+
 add_executable(newtex newtex.c)
 target_link_libraries(newtex ${AAIOLIB} cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 
