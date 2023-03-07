@@ -172,7 +172,7 @@ int do_simple_hftexture(dataptr dz)
     int hsindex;
     noteptr tsetnote = tset->firstnote;
     noteptr nextnote;
-    double thistime, thispitch, lastpitch = -1.0;
+    double thistime, thispitch /* , lastpitch = -1.0 */ ;
     noteptr thishfnote = hfmotif->firstnote;
     noteptr thishsnote = hfmotif->firstnote;
     double thishftime,nexthftime,thishstime,nexthstime,thisamp,thisdur;
@@ -197,7 +197,7 @@ int do_simple_hftexture(dataptr dz)
     }
     while(tsetnote!=(noteptr)0) {                   /* 3 */
 //        repeated  =  chekrepeat(tsetnote,lastpitch);
-        lastpitch = tsetnote->pitch;                                                    
+//        lastpitch = tsetnote->pitch;
         thistime  = (double)tsetnote->ntime;        /* 5 */
         if((exit_status = read_values_from_all_existing_brktables(thistime,dz))<0)
             return(exit_status);
@@ -247,7 +247,7 @@ int do_clumped_hftexture(dataptr dz)
     fitptr fithead = NULL;
     noteptr tsetnote = tset->firstnote;
     noteptr thisnote=NULL, nextnote=NULL, phrasenote=NULL, nextevent=NULL, *shadow=NULL;
-    double thispitch = 0.0, lastpitch = -1.0, ampstep = 0.0, ampdif = 0.0, notetime = 0.0, thisamp = 0.0, thisdur = 0.0;
+    double thispitch = 0.0, /* lastpitch = -1.0,*/ ampstep = 0.0, ampdif = 0.0, notetime = 0.0, thisamp = 0.0, thisdur = 0.0;
     unsigned char thisinstr;
     double phrfirstnote = 0.0, thistime = 0.0, rangemult = 0.0, gprlow = 0.0;
     double timeadjust = 0.0; /* default */
@@ -310,7 +310,7 @@ int do_clumped_hftexture(dataptr dz)
     while(tsetnote!=(noteptr)0) {
         if(!(texflag & IS_ORNATE)) {
  //           repeated =  chekrepeat(tsetnote,lastpitch);
-            lastpitch = tsetnote->pitch;
+ //           lastpitch = tsetnote->pitch;
         }
         tsettime = thistime = (double)tsetnote->ntime;
         if((exit_status = read_values_from_all_existing_brktables(thistime,dz))<0)
@@ -1512,14 +1512,15 @@ int gen_hs(double **hf,double **hs, int *hsnotecnt, int hfnotecnt)
  *
  * Flag if there is a repeated note in the source data.
  */
-
+#if 0
+// removed vars set but unused, so this func no longer needed
 int chekrepeat(noteptr thisnote,double lastpitch)
 { 
     if(flteq((double)thisnote->pitch,lastpitch))
         return(TRUE);
     return(FALSE);
 }
-
+#endif
 /****************************** GETNEXTHF ***********************************
  *
  * Get the harmonic field pertaining to this time, + 'hfnotecnt'.
