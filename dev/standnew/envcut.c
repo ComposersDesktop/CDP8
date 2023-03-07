@@ -156,7 +156,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
