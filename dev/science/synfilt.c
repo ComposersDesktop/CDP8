@@ -1600,12 +1600,12 @@ int filter_process(double flt_inv_sr,int flt_cnt,int flt_timeslots,dataptr dz)
                     }
                 }
                 if(dz->samps_left <= 0) {
-                    was_tail_extend = 1;
+//                    was_tail_extend = 1;
                     tail_extend = 1;
                 }
             }
             if(tail_extend) {
-                bufspace = dz->buflen;
+//                bufspace = dz->buflen;
                 dz->ssampsread = dz->buflen;                
             }
             if((exit_status = do_fvary_filters(flt_inv_sr,flt_cnt,&flt_times_cnt,&flt_sams,&flt_q_incr,&flt_blokcnt,&flt_ovflw,flt_timeslots,&flt_frq_index,0,dz)) <0)
