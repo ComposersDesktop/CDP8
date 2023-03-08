@@ -36,11 +36,12 @@
 #include <cdpmain.h>
 
 #define maxtime scalefact
-
 #include <sfsys.h>
 #include <osbind.h>
 #include <grain.h>
-
+#ifndef HUGE
+#define HUGE 3.40282347e+38F
+#endif
 #ifdef unix
 #define round(x) lround((x))
 #endif
