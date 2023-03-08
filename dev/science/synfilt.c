@@ -1705,7 +1705,7 @@ int filter_process(double flt_inv_sr,int flt_cnt,int flt_timeslots,dataptr dz)
     while(dz->samps_left > 0 || tail_extend) {
         memset((char *)buf,0,(size_t) (dz->buflen * sizeof(float)));
         if(tail_extend)
-            dz->ssampsread = 0;         
+            dz->ssampsread = 0;
         else {
             gen_noise(buf,dz);
             if(startup) {                           //  Fade-up splice at start of synth material
@@ -1741,8 +1741,8 @@ int filter_process(double flt_inv_sr,int flt_cnt,int flt_timeslots,dataptr dz)
             }
         }
         if(tail_extend) {
-            bufspace = dz->buflen;
-            dz->ssampsread = dz->buflen;                
+//            bufspace = dz->buflen;
+            dz->ssampsread = dz->buflen;
         }
         if((exit_status = do_fvary_filters(flt_inv_sr,flt_cnt,&flt_times_cnt,&flt_sams,&flt_q_incr,&flt_blokcnt,&flt_ovflw,flt_timeslots,&flt_frq_index,1,dz))<0)
             return(exit_status);
