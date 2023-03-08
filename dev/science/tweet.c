@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -126,7 +126,7 @@ int main(int argc,char *argv[])
     char **cmdline;
     int  cmdlinecnt;
     int n;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -190,7 +190,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -639,7 +639,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -661,10 +661,10 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             }
             if(dz->mode > 0)
                 dz->mode--;
-            //setup_particular_application() =
+            //setup_particular_application()=
             if((exit_status = setup_tweet_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -690,16 +690,16 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = filesize;   
+            dz->insams[0] = filesize;
             break;
-        case(INPUT_INSAMS+4):   
+        case(INPUT_INSAMS+4):
             if(sscanf(argv[cnt],"%d",&insams)!=1) {
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams; 
+            dz->insams[0] = insams;
             break;
-        case(INPUT_SRATE+4):    
+        case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
                 sprintf(errstr,"Cannot read srate sent from TK\n");
                 return(DATA_ERROR);
@@ -711,62 +711,62 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_STYPE+4):    
+        case(INPUT_STYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
                 sprintf(errstr,"Cannot read stype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGSTYPE+4):    
+        case(INPUT_ORIGSTYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
                 sprintf(errstr,"Cannot read origstype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGRATE+4): 
+        case(INPUT_ORIGRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
                 sprintf(errstr,"Cannot read origrate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MLEN+4): 
+        case(INPUT_MLEN+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
                 sprintf(errstr,"Cannot read Mlen sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DFAC+4): 
+        case(INPUT_DFAC+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
                 sprintf(errstr,"Cannot read Dfac sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGCHANS+4):    
+        case(INPUT_ORIGCHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_SPECENVCNT+4):   
+        case(INPUT_SPECENVCNT+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
                 sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->specenvcnt = dz->infile->specenvcnt;
             break;
-        case(INPUT_WANTED+4):   
+        case(INPUT_WANTED+4):
             if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
                 sprintf(errstr,"Cannot read wanted sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_WLENGTH+4):  
+        case(INPUT_WLENGTH+4):
             if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
                 sprintf(errstr,"Cannot read wlength sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_OUT_CHANS+4):    
+        case(INPUT_OUT_CHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
                 sprintf(errstr,"Cannot read out_chans sent from TK\n");
                 return(DATA_ERROR);
@@ -1958,7 +1958,7 @@ int find_the_local_peaks(int *here,int *there,float *buf,int *n,int trofpntcnt,i
          int *startsamp,int *endsamp,int losamp, int *cut, int cutcnt, double *localpeak, double *scanarray,
          int *localpeakcnt,int *first_downcross,dataptr dz)
 {
-    int exit_status, notfound = 0, finished = 0, below, bufinc = 0;
+    int exit_status, notfound = 0, finished = 0, /*below,*/ bufinc = 0;
     int maxat=0;
     float maxval=0.0f, val;
     int wsize, hisamp,losampinbuf,hisampinbuf;
@@ -2028,7 +2028,7 @@ int find_the_local_peaks(int *here,int *there,float *buf,int *n,int trofpntcnt,i
         *there = hisampinbuf - 1;
         val = buf[*there];
         if(val >= 0.0) {
-            below = 0;
+//            below = 0;
             while(val >= 0.0) {
                 (*there)--;
                 if(*there < losampinbuf) {
@@ -2037,7 +2037,7 @@ int find_the_local_peaks(int *here,int *there,float *buf,int *n,int trofpntcnt,i
                 val = buf[*there];
             }
         } else if(val <= 0.0) {
-            below = 1;
+//            below = 1;
             while(val <= 0.0) {
                 (*there)--;
                 if(*there < losampinbuf) {
@@ -2450,7 +2450,7 @@ int create_tweet_sndbufs(dataptr dz)
         sprintf(errstr,"buffer pointers not allocated: create_fofex_sndbufs()\n");
         return(PROGRAM_ERROR);
     }
-    bigbufsize = (int)Malloc(-1);
+    bigbufsize = (int)(size_t) Malloc(-1);
     dz->buflen = bigbufsize/sizeof(float);
     if((dz->bigbuf = (float *)malloc(bigbufsize * 2)) == NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY to create initial sound buffer.\n");
@@ -2469,7 +2469,7 @@ int recreate_tweet_sndbufs(dataptr dz)
     int bigbufsize;
     free(dz->bigbuf);
     dz->bufcnt = 3;
-    bigbufsize = (int)Malloc(-1);
+    bigbufsize = (int)(size_t) Malloc(-1);
     bigbufsize = max(dz->buflen * sizeof(float),(unsigned int)bigbufsize);
     dz->buflen = bigbufsize/sizeof(float);
     if((dz->bigbuf = (float *)malloc(bigbufsize  * (dz->bufcnt+1))) == NULL) {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -102,10 +102,10 @@ int main(int argc,char *argv[])
     char **cmdline, *p;
     int *patterncnt;
     int  cmdlinecnt;
-    int knotdatacnt;
-    double *spatpos, *spatstep, *outdata, *comboarray, dummy;
+    int knotdatacnt = 0;
+    double *spatpos, *spatstep, *outdata = 0, *comboarray, dummy;
     int combopatterncnt, n;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -160,7 +160,7 @@ int main(int argc,char *argv[])
         return(FAILED);
     }
 
-    ap = dz->application;
+//    ap = dz->application;
 
     // setup_param_ranges_and_defaults() =
     if((exit_status = setup_unknot_param_ranges_and_defaults(dz))<0) {
@@ -1118,7 +1118,7 @@ int unknot(int *patterncnt,int *knotdatacnt,double **spat_pos,double **spat_step
 {
     double *timediff, *comboarray, *outdata = NULL, *spatpos, *spatstep, *outpos;
     int comboarraysize, outdiffcnt, outtestcnt, unknotting_eventcnt, outpatterncnt, outdatacnt = 0;
-    int n, m, r, k, tn, tm, tnow,  tnext, tlast, passno, smooth, combopatterncnt, lastnonzerodiff;
+    int n, m, r, k, tn, tm, tnow,  tnext,/* tlast,*/ passno, smooth, combopatterncnt, lastnonzerodiff;
     int unknotcnt = 0, maxcnt, adjacent, zerocnt = 0, prezerocnt, postzerocnt, adjacentzeros, maxloc, respacecnt = 0;
     double tim_n, mid_n, lev_n, pos_n, tim_m, mid_m, lev_m, pos_m;
     double bastime, maxdiff, span, halfspan, sum;
@@ -1423,7 +1423,7 @@ int unknot(int *patterncnt,int *knotdatacnt,double **spat_pos,double **spat_step
             n++;
         }
         bastime = 0.0;
-        tlast = 0;
+//        tlast = 0;
         outpatterncnt = writesteps * dz->iparam[KNOT_UNKNOTREP];        //  Number of patterns in unknotting output
         for(n = 0,r = 0; n < outpatterncnt;n++,r+=combopatterncnt) {    //  For every pattern, (each pattern starts at r)
             sum  = 0.0;                                                 //  Single pattern timesum
@@ -1448,7 +1448,7 @@ int unknot(int *patterncnt,int *knotdatacnt,double **spat_pos,double **spat_step
 int unknot_output(int *patterncnt,int knotdatacnt,double *spatpos,double *spatstep,double *comboarray,int combopatterncnt,double *outdata,dataptr dz)
 {
     int respace = 0, n, pcnt, r, ccnt, spacetyp = dz->iparam[KNOT_SPACETYP];
-    double *thispattern, *combo, bastime, endtime, thispos, starttime;
+    double *thispattern, *combo, bastime,/*endtime,*/ thispos, starttime;
     int combosize = 0, tim, mid, lev, pos, outpatterncnt, unknotting_eventcnt, sttim, stmid, stlev, stpos;
     char temp[400];
 
@@ -1578,7 +1578,7 @@ int unknot_output(int *patterncnt,int knotdatacnt,double *spatpos,double *spatst
     mid = 1;
     lev = 2;
     pos = 3;
-    endtime = bastime;
+//    endtime = bastime;
     if(dz->vflag[2]) {
         sprintf(temp,";UNKNOTTING\n");
         fputs(temp,dz->fp);

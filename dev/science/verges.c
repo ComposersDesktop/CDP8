@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -100,7 +100,7 @@ int main(int argc,char *argv[])
     char **cmdline;
     int  cmdlinecnt;
     int n;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -158,7 +158,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -591,7 +591,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -616,7 +616,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_verges_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -1205,14 +1205,14 @@ int verges(dataptr dz)
 {
     int exit_status, chans = dz->infile->channels; 
     float *ibuf = dz->sampbuf[0], *iovflwbuf = dz->sampbuf[1], *obuf = dz->sampbuf[2];
-    double *vtimes = dz->parray[0], srate = (double)dz->infile->srate, lastvtime;
+    double *vtimes = dz->parray[0], srate = (double)dz->infile->srate /*, lastvtime*/;
     int last_total_samps_read, ibufpos, obufpos, n, vsamp, endsamps, vergsamps, maxextend, *vsmptimes = dz->lparray[0];
 
     //  (much more than) the maximum amount the input-data can be stretched when creating a verge
 
     maxextend = (int)ceil(dz->application->hi[VRG_TRNSP]);
 
-    lastvtime = 0.0;
+//    lastvtime = 0.0;
     last_total_samps_read = 0;
     ibufpos = 0;
     obufpos = 0;
@@ -1300,7 +1300,7 @@ int create_temporary_verge_sndbufs(dataptr dz)
     int bigbufsize, secsize, minbuflen, framesize = F_SECSIZE * chans;
 
     minbuflen = dz->bigverge;
-    dz->buflen = (int)Malloc(-1)/sizeof(float);
+    dz->buflen = (int)(size_t) Malloc(-1)/sizeof(float);
     dz->buflen = max(dz->buflen,minbuflen); 
     secsize = dz->buflen/framesize;
     if(secsize * framesize != dz->buflen)
@@ -1326,7 +1326,7 @@ int create_verges_sndbufs(dataptr dz)
     int bigbufsize, secsize, minbuflen, framesize = F_SECSIZE * chans;
 
     minbuflen = dz->bigverge;
-    dz->buflen = (int)Malloc(-1)/sizeof(float);
+    dz->buflen = (int)(size_t) Malloc(-1)/sizeof(float);
     dz->buflen = max(dz->buflen,minbuflen); 
     secsize = dz->buflen/framesize;
     if(secsize * framesize != dz->buflen)

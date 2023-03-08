@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -118,7 +118,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -180,7 +180,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
     dz->infile->channels = 1;
     // parse_infile_and_hone_type() = 
     // setup_param_ranges_and_defaults() =
@@ -622,7 +622,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -647,7 +647,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_synspline_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -1114,7 +1114,7 @@ int synspline(dataptr dz)
     double thistime = 0.0, ampinterp1, ampinterp2, val1, val2, val, frac, diff, dpos1, dpos2, dincr1, dincr2, rrange, srate = dz->iparam[SPLIN_SRATE];
     float *splinebuf1 = dz->sampbuf[0], *splinebuf2 = dz->sampbuf[1], *obuf = dz->sampbuf[2], *ovflwbuf = dz->sampbuf[3];
     float *driftbuf = dz->sampbuf[4];
-    double lastdrifttime = 0.0, nextdrifttime = 0.0, driftincr1 = 1.0, driftincr2 = 1.0, driftincrincr = 0.0, driftend, dbufpos, abstime;
+    double lastdrifttime = 0.0, nextdrifttime = 0.0, driftincr1 = 1.0, driftincr2 = 1.0, driftincrincr = 0.0, driftend, dbufpos/*, abstime*/;
     int lastdriftsamps = 0, nextdriftsamps = 0, abssamps = 0, driftbufpos = 0;
     memset((char *)splinebuf1,0,dz->buflen * sizeof(float));
     memset((char *)splinebuf2,0,dz->buflen * sizeof(float));
@@ -1227,7 +1227,7 @@ int synspline(dataptr dz)
 
                 while(dbufpos < driftend) {                         //  Advance by interpolated increments in driftbuf until end of buf reached.
                     abssamps = dz->total_samps_written + obufpos;               
-                    abstime = (double)abssamps/srate;               //  Absolute time (for reading any brktables) measured from absolute outbuf position
+//                    abstime = (double)abssamps/srate;               //  Absolute time (for reading any brktables) measured from absolute outbuf position
                     if(abssamps == nextdriftsamps) {
                         driftincr1     = driftincr2;                //  If we've reached the next designated time for generating a new transposition(incr) value,
                         lastdrifttime  = nextdrifttime;             //  Set the "last" values as what were the "next" values
@@ -1404,8 +1404,8 @@ int create_synspline_sndbufs(dataptr dz)
     }
     dz->sbufptr[0] = dz->sampbuf[0] = dz->bigbuf;                       //  splinebuf1
     dz->sbufptr[1] = dz->sampbuf[1] = dz->sampbuf[0] + dz->buflen;      //  splinebuf2
-    dz->sampbuf[2] = dz->sampbuf[2] = dz->sampbuf[1] + dz->buflen;      //  obuf
-    dz->sampbuf[3] = dz->sampbuf[3] = dz->sampbuf[2] + dz->buflen2;     //  ovflwbuf
+    /*dz->sampbuf[2] = */ dz->sampbuf[2] = dz->sampbuf[1] + dz->buflen;      //  obuf
+    /*dz->sampbuf[3] = */ dz->sampbuf[3] = dz->sampbuf[2] + dz->buflen2;     //  ovflwbuf
     if(dz->is_drift) {
         dz->sampbuf[4] = dz->sampbuf[4] = dz->sampbuf[3] + dz->buflen2; //  pre-drift interpolation buffer
         dz->sampbuf[5] = dz->sampbuf[5] + dz->buflen2;                  //  end of pre-drift buffer
@@ -1589,7 +1589,7 @@ int do_a_spline(int *wavelen,double srate,dataptr dz)
 {
     int gotit = 0, n, m, hi = 0, orig_splincnt, rval, splincnt = 0;
     int half_wavelen;
-    double maxrand, temp, maxsamp, rrange;
+    double maxrand, temp,/*maxsamp,*/ rrange;
     int   *splintsamps = dz->lparray[0];
     double *splintrand  = dz->parray[4], *splintamp = dz->parray[4];
     float  *splinebuf2  = dz->sampbuf[1];  
@@ -1673,7 +1673,7 @@ int do_a_spline(int *wavelen,double srate,dataptr dz)
     cospline(half_wavelen,splincnt,dz);                 //  Calculate times for splining
     for(n=0; n < half_wavelen;n++)                      //  Do COSIN-interps
         splinebuf2[n] = (float)cosplint(&hi,(double)n/srate,splincnt,dz);
-    maxsamp = 0.0;
+//    maxsamp = 0.0;
     for(n=0,m = half_wavelen; n < half_wavelen;n++,m++)
         splinebuf2[m] = (float)(-splinebuf2[n]);
     return FINISHED;
