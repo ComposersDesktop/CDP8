@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -117,7 +117,7 @@ int main(int argc,char *argv[])
     char **cmdline;
     int  cmdlinecnt;
     int n, max_gp_seg = 0;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -181,7 +181,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     modetype = dz->mode % 3;
 
@@ -1283,11 +1283,11 @@ int motor(dataptr dz)
 {
     int exit_status, warned = 0, bufcntr = 0, done = 0, event_cnt, ibufno, ch, chans = dz->infile->channels;
     float **ibuf, *ebuf, *obuf, *ovflwbuf;
-    int *instep, *gp_sampsread, *mot_starts, *mot_ends, arraysize, in_upstep = 0, in_dnstep = 0, write_position, gp_edgsmps, pulsesmps, start = 0, end = 0, next;
-    int n, m, j, k, cresc_cnt, decresc_cnt, max_cresccnt, inner_cnt, max_innercnt, outstep, gp_eventsamps, gp_tail, ibufpos, obufpos = 0;
+    int *instep, *gp_sampsread, *mot_starts, *mot_ends, arraysize, in_upstep = 0, in_dnstep = 0, write_position, gp_edgsmps, pulsesmps, start = 0, end = 0 /*, next*/;
+    int n, m, j, k, cresc_cnt, decresc_cnt, max_cresccnt=0, inner_cnt, max_innercnt = 0, outstep, gp_eventsamps, gp_tail, ibufpos, obufpos = 0;
     double time, srate = (double)dz->infile->srate;
     double *mot_frq, *mot_sym, *mot_frnd, *mot_jit, *mot_trem, *mot_symrnd, *mot_fratio, *mot_dur, *mot_edge, *mot_bite, *inseg;
-    double frq, edge, sym, frnd, jit, trem, symrnd, fratio, pulsdur, bite = 1.0, edgelen, outer_dur, real_outer_dur, rnd, endtime, cresctime = 0.0, decresctime = 0.0;
+    double frq=0.0, edge=0.0, sym, frnd, jit, trem, symrnd, fratio, pulsdur, bite = 1.0, edgelen, outer_dur, real_outer_dur, rnd, endtime, cresctime = 0.0, decresctime = 0.0;
     double inner_dur, thisdur, val, incr, mindur, segdur;
     int *permm, permcnt = dz->inbufcnt;
     int *samphold, start_read, samps_to_read, gp_splicelen, gp_samps_envup, gp_samps_envdn, zerocnt;
@@ -1519,10 +1519,10 @@ int motor(dataptr dz)
             
             start = mot_starts[n];
             end   = mot_ends[n];
-            if(n < event_cnt - 1)
-                next = mot_starts[n+1];                     //  Note start of next pulse
-            else                                            //  (if there is one)
-                next = -1;
+//           if(n < event_cnt - 1)
+//               next = mot_starts[n+1];                     //  Note start of next pulse   RWD: NOTUSED...?
+//           else                                            //  (if there is one)
+//               next = -1;
             frq     = mot_frq[n];
             sym     = mot_sym[n];
             frnd    = mot_frnd[n];
@@ -1536,12 +1536,12 @@ int motor(dataptr dz)
             
             //  Using outer-event duration and symmetry, find true durations of cresc and decresc in envelope
             //  find counts of inner events in cresc and decresc portions of envelope
-            
+
             if((exit_status = calculate_cresc_and_decresc_counts_of_inner_events(&cresc_cnt,&decresc_cnt,&cresctime,&decresctime,sym,symrnd,pulsdur,frq,dz))<0)
                 return exit_status;
-            
+
             inner_cnt = cresc_cnt + decresc_cnt;
-            
+
             //  Select appropriate infile to read
 
             ibufno = select_infile_to_use(&bufcntr,permm,permcnt,dz);
@@ -1802,7 +1802,7 @@ int generate_inner_pulse(float *ebuf,float *ibuf,float *obuf,int ibufpos,int obu
         memset((char *)ebuf,0,dz->buflen * sizeof(float));  //  Copy total event samples from ibuf
         memcpy((char *)ebuf,(char *)(ibuf + ibufpos),gp_eventsamps * chans * sizeof(float));
 
-        splen = min(gp_splicelen,gp_eventsamps/2);          //  Find appropriate splicelen              
+        splen = min(gp_splicelen,gp_eventsamps/2);          //  Find appropriate splicelen
         for(k = 0; k < splen;k++) {                         //  Do on-splice
             kk = k * chans;
             splic = (double)k/(double)splen;
@@ -1846,7 +1846,7 @@ int generate_inner_pulse(float *ebuf,float *ibuf,float *obuf,int ibufpos,int obu
             for(ch = 0;ch < chans; ch++) {
                 val  = ebuf[thispos++];
                 diff = ebuf[nextpos++] - val;
-                val += diff * frac;                         
+                val += diff * frac;
                 val *= amp;                                 //  Do any required amplitude atenuation
                 obuf[obufpos] = (float)(obuf[obufpos] + val);// Add sample into output (in case there are event overlaps)
                 obufpos++;
@@ -1895,8 +1895,8 @@ int calculate_cresc_and_decresc_counts_of_inner_events(int *cresc_cnt,int *decre
         adjust = -offset;                               //  step back to midpoint
         adjust /= 10.0;                                 //  1/10 of this distance
         while(total < 2) {
-            sym += adjust;                              //  Move symmetry towards midpoint, in small steps  
-            if(adjust > 0.0 && sym > 0.5)               //  recalculating cresctime & decresctime, to get values that work 
+            sym += adjust;                              //  Move symmetry towards midpoint, in small steps
+            if(adjust > 0.0 && sym > 0.5)               //  recalculating cresctime & decresctime, to get values that work
                 bum = 1;
             else if(adjust < 0.0 && sym < 0.5)          //  But if no values work ... fail!!!!
                 bum = 1;
@@ -1933,7 +1933,7 @@ int select_infile_to_use(int *bufcntr,int *permm,int permcnt,dataptr dz)
     int modetype = dz->mode % 3;
     if(modetype != MOT_SNGLE) {                     //  Find appropriate inbuf, if multiple input files, or many cut segments
         if(dz->vflag[MOT_CYCLIC])
-            ibufno = *bufcntr;                      //  either next one cyclically  
+            ibufno = *bufcntr;                      //  either next one cyclically
         else
             ibufno = permm[*bufcntr];               //  or next one in perm
         if(++(*bufcntr) >= dz->inbufcnt) {          //  and advance infile counter "bufcntr"
@@ -1957,8 +1957,8 @@ void calculate_fwd_and_bkwd_sampsteps_in_infile(int *in_upstep,int *in_dnstep,do
     if(dz->mode < 3)
         advance_regress = 1;
 
-    if(dz->vflag[MOT_FXDSTP]) {                     //  Envelope inner-events always advance by a fixed amount  
-                                                    //  From known pre-calculated timestep between reads, for this infile   
+    if(dz->vflag[MOT_FXDSTP]) {                     //  Envelope inner-events always advance by a fixed amount
+                                                    //  From known pre-calculated timestep between reads, for this infile
         *in_upstep = instep[ibufno];                //  Fixed step calculated so this is same in all modes (for modes > 3 in_dnstep not used)
         if(advance_regress) {
             upsteptime = (double)((*in_upstep)/chans)/srate;
@@ -2009,15 +2009,15 @@ void calculate_inputsamps_to_read_and_length_of_tail(int *gp_eventsamps,int *gp_
 
 int calculate_max_read_events_in_any_env_pulse(int *max_cresccnt,int *max_innercnt,double *frq,double *edge,int arraysize,int *permm,int permcnt,int *gp_sampsread,dataptr dz)
 {
-    int exit_status, chans = dz->infile->channels, done = 0, ibufno, bufcntr;
+    int exit_status, chans = dz->infile->channels,/* done = 0, ibufno,*/ bufcntr;
     int n, event_cnt, write_position, cresc_cnt = 0, decresc_cnt = 0, pulsesmps;
     double time, cresctime = 0.0, decresctime = 0.0, srate = (double)dz->infile->srate;
     double *mot_sym = dz->parray[0], *mot_symrnd = dz->parray[1], *mot_dur = dz->parray[3], *mot_frnd = dz->parray[5];
     double *mot_jit = dz->parray[6], *mot_trem = dz->parray[7]; 
     double outer_dur, rnd, real_outer_dur, sym, symrnd, frnd, jit, trem;
-    float *ebuf, *obuf;
-    ebuf = dz->sampbuf[dz->inbufcnt];
-    obuf = dz->sampbuf[dz->inbufcnt+1];
+//    float *ebuf , *obuf;
+//    ebuf = dz->sampbuf[dz->inbufcnt];
+//    obuf = dz->sampbuf[dz->inbufcnt+1];
     time = 0.0;
     write_position = 0;
     while(time < dz->param[MOT_DUR]) {                      //  Until we have generated the required output duration
@@ -2030,10 +2030,10 @@ int calculate_max_read_events_in_any_env_pulse(int *max_cresccnt,int *max_innerc
             if(event_cnt >= arraysize) {
                 sprintf(errstr,"Array overrun storing pulse start and end times in buffer.\n");
                 return PROGRAM_ERROR;
-            }                                               //  Store sample-time of start of large-pulse .....
-    
+            }                                               //  Store sample-time of start of large-pulse
+
             //  Find parameters for internal-events inside each of envelope-pulse
-            
+
             if((exit_status = read_values_from_all_existing_brktables(time,dz))<0)
                 return exit_status;
             mot_sym[event_cnt]    = dz->param[MOT_SYM];
@@ -2044,7 +2044,7 @@ int calculate_max_read_events_in_any_env_pulse(int *max_cresccnt,int *max_innerc
             //  Find step between envelope-pulses, and actual sounding-end of envelope-pulse
 
             outer_dur = dz->param[MOT_PULSE];               //  Find actual duration of large-pulse, modifying it, if randomised
-            if(dz->param[MOT_PRND] > 0.0) {         
+            if(dz->param[MOT_PRND] > 0.0) {
                 rnd = (drand48() * 2.0) - 1.0;              //  Range -1 to 1
                 rnd *= dz->param[MOT_PRND];                 //  Range -r to + r
                 rnd += 1.0;                                 //  Range 1-r to 1+r
@@ -2055,39 +2055,37 @@ int calculate_max_read_events_in_any_env_pulse(int *max_cresccnt,int *max_innerc
             real_outer_dur = max(outer_dur,2.0/dz->param[MOT_FRQ]); //  Outer-Pulse cannot be shorter than 2 inner_pulses
             mot_dur[event_cnt] = real_outer_dur;            //  and store it
             pulsesmps = (int)round(outer_dur * srate) * chans;
-            event_cnt++;                                    //  Advance event-counter to next event             
+            event_cnt++;                                    //  Advance event-counter to next event
             write_position += pulsesmps;                    //  Advance write-position in output buffer.
-            time += outer_dur;                              //  Advance time for next brktable-read     
+            time += outer_dur;                              //  Advance time for next brktable-read
             if(time >= dz->param[MOT_DUR]) {                //  If this large-pulse event runs over required total-duration-of-output,
-                done = 1;                                   //  flag to quit, once inner-events have been generated
+//                done = 1;                                   //  flag to quit, once inner-events have been generated
                 break;                                      //  and break (so no further envel-pulses generated).
             }
         }
             //  NOW PSEUDO-GENERATE THE INNER EVENTS INSIDE THE LARGE-PULSES
-        
-        for(n = 0; n <event_cnt; n++) {
 
-            //  Get params needed for for inner-event within each outer-pulse           
-            
+        for(n = 0; n <event_cnt; n++) {
+            //  Get params needed for for inner-event within each outer-pulse
             sym       = mot_sym[n];
             symrnd    = mot_symrnd[n];
             outer_dur = mot_dur[n];
             frnd      = mot_frnd[n];
             jit       = mot_jit[n];
             trem      = mot_trem[n];
-            
+
             //  Using outer-event duration and symmetry, find true durations of cresc and decresc in envelope
             //  find counts of inner events in cresc and decresc portions of envelope
-            
+
             if((exit_status = calculate_cresc_and_decresc_counts_of_inner_events(&cresc_cnt,&decresc_cnt,&cresctime,&decresctime,sym,symrnd,outer_dur,*frq,dz))<0)
                 return exit_status;
             *max_innercnt = max(*max_innercnt,cresc_cnt + decresc_cnt); 
             *max_cresccnt = max(*max_cresccnt,cresc_cnt);
-            
+
             //  Select appropriate infile to read MAY USE RAND
 
-            ibufno = select_infile_to_use(&bufcntr,permm,permcnt,dz);
-            
+//            ibufno = select_infile_to_use(&bufcntr,permm,permcnt,dz);
+
             //  USE ANY RAND FUNCTIONS THAT MAY BE USED LATER, TO KEEP RAND OUTPUT REPRODUCIBLE
 
             if(dz->param[MOT_VARY] > 0.0)
@@ -2106,7 +2104,7 @@ int calculate_max_read_events_in_any_env_pulse(int *max_cresccnt,int *max_innerc
                     rnd = drand48();
             }
             //  USE ANY RAND FUNCTIONS THAT MAY BE USED IN GENERATING THE EVENTS IN THE DECRESC PART OF ENVELOPE
-            
+
             for(n = 0; n < decresc_cnt;n++) {
                 if(trem > 0.0)
                     rnd = drand48();
