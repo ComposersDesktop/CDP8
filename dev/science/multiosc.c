@@ -1236,7 +1236,7 @@ int usage2(char *str)
 int multiosc(dataptr dz) 
 {
     int exit_status, oscilcnt = 0;
-    double time, val, srate, onehzincr, spliceincr = 0.0 /*, upspliceval = 0.0, dnspliceval = 1.0 */;
+    double time, val, srate, onehzincr /* , spliceincr = 0.0 , upspliceval = 0.0, dnspliceval = 1.0 */;
     int infade = 0 /*, outfade = 0 */;
     float *obuf = dz->sampbuf[0];
     int obufpos = 0, outsamps = 0;
@@ -1249,7 +1249,7 @@ int multiosc(dataptr dz)
     srate = (double)dz->iparam[MOSC_SRATE];
     infade = (int)floor(dz->param[MOSC_SPLEN] * MS_TO_SECS * srate);
 //    outfade = dz->iparam[MOSC_DUR] - infade;
-    spliceincr = 1.0/infade;
+//    spliceincr = 1.0/infade;
 //    upspliceval = 0.0;
 //    dnspliceval = 1.0 - spliceincr;
     onehzincr = (double)SYNTH_TABSIZE/srate;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -317,7 +317,7 @@ int main(int argc,char *argv[])
     char indatafile[400];
     int  cmdlinecnt;
     double synth_ctr = 0.0, synth_sqz = 0.0, flt_mul = 0.0;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     double onehzincr = (double)SYNTH_TABSIZE/(double)MSYNSRATE;
 
@@ -382,7 +382,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
     // parse_infile_and_hone_type() = 
     // setup_param_ranges_and_defaults() =
     if((exit_status = setup_synthesis_param_ranges_and_defaults(dz))<0) {
@@ -824,7 +824,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -849,7 +849,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_synthesizer_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//           ap = dz->application;
             break;
 
         case(3):    
@@ -2275,7 +2275,7 @@ int pretest_the_special_data(char *str,int *inlinecnt,synptr *orchestra,dataptr 
     double dummy = 0.0, lasttime = 0.0, lastpitch[16];
     synptr instrument;
     double timestep;
-    int insno, typ, coincident = 0, doublestop, lastdur, pianoRHcnt = 0, pianoLHcnt = 0, pianoRHpos = -1, pianoLHpos = -1;
+    int insno, typ, coincident = 0, /* doublestop,*/ lastdur, pianoRHcnt = 0, pianoLHcnt = 0, pianoRHpos = -1, pianoLHpos = -1;
     FILE *fp;
     int cnt, linecnt, n, m;
     char temp[8000], insnam[200],*p;
@@ -2309,7 +2309,7 @@ int pretest_the_special_data(char *str,int *inlinecnt,synptr *orchestra,dataptr 
             pianoLHpos = linecnt;
         }
         instrument = orchestra[insno]; // ALPHA : Sets up instrument specific pitch-ranges
-        doublestop = instrument->doublestop;
+//        doublestop = instrument->doublestop;
         cnt = 0;
         lastdur = 0;
         while(get_float_from_within_string(&p,&dummy)) {

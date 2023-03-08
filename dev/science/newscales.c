@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -498,10 +498,10 @@ int handle_the_outfile(int *cmdlinecnt,char ***cmdline,dataptr dz)
 int setup_newscales_application(dataptr dz)
 {
     int exit_status;
-    aplptr ap;
+//    aplptr ap;
     if((exit_status = establish_application(dz))<0)     // GLOBAL
         return(FAILED);
-    ap = dz->application;
+//    ap = dz->application;
     // set_legal_infile_structure -->
     dz->has_otherfile = FALSE;
     // assign_process_logic -->
@@ -611,7 +611,7 @@ int read_newscales_data(char **cmdline,double **frq,int **duration,double *maxfr
 int read_spectrum_data(char **cmdline,double ***harm,double ***amp,double maxfrq,dataptr dz)
 {
     double *h, *a, dummy;
-    int harmcnt, linecnt, k;
+    int /*harmcnt,*/ linecnt, k;
     char temp[200], *q;
     int isharm;
     FILE *fp;
@@ -619,7 +619,7 @@ int read_spectrum_data(char **cmdline,double ***harm,double ***amp,double maxfrq
         sprintf(errstr, "Can't open datafile %s to read data.\n",cmdline[0]);
         return(DATA_ERROR);
     }
-    harmcnt = 0;
+//    harmcnt = 0;
     linecnt = 0;
     while(fgets(temp,200,fp)==temp) {    /* READ AND TEST VALS */
         q = temp;
