@@ -2534,7 +2534,7 @@ void dovetail(int dovelen, dataptr dz)
 {
     float *buf;
     double splice;
-    int buflen, i, j, n;
+    int /* buflen,*/ i, j, n;
     for(n= 0; n < dz->infilecnt; n++) {
         buf = dz->sampbuf[THISIBUF+n];
  //       buflen = dz->insams[n] + 1;
