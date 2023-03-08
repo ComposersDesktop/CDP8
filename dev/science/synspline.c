@@ -1407,7 +1407,7 @@ int create_synspline_sndbufs(dataptr dz)
     /*dz->sampbuf[2] = */ dz->sampbuf[2] = dz->sampbuf[1] + dz->buflen;      //  obuf
     /*dz->sampbuf[3] = */ dz->sampbuf[3] = dz->sampbuf[2] + dz->buflen2;     //  ovflwbuf
     if(dz->is_drift) {
-        dz->sampbuf[4] = dz->sampbuf[4] = dz->sampbuf[3] + dz->buflen2; //  pre-drift interpolation buffer
+       /* dz->sampbuf[4] = */ dz->sampbuf[4] = dz->sampbuf[3] + dz->buflen2; //  pre-drift interpolation buffer
         dz->sampbuf[5] = dz->sampbuf[5] + dz->buflen2;                  //  end of pre-drift buffer
     } else
         dz->sampbuf[4] = dz->sampbuf[4] + dz->buflen2;                  //  end of ovflwbuf
