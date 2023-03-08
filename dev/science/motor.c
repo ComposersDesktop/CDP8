@@ -691,7 +691,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//   aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -716,7 +716,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_motor_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -2009,7 +2009,7 @@ void calculate_inputsamps_to_read_and_length_of_tail(int *gp_eventsamps,int *gp_
 
 int calculate_max_read_events_in_any_env_pulse(int *max_cresccnt,int *max_innercnt,double *frq,double *edge,int arraysize,int *permm,int permcnt,int *gp_sampsread,dataptr dz)
 {
-    int exit_status, chans = dz->infile->channels,/* done = 0, ibufno,*/ bufcntr;
+    int exit_status, chans = dz->infile->channels,/* done = 0, ibufno, bufcntr*/;
     int n, event_cnt, write_position, cresc_cnt = 0, decresc_cnt = 0, pulsesmps;
     double time, cresctime = 0.0, decresctime = 0.0, srate = (double)dz->infile->srate;
     double *mot_sym = dz->parray[0], *mot_symrnd = dz->parray[1], *mot_dur = dz->parray[3], *mot_frnd = dz->parray[5];
