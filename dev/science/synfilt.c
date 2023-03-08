@@ -1734,7 +1734,7 @@ int filter_process(double flt_inv_sr,int flt_cnt,int flt_timeslots,dataptr dz)
                 }
             }
             if(dz->samps_left <= 0) {
-                was_tail_extend = 1;
+//                was_tail_extend = 1;
                 tail_extend = 1;
                 fprintf(stdout,"INFO: Writing Filter tail.\n");
                 fflush(stdout);
