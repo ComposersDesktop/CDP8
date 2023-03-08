@@ -97,7 +97,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -165,7 +165,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
     dz->infile->channels = 1;
     // parse_infile_and_hone_type() = 
     // setup_param_ranges_and_defaults() =
@@ -632,7 +632,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -657,7 +657,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_chirikov_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -1168,7 +1168,7 @@ int create_chirikov_sndbufs(dataptr dz)
         sprintf(errstr,"INSUFFICIENT MEMORY establishing sample buffer pointers.\n");
         return(MEMORY_ERROR);
     }
-    bigbufsize = (int)Malloc(-1);
+    bigbufsize = (int)(size_t)Malloc(-1);
     bigbufsize /= dz->bufcnt;
     if(bigbufsize <=0)
         bigbufsize  = framesize * sizeof(float);

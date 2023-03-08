@@ -205,7 +205,7 @@ int main(int argc,char *argv[])
     char **cmdline;
     int  cmdlinecnt;
     int n;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -269,7 +269,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -798,7 +798,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -823,7 +823,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_crystal_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -1385,7 +1385,7 @@ int get_the_mode_from_cmdline(char *str,dataptr dz)
 int handle_the_special_data(char *str,dataptr dz)
 {
     FILE *fp;
-    double dummy = -1.0, sum, vectorlen, lasttime, x, y, z;
+    double dummy = -1.0, /*sum,*/ vectorlen, lasttime, x, y, z;
     char temp[200], *p;
     int cnt = 0, linecnt = 0, vertexcnt = 0, datacnt = 0, jj, envelcnt = 0, k;
     int  istime, inenvel = 0;
@@ -1539,7 +1539,7 @@ int handle_the_special_data(char *str,dataptr dz)
     fclose(fp);
     for(vertexcnt = 0; vertexcnt < dz->no_of_vertices; vertexcnt++) {
         jj = vertexcnt * 3;
-        sum = 0.0;
+//        sum = 0.0;
         x = dz->parray[ORIG_VTX_DATA][jj];
         y = dz->parray[ORIG_VTX_DATA][jj+1];
         z = dz->parray[ORIG_VTX_DATA][jj+2];
@@ -2537,7 +2537,7 @@ void dovetail(int dovelen, dataptr dz)
     int buflen, i, j, n;
     for(n= 0; n < dz->infilecnt; n++) {
         buf = dz->sampbuf[THISIBUF+n];
-        buflen = dz->insams[n] + 1;
+ //       buflen = dz->insams[n] + 1;
         for(i = 0, j = dz->insams[n]; i < dovelen; i++,j--) {
             splice = (double)i/(double)dovelen;
             buf[i] = (float)(buf[i] * splice);

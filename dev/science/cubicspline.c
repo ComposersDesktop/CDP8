@@ -194,7 +194,7 @@ int usage1(void)
 int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, double **x, double **y,int *itemcnt)
 {
     int cnt, linecnt;
-    int arraycnt;
+//    int arraycnt;
     double *p, dummy;
     char temp[200], *q;
     cnt = 0;
@@ -221,7 +221,7 @@ int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, do
         fflush(stdout);
         return(MEMORY_ERROR);
     }
-    arraycnt = cnt/2;
+//    arraycnt = cnt/2;
     if((*secondderiv = (double *)malloc(cnt/2 * sizeof(double)))==NULL) {
         fprintf(stdout,"INSUFFICIENT MEMORY for storing slope of input data.\n");
         fflush(stdout);
