@@ -1644,7 +1644,7 @@ int write_event(double current_pitch,double current_gain,double tabincr,dataptr 
  */
 int write_event_to_output(int passno,double current_time,double current_position,double *maxsamp,double normaliser,int *obufpos,dataptr dz)
 {
-    int current_left, current_right;
+    int current_left/* , current_right*/;
     int bufpos, n, j, samps_written;
     float val;
     int ochans = dz->iparam[BRCHANS];
@@ -1698,7 +1698,7 @@ int write_event_to_output(int passno,double current_time,double current_position
         }
     } else {
         current_left = (int)floor(current_position);            //  Find appropriate "left" and "right" channels for current-position of output
-        current_right = current_left + 1;
+//        current_right = current_left + 1;
         current_position -= current_left;                       //  position becomes 0to1-range-position between adjacent channels
         current_position = (current_position * 2.0) - 1.0;      //  position becomes -1to+1-range- position between adjacent channels
         current_position = max(current_position,-1.0);

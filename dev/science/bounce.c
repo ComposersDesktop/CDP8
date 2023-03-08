@@ -1101,7 +1101,7 @@ int usage3(char *str1,char *str2)
 
 int bounce(dataptr dz)
 {
-    int exit_status, chans = dz->infile->channels, passno, bouncecnt, numberlessone, endsampstepset, levcnt;
+    int exit_status, chans = dz->infile->channels, passno, bouncecnt, /*numberlessone,*/ endsampstepset, levcnt;
     double levchange, levpos, thislevel, normaliser, maxsamp, splcincr, normdrop = 0.0, lastratio, thisratio, srate = (double)dz->infile->srate;
     int gpsampdur, gpsplen, absplen, opos, start_of_buf, maxpos = 0, startsplice, endsplice, sampstep = 0, endsampstep = 0, n, m, k, minsampdur;
     int fadelen = 0, fadecnt = 0, enddur, absbouncepos;
@@ -1118,7 +1118,7 @@ int bounce(dataptr dz)
         return(MEMORY_ERROR);
     }
     minsampdur    = (int)round(dz->param[BNC_MINDUR] * dz->infile->srate) * chans;
-    numberlessone = dz->iparam[BNC_NUMBER] - 1;
+//    numberlessone = dz->iparam[BNC_NUMBER] - 1;
     gpsplen = (int)round(BOUNCESPLICE * MS_TO_SECS * (double)dz->infile->srate);
     minstep = (gpsplen/2) * chans;
     absplen = gpsplen * chans;
@@ -1223,12 +1223,12 @@ int bounce(dataptr dz)
                         endsplice = startsplice +  absplen;             //  Splice off start
                         k = 0;
                         n = startsplice;
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"AAA at %lf\n",(dz->total_samps_written + opos)/(double)dz->infile->srate);
 fflush(stdout);
 }
-/* TEST */
+ TEST */
                         while(k < gpsplen) {
                             splcincr = (double)k/(double)gpsplen;
                             for(m = 0; m < chans; m++) {
@@ -1236,40 +1236,40 @@ fflush(stdout);
                                 opos++;
                             }
                             k++;
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"BBB at %lf\n",(dz->total_samps_written + opos)/(double)dz->infile->srate);
 fflush(stdout);
 }
-/* TEST */
+ TEST */
                         }
                         while(n < dz->insams[0])
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"CCC at %lf\n",(dz->total_samps_written + opos)/(double)dz->infile->srate);
 fflush(stdout);
 }
-/* TEST */
+ TEST */
                             obuf[opos++] = (float)(ibuf[n++] * thislevel);
                     } else {
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"DDD at %lf\n",(dz->total_samps_written + opos)/(double)dz->infile->srate);
 fflush(stdout);
 }
-/* TEST */
+ TEST */
                         startsplice = endsampstep - absplen;            //  Splice off end
                         endsplice = endsampstep;
                         for(n=0;n<startsplice;n++) {
                             obuf[opos] = (float)(obuf[opos] + (ibuf[n] * thislevel));
                             opos++;
                         }
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"EEE bouncecnt = %d at %lf\n",bouncecnt,(dz->total_samps_written + opos)/(double)dz->infile->srate);
 fflush(stdout);
 }
-/* TEST */
+ TEST */
                         k = gpsplen - 1;
                         while(k >= 0) {
                             splcincr = (double)k/(double)gpsplen;
@@ -1279,32 +1279,32 @@ fflush(stdout);
                             }
                             k--;
                         }
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"FFF bouncecnt = %d at %lf\n",bouncecnt,(dz->total_samps_written + opos)/(double)dz->infile->srate);
 fflush(stdout);
 }
-/* TEST */
+ TEST */
                     }
                 } else {                                                //  No overlap, straight copy
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"GGG\n");
 fflush(stdout);
 }
-/* TEST */
+ TEST */
                     for(n=0;n<dz->insams[0];n++) {
                         obuf[opos] = (float)(obuf[opos] + (ibuf[n] * thislevel));
                         opos++;
                     }
                 }
             } else {                                                    //  As overlap possible, ADD new copy to output
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"HHH\n");
 fflush(stdout);
 }
-/* TEST */
+ TEST */
                 for(n=0;n<dz->insams[0];n++) {
                     for(n=0;n<dz->insams[0];n++) {
                         obuf[opos] = (float)(obuf[opos] + (ibuf[n] * thislevel));
@@ -1315,12 +1315,12 @@ fflush(stdout);
             bouncecnt++;
         }
         if(opos > 0) {
-/* TEST */
+/* TEST
 if(dz->total_samps_written + opos > 132496) {
 fprintf(stdout,"III bouncecnt = %d at %lf\n",bouncecnt,(dz->total_samps_written + opos)/(double)dz->infile->srate);
 fflush(stdout);
 }
-/* TEST */
+ TEST */
             while ((exit_status = handle_buffer_output(passno,&maxsamp,&maxpos,fadelen,&fadecnt,&start_of_buf,steps[0],normdrop,opos,&opos,dz)) < 0)
                 return exit_status;
         }
