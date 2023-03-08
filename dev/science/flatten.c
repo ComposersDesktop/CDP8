@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -97,7 +97,7 @@ int main(int argc,char *argv[])
     char **cmdline;
     int  cmdlinecnt;
     int n;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -155,7 +155,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -589,7 +589,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -614,7 +614,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_flatten_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -1109,7 +1109,7 @@ int flatten(dataptr dz)
     double magprechange = 0.0, magpostchange = 0.0, incr, mag, lastmag = 0.0, max_samp, local_max_samp, val, normaliser = 1.0;
     float *ibuf = dz->sampbuf[0], *obuf = dz->sampbuf[1];
     int bufpos = 0, n, m, k, j, wsize, bigger_wsize, this_wsize, subwsize, finalsubwsize, this_subwsize;
-    int envcnt, trofcnt, nutrofcnt, trofpos, startsamp, endsamp, sub_startsamp, last_startsamp, last_endsamp, zcrospos;
+    int envcnt, trofcnt, nutrofcnt, trofpos, startsamp, endsamp, sub_startsamp, last_startsamp, last_endsamp, zcrospos=0;
     int dove, maxat, seglen, peaksamp, samps_to_peak, samps_from_peak, doveup, dovedn, tail;
     double *env = dz->parray[0], *maxamp;
     int *trof = dz->lparray[0], *peakloc;
