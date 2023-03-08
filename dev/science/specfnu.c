@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -6358,7 +6358,7 @@ int establish_arrays_for_pitchwork(dataptr dz)
 int specpitch(int inner_lpcnt,double *target, dataptr dz)
 {
     int exit_status;
-    int vc, pitchcc;
+    int vc, pitchcc=0;
     chvptr here, there, *partials;
     float minamp, newfrq;
     double loudest_partial_frq, nextloudest_partial_frq, lo_loud_partial, hi_loud_partial, thepitch;
@@ -6628,7 +6628,7 @@ int is_peak_at(double frq,int window_offset,float minamp,dataptr dz)
     int cc, vc, searchtop, searchbot;
     if(window_offset) {                             /* BAKTRAK ALONG BIGBUF, IF NESS */
         thisbuf = dz->flbufptr[0] - (window_offset * dz->wanted);
-        if((int)thisbuf < 0 || thisbuf < dz->bigfbuf || thisbuf >= dz->flbufptr[2])
+        if((int)(size_t)thisbuf < 0 || thisbuf < dz->bigfbuf || thisbuf >= dz->flbufptr[2])
             return(FALSE);
     } else
         thisbuf = dz->flbufptr[0];

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -172,7 +172,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     quartertone = sqrt(SEMITONE_INTERVAL);
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
@@ -237,7 +237,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
@@ -735,7 +735,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -760,7 +760,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_specanal_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -2679,7 +2679,7 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn,float *at,float 
                         /*  because wish to use Fortran array  */
                         /* index which runs 1 to n, not 0 to n */
 
-    int     m = 0, nf, k, kt, ntot, j, jj, maxf, maxp=0;
+    int     m = 0, nf, k, kt, ntot, j, jj, maxf /*, maxp=0*/;
 
 /* work space pointers */
 //  float   *at, *ck, *bt, *sk;
@@ -2720,7 +2720,7 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn,float *at,float 
         }
 
         kt = m;
-        maxp = max((kt+kt+2),(k-1));
+//        maxp = max((kt+kt+2),(k-1));
         for(j=2; j<=k; j=1+((j+1)/2)*2) {
             if(k%j==0){
                 nfac[++m]=j;
@@ -2728,8 +2728,8 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn,float *at,float 
             }
         }
     }
-    if(m <= kt+1) 
-        maxp = m + kt + 1;
+//    if(m <= kt+1)
+//        maxp = m + kt + 1;
     if(m+kt > 15) {
         sprintf(errstr,"FFT parameter n has more than 15 factors : %d", n);
         return(DATA_ERROR);
