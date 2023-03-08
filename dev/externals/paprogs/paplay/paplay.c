@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Richard Dobson and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2022 Richard Dobson and Composers Desktop Project Ltd
  * http://people.bath.ac.uk/masrwd
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
@@ -56,7 +56,7 @@
 
 #include <signal.h>
 
-#ifdef unix
+#if defined unix || defined linux
 #include <aaio.h>
 #endif
 
@@ -1130,7 +1130,7 @@ void usage(void){
             printf("PEAK data:\ncreation time: %s",ctime(&in_peaktime));
 
             for(i=0;i < inchans;i++){
-                printf("CH %d: %.4f at frame %lu: \t%.4f secs\n",
+                printf("CH %d: %.4f at frame %u: \t%.4f secs\n",
                        i,fpeaks[i].val,fpeaks[i].pos,(double)(fpeaks[i].pos / (double) props.srate));
             }
         }
