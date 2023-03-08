@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -183,7 +183,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -243,7 +243,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -850,7 +850,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -875,7 +875,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_the_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -2007,7 +2007,7 @@ int specget(double *pitch,chvptr *partials,dataptr dz)
     int vc;
     chvptr here, there;
     float minamp;
-    double loudest_partial_frq, nextloudest_partial_frq, lo_loud_partial, hi_loud_partial, sum; 
+    double loudest_partial_frq, nextloudest_partial_frq, /* lo_loud_partial, hi_loud_partial,*/ sum;
     if((exit_status = initialise_ring_vals(MAXIMI,-1.0,dz))<0)
         return(exit_status);
     if((exit_status = rectify_frqs(dz->flbufptr[0],dz))<0)
@@ -2037,6 +2037,7 @@ int specget(double *pitch,chvptr *partials,dataptr dz)
     }
     loudest_partial_frq     = dz->flbufptr[0][dz->ringhead->loc + 1];
     nextloudest_partial_frq = dz->flbufptr[0][dz->ringhead->next->loc + 1];
+/*
     if(loudest_partial_frq < nextloudest_partial_frq) {
         lo_loud_partial = loudest_partial_frq;
         hi_loud_partial = nextloudest_partial_frq;
@@ -2044,6 +2045,7 @@ int specget(double *pitch,chvptr *partials,dataptr dz)
         lo_loud_partial = nextloudest_partial_frq;
         hi_loud_partial = loudest_partial_frq;
     }
+ */
     if((exit_status = put_ring_frqs_in_ascending_order(&partials,&minamp,dz))<0)
         return(exit_status);
     if((exit_status = alternative_find_pitch(pitch,partials,dz))<0)
@@ -2933,7 +2935,7 @@ int alternative_find_pitch(double *pitch,chvptr *partials,dataptr dz)
 int setup_formants(dataptr dz)
 {
     int exit_status;
-    int max_fbands = 0, arraycnt;
+    int /* max_fbands = 0,*/ arraycnt;
     aplptr ap = dz->application;
     if((exit_status = establish_formant_band_ranges(dz->infile->channels,ap))<0)
         return(exit_status);
@@ -2944,7 +2946,7 @@ int setup_formants(dataptr dz)
         return(DATA_ERROR);
     }
     dz->formant_bands = 4;
-    max_fbands = ap->max_pichwise_fbands;
+//    max_fbands = ap->max_pichwise_fbands;
     if((exit_status = initialise_specenv(&arraycnt,dz))<0)
         return(exit_status);
     if((exit_status = set_specenv_frqs(arraycnt,dz))<0)
@@ -3070,12 +3072,12 @@ int special_operation_on_window_zero(dataptr dz)
 
 int do_specpedal(dataptr dz)
 {
-    int exit_status, wc, done, windows_in_buf, wastuned = 0, tuned = 0;
+    int exit_status, wc, /*done,*/ windows_in_buf, wastuned = 0, tuned = 0;
     int samps_read;
     double time = 0.0, totalamp = 0.0;
     float maxamp;
     chvptr *partials;
-    done = 0;
+//    done = 0;
     if((partials = (chvptr *)malloc(MAXIMI * sizeof(chvptr)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for partials array.\n");
         return(MEMORY_ERROR);
