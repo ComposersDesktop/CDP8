@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -141,7 +141,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline, sfnam[400];
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     int *perm, *permon, *permoff, *superperm;
     int maxsteps = 0;
@@ -215,7 +215,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
     dz->infile->channels = 1;
     // parse_infile_and_hone_type() = 
     // setup_param_ranges_and_defaults() =
@@ -3047,7 +3047,7 @@ int create_synthesizer_sndbufs(dataptr dz)
         sprintf(errstr,"INSUFFICIENT MEMORY establishing sample buffer pointers.\n");
         return(MEMORY_ERROR);
     }
-    bigbufsize = (int)Malloc(-1);
+    bigbufsize = (int)(size_t) Malloc(-1);
     bigbufsize /= dz->bufcnt;
     if(bigbufsize <=0)
         bigbufsize  = framesize * sizeof(float);

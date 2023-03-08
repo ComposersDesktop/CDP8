@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -224,7 +224,7 @@ int peakiso(double *parray,int itemcnt,double *outarray,double minnotch)
     int ampat, trofampat, pkampbelowat, pkampaboveat, nexttrofat, writeat, j;
     double amp, lastamp, ampstep, lastampstep, belowstep, abovestep, notchdepth;
     double *pkbefore, *pkafter, *notch;
-    int trofcnt, badnotches, jj, kk, notchwidth, prepeak, postpeak, pksttej, pkendej;
+    int trofcnt, badnotches, jj, kk, notchwidth, prepeak, postpeak, pksttej, pkendej=0;
     int ampsttej, ampendej;
     double sttval, endval;
     int *pkbeforeat, *notchat, *orig_notchat;
