@@ -3189,7 +3189,7 @@ int grev(dataptr dz)
         maxsamp0 = 0.0;
         maxsamp1 = 0.0;
         gotmaxsamp0 = 0;
-        minpeakav = HUGE;
+        minpeakav = HUGE_VAL;
         minpeakloc = -1;
         j = startsearch;
         crossed_zero_to_positive = 0;
