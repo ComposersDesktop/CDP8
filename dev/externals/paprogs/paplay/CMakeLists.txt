@@ -24,7 +24,7 @@ else()
     find_library(PA NAMES libportaudio.a)
     find_library(AAIOLIB NAMES libaaio.a)
     set(CMAKE_C_FLAGS "-O3 -Wall -Dlinux -Dunix -fomit-frame-pointer -funroll-loops")
-    set(EXTRA_LIBRARIES1 jack asound portsf portaudio pthread ${AAIOLIB} ${EXTRA_LIBRARIES})
+    set(EXTRA_LIBRARIES1 jack asound portsf portaudio pthread ${AAIOLIB} ${PA} ${EXTRA_LIBRARIES})
   endif()
 endif()
 
@@ -34,7 +34,7 @@ include_directories(../../include ../include ../portaudio/include ../portaudio/s
 if(MINGW)
 add_executable(paplay paplay.c fmhfuncs.c cmakedummy.cpp)
 else()
-add_executable(paplay paplay.c fmhfuncs.c)
+add_executable(paplay paplay.c fmhfuncs.c )
 endif()
 target_link_libraries(paplay ${EXTRA_LIBRARIES1})
 
