@@ -2007,7 +2007,7 @@ int specget(double *pitch,chvptr *partials,dataptr dz)
     int vc;
     chvptr here, there;
     float minamp;
-    double loudest_partial_frq, nextloudest_partial_frq, /* lo_loud_partial, hi_loud_partial,*/ sum;
+    double /* loudest_partial_frq, nextloudest_partial_frq,  lo_loud_partial, hi_loud_partial,*/ sum;
     if((exit_status = initialise_ring_vals(MAXIMI,-1.0,dz))<0)
         return(exit_status);
     if((exit_status = rectify_frqs(dz->flbufptr[0],dz))<0)
@@ -2035,8 +2035,8 @@ int specget(double *pitch,chvptr *partials,dataptr dz)
             } while((here = here->next)!=dz->ringhead);
         }
     }
-    loudest_partial_frq     = dz->flbufptr[0][dz->ringhead->loc + 1];
-    nextloudest_partial_frq = dz->flbufptr[0][dz->ringhead->next->loc + 1];
+//    loudest_partial_frq     = dz->flbufptr[0][dz->ringhead->loc + 1];
+//    nextloudest_partial_frq = dz->flbufptr[0][dz->ringhead->next->loc + 1];
 /*
     if(loudest_partial_frq < nextloudest_partial_frq) {
         lo_loud_partial = loudest_partial_frq;
