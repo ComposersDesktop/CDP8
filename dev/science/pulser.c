@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -111,7 +111,7 @@ int main(int argc,char *argv[])
     char **cmdline;
     int  cmdlinecnt;
     int n;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -176,7 +176,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
 
     // parse_infile_and_hone_type() = 
     if(dz->process != PULSER3) {
@@ -789,7 +789,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -814,7 +814,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_pulser_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -2025,7 +2025,7 @@ int synthesize_src(double frq,double srate,double time,dataptr dz)
 {
     int n,i,j, *dataindex, *datasize, isfrac = 0, partialscnt, thispartialscnt, nextpartialscnt, nextlopar;
     int loindex, hiindex;
-    double loval, hival, valdiff, timefrac, val, level, onehzincr, parfrac = 0.0, nexttime, partialdiff, leveldiff;
+    double loval, hival, valdiff, timefrac, val, level, onehzincr, parfrac = 0.0,/* nexttime,*/ partialdiff, leveldiff;
     float *ibuf = dz->sampbuf[0];
     double *partials = dz->parray[0], *levels = dz->parray[1];
     double *sintab = dz->parray[2], *sinptr = dz->parray[3], *datatime, *thispartials = dz->parray[6], *thislevels = dz->parray[7];
@@ -2058,7 +2058,7 @@ int synthesize_src(double frq,double srate,double time,dataptr dz)
                 }
             } else {                                                    //  Interpolate partials
                 thispartialscnt = partialscnt;
-                nexttime  = datatime[n+1];
+//                nexttime  = datatime[n+1];
                 timefrac  = (time - datatime[n])/(datatime[n+1] - datatime[n]);
                 nextlopar = dataindex[n+1];
                 nextpartialscnt = datasize[n+1];
