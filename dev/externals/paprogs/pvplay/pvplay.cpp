@@ -421,6 +421,7 @@ int main(int argc,char **argv)
     sfdata.outbuf_l = NULL;
     sfdata.outbuf_r = NULL;
     sfdata.pvfile = -1;
+    sfdata.ifd = -1;
     
     printf("PvPlay: play multi-channel PCM and analysis files (.ana, .pvx). V7.0.0 RWD,CDP 2014\n");
     file_playing = 0;
