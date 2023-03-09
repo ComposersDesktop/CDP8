@@ -59,7 +59,7 @@ int main(int argc,char *argv[])
     /*char *special_data_string = NULL;*/
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+    //aplptr ap;
     int *valid = NULL;
     int is_launched = FALSE;
     int  validcnt;
@@ -121,7 +121,7 @@ int main(int argc,char *argv[])
         }
     }
 
-    ap = dz->application;
+    //ap = dz->application;
 
 /*********************************************************************************************************************
        cmdline[0]                         2 vals                              ACTIVE         

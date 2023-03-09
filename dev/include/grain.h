@@ -30,3 +30,8 @@
 #include        <flags.h>
 #include        <graicon.h>
 #include        <grain1.h>
+
+#ifndef HUGE
+#define HUGE 3.40282347e+38F
+#endif
+
