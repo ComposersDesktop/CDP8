@@ -366,8 +366,8 @@ int main(int argc,char **argv)
     unsigned int flags[FLAG_NFLAGS] = {0};
 #ifdef WIN32
     int speakermask = 0;
-#endif
     int do_speakermask = 0;
+#endif
     int do_updatemessages = 1;
 #ifdef unix
     struct itimerval tout_val;    
@@ -530,9 +530,11 @@ int main(int argc,char **argv)
             case 'u':
                 do_updatemessages = 0;
                 break;
+#ifdef WIN32
             case 'x':
                 do_speakermask = 1;
                 break;
+#endif
             case 'B':
                 if(flags[FLAG_BM]){
                     printf("error: multiple -B flags\n");
