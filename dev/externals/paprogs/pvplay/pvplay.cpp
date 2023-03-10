@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2020 Richard Dobson and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Richard Dobson and Composers Desktop Project Ltd
  * http://www.rwdobson.com
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
@@ -243,7 +243,7 @@ static int MemCallback(const    void *inputBuffer, void *outputBuffer,
     // everything now in inbuf
     if(pdata->do_decode) {
         ABFSAMPLE abfsamp;
-        int j;    
+        unsigned long j;
         for(j=0; j < framesToPlay; j++){
             pdata->copyfunc(&abfsamp,pdata->inbuf + (j * pdata->inchans));
             pdata->decodefunc(&abfsamp,out + (j * pdata->outchans), 1);
@@ -364,7 +364,9 @@ int main(int argc,char **argv)
     fmhdecodefunc decodefunc = NULL;
     /* chorder facility not included in pvplay - use paplay! */
     unsigned int flags[FLAG_NFLAGS] = {0};
+#ifdef WIN32
     int speakermask = 0;
+#endif
     int do_speakermask = 0;
     int do_updatemessages = 1;
 #ifdef unix
@@ -421,7 +423,6 @@ int main(int argc,char **argv)
     sfdata.outbuf_l = NULL;
     sfdata.outbuf_r = NULL;
     sfdata.pvfile = -1;
-    sfdata.ifd = -1;
     
     printf("PvPlay: play multi-channel PCM and analysis files (.ana, .pvx). V7.0.0 RWD,CDP 2014\n");
     file_playing = 0;
@@ -805,7 +806,7 @@ int main(int argc,char **argv)
                 }
                 // ensure ring buffer is large enough even for huge FFT lengths!
                 adjusted = false;
-                while(ringframelen < (sfdata.fftsize * 4)) {
+                while(ringframelen < (unsigned long)(sfdata.fftsize * 4)) {
                     ringframelen <<= 1;
                     adjusted = true;
                 }
@@ -822,7 +823,7 @@ int main(int argc,char **argv)
                 //framesize_factor = (long) (48000/ props.srate);
                 //framesize_factor += 1;
                 filesize /= inchans;
-                                
+#ifdef WIN32
                 if(props.format == WAVE_EX){
                     if(do_speakermask){
                         int mask;
@@ -839,6 +840,7 @@ int main(int argc,char **argv)
                         }
                     }
                 }
+#endif
                 from_frame = (long)(fromdur * props.srate);
                 if(from_frame >= filesize){
                     printf("Error: start is beyond end of file\n");
