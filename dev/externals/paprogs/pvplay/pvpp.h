@@ -50,7 +50,7 @@ extern "C" {
 #include <sys/param.h>
 #include <sys/sysctl.h>
 #include <CoreServices/CoreServices.h>
-#include <Accelerate/Accelerate.h>
+//#include <Accelerate/Accelerate.h>
 #endif      
     
 //}
