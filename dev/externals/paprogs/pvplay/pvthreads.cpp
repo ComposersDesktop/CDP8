@@ -346,13 +346,13 @@ unsigned int __stdcall threadFunctionReadFromPVXFile(void* ptr)
 
                         framepos++;
 
-                        if(got && (framepos <= pdata->to_frame)) {
+                        if(got && (framepos <= (long) pdata->to_frame)) {
                             long samps = pdata->pv_l->process_frame(pdata->analframe1,pbuf,PVOC_AMP_FREQ);
                             elementstowrite += samps;
                             pbuf += samps;
                         }
 
-                        if (got==0 || framepos >= pdata->to_frame){
+                        if (got==0 || framepos >= (long) pdata->to_frame){
                             if(pdata->play_looped) {
                                 if(pvoc_seek_mcframe(pdata->pvfile,pdata->from_frame,SEEK_SET)) {
                                     fprintf(stderr,"Error rewinding frame loop.\n");
@@ -424,7 +424,7 @@ unsigned int __stdcall threadFunctionReadFromPVXFile(void* ptr)
                             }
                         }
                         framepos++;
-                        if(got && (framepos <= pdata->to_frame)) {
+                        if(got && (framepos <= (long) pdata->to_frame)) {
                             // each call returns <overlap> samples
                             long samps = pdata->pv_l->process_frame(pdata->analframe1,pbuf,PVOC_AMP_FREQ);
                             pbuf += samps;
@@ -433,7 +433,7 @@ unsigned int __stdcall threadFunctionReadFromPVXFile(void* ptr)
                             
                             elementstowrite += samps; // element is a stereo sample frame
                         }
-                        if (got==0 || framepos >= pdata->to_frame){
+                        if (got==0 || framepos >= (long) pdata->to_frame){
                             if(pdata->play_looped) {
                                 //pos = sndseekEx(pdata->ifd,pdata->from_frame * pdata->anal_framesize,SEEK_SET);
                                 //if(pvoc_rewind(pdata->pvfile,1)){  /* 1 = skip empty frame */
