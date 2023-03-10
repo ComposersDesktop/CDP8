@@ -1,6 +1,6 @@
 
 /*
- * Copyright (c) 1983-2020 Richard Dobson and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Richard Dobson and Composers Desktop Project Ltd
  * http://www.rwdobson.com
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
@@ -214,7 +214,8 @@ unsigned int __stdcall threadFunctionReadFromAnalFile(void* ptr)
             
             if (file_playing)  {
                 /* find out where we are ... */
-                long framepos1 = sndtellEx(pdata->ifd) / pdata->anal_framesize;
+                // unsigned: we have to trust no error from sndtellEx!
+                unsigned long framepos1 = (unsigned long) (sndtellEx(pdata->ifd) / pdata->anal_framesize);
                 
                 for(i = 0;i < framestoget;i++){ 
                     /* read one frame*/
