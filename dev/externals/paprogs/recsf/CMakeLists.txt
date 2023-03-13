@@ -19,7 +19,7 @@ else()
     find_library(AAIOLIB NAMES libaaio.a) 
     find_library(PA NAMES libportaudio.c)
     set(CMAKE_C_FLAGS "-O3 -Wall -Dlinux -Dunix -fomit-frame-pointer -funroll-loops")
-    set(EXTRA_LIBRARIES1 asound jack pthread m ${AAIOLIB} {PA} ${EXTRA_LIBARIES})
+    set(EXTRA_LIBRARIES1 asound jack pthread m ${AAIOLIB} ${PA} ${EXTRA_LIBARIES})
   endif()
 endif()
 
