@@ -1304,7 +1304,7 @@ int create_the_iterbufs(double maxpscat,dataptr dz)
     int extra_space, infile_space, max_infile_space, big_buffer_size;
     int overflowsize, maxinsize;
 
-    int framesize = F_SECSIZE * sizeof(float) * dz->infile->channels;
+//    int framesize = F_SECSIZE * sizeof(float) * dz->infile->channels;
     int chans = dz->infile->channels, m;
 //    unsigned int min_bufsize;
     maxinsize = dz->insams[0];
