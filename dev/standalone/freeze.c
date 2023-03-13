@@ -1602,11 +1602,9 @@ int iter_shift_interp(int cnt,int passno, double *gain,double *pshift,int local_
             nextval = inbuf[i];
             diff    = nextval - val;
             z = val + ((double)diff * part);
-            // **** FIX ME **** Shoukd the += be ifn the if or not
             if(iterating)
                 z = (z * thisgain);
             z += outbuf[j];
-            // END OF CODE NEEDNG FIXING
             outbuf[j++] = (float)z;
             d      += dz->param[ITER_SSTEP];
             i      = (int)d;                        /* TRUNCATE */
