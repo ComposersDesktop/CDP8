@@ -723,7 +723,7 @@ int main(int argc,char **argv)
     inputParameters.hostApiSpecificStreamInfo = NULL;
 
     devinfo = (PaDeviceInfo *) Pa_GetDeviceInfo(device);
-#ifdef MAC
+#ifndef WIN32
     if(devinfo){
         printf("Using device %d: %s\n",device,devinfo->name);
     }
