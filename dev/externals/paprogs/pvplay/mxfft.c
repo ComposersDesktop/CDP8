@@ -86,25 +86,25 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
         for (; !(k%jj); nfac[++m]=j,k/=jj)
             ;
 
-        if (k<=4){
-            kt = m;
-            nfac[m+1] = k;
-            if(k != 1) 
-            m++;
+    if (k<=4){
+        kt = m;
+        nfac[m+1] = k;
+        if(k != 1)
+        m++;
     }
     else{
         if(k%4==0){
         nfac[++m]=2;
         k/=4;
-        }
+    }
 
-        kt = m;
-            maxp = max((kt+kt+2),(k-1));
-        for(j=2; j<=k; j=1+((j+1)/2)*2)
-            if(k%j==0){
-                nfac[++m]=j;
-                k/=j;
-            }
+    kt = m;
+    maxp = max((kt+kt+2),(k-1));
+    for(j=2; j<=k; j=1+((j+1)/2)*2)
+        if(k%j==0){
+            nfac[++m]=j;
+            k/=j;
+        }
     }
     if(m <= kt+1) 
         maxp = m + kt + 1;
@@ -113,7 +113,7 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
             return(DATA_ERROR);
     }
     if(kt!=0){
-            j = kt;
+        j = kt;
         while(j)
             nfac[++m]=nfac[j--];
     }
@@ -745,7 +745,7 @@ int reals_(float *a, float *b, int n, int isn)
     inc=abs(isn);
     nf=abs(n);
         if(nf*isn==0){
-            sprintf(errstr,"zero in reals parameters in FFT : %d : %d ",n,isn);
+            fprintf(stderr,"zero in reals parameters in FFT : %d : %d ",n,isn);
             return(DATA_ERROR);;
         }
         nk = (nf*inc) + 2;
