@@ -51,7 +51,7 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
         /*  b: pointer to array 'banal' */
 {
     int exit_status;
-    int nfac[16];       /*  These are one bigger than needed   */
+    int nfac[32];       /* RWD 2023 was 16, suffered off-by-one error */ /*  These are one bigger than needed   */
                         /*  because wish to use Fortran array  */
                         /* index which runs 1 to n, not 0 to n */
 
@@ -77,12 +77,14 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
     ntot=abs(nspn*nseg);
 
     if(isn*ntot == 0){
-        sprintf(errstr,"zero in FFT parameters %d %d %d %d",nseg, n, nspn, isn);
+        fprintf(stderr,"zero in FFT parameters %d %d %d %d",nseg, n, nspn, isn);
         return(DATA_ERROR);
     }
-    for (m=0; !(k%16); nfac[++m]=4,k/=16);
+    for (m=0; !(k%16); nfac[++m]=4,k/=16)
+        ;
     for (j=3,jj=9; jj<=k; j+=2,jj=j*j)
-        for (; !(k%jj); nfac[++m]=j,k/=jj);
+        for (; !(k%jj); nfac[++m]=j,k/=jj)
+            ;
 
         if (k<=4){
             kt = m;
@@ -106,17 +108,17 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
     }
     if(m <= kt+1) 
         maxp = m + kt + 1;
-        if(m+kt > 15) {
-            sprintf(errstr,"FFT parameter n has more than 15 factors : %d", n);
+    if(m+kt > 15) {
+            fprintf(stderr,"FFT parameter n has more than 15 factors : %d", n);
             return(DATA_ERROR);
     }
-        if(kt!=0){
+    if(kt!=0){
             j = kt;
         while(j)
             nfac[++m]=nfac[j--];
     }
     maxf = nfac[m-kt];
-        if(kt > 0) 
+    if(kt > 0)
         maxf = max(nfac[kt],maxf);
 
 /*  allocate workspace - assume no errors! */
