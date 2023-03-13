@@ -294,10 +294,10 @@ void initialise_filter_coeffs_lphp(int chans,dataptr dz)
     for(i=1;i < chans; i++){
         index = i * FLT_LPHP_ARRAYS_PER_FILTER;
         for (k = 0 ; k < dz->iparam[FLT_CNT]; k++) {
-            dz->parray[FLT_S1_BASE + i][k] = 0.0;
-            dz->parray[FLT_S2_BASE + i][k] = 0.0;
-            dz->parray[FLT_E1_BASE + i][k] = 0.0;
-            dz->parray[FLT_E2_BASE + i][k] = 0.0;
+            dz->parray[FLT_S1_BASE + index][k] = 0.0;
+            dz->parray[FLT_S2_BASE + index][k] = 0.0;
+            dz->parray[FLT_E1_BASE + index][k] = 0.0;
+            dz->parray[FLT_E2_BASE + index][k] = 0.0;
         }
     }
 }
