@@ -5,20 +5,20 @@
  *
  This file is part of the CDP System.
 
- The CDP System is free software; you can redistribute it
- and/or modify it under the terms of the GNU Lesser General Public
- License as published by the Free Software Foundation; either
- version 2.1 of the License, or (at your option) any later version.
+    The CDP System is free software; you can redistribute it
+    and/or modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
 
- The CDP System is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU Lesser General Public License for more details.
+    The CDP System is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU Lesser General Public License for more details.
 
- You should have received a copy of the GNU Lesser General Public
- License along with the CDP System; if not, write to the Free Software
- Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
- 02111-1307 USA
+    You should have received a copy of the GNU Lesser General Public
+    License along with the CDP System; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
+    02111-1307 USA
  *
  */
 
@@ -59,10 +59,10 @@ int main(int argc,char *argv[])
 {
     int exit_status;
     dataptr dz = NULL;
-    //      char *special_data_string = NULL;
+//  char *special_data_string = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    //aplptr ap;
+//    aplptr ap;
     int *valid = NULL;
     int is_launched = FALSE;
     int  validcnt;
@@ -72,8 +72,8 @@ int main(int argc,char *argv[])
         fflush(stdout);
         return 0;
     }
-    /* CHECK FOR SOUNDLOOM */
-    //TW UPDATE
+                        /* CHECK FOR SOUNDLOOM */
+//TW UPDATE
     if((sloom = sound_loom_in_use(&argc,&argv)) > 1) {
         sloom = 0;
         sloombatch = 1;
@@ -90,28 +90,28 @@ int main(int argc,char *argv[])
         return(FAILED);
     }
 
-    /* SET UP THE PRINCIPAL DATASTRUCTURE */
+                          /* SET UP THE PRINCIPLE DATASTRUCTURE */
     if((exit_status = establish_datastructure(&dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
 
     if(!sloom) {
-        /* INITIAL CHECK OF CMDLINE DATA */
+                          /* INITIAL CHECK OF CMDLINE DATA */
         if((exit_status = make_initial_cmdline_check(&argc,&argv))<0) {
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
 #ifdef unix
-            fflush(stdout);           /*RWD ???? */
+            fflush(stdout);       /*RWD ???? */
 #endif
             return(FAILED);
         }
-        /* GET PRE_DATA, ALLOCATE THE APPLICATION, CHECK FOR EXTRA INFILES */
+                      /* GET PRE_DATA, ALLOCATE THE APPLICATION, CHECK FOR EXTRA INFILES */
         cmdline    = argv;
         cmdlinecnt = argc;
         if((exit_status = get_process_and_mode_from_cmdline(&cmdlinecnt,&cmdline,dz))<0) {
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
-        }
+        }       
         if((exit_status = setup_particular_application(dz))<0) {
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
@@ -121,19 +121,19 @@ int main(int argc,char *argv[])
             return(FAILED);
         }
     } else {
-        if((exit_status = parse_tk_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {        /* includes setup_particular_application()      */
+        if((exit_status = parse_tk_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {    /* includes setup_particular_application()      */
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);/* and cmdlinelength check = sees extra-infiles */
-            return(exit_status);
+            return(exit_status);         
         }
     }
-    //ap = dz->application;
+//    ap = dz->application;
 
-    /*********************************************************************************************************************
-           cmdline[0]                                             2 vals                                                          ACTIVE
-TK              (infile) (more-infiles) (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
-CMDLINE (infile) (more-infiles) (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY              POSSIBLY
-                                                                                  1 val
-    *********************************************************************************************************************/
+/*********************************************************************************************************************
+       cmdline[0]                         2 vals                              ACTIVE         
+TK      (infile) (more-infiles) (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
+CMDLINE (infile) (more-infiles) (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY      POSSIBLY
+                                          1 val
+*********************************************************************************************************************/
 
     if((exit_status = parse_infile_and_hone_type(cmdline[0],valid,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -145,47 +145,47 @@ CMDLINE (infile) (more-infiles) (outfile) (formants) (formantsqksrch) (special) 
         return(FAILED);
     }
 
-    /* OPEN FIRST INFILE AND STORE DATA, AND INFORMATION, APPROPRIATELY */
+                    /* OPEN FIRST INFILE AND STORE DATA, AND INFORMATION, APPROPRIATELY */
 
     if(dz->input_data_type!=NO_FILE_AT_ALL) {
-        if((exit_status = open_first_infile(cmdline[0],dz))<0) {
-            print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        if((exit_status = open_first_infile(cmdline[0],dz))<0) {    
+            print_messages_and_close_sndfiles(exit_status,is_launched,dz);  
             return(FAILED);
         }
-        //TW UPDATE (MOVED inside bracket)
+//TW UPDATE (MOVED inside bracket)
         cmdlinecnt--;
         cmdline++;
     }
-
-    /*********************************************************************************************************************
-                cmdline[0]                                 2 vals                                                          ACTIVE
-TK              (more-infiles) (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
-CMDLINE (more-infiles) (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY                 POSSIBLY
-                                                                   1 val
-    *********************************************************************************************************************/
+    
+/*********************************************************************************************************************
+        cmdline[0]                 2 vals                              ACTIVE        
+TK      (more-infiles) (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
+CMDLINE (more-infiles) (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY         POSSIBLY
+                                   1 val
+*********************************************************************************************************************/
 
     if((exit_status = handle_extra_infiles(&cmdline,&cmdlinecnt,dz))<0) {
-        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);      
         return(FAILED);
     }
 
-    /*********************************************************************************************************************
-                cmdline[0]        2                                                                 ACTIVE
-TK              (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
-CMDLINE (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY                 POSSIBLY
-                                          1
-    *********************************************************************************************************************/
+/*********************************************************************************************************************
+        cmdline[0]    2                                 ACTIVE       
+TK      (outfile) (flag val) (formantsqksrch) (special) params  options   variant-params  flags
+CMDLINE (outfile) (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY         POSSIBLY
+                      1
+*********************************************************************************************************************/
 
     if((exit_status = handle_outfile(&cmdlinecnt,&cmdline,is_launched,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
 
-    /****************************************************************************************
-                cmdline[0]                                                     ACTIVE
-TK              (flag val) (formantsqksrch) (special) params  options   variant-params  flags
-CMDLINE (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY                POSSIBLY
-    *****************************************************************************************/
+/****************************************************************************************
+        cmdline[0]                             ACTIVE        
+TK      (flag val) (formantsqksrch) (special) params  options   variant-params  flags
+CMDLINE (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY        POSSIBLY
+*****************************************************************************************/
 
     if((exit_status = handle_formants(&cmdlinecnt,&cmdline,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -199,12 +199,12 @@ CMDLINE (formants) (formantsqksrch) (special) params  POSSIBLY  POSSIBLY        
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-
-    /****************************************************************************************
-                cmdline[0]
-TK              active_params   options                 variant-params  flags
-CMDLINE active_params   POSSIBLY                POSSIBLY                POSSIBLY
-    *****************************************************************************************/
+ 
+/****************************************************************************************
+        cmdline[0]                          
+TK      active_params   options         variant-params  flags
+CMDLINE active_params   POSSIBLY        POSSIBLY        POSSIBLY
+*****************************************************************************************/
 
     if((exit_status = read_parameters_and_flags(&cmdline,&cmdlinecnt,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -238,3 +238,4 @@ CMDLINE active_params   POSSIBLY                POSSIBLY                POSSIBLY
     free(dz);
     return(SUCCEEDED);
 }
+
