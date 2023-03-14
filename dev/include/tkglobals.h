@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -48,6 +48,12 @@
 #include <math.h>
 #include <headread.h>
 #include <cdpstate.h>
+#ifdef _WIN32
+# ifdef FAILED
+# undef FAILED
+# undef SUCCEEDED
+# endif
+#endif
 
 #define FAILED          (-1)    /* check with Ambrose ???? */
 #define SUCCEEDED       (0)             /* check with Ambrose ???? */
@@ -181,7 +187,7 @@ int  value_is_numeric(char *str);
 #define BUF_MULTIPLIER  (20)    /* arbitrary size for moment */
 
 
-/* RWD ARRRRGH! CANNOT declare a var in a header file! I declare in dzsetup.c, so it goes in the library */
+/* RWD ARGH - CANNOT declare a var in a header file! I declare in dzsetup.c, so it goes in the library */
 /*unsigned int superzargo;*/    /* for timing involving several file-writes */
 extern unsigned int superzargo;
 
@@ -199,11 +205,6 @@ void splice_multiline_string(char *str,char *prefix);
 #define FILE_JOINER             '\\'
 #endif
 
-/*******  RWD we don't support old MacOS!
-#ifdef IS_MAC
-#define FILE_JOINER             ':'
-#endif
-*******/
 int redefine_textfile_types(dataptr dz);
 int strgetfloat(char **str,double *val);
 //TW NEW
@@ -222,7 +223,8 @@ int reset_peak_finder(dataptr dz);
 int establish_peak_status(dataptr dz);
 #endif
 //TW names reflecting new status of these data items
-#define CDP_SOUND               SAMP_SHORT
+// RWD but SAMP_FLOAT is definiutely a SOUND these days...
+#define CDP_SOUND       SAMP_SHORT
 #define CDP_NONSOUND    SAMP_FLOAT
 
 void copy_to_fileptr(infileptr i, fileptr f);
