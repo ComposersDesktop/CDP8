@@ -1970,13 +1970,13 @@ int segsbkwd(dataptr dz)
     int exit_status, n, m, forwards, reversals;
     double srate = (double)dz->infile->srate;
     double *time = dz->parray[0];
-    int samptime;
+//    int samptime;
     float *ibuf = dz->sampbuf[0], *obuf = dz->sampbuf[1], *buf1, *buf2, *bufa = dz->sampbuf[2], *bufb = dz->sampbuf[3], *tempbuf;
     int modd;
     int k, j, z, obufpos, stt, sttsamp, endsamp, sampcnt1, sampcnt2;
     int *sttend = dz->lparray[0];
     int splicelen = (int)round(SSPLICELEN * MS_TO_SECS * srate);
-    samptime = 0;
+//    samptime = 0;
     time[0] = 0.0;                                          //  Stretch initial time to start of file   
     time[dz->itemcnt] = dz->duration;                       //  Complete times array with the duration of the src
 
