@@ -5,11 +5,10 @@
 #ifndef wavdefs_h
 #define wavdefs_h
 
+# ifndef _WIN32
 typedef unsigned short WORD;
 typedef unsigned int DWORD;
 
-
-# ifndef _WIN32
 typedef struct _GUID
 {
     DWORD           Data1;
