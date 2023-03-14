@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -131,7 +131,7 @@ int main(int argc,char *argv[])
     dataptr dz = NULL;
     char **cmdline;
     int  cmdlinecnt;
-    aplptr ap;
+//    aplptr ap;
     int is_launched = FALSE;
     if(argc==2 && (strcmp(argv[1],"--version") == 0)) {
         fprintf(stdout,"%s\n",cdp_version);
@@ -152,7 +152,7 @@ int main(int argc,char *argv[])
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-                      
+
     if(!sloom) {
         if(argc == 1) {
             usage1();   
@@ -198,7 +198,7 @@ int main(int argc,char *argv[])
             return(exit_status);         
         }
     }
-    ap = dz->application;
+//    ap = dz->application;
     // parse_infile_and_hone_type() = 
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -694,7 +694,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
     int filesize, insams, inbrksize;
     double dummy;
     int true_cnt = 0;
-    aplptr ap;
+//    aplptr ap;
 
     while(cnt<=PRE_CMDLINE_DATACNT) {
         if(cnt > argc) {
@@ -719,7 +719,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //setup_particular_application() =
             if((exit_status = setup_the_application(dz))<0)
                 return(exit_status);
-            ap = dz->application;
+//            ap = dz->application;
             break;
 
         case(3):    
@@ -1599,7 +1599,7 @@ int matrix_process(dataptr dz)
             flag = 0,   /* end-of-input flag */
             matrix_ovlap;
     /*RWD */
-    float F = 0.0f;
+//    float F = 0.0f;
 
     matrix  = dz->parray[0];
     matrix2 = dz->parray[1];
@@ -1613,7 +1613,7 @@ int matrix_process(dataptr dz)
     }
     N2 = dz->wanted / 2;        //  N2 = clength
 
-    F = /*(int)*/(float)(R /(float)dz->wanted);   /*RWD*/
+//    F = /*(int)*/(float)(R /(float)dz->wanted);   /*RWD*/
 
     matrix_ovlap = dz->overlap - 1;     //  See pvoc_preprocess
     switch(matrix_ovlap){
@@ -2212,20 +2212,21 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
         sprintf(errstr,"zero in FFT parameters %d %d %d %d",nseg, n, nspn, isn);
         return(DATA_ERROR);
     }
-    for (m=0; !(k%16); nfac[++m]=4,k/=16);
+    for (m=0; !(k%16); nfac[++m]=4,k/=16)
+        ;
     for (j=3,jj=9; jj<=k; j+=2,jj=j*j)
         for (; !(k%jj); nfac[++m]=j,k/=jj);
 
-        if (k<=4){
-            kt = m;
-            nfac[m+1] = k;
-            if(k != 1) 
+    if (k<=4){
+        kt = m;
+        nfac[m+1] = k;
+        if(k != 1)
             m++;
     }
     else{
         if(k%4==0){
-        nfac[++m]=2;
-        k/=4;
+            nfac[++m]=2;
+            k/=4;
         }
 
         kt = m;
@@ -2238,17 +2239,17 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
     }
     if(m <= kt+1) 
         maxp = m + kt + 1;
-        if(m+kt > 15) {
-            sprintf(errstr,"FFT parameter n has more than 15 factors : %d", n);
-            return(DATA_ERROR);
+    if(m+kt > 15) {
+        sprintf(errstr,"FFT parameter n has more than 15 factors : %d", n);
+        return(DATA_ERROR);
     }
-        if(kt!=0){
-            j = kt;
+    if(kt!=0){
+        j = kt;
         while(j)
             nfac[++m]=nfac[j--];
     }
     maxf = nfac[m-kt];
-        if(kt > 0) 
+    if(kt > 0) 
         maxf = max(nfac[kt],maxf);
 
 /*  allocate workspace - assume no errors! */
