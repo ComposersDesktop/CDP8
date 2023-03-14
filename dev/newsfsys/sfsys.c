@@ -323,7 +323,7 @@ typedef struct {
 } WAVEFORMATEX;
 # endif
 #endif
-
+// RWD TO TEST: on PC/MinGW: this need to be ifndef _WIN32 (or could just be ifndef WAVEFORMATEXTENSIBLE ?) 
 #ifdef _WIN32
 typedef struct {
     WAVEFORMATEX    Format;
@@ -3397,7 +3397,9 @@ gettypefromname98(const char *path)
 }
 
 //if a cdpfile - what format is it?
-//RWD TODO: rewrite this with error retval
+//RWD TODO: rewrite this with error retval, or at least add sferrstr message if bad seek
+/* RWD NB: would need to drill further into header to discover a pvx file - maybe a "findGuid" function? */
+/* but currently this leaves the file open for further parsing, currently pvx handled separately */
 static enum sndfiletype
 gettypefromfile(struct sf_file *f)
 {
@@ -3740,6 +3742,7 @@ int get_pvxfd(int sfd ,PVOCDATA *pvxdata ){
     return rc;
 }
 // this needs to be declared in sffuncs.h - accessible by snd.c, but not durectly to app code
+/* currently NOTUSED, ditto snd_getpvxfno in snd.c  */
 int getpvxfno(int sfd){
     struct sf_file *f;
     int rc = 0;
@@ -6776,7 +6779,7 @@ sfdirprop(int sfd, int (*func)(char *propname, int propsize))
 
 
 #if defined _WIN32 && defined _MSC_VER
-long cdp_round(double fval)
+static int asm_round(double fval)
 {
     int result;
     _asm{
@@ -6786,23 +6789,22 @@ long cdp_round(double fval)
     }
     return (long) result;
 }
-
-#else
-# if defined __GNUWIN32__
-// TODO: learn and use gcc asm syntax!
-long cdp_round(double fval)
-{
-    int k;
-        k = (int)(fabs(fval)+0.5);
-        if(fval < 0.0)
-            k = -k;
-        return (long) k;
-}
-
-# endif
-
 #endif
-
+    
+int cdp_round(double fval)
+{
+#if defined _WIN32  && defined _MSC_VER
+    return asm_round(fval);
+#elseif defined unix
+    return (int) lround(fval);
+#else
+    int k;
+    k = (int)(fabs(fval)+0.5);
+    if(fval < 0.0)
+        k = -k;
+    return k;
+#endif
+}
 
 int sfformat(int sfd, fileformat *pfmt)
 {
