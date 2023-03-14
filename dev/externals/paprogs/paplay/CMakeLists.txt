@@ -19,7 +19,7 @@ else()
     link_directories(/usr/local/lib)
     find_library(PA NAMES libportaudio.a)
 #    NB winmm must appear after any module that references it. Yes, that's weird.
-    set(EXTRA_LIBRARIES1 dsound winspool portsf $(PA) winmm ${EXTRA_LIBRARIES})
+    set(EXTRA_LIBRARIES1 dsound winspool portsf ${PA} winmm ${EXTRA_LIBRARIES})
   else()
     link_directories (/usr/local/lib)
     find_library(PA NAMES libportaudio.a)
