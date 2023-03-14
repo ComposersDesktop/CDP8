@@ -45,6 +45,10 @@
 #ifdef unix
 #define round(x) lround((x))
 #endif
+/* maybe just in MinGW*/
+#ifdef fileno
+#undef fileno
+#endif
 
 #define fileno ringsize
 #define ebuflen rampbrksize
