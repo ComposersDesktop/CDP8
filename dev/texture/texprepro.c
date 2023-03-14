@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -1107,7 +1107,7 @@ int read_a_note_from_notedata_file(noteptr thisnote,int noteno,int motifno,doubl
     unsigned int texflag = dz->tex->txflag;
     char temp[200], *p, *q;
     double val;
-    int instr_no, start;
+    int /*instr_no,*/ start;
     if(dz->fp==NULL) {
         sprintf(errstr,"Note datafile descriptor not initialised: read_a_note_from_notedata_file()\n");
         return(PROGRAM_ERROR);
@@ -1147,7 +1147,7 @@ int read_a_note_from_notedata_file(noteptr thisnote,int noteno,int motifno,doubl
         sprintf(errstr,"No data after instr_no for note %d, motif %d in notedatafile\n",noteno,motifno); 
         return(DATA_ERROR);
     }
-    instr_no = round(val);
+//    instr_no = round(val);
 
     p++;
     q = p;
