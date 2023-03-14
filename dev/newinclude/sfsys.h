@@ -391,14 +391,7 @@ void Mfree(void *);
 
 /*CDP98: now a func, so can round negative numbers properly!*/
 /* NB in WIN32 sfsys.c: this is implemented in asssembler for great speed! */
-#if defined _MSC_VER || defined __GNUWIN32__
-// NB: needs to be a long as lround is defined as such
-extern long cdp_round(double val);
-#define round(x) cdp_round((x))
-#endif
-#ifdef unix
-#define cdp_round(x) lround((x))
-#endif
+extern int cdp_round(double val);
 /* unix math.h does not include these macros */
 #ifndef __cplusplus
 #ifndef min
