@@ -324,7 +324,7 @@ typedef struct {
 # endif
 #endif
 // RWD TO TEST: on PC/MinGW: this need to be ifndef _WIN32 (or could just be ifndef WAVEFORMATEXTENSIBLE ?) 
-#ifdef _WIN32
+#if 0
 typedef struct {
     WAVEFORMATEX    Format;
     union {
