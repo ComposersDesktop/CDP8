@@ -663,7 +663,7 @@ int do_btob(dataptr dz)
             if(obuf==sbuf) {
                 for(m=0;m<chans;m++)
                     sbuf[splicecnt++] = (float)(ibuf[n+m] * spliceval);
-                spliceval -= spliceincr;
+                spliceval -= spliceincr;            
                 if(splicecnt >= dz->iparam[BTOB_SPLEN]) {
                     finished = 1;
                     break;
@@ -678,7 +678,7 @@ int do_btob(dataptr dz)
                 }
                 if((total_samps_got += chans) >= samps_to_work_on) {
                     obuf= sbuf;
-                    spliceval -= spliceincr;
+                    spliceval -= spliceincr;            
                 }
             }
         }
@@ -732,3 +732,4 @@ int do_btob(dataptr dz)
     }
     return(FINISHED);
 }
+
