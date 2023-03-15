@@ -142,15 +142,21 @@ int establish_special_data_type(int process,int mode,aplptr ap)
             /*************************** GROUCHO ****************************/
 
     case(DISTORT_ENV):  
-        if(mode==DISTORTE_USERDEF)  ap->special_data = DISTORT_ENVELOPE;                break;
+        if(mode==DISTORTE_USERDEF)
+            ap->special_data = DISTORT_ENVELOPE;                break;
     case(ENVSYN):
-        if(mode==ENVSYN_USERDEF)    ap->special_data = ENVSYN_ENVELOPE;                 break;
-    case(DISTORT_HRM):              ap->special_data = HARMONIC_DISTORT;                break;
-    case(DISTORT_SHUF):             ap->special_data = SHUFFLE_DATA;                    break;
+        if(mode==ENVSYN_USERDEF)
+            ap->special_data = ENVSYN_ENVELOPE;                 break;
+    case(DISTORT_HRM):
+            ap->special_data = HARMONIC_DISTORT;                break;
+    case(DISTORT_SHUF):
+            ap->special_data = SHUFFLE_DATA;                    break;
 //TW NEW CASE
-    case(DISTORT_PULSED):           ap->special_data = PULSE_ENVELOPE;                  break;
-    case(ZIGZAG):       
-        if(mode==ZIGZAG_USER)       ap->special_data = ZIGDATA;                         break;
+    case(DISTORT_PULSED):
+            ap->special_data = PULSE_ENVELOPE;                  break;
+    case(ZIGZAG):
+        if(mode==ZIGZAG_USER)
+            ap->special_data = ZIGDATA;                         break;
 
     case(SIMPLE_TEX):       
     case(GROUPS):           
@@ -178,17 +184,20 @@ int establish_special_data_type(int process,int mode,aplptr ap)
         break;
     case(ENV_CREATE):
         if(mode==ENV_ENVFILE_OUT 
-        || mode==ENV_BRKFILE_OUT)   ap->special_data = ENV_CREATEFILE;                  break;
+        || mode==ENV_BRKFILE_OUT)
+            ap->special_data = ENV_CREATEFILE;                  break;
     case(ENV_WARPING):
     case(ENV_REPLOTTING):
     case(ENV_RESHAPING): 
-        if(mode==ENV_TRIGGERING)    ap->special_data = ENV_TRIGGER_RAMP;                break;
+        if(mode==ENV_TRIGGERING)
+            ap->special_data = ENV_TRIGGER_RAMP;                break;
     case(MIXINBETWEEN):             
         if(mode==INBI_RATIO)
             ap->special_data = INBTWN_RATIOS;
         break;
     case(MIXSHUFL): 
-        if(mode==MSH_DUPL_AND_RENAME) ap->special_data=SNDFILENAME;                     break;
+        if(mode==MSH_DUPL_AND_RENAME)
+            ap->special_data=SNDFILENAME;                     break;
 
     case(FLTBANKU):    
     case(FLTITER):                  ap->special_data = FILTERBANK;                      break;
@@ -199,7 +208,8 @@ int establish_special_data_type(int process,int mode,aplptr ap)
     case(EDIT_EXCISEMANY):          ap->special_data = EXCISE_TIMES;                    break;
     case(INFO_MUSUNITS):
         if(mode==MU_NOTE_TO_FRQ
-        || mode==MU_NOTE_TO_MIDI)   ap->special_data = NOTE_REPRESENTATION;
+        || mode==MU_NOTE_TO_MIDI)
+            ap->special_data = NOTE_REPRESENTATION;
         else if(mode==MU_INTVL_TO_TSTRETCH
              || mode==MU_INTVL_TO_FRQRATIO) 
                                     ap->special_data = INTERVAL_REPRESENTATION;         break;
