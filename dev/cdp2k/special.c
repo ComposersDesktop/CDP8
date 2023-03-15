@@ -242,7 +242,7 @@ int establish_special_data_type(int process,int mode,aplptr ap)
         else if(mode==MU_INTVL_TO_TSTRETCH
              || mode==MU_INTVL_TO_FRQRATIO)
             ap->special_data = INTERVAL_REPRESENTATION;
-            break;
+        break;
     case(HOUSE_DEL):
         ap->special_data = SNDFILENAME;
         break;
