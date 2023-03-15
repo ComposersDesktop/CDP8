@@ -1861,7 +1861,7 @@ int create_crumble_sndbufs(dataptr dz)
     }
     framesize *= 2;                                 //  frame must accomodate double buffer for input, and for output
     frameunit *= 2;
-    bigbufsize = (int)Malloc(-1);
+    bigbufsize = (int)(size_t) Malloc(-1);
     dz->buflen = bigbufsize / sizeof(float);        //  Ensure buffer contains an integer number of frames
     dz->buflen = (dz->buflen / framesize)  * framesize;
     bigbufsize = dz->buflen * sizeof(float);
