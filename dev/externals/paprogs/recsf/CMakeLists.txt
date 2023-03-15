@@ -1,4 +1,5 @@
 if(APPLE)
+# -mmacosx-version-min=10.9
   set(CMAKE_C_FLAGS "-O2 -Wall -Dunix -fomit-frame-pointer -funroll-loops")
   include_directories ( /Developer/Headers/FlatCarbon )
   find_library(COREAUDIOLIB CoreAudio)
@@ -13,7 +14,10 @@ else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O3 -DWIN32 -D_WIN32 -DUSE_ASIO -fomit-frame-pointer -funroll-loops")
     set(CMAKE_CXX_FLAGS "-O3 -DWIN32 -D_WIN32 -DUSE_ASIO -fomit-frame-pointer  -funroll-loops -static-libgcc -static-libstdc++")
-    set(EXTRA_LIBRARIES1 winmm dsound winspool portsf ${EXTRA_LIBARIES})
+    link_directories(/usr/local/lib)
+    find_library(PA NAMES libportaudio.a)
+#    NB winmm must appear after any module that references it. Yes, that's weird.
+    set(EXTRA_LIBRARIES1 dsound winspool portsf ${PA} winmm ${EXTRA_LIBARIES})
   else()
     link_directories (/usr/local/lib)
     find_library(AAIOLIB NAMES libaaio.a) 
@@ -23,7 +27,7 @@ else()
   endif()
 endif()
 
-link_directories(../../lib ../portaudio/lib/.libs)
+link_directories(../../lib)
 
 include_directories(../../include ../portaudio/include ../portaudio/src/common /usr/local/include)
 if(MINGW)
