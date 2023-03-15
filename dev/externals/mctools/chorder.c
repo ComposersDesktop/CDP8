@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Richard Dobson and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Richard Dobson and Composers Desktop Project Ltd
  * http://people.bath.ac.uk/masrwd
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
@@ -43,7 +43,7 @@ extern int stricmp(const char *a, const char *b);
 
 void usage(void)
 {
-    fprintf(stderr,"\nCDP MCTOOLS: CHORDER V1.2 (c) RWD,CDP 2009,2010\n");	
+    fprintf(stderr,"\nCDP MCTOOLS: CHORDER V1.2 (c) RWD,CDP 2009,2010\n");  
     fprintf(stderr,
             "Reorder soundfile channels.\n"
             "Usage:  chorder infile outfile orderstring\n"
@@ -63,20 +63,20 @@ void usage(void)
 
 int main(int argc, char* argv[])
 {
-	PSF_PROPS inprops,outprops;									
-	long framesread;	
-	/* init all dynamic resources to default states */
-	unsigned int i;
+    PSF_PROPS inprops,outprops;                                 
+    long framesread;    
+    /* init all dynamic resources to default states */
+    unsigned int i;
     int halfsec;
-	unsigned int framepos;
+    unsigned int framepos;
     long outsize;
     int ifd = -1,ofd = -1;
-	int error = 0;
-	PSF_CHPEAK* peaks = NULL;	
-	psf_format outformat =  PSF_FMT_UNKNOWN;
-	unsigned long nframes = 1;
-	float* inframe = NULL;
-	float* outframe = NULL;
+    int error = 0;
+    PSF_CHPEAK* peaks = NULL;   
+    psf_format outformat =  PSF_FMT_UNKNOWN;
+    unsigned long nframes = 1;
+    float* inframe = NULL;
+    float* outframe = NULL;
     float* orderptr[26];
     char* argstring = NULL;
     unsigned int rootchar = 'a';
@@ -84,36 +84,36 @@ int main(int argc, char* argv[])
     unsigned int  nchars,nzeros = 0;
     unsigned int max_inchar;
     MYLONG peaktime;
-	
+    
     /* CDP version number */
     if(argc==2 && (stricmp(argv[1],"--version")==0)){
         printf("1.2.\n");
         return 0;
     }
 
-	/* process any optional flags: remove this block if none used! */
-	if(argc > 1){
-		char flag;
-		while(argv[1][0] == '-') {
-			flag = argv[1][1];
-			switch(flag){
-			/*TODO: handle any  flag arguments here */
-			case('\0'):
-				printf("Error: missing flag name\n");
-				return 1;
-			default:
-				break;
-			}
-			argc--;
-			argv++;
-		}
-	}
+    /* process any optional flags: remove this block if none used! */
+    if(argc > 1){
+        char flag;
+        while(argv[1][0] == '-') {
+            flag = argv[1][1];
+            switch(flag){
+            /*TODO: handle any  flag arguments here */
+            case('\0'):
+                printf("Error: missing flag name\n");
+                return 1;
+            default:
+                break;
+            }
+            argc--;
+            argv++;
+        }
+    }
 
-	if(argc < ARG_NARGS){
-		printf("insufficient arguments.\n");
-		usage();
-		return 1;
-	}
+    if(argc < ARG_NARGS){
+        printf("insufficient arguments.\n");
+        usage();
+        return 1;
+    }
     
     /* initial check of charstring */
     argstring = argv[ARG_ORDERSTRING];
@@ -123,30 +123,30 @@ int main(int argc, char* argv[])
         return 1;
     }
     
-	/*  always startup portsf */
-	if(psf_init()){
-		printf("unable to start portsf\n");
-		return 1;
-	}
-																							
-	ifd = psf_sndOpen(argv[ARG_INFILE],&inprops,0);															  
-	if(ifd < 0){
-		printf("Error: unable to open infile %s\n",argv[ARG_INFILE]);
-		error++;
-		goto exit;
-	}
+    /*  always startup portsf */
+    if(psf_init()){
+        printf("unable to start portsf\n");
+        return 1;
+    }
+                                                                                            
+    ifd = psf_sndOpen(argv[ARG_INFILE],&inprops,0);                                                           
+    if(ifd < 0){
+        printf("Error: unable to open infile %s\n",argv[ARG_INFILE]);
+        error++;
+        goto exit;
+    }
     outsize = psf_sndSize(ifd);
-	if(outsize <= 0){
-		fprintf(stderr,"chorder: infile is empty!\n");
-		psf_sndClose(ifd);
-		return 1;
-	}
+    if(outsize <= 0){
+        fprintf(stderr,"chorder: infile is empty!\n");
+        psf_sndClose(ifd);
+        return 1;
+    }
     inframe = (float*) malloc(nframes * inprops.chans * sizeof(float));
-	if(inframe==NULL){
-		puts("No memory!\n");
-		error++;
-		goto exit;
-	}
+    if(inframe==NULL){
+        puts("No memory!\n");
+        error++;
+        goto exit;
+    }
     /* final validate and parse of charstring */
     max_inchar = rootchar;
     for(i=0;i < nchars;i++){
@@ -179,17 +179,17 @@ int main(int argc, char* argv[])
             goto exit;
         }
     }
-	/* check file extension of outfile name, so we use correct output file format*/
-	outformat = psf_getFormatExt(argv[ARG_OUTFILE]);
-	if(outformat == PSF_FMT_UNKNOWN){
-		printf("outfile name %s has unsupported extension.\n"
-			"Use any of .wav, .aiff, .aif, .afc, .aifc, .amb\n",argv[ARG_OUTFILE]);
-		error++;
-		goto exit;
-	}
-	inprops.format = outformat;
-	outprops = inprops;
-	outprops.chans = nchars;
+    /* check file extension of outfile name, so we use correct output file format*/
+    outformat = psf_getFormatExt(argv[ARG_OUTFILE]);
+    if(outformat == PSF_FMT_UNKNOWN){
+        printf("outfile name %s has unsupported extension.\n"
+            "Use any of .wav, .aiff, .aif, .afc, .aifc, .amb\n",argv[ARG_OUTFILE]);
+        error++;
+        goto exit;
+    }
+    inprops.format = outformat;
+    outprops = inprops;
+    outprops.chans = nchars;
     if(!is_legalsize(outsize,&outprops)){
         fprintf(stderr,"error: outfile size exceeds capacity of format.\n");
         return 1;
@@ -202,7 +202,7 @@ int main(int argc, char* argv[])
     
     if(outformat==PSF_WAVE_EX){
         int matched = 0;
-        for(i=0;i < N_BFORMATS;i++)	{
+        for(i=0;i < N_BFORMATS;i++) {
             if(inprops.chans == bformats[i]){
                 matched = 1;
                 break;
@@ -217,24 +217,24 @@ int main(int argc, char* argv[])
     
     outframe = malloc(sizeof(float) * nchars);
     
-	peaks  =  (PSF_CHPEAK*) malloc(outprops.chans * sizeof(PSF_CHPEAK));
-	if(peaks == NULL){
-		puts("No memory!\n");
-		error++;
-		goto exit;
-	}
-	ofd = psf_sndCreate(argv[ARG_OUTFILE],&outprops,0,0,PSF_CREATE_RDWR);
-	if(ofd < 0){
-		printf("Error: unable to create outfile %s\n",argv[ARG_OUTFILE]);
-		error++;
-		goto exit;
-	}
-	
+    peaks  =  (PSF_CHPEAK*) malloc(outprops.chans * sizeof(PSF_CHPEAK));
+    if(peaks == NULL){
+        puts("No memory!\n");
+        error++;
+        goto exit;
+    }
+    ofd = psf_sndCreate(argv[ARG_OUTFILE],&outprops,0,0,PSF_CREATE_RDWR);
+    if(ofd < 0){
+        printf("Error: unable to create outfile %s\n",argv[ARG_OUTFILE]);
+        error++;
+        goto exit;
+    }
+    
     halfsec = inprops.srate / 2;
-	framepos = 0;
-	printf("processing....\n");									
-	
-	while ((framesread = psf_sndReadFloatFrames(ifd,inframe,1)) > 0){
+    framepos = 0;
+    printf("processing....\n");                                 
+    
+    while ((framesread = psf_sndReadFloatFrames(ifd,inframe,1)) > 0){
         float val;
         for(i=0;i < nchars;i++){
             if(orderptr[i] == NULL)
@@ -243,29 +243,27 @@ int main(int argc, char* argv[])
                 val = *orderptr[i];
             outframe[i] = val;
         }
-		
-
-		if(psf_sndWriteFloatFrames(ofd,outframe,1) != 1){
-			printf("Error writing to outfile\n");
-			error++;
-			break;
-		}
+        if(psf_sndWriteFloatFrames(ofd,outframe,1) != 1){
+            printf("Error writing to outfile\n");
+            error++;
+            break;
+        }
         if((framepos % halfsec) == 0){
-			printf("%.2lf secs\r",(double) framepos / (double) outprops.srate);
+            printf("%.2lf secs\r",(double) framepos / (double) outprops.srate);
             fflush(stdout);
         }
-		framepos++;
-	}
+        framepos++;
+    }
 
-	if(framesread < 0)	{
-		printf("Error reading infile. Outfile is incomplete.\n");
-		error++;
-	}
-	printf("\n%.4lf secs\nWritten %d frames to %s\n",(double)framepos / (double) outprops.srate,framepos,argv[ARG_OUTFILE]);
-		
-	if(psf_sndReadPeaks( ofd,peaks,&peaktime)){
-		printf("PEAK values:\n");
-		for(i=0; i < outprops.chans; i++){
+    if(framesread < 0)  {
+        printf("Error reading infile. Outfile is incomplete.\n");
+        error++;
+    }
+    printf("\n%.4lf secs\nWritten %d frames to %s\n",(double)framepos / (double) outprops.srate,framepos,argv[ARG_OUTFILE]);
+        
+    if(psf_sndReadPeaks( ofd,peaks,&peaktime)){
+        printf("PEAK values:\n");
+        for(i=0; i < outprops.chans; i++){
             double val, dbval;
             val = (double) peaks[i].val;
             if(val > 0.0){
@@ -278,20 +276,20 @@ int main(int argc, char* argv[])
                        val,(unsigned int) peaks[i].pos,(double)peaks[i].pos / (double) outprops.srate); 
             }
         }
-	}
-	printf("\n");
-exit:	 	
-	if(ifd >= 0)
-		psf_sndClose(ifd);
-	if(ofd >= 0)
-		psf_sndClose(ofd);
-	if(inframe)
-		free(inframe);
+    }
+    printf("\n");
+exit:       
+    if(ifd >= 0)
+        psf_sndClose(ifd);
+    if(ofd >= 0)
+        psf_sndClose(ofd);
+    if(inframe)
+        free(inframe);
     if(outframe)
         free(outframe);
-	if(peaks)
-		free(peaks);
+    if(peaks)
+        free(peaks);
 
-	psf_finish();
-	return error;
+    psf_finish();
+    return error;
 }
