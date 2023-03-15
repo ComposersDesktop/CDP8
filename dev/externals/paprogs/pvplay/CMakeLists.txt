@@ -1,5 +1,6 @@
 if(APPLE)
-  set(CMAKE_C_FLAGS "-O2 -Wall  -Dunix  -DMAC -DPA_USE_COREAUDIO -mmacosx-version-min=10.9 -fomit-frame-pointer -funroll-loops")
+# -mmacosx-version-min=10.9
+  set(CMAKE_C_FLAGS "-O2 -Wall  -Dunix  -DMAC -DPA_USE_COREAUDIO  -fomit-frame-pointer -funroll-loops")
   set(CMAKE_CXX_FLAGS "-O2 -Wall  -Dunix -DMAC -DPA_USE_COREAUDIO -fomit-frame-pointer -mmacosx-version-min=10.9 -funroll-loops -std=c++11 -stdlib=libc++")
   include_directories ( /Developer/Headers/FlatCarbon )
   find_library(COREAUDIOLIB CoreAudio)
@@ -14,7 +15,10 @@ else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O3 -DWIN32 -D_WIN32 -DUSE_ASIO -fomit-frame-pointer -funroll-loops")
     set(CMAKE_CXX_FLAGS "-O3 -DWIN32 -D_WIN32 -DUSE_ASIO -fomit-frame-pointer -funroll-loops -static-libgcc -static-libstdc++")
-    set(EXTRA_LIBRARIES1 winmm dsound winspool ${EXTRA_LIBRARIES})
+    link_directories(/usr/local/lib)
+    find_library(PA NAMES libportaudio.a)
+#    NB winmm must appear after any module that references it. Yes, that's weird.
+    set(EXTRA_LIBRARIES1 dsound winspool ${PA} winmm ${EXTRA_LIBRARIES})
   else()
     link_directories (/usr/local/lib)
     find_library(AAIOLIB NAMES libaaio.a)
@@ -29,6 +33,6 @@ link_directories( ../../lib  ../../../newsfsys ../../../pvxio2)
 include_directories(/usr/local/include ../../../newinclude ../include ../portaudio/include ../portaudio/src/common)
 #../portaudio/src/common/pa_ringbuffer.c
 add_executable(pvplay pvplay.cpp pvoc2.cpp fmhfuncs.c pvthreads.cpp mxfft.c)
-target_link_libraries(pvplay portaudio sfsys pvxio2 ${EXTRA_LIBRARIES1})
+target_link_libraries(pvplay sfsys pvxio2 ${EXTRA_LIBRARIES1})
 
 my_install(pvplay)
