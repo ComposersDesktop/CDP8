@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Richard Dobson and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Richard Dobson and Composers Desktop Project Ltd
  * http://people.bath.ac.uk/masrwd
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
@@ -37,9 +37,9 @@ enum {GUID_PCM,GUID_IEEE,GUID_AMB_PCM,GUID_AMB_IEEE};
 char* guidnames[] = {"PCM","PCM FLOAT","AMB PCM","AMB FLOAT"};
 
 
-#define REVDWBYTES(t)	( (((t)&0xff) << 24) | (((t)&0xff00) << 8) | (((t)&0xff0000) >> 8) | (((t)>>24) & 0xff) )
-#define REVWBYTES(t)	( (((t)&0xff) << 8) | (((t)>>8) &0xff) )
-#define TAG(a,b,c,d)	( ((a)<<24) | ((b)<<16) | ((c)<<8) | (d) )
+#define REVDWBYTES(t)   ( (((t)&0xff) << 24) | (((t)&0xff00) << 8) | (((t)&0xff0000) >> 8) | (((t)>>24) & 0xff) )
+#define REVWBYTES(t)    ( (((t)&0xff) << 8) | (((t)>>8) &0xff) )
+#define TAG(a,b,c,d)    ( ((a)<<24) | ((b)<<16) | ((c)<<8) | (d) )
 
 #ifdef linux
 #define POS64(x) (x.__pos)
@@ -47,7 +47,7 @@ char* guidnames[] = {"PCM","PCM FLOAT","AMB PCM","AMB FLOAT"};
 #define POS64(x) (x)
 #endif
 
-#define WAVE_FORMAT_PCM			(0x0001)
+#define WAVE_FORMAT_PCM         (0x0001)
 #define sizeof_WFMTEX  (40)
 typedef struct _GUID 
 { 
@@ -59,7 +59,7 @@ typedef struct _GUID
 
 
 typedef struct  {
-	WORD  wFormatTag; 
+    WORD  wFormatTag; 
     WORD  nChannels; 
     DWORD nSamplesPerSec; 
     DWORD nAvgBytesPerSec; 
@@ -80,94 +80,94 @@ typedef struct {
 } WAVEFORMATEX; 
 
 typedef struct {
-    WAVEFORMATEX    Format;				/* 18 bytes */
+    WAVEFORMATEX    Format;             /* 18 bytes */
     union {
         WORD wValidBitsPerSample;       /* bits of precision  */
         WORD wSamplesPerBlock;          /* valid if wBitsPerSample==0 */
         WORD wReserved;                 /* If neither applies, set to */
                                         /* zero. */
     } Samples;
-    DWORD    dwChannelMask;				/* which channels are */
+    DWORD    dwChannelMask;             /* which channels are */
                                         /* present in stream  */
     GUID     SubFormat;
 } WAVEFORMATEXTENSIBLE;
 
 static const GUID  KSDATAFORMAT_SUBTYPE_PCM = {0x00000001,0x0000,0x0010,
-								{0x80,
-								0x00,
-								0x00,
-								0xaa,
-								0x00,
-								0x38,
-								0x9b,
-								0x71}};
+                                {0x80,
+                                0x00,
+                                0x00,
+                                0xaa,
+                                0x00,
+                                0x38,
+                                0x9b,
+                                0x71}};
 
 static const GUID  KSDATAFORMAT_SUBTYPE_IEEE_FLOAT = {0x00000003,0x0000,0x0010,
-								{0x80,
-								0x00,
-								0x00,
-								0xaa,
-								0x00,
-								0x38,
-								0x9b,
-								0x71}};
+                                {0x80,
+                                0x00,
+                                0x00,
+                                0xaa,
+                                0x00,
+                                0x38,
+                                0x9b,
+                                0x71}};
 
 static const GUID SUBTYPE_AMBISONIC_B_FORMAT_PCM = { 0x00000001, 0x0721, 0x11d3, 
-												{ 0x86,
-												0x44,
-												0xc8,
-												0xc1,
-												0xca,
-												0x0,
-												0x0,
-												0x0 } };
+                                                { 0x86,
+                                                0x44,
+                                                0xc8,
+                                                0xc1,
+                                                0xca,
+                                                0x0,
+                                                0x0,
+                                                0x0 } };
 
 
 static const GUID SUBTYPE_AMBISONIC_B_FORMAT_IEEE_FLOAT = { 0x00000003, 0x0721, 0x11d3, 
-												{ 0x86,
-												0x44,
-												0xc8,
-												0xc1,
-												0xca,
-												0x0,
-												0x0,
-												0x0 } };
+                                                { 0x86,
+                                                0x44,
+                                                0xc8,
+                                                0xc1,
+                                                0xca,
+                                                0x0,
+                                                0x0,
+                                                0x0 } };
 
 
-#define WAVE_FORMAT_IEEE_FLOAT	(0x0003)
-#define WAVE_FORMAT_EXTENSIBLE	(0xfffe)
+#define WAVE_FORMAT_IEEE_FLOAT  (0x0003)
+#define WAVE_FORMAT_EXTENSIBLE  (0xfffe)
 
 static int compare_guids(const GUID *gleft, const GUID *gright)
 {
-	const char *left = (const char *) gleft, *right = (const char *) gright;
-	return !memcmp(left,right,sizeof(GUID));
+    const char *left = (const char *) gleft, *right = (const char *) gright;
+    return !memcmp(left,right,sizeof(GUID));
 }
 
 
 static int wavDoRead(FILE* fp, void* buf, DWORD nBytes)
 {
-	DWORD got = 0;	
-	if((got = fread(buf,sizeof(char),nBytes,fp)) != nBytes) {
+    DWORD got = 0;  
+    if((got = fread(buf,sizeof(char),nBytes,fp)) != nBytes) {
         return 1;
     }
-	return 0;
+    return 0;
 }
 
-static int byte_order()					
-{						    
+static int byte_order()                 
+{                           
   int   one = 1;
   char* endptr = (char *) &one;
   return (*endptr);
 }
 
 static void fmtSwapBytes(WAVEFORMATEX  *pfmt)
-{	
-	pfmt->wFormatTag	= (WORD) REVWBYTES(pfmt->wFormatTag);
-	pfmt->nChannels		= (WORD) REVWBYTES(pfmt->nChannels);
-	pfmt->nSamplesPerSec	= REVDWBYTES(pfmt->nSamplesPerSec);
-	pfmt->nAvgBytesPerSec	= REVDWBYTES(pfmt->nAvgBytesPerSec);
-	pfmt->nBlockAlign	= (WORD) REVWBYTES(pfmt->nBlockAlign);
-	pfmt->wBitsPerSample	= (WORD) REVWBYTES(pfmt->wBitsPerSample);	
+{   
+    pfmt->wFormatTag    = (WORD) REVWBYTES(pfmt->wFormatTag);
+    pfmt->nChannels     = (WORD) REVWBYTES(pfmt->nChannels);
+    pfmt->nSamplesPerSec    = REVDWBYTES(pfmt->nSamplesPerSec);
+    pfmt->nAvgBytesPerSec   = REVDWBYTES(pfmt->nAvgBytesPerSec);
+    pfmt->nBlockAlign   = (WORD) REVWBYTES(pfmt->nBlockAlign);
+    pfmt->wBitsPerSample    = (WORD) REVWBYTES(pfmt->wBitsPerSample);   
 }
 
 
@@ -343,15 +343,15 @@ int main (int argc, char**argv)
     int src_is_amb = 0;
     FILE* fp  = NULL;
     char* maskstring = NULL;
-    psf_format outformat;
-    psf_format new_outtype;
+    psf_format outformat=PSF_FMT_UNKNOWN;
+    psf_format new_outtype=PSF_FMT_UNKNOWN;
     DWORD tag;
     DWORD size;
     fpos_t bytepos;
     DWORD fmtoffset = 0;
     DWORD guidoffset = 0;
     DWORD maskoffset = 0;
-	WORD cbSize;
+    WORD cbSize;
     WORD validbits;
     DWORD chmask;
     WAVEFORMATEXTENSIBLE fmt;
@@ -368,7 +368,7 @@ int main (int argc, char**argv)
         return 1;
     }
     while(argv[1][0]=='-'){
-		switch(argv[1][1]){
+        switch(argv[1][1]){
             case 'm':
                 if(argc > 2){
                     printf("cannot use -m with other options\n");
@@ -429,10 +429,10 @@ int main (int argc, char**argv)
     psf_init();
     /* nitty-gritty to read header */
     outformat = psf_getFormatExt(argv[ARG_INFILE]);
-	if(!(outformat == PSF_STDWAVE|| outformat==PSF_WAVE_EX)){
-		printf("file mustbe WAVEX format with .wav or .amb extension.\n");
+    if(!(outformat == PSF_STDWAVE|| outformat==PSF_WAVE_EX)){
+        printf("file mustbe WAVEX format with .wav or .amb extension.\n");
         return 1;
-	}
+    }
     
     fp = fopen(argv[ARG_INFILE],"rb+");
     if(fp==NULL){
@@ -440,112 +440,112 @@ int main (int argc, char**argv)
         return 1;
     }
     if(wavDoRead(fp,(char *)&tag,sizeof(DWORD))
-		|| wavDoRead(fp,(char *) &size,sizeof(DWORD))) {
-		printf("read error 1\n");
+        || wavDoRead(fp,(char *) &size,sizeof(DWORD))) {
+        printf("read error 1\n");
         return 1;
     }
-	if(!is_little_endian)
-		size = REVDWBYTES(size);
-	else
-		tag = REVDWBYTES(tag);
-	if(tag != TAG('R','I','F','F')){
-		printf("not a RIFF file\n");
+    if(!is_little_endian)
+        size = REVDWBYTES(size);
+    else
+        tag = REVDWBYTES(tag);
+    if(tag != TAG('R','I','F','F')){
+        printf("not a RIFF file\n");
         return 1;
     }
-	if(size < (sizeof(WAVEFORMAT) + 3 * sizeof(WORD))){
-		printf("file has bad header.\n");
+    if(size < (sizeof(WAVEFORMAT) + 3 * sizeof(WORD))){
+        printf("file has bad header.\n");
         return 1;
     }
 
-	if(wavDoRead(fp,(char *)&tag,sizeof(DWORD))) {
-		printf("read error 2\n");
+    if(wavDoRead(fp,(char *)&tag,sizeof(DWORD))) {
+        printf("read error 2\n");
         return 1;
     }
-	if(is_little_endian)
-		tag = REVDWBYTES(tag);
-	if(tag != TAG('W','A','V','E')){
-		printf("Not a WAVE file.\n");
+    if(is_little_endian)
+        tag = REVDWBYTES(tag);
+    if(tag != TAG('W','A','V','E')){
+        printf("Not a WAVE file.\n");
         return 1;    
     }
-	for(;;){
+    for(;;){
         if(fmtfound) 
             break;
-		if(wavDoRead(fp,(char *)&tag,sizeof(DWORD))
-				|| wavDoRead(fp,(char *) &size,sizeof(DWORD))) {
-			printf("read error 3\n");
+        if(wavDoRead(fp,(char *)&tag,sizeof(DWORD))
+                || wavDoRead(fp,(char *) &size,sizeof(DWORD))) {
+            printf("read error 3\n");
             return 1;
         }
-		if(!is_little_endian)
-			size = REVDWBYTES(size);
-		else
-			tag = REVDWBYTES(tag);
-		switch(tag){
-		case(TAG('f','m','t',' ')):
-			if( size < sizeof(WAVEFORMAT)){
-				printf("file has bad format.\n");
+        if(!is_little_endian)
+            size = REVDWBYTES(size);
+        else
+            tag = REVDWBYTES(tag);
+        switch(tag){
+        case(TAG('f','m','t',' ')):
+            if( size < sizeof(WAVEFORMAT)){
+                printf("file has bad format.\n");
                 return 1;
             }
             
-			if(size > sizeof_WFMTEX) {
-				printf("file has unsupported WAVE format.\n");
+            if(size > sizeof_WFMTEX) {
+                printf("file has unsupported WAVE format.\n");
                 return 1;
             }
-			if(fgetpos(fp,&bytepos)) {
-			    printf("seek error\n");
+            if(fgetpos(fp,&bytepos)) {
+                printf("seek error\n");
                 return 1;
             }
-			fmtoffset = (DWORD) POS64(bytepos);
-			if(wavDoRead(fp,(char *) &fmt.Format,sizeof(WAVEFORMAT))){				
-				printf("read error 4\n");
+            fmtoffset = (DWORD) POS64(bytepos);
+            if(wavDoRead(fp,(char *) &fmt.Format,sizeof(WAVEFORMAT))){              
+                printf("read error 4\n");
                 return 1;
-			}
-			if(!is_little_endian)		
-				fmtSwapBytes(&fmt.Format);	
-			/* calling function decides if format is supported*/
-			if(size > sizeof(WAVEFORMAT)) {
-				if(wavDoRead(fp,(char*)&cbSize,sizeof(WORD))){
-					printf("read error 5\n");
+            }
+            if(!is_little_endian)       
+                fmtSwapBytes(&fmt.Format);  
+            /* calling function decides if format is supported*/
+            if(size > sizeof(WAVEFORMAT)) {
+                if(wavDoRead(fp,(char*)&cbSize,sizeof(WORD))){
+                    printf("read error 5\n");
                     return 1;
                 }
-				if(!is_little_endian)		
-					cbSize = (WORD) REVWBYTES(cbSize);
+                if(!is_little_endian)       
+                    cbSize = (WORD) REVWBYTES(cbSize);
                 if(cbSize==0){
                     printf("file is plain WAVE format.\n");
                     return 1;
                 }
-				if(fmt.Format.wFormatTag == WAVE_FORMAT_EXTENSIBLE){
-					if(cbSize != 22) {
-						printf("not a recognized WAVEX file.\n");
+                if(fmt.Format.wFormatTag == WAVE_FORMAT_EXTENSIBLE){
+                    if(cbSize != 22) {
+                        printf("not a recognized WAVEX file.\n");
                         return 1;
-					}
-				}				
-				if(wavDoRead(fp,(char *) &validbits,sizeof(WORD))){
-					printf("read error 6\n");
+                    }
+                }               
+                if(wavDoRead(fp,(char *) &validbits,sizeof(WORD))){
+                    printf("read error 6\n");
                     return 1;
                 }
                 
-				if(!is_little_endian)
+                if(!is_little_endian)
                     validbits = REVWBYTES(validbits);
                 fmt.Samples.wValidBitsPerSample = (WORD) validbits;
-				if(wavDoRead(fp,(char *) &chmask,sizeof(DWORD))) {
-					printf("read error 7\n");
+                if(wavDoRead(fp,(char *) &chmask,sizeof(DWORD))) {
+                    printf("read error 7\n");
                     return 1;
                 }
-				if(!is_little_endian)
+                if(!is_little_endian)
                     chmask = REVDWBYTES(chmask);
                 fmt.dwChannelMask = chmask;
-				if(wavDoRead(fp,(char *) &(fmt.SubFormat),sizeof(GUID))) {
-					printf("read error 8 \n");
+                if(wavDoRead(fp,(char *) &(fmt.SubFormat),sizeof(GUID))) {
+                    printf("read error 8 \n");
                     return 1;
                 }
-				if(!is_little_endian){
-					fmt.SubFormat.Data1 = REVDWBYTES(fmt.SubFormat.Data1);
-					fmt.SubFormat.Data2 = (WORD) REVWBYTES(fmt.SubFormat.Data2);
-					fmt.SubFormat.Data3 = (WORD) REVWBYTES(fmt.SubFormat.Data3);	
-				}
-				/* if we get a good GUID, we are ready to make changes! */
+                if(!is_little_endian){
+                    fmt.SubFormat.Data1 = REVDWBYTES(fmt.SubFormat.Data1);
+                    fmt.SubFormat.Data2 = (WORD) REVWBYTES(fmt.SubFormat.Data2);
+                    fmt.SubFormat.Data3 = (WORD) REVWBYTES(fmt.SubFormat.Data3);    
+                }
+                /* if we get a good GUID, we are ready to make changes! */
                 
-				if(compare_guids(&(fmt.SubFormat),&(KSDATAFORMAT_SUBTYPE_PCM))) {
+                if(compare_guids(&(fmt.SubFormat),&(KSDATAFORMAT_SUBTYPE_PCM))) {
                     in_guidtype = GUID_PCM;
                     if(test)
                         printf("Current GUID: KSDATAFORMAT_SUBTYPE_PCM.\n");
@@ -570,31 +570,31 @@ int main (int argc, char**argv)
                 else {
                     printf("unrecognized WAVE_EX GUID.\n");
                     return 1;
-                }				
-			}
+                }               
+            }
             else {
                 printf("WAVEX format required.\n"
                        "Use copysfx to convert to WAVEX format.\n");
                 return 1;
             }
-            fmtfound = 1;			
-			break;
-		case TAG('d','a','t','a'):
+            fmtfound = 1;           
+            break;
+        case TAG('d','a','t','a'):
             if(!fmtfound){
                 printf("bad WAVE file: no fmt chunk found!\n");
                 return 1;
             }                 
         default:
-			/* unknown chunk - skip */
+            /* unknown chunk - skip */
             if(!fmtfound) {
                 if(fseek(fp,size,SEEK_CUR)){
                     printf("seek error\n");
                     return 1;
                 }
             }
-			break;
-		}
-	}
+            break;
+        }
+    }
     if(!fmtfound){
          printf("no fmt chunk found!\n");
          return 1;
@@ -693,8 +693,8 @@ int main (int argc, char**argv)
                 //make the change!
                 if(!is_little_endian){
                     nuguid.Data1 = REVDWBYTES(nuguid.Data1);
-					nuguid.Data2 = (WORD) REVWBYTES(nuguid.Data2);
-					nuguid.Data3 = (WORD) REVWBYTES(nuguid.Data3);
+                    nuguid.Data2 = (WORD) REVWBYTES(nuguid.Data2);
+                    nuguid.Data3 = (WORD) REVWBYTES(nuguid.Data3);
                 }
                 if(!test){
                     if(fseek(fp,guidoffset,SEEK_SET) !=0){
