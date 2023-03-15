@@ -162,19 +162,40 @@ int superfree(dataptr dz)
         if(dz->tex != NULL)
             free_tex_structure(dz);
 
-        if(dz->infile!=NULL)        free(dz->infile);       if(dz->outfile!=NULL)       free(dz->outfile);  
-        if(dz->fp!=NULL)            fclose(dz->fp);
-        if(dz->is_int!=NULL)        free(dz->is_int);       if(dz->no_brk!=NULL)        free(dz->no_brk);  
-        if(dz->is_active!=NULL)     free(dz->is_active);    
-        if(dz->bigbuf!=NULL)        free(dz->bigbuf);       if(dz->bigfbuf!=NULL)       free(dz->bigfbuf);  
-        if(dz->amp!=NULL)           free(dz->amp);          if(dz->freq!=NULL)          free(dz->freq);
-        if(dz->sbufptr!=NULL)       free(dz->sbufptr);      if(dz->sampbuf!=NULL)       free(dz->sampbuf); 
-        if(dz->flbufptr!=NULL)      free(dz->flbufptr);     if(dz->windowbuf!=NULL)     free(dz->windowbuf);
+        if(dz->infile!=NULL)
+            free(dz->infile);
+        if(dz->outfile!=NULL)
+            free(dz->outfile);
+        if(dz->fp!=NULL)
+            fclose(dz->fp);
+        if(dz->is_int!=NULL)
+            free(dz->is_int);
+        if(dz->no_brk!=NULL)
+            free(dz->no_brk);
+        if(dz->is_active!=NULL)
+            free(dz->is_active);
+        if(dz->bigbuf!=NULL)
+            free(dz->bigbuf);
+        if(dz->bigfbuf!=NULL)
+            free(dz->bigfbuf);
+        if(dz->amp!=NULL)
+            free(dz->amp);
+        if(dz->freq!=NULL)
+            free(dz->freq);
+        if(dz->sbufptr!=NULL)
+            free(dz->sbufptr);
+        if(dz->sampbuf!=NULL)
+            free(dz->sampbuf);
+        if(dz->flbufptr!=NULL)
+            free(dz->flbufptr);
+        if(dz->windowbuf!=NULL)
+            free(dz->windowbuf);
         if(dz->ifd!=NULL) {
             free(dz->ifd);
             dz->ifd = NULL;       /*RWD Nov 2011 jic */
         }
-        if(dz->insams!=NULL)        free(dz->insams);
+        if(dz->insams!=NULL)
+            free(dz->insams);
 
         if(dz->application!=NULL)
             free_application_structure_and_related_brktables(dz);
@@ -182,12 +203,26 @@ int superfree(dataptr dz)
         if((dz->extrabrkno >= 0) && (dz->brk !=NULL) && (dz->brk[dz->extrabrkno] !=NULL)) 
             free(dz->brk[dz->extrabrkno]);
 
-        if(dz->brk!=NULL)           free(dz->brk);          if(dz->brkptr!=NULL)        free(dz->brkptr);  
-        if(dz->brksize!=NULL)       free(dz->brksize);  
-        if(dz->lastind!=NULL)       free(dz->lastind);      if(dz->lastval!=NULL)       free(dz->lastval); 
-        if(dz->brkinit!=NULL)       free(dz->brkinit);      if(dz->firstval!=NULL)      free(dz->firstval); 
-        if(dz->param!=NULL)         free(dz->param);        if(dz->iparam!=NULL)        free(dz->iparam);
-        if(dz->vflag!=NULL)         free(dz->vflag);
+        if(dz->brk!=NULL)
+            free(dz->brk);
+        if(dz->brkptr!=NULL)
+            free(dz->brkptr);
+        if(dz->brksize!=NULL)
+            free(dz->brksize);
+        if(dz->lastind!=NULL)
+            free(dz->lastind);
+        if(dz->lastval!=NULL)
+            free(dz->lastval);
+        if(dz->brkinit!=NULL)
+            free(dz->brkinit);
+        if(dz->firstval!=NULL)
+            free(dz->firstval);
+        if(dz->param!=NULL)
+            free(dz->param);
+        if(dz->iparam!=NULL)
+            free(dz->iparam);
+        if(dz->vflag!=NULL)
+            free(dz->vflag);
 
         if((dz->array_cnt > 0) && (dz->parray!=NULL)) {
             for(n = 0;n< dz->array_cnt; n++)  { 
@@ -219,23 +254,59 @@ int superfree(dataptr dz)
             free(dz->lfarray);
 
 
-        if(dz->parray!=NULL)        free(dz->parray);       if(dz->iparray!=NULL) free(dz->iparray);
-        if(dz->lparray!=NULL)       free(dz->lparray);      if(dz->sndbuf!=NULL) free(dz->sndbuf);
-        if(dz->fptr!=NULL)          free(dz->fptr);         if(dz->ptr!=NULL)
+        if(dz->parray!=NULL)
+            free(dz->parray);
+        if(dz->iparray!=NULL)
+            free(dz->iparray);
+        if(dz->lparray!=NULL)
+            free(dz->lparray);
+        if(dz->sndbuf!=NULL)
+            free(dz->sndbuf);
+        if(dz->fptr!=NULL)
+            free(dz->fptr);
+        if(dz->ptr!=NULL)
             free(dz->ptr);
-        if(dz->specenvfrq!=NULL)    free(dz->specenvfrq);   if(dz->specenvpch!=NULL) free(dz->specenvpch);
-        if(dz->specenvamp!=NULL)    free(dz->specenvamp);   if(dz->specenvtop!=NULL) free(dz->specenvtop);
-        if(dz->specenvamp2!=NULL)   free(dz->specenvamp2);  if(dz->pitches!=NULL) free(dz->pitches);
-        if(dz->transpos!=NULL)      free(dz->transpos);     if(dz->pitches2!=NULL) free(dz->pitches2);
-        if(dz->transpos2!=NULL)     free(dz->transpos2);    if(dz->frq_template!=NULL) free(dz->frq_template);
-        if(dz->fsampbuf!=NULL)      free(dz->fsampbuf);     if(dz->filtpeak!=NULL) free(dz->filtpeak);
-        if(dz->fbandtop!=NULL)      free(dz->fbandtop);     if(dz->fbandbot!=NULL) free(dz->fbandbot);
-        if(dz->peakno!=NULL)        free(dz->peakno);       if(dz->lastpeakno!=NULL) free(dz->lastpeakno);
-        if(dz->band!=NULL)          free(dz->band);         if(dz->temp!=NULL)
+        if(dz->specenvfrq!=NULL)
+            free(dz->specenvfrq);
+        if(dz->specenvpch!=NULL)
+            free(dz->specenvpch);
+        if(dz->specenvamp!=NULL)
+            free(dz->specenvamp);
+        if(dz->specenvtop!=NULL)
+            free(dz->specenvtop);
+        if(dz->specenvamp2!=NULL)
+            free(dz->specenvamp2);
+        if(dz->pitches!=NULL)
+            free(dz->pitches);
+        if(dz->transpos!=NULL)
+            free(dz->transpos);
+        if(dz->pitches2!=NULL)
+            free(dz->pitches2);
+        if(dz->transpos2!=NULL)
+            free(dz->transpos2);
+        if(dz->frq_template!=NULL)
+            free(dz->frq_template);
+        if(dz->fsampbuf!=NULL)
+            free(dz->fsampbuf);
+        if(dz->filtpeak!=NULL)
+            free(dz->filtpeak);
+        if(dz->fbandtop!=NULL)
+            free(dz->fbandtop);
+        if(dz->fbandbot!=NULL) free(dz->fbandbot);
+        if(dz->peakno!=NULL)
+            free(dz->peakno);
+        if(dz->lastpeakno!=NULL)
+            free(dz->lastpeakno);
+        if(dz->band!=NULL)
+            free(dz->band);
+        if(dz->temp!=NULL)
             free(dz->temp);
-        if(dz->origenv!=NULL)       free(dz->origenv);      if(dz->env!=NULL)
+        if(dz->origenv!=NULL)
+            free(dz->origenv);
+        if(dz->env!=NULL)
             free(dz->env);
-        if(dz->rampbrk!=NULL)       free(dz->rampbrk);
+        if(dz->rampbrk!=NULL)
+            free(dz->rampbrk);
 
         if(dz->valstor!=NULL) {
             for(n=0;n<dz->linecnt;n++) {
@@ -255,9 +326,14 @@ int superfree(dataptr dz)
         if(dz->wordstor!=NULL)
             free_wordstors(dz);
 
-        if(dz->wordcnt!=NULL)       free(dz->wordcnt);      if(dz->act!=NULL)
+        if(dz->wordcnt!=NULL)
+            free(dz->wordcnt);
+        if(dz->act!=NULL)
             free(dz->act);
-        if(dz->activebuf!=NULL)     free(dz->activebuf);    if(dz->activebuf_ptr!=NULL) free(dz->activebuf_ptr);
+        if(dz->activebuf!=NULL)
+            free(dz->activebuf);
+        if(dz->activebuf_ptr!=NULL)
+            free(dz->activebuf_ptr);
 
 
         if(dz->outpeaks)
