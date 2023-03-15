@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Richard Dobson and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Richard Dobson and Composers Desktop Project Ltd
  * http://people.bath.ac.uk/masrwd
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
@@ -52,16 +52,16 @@ extern int stricmp(const char *a, const char *b);
  
  
  Horizontal   Height  Soundfield   Number of    Channels
- order 	      order 	  type      channels 	
- 1 	         0 	       horizontal 	  3 	    WXY
- 1 	         1 	      full-sphere 	  4 	    WXYZ
- 2 	         0 	       horizontal 	  5 	    WXY....UV
- 2 	         1 	       mixed-order    6 	    WXYZ...UV
- 2 	         2 	      full-sphere     9 	    WXYZRSTUV
- 3           0 	       horizontal 	  7 	    WXY....UV.....PQ
- 3 	         1         mixed-order 	  8 	    WXYZ...UV.....PQ
- 3 	         2 	       mixed-order 	 11 	    WXYZRSTUV.....PQ
- 3 	         3 	      full-sphere 	 16 	    WXYZRSTUVKLMNOPQ
+ order        order       type      channels    
+ 1           0         horizontal     3         WXY
+ 1           1        full-sphere     4         WXYZ
+ 2           0         horizontal     5         WXY....UV
+ 2           1         mixed-order    6         WXYZ...UV
+ 2           2        full-sphere     9         WXYZRSTUV
+ 3           0         horizontal     7         WXY....UV.....PQ
+ 3           1         mixed-order    8         WXYZ...UV.....PQ
+ 3           2         mixed-order   11         WXYZRSTUV.....PQ
+ 3           3        full-sphere    16         WXYZRSTUVKLMNOPQ
 
  */
 
@@ -78,11 +78,11 @@ void usage(void)
 {
    printf(
     "usage: fmdcode [-x][-w] infile outfile layout\n"
-	"       -w    :   write plain WAVE outfile format\n"
+    "       -w    :   write plain WAVE outfile format\n"
     "                (.wav default - use generic wavex format).\n"
     "       -x    : write std WAVEX speaker positions to header\n"
     "               (applies to compatible layouts only; requires .wav extension).\n"
-	"   layout    : one of the choices below.\n"
+    "   layout    : one of the choices below.\n"
     "       Output channel order is anticlockwise from centre front\n"
     "            except where indicated.\n"
     "   Layouts indicated with * are compatible with WAVEX speaker position order. \n"
@@ -104,25 +104,25 @@ void usage(void)
 
 int main(int argc,char *argv[])
 {
-	int i,ifd, ofd;
-	int layout,inorder = 1;
+    int i,ifd, ofd;
+    int layout,inorder = 1;
     int got,halfsec;
-	unsigned int framepos;
+    unsigned int framepos;
     int inchans,outchans;
     int outsize;
     int write_speakerpositions = 0;
     MYLONG peaktime;
     psf_channelformat chformat = MC_STD;
     psf_format  outformat;
-	char *sfname;
+    char *sfname;
     float *frame = NULL;
     fmhcopyfunc copyfunc;
     fmhdecodefunc decodefunc = NULL;
-	int write_wavex = 1;
-	ABFSAMPLE abfsample;
-	PSF_PROPS props;
-	PSF_CHPEAK *peaks = NULL;
-	float abfframe[16];
+    int write_wavex = 1;
+    ABFSAMPLE abfsample;
+    PSF_PROPS props;
+    PSF_CHPEAK *peaks = NULL;
+    float abfframe[16];
 
     /* CDP version number */
     if(argc==2 && (stricmp(argv[1],"--version")==0)){
@@ -130,65 +130,65 @@ int main(int argc,char *argv[])
         return 0;
     }
     
-	if(argc < 3){
-		printf("\nCDP MCTOOLS: FMDCODE v 1.0beta: RWD,CDP 2009\n"
-				"Plain multi-layout decoder for .amb files.\n"
+    if(argc < 3){
+        printf("\nCDP MCTOOLS: FMDCODE v 1.0beta: RWD,CDP 2009\n"
+                "Plain multi-layout decoder for .amb files.\n"
                 "Regular layouts use standard Furse-Malham in-phase coefficients.\n" 
                 "5.x surround coefficients (maxre) from David Moore.\n");
         usage();
-		return 1;
-	}
-	while(argv[1][0] =='-'){		
-		switch(argv[1][1]){
-		case('w'):
-			write_wavex = 0;
-			break;
+        return 1;
+    }
+    while(argv[1][0] =='-'){        
+        switch(argv[1][1]){
+        case('w'):
+            write_wavex = 0;
+            break;
         case 'x':
             write_speakerpositions = 1;
             break;
-		default:
-			fprintf(stderr,"fmdcode: error: illegal flag option %s\n",argv[1]);
-			return 1;
-		}
-		argc--; argv++;
-	}
-	if(argc < ARG_NARGS){
+        default:
+            fprintf(stderr,"fmdcode: error: illegal flag option %s\n",argv[1]);
+            return 1;
+        }
+        argc--; argv++;
+    }
+    if(argc < ARG_NARGS){
         
-		usage();
-		return 1;
-	}
-	if(psf_init()) {		
-		printf("failed to init psfsys\n");
-		exit(1);
-	}
-	
-	sfname = argv[ARG_OUTFILE];
-	layout = atoi(argv[ARG_LAYOUT]);
+        usage();
+        return 1;
+    }
+    if(psf_init()) {        
+        printf("failed to init psfsys\n");
+        exit(1);
+    }
+    
+    sfname = argv[ARG_OUTFILE];
+    layout = atoi(argv[ARG_LAYOUT]);
     if(layout < 1 || layout > FM_NLAYOUTS+1){
         printf("Unsupported layout type.\n");
         return 1;
     }
     
     
-	ifd = psf_sndOpen(argv[ARG_INFILE],&props,0);
-	if(ifd < 0){
-		fprintf(stderr,"unable toopen infile %s\n",argv[ARG_INFILE]);
-		return 1;
-	}
+    ifd = psf_sndOpen(argv[ARG_INFILE],&props,0);
+    if(ifd < 0){
+        fprintf(stderr,"unable toopen infile %s\n",argv[ARG_INFILE]);
+        return 1;
+    }
     inchans = props.chans;
     if(inchans > 4) {
         inorder = 2;
         printf("%d-channel input: performing 2nd-order decode.\n",inchans);
     }
     outsize = psf_sndSize(ifd);
-	if(outsize <= 0){
-		fprintf(stderr,"fmdcode: infile is empty!\n");
-		psf_sndClose(ifd);
-		return 1;
-	}
+    if(outsize <= 0){
+        fprintf(stderr,"fmdcode: infile is empty!\n");
+        psf_sndClose(ifd);
+        return 1;
+    }
     
     switch(inchans){
-	case 3:
+    case 3:
         copyfunc = fmhcopy_3;
         break;
     case 4:
@@ -219,7 +219,7 @@ int main(int argc,char *argv[])
         printf("file has unsupported number of channels (%d)\n",inchans);
         psf_sndClose(ifd);
         return 1;
-	}
+    }
     //FM_MONO,FM_STEREO,FM_SQUARE,FM_PENT,FM_SURR,FM_SURR6,FM_HEX,FM_OCT1,FM_OCT2,FM_CUBE
     switch(layout-1){
         case FM_MONO:
@@ -325,54 +325,54 @@ int main(int argc,char *argv[])
         puts("No Memory!\n");
         return 1;
     }
-	props.chformat = STDWAVE;
-	props.chans = outchans;
+    props.chformat = STDWAVE;
+    props.chans = outchans;
     if(!is_legalsize(outsize,&props)){
         fprintf(stderr,"error: outfile size exceeds capacity of format.\n");
         return 1;
     }
     
     /*TODO: set speaker pos when we can */
-	if(write_wavex){
-		props.chformat = chformat;
-		props.format = PSF_WAVE_EX;
-	}
+    if(write_wavex){
+        props.chformat = chformat;
+        props.format = PSF_WAVE_EX;
+    }
 
-	ofd = psf_sndCreate(sfname,&props,0,0,PSF_CREATE_RDWR);
-	if(ofd < 0){
-		fprintf(stderr,"can't create outfile %s\n",sfname);
-		psf_sndClose(ifd);
-		return 1;
-	}
+    ofd = psf_sndCreate(sfname,&props,0,0,PSF_CREATE_RDWR);
+    if(ofd < 0){
+        fprintf(stderr,"can't create outfile %s\n",sfname);
+        psf_sndClose(ifd);
+        return 1;
+    }
     peaks = (PSF_CHPEAK*)  malloc(sizeof(PSF_CHPEAK) * outchans);
     memset(peaks,0,sizeof(PSF_CHPEAK) * outchans);
 
-	halfsec = props.srate / 2;
-	framepos = 0;
-	printf("\ndecoding:\n");
-	while((got = psf_sndReadFloatFrames(ifd,abfframe,1))==1){
+    halfsec = props.srate / 2;
+    framepos = 0;
+    printf("\ndecoding:\n");
+    while((got = psf_sndReadFloatFrames(ifd,abfframe,1))==1){
         memset(&abfsample,0,sizeof(ABFSAMPLE));
         copyfunc(&abfsample,abfframe);
         decodefunc(&abfsample,frame,1);            
-		if(0 > psf_sndWriteFloatFrames(ofd,frame,1)){
-			fprintf(stderr,"error writing to outfile\n");
-			psf_sndClose(ifd);
-			psf_sndClose(ofd);
-			return 1;
-		}
+        if(0 > psf_sndWriteFloatFrames(ofd,frame,1)){
+            fprintf(stderr,"error writing to outfile\n");
+            psf_sndClose(ifd);
+            psf_sndClose(ofd);
+            return 1;
+        }
 
-		if((framepos % halfsec) == 0){
-			printf("%.2lf secs\r",(double) framepos / (double) props.srate);
+        if((framepos % halfsec) == 0){
+            printf("%.2lf secs\r",(double) framepos / (double) props.srate);
             fflush(stdout);
         }
-		framepos++;
-	}
+        framepos++;
+    }
 
-	if(got != 0){
-		fprintf(stderr,"warning: not all data was read\n");
-	}
-	printf("\n%.4lf secs\nWritten %d frames to %s\n",(double)framepos / (double) props.srate,framepos,sfname);
-	
+    if(got != 0){
+        fprintf(stderr,"warning: not all data was read\n");
+    }
+    printf("\n%.4lf secs\nWritten %d frames to %s\n",(double)framepos / (double) props.srate,framepos,sfname);
+    
     if(psf_sndReadPeaks( ofd,peaks,&peaktime)){
         printf("PEAK values:\n");
         for(i=0; i < outchans; i++){
@@ -391,10 +391,12 @@ int main(int argc,char *argv[])
         }
     }
     printf("\n");
-	psf_sndClose(ifd);
-	psf_sndClose(ofd);
-    if(peaks)
+    psf_sndClose(ifd);
+    psf_sndClose(ofd);
+    if(peaks){
         free(peaks);
-	psf_finish();
-	return 0;
+    }
+    psf_finish();
+    return 0;
 }
+
