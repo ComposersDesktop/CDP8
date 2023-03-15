@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Richard Dobson and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Richard Dobson and Composers Desktop Project Ltd
  * http://people.bath.ac.uk/masrwd
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
@@ -521,9 +521,9 @@ main(int argc, char *argv[])
 			free(peaks);				
 		exit(1);
 	}
-    if(do_dither)
+    if(do_dither){
         psf_sndSetDither(ofd,PSF_DITHER_TPDF);
-
+    }
 	if(force_wave){
 		if(outprops.format==PSF_WAVE_EX){
 			if(outformat > PSF_WAVE_EX)
