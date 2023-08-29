@@ -1,4 +1,4 @@
-pamacbuild.txt 19-10-2021
+pamacbuild.txt 29-08-2023
 
 This outlines the procedure to configure portaudio to build as a native static library on OS X,
 required by the audio programs (paplay, pvplay, recsf, listaudevs). 
@@ -6,6 +6,7 @@ This assumes a full Xcode installation complete with all
 required command-line tools.
 
 Download the latest "stable" version of portaudio from: http://files.portaudio.com/download.html
+into the "paprogs" directory.
 
 Expand the pa_stable...tgz file
 
@@ -22,10 +23,15 @@ Run ./configure as shown here - the CDP audio programs only require the static l
  
 ./configure --enable-shared=no --enable-mac-universal=no
 
-Then run make as usual to build. 
+Then run 'make install' as usual to build. Previously we avoided the final install step as a courtesy 
+to users who may already have a preferred full installation of portaudio, but this led to many problems
+variously relating to newer versions of the compiler tools, and Cmake.
 
-The CDP makefiles look for the local (to the CDP programs) lib/.libs folder for libportaudio.a
-This procedure therefore does not replace any version of portaudio already installed in /usr folders.
+As the play programs require access to one of the non-public portaudio header files ("pa_ringbuffer.h" in src/common), 
+the makefiles expect to find the sources as described above.
+
+
+
 
 
 
