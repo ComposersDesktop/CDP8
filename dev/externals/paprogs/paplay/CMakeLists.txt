@@ -1,6 +1,6 @@
 if(APPLE)
 #-mmacosx-version-min=10.9
-  set(CMAKE_C_FLAGS "-std=c99 -mmacosx-version-min=10.9 -O2 -Wall -Dunix -fomit-frame-pointer -funroll-loops")
+  set(CMAKE_C_FLAGS "-std=c99  -O2 -Wall -Dunix -fomit-frame-pointer -funroll-loops")
   include_directories ( /Developer/Headers/FlatCarbon )
   find_library(COREAUDIOLIB CoreAudio)
   find_library(AUDIOTOOLBOX AudioToolbox)
@@ -29,7 +29,7 @@ else()
   endif()
 endif()
 
-link_directories(../portaudio/lib/.libs ../../lib )
+link_directories(../../lib )
 include_directories(../../include ../include ../portaudio/include ../portaudio/src/common /usr/local/include)
 
 if(MINGW)
