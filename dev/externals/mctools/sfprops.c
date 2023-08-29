@@ -27,9 +27,10 @@
 /* Nov28 2001: rebuild with sfsysEx recognizing stupid QuickTime AIFC floats with 16bit size! */
 /*Dec 2005 support .amb extension */
 /*April 2006: build with updated sfsys to read PEAK chunk after data chunk (Thanks to Sony!)*/
-/* OCt 2009 TODO: sort out 64bit platform issues (peaktime etc) */
+/* OCT 2009 TODO: sort out 64bit platform issues (peaktime etc) */
 /* FEB 2010: decl filesize etc as unsigned to read huge file sizes! */
 /* Nov 2013 added MC_SURR_6_1 */
+/* March 2023: add flags for plain numeric output, as helper for TV scripts */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -91,9 +92,13 @@ static const WAVE_EX_SPEAKER speakers[NUM_SPEAKER_POSITIONS] = {
 };
 
 void usage(){
-    fprintf(stderr,"CDP MCTOOLS: SFPROPS v2.2.0 (c) RWD,CDP,1999,2009,2010,2013\n"
+    fprintf(stderr,"CDP MCTOOLS: SFPROPS v2.2.1 (c) RWD,CDP,1999,2009,2010,2013,2023\n"
                     "Display soundfile details, with WAVE-EX speaker positions\n"
-                    "\n\tusage: sfprops infile\n");
+                    "\n\tusage: sfprops [-c | -d | -r] infile\n");
+    fprintf(stderr,"\tflag options for single data report\n");
+    fprintf(stderr,"\t-c: print number of channels in file\n");
+    fprintf(stderr,"\t-d: print duration (secs) of file\n");
+    fprintf(stderr,"\t-r: print sample rate of file\n");
 }
 
  
@@ -110,34 +115,90 @@ int main(int argc, char **argv)
     int res,peaktime,speakermask = 0;
     float fmaxamp;
     int lmaxamp;
-    
-    /* CDP version number */
-    if(argc==2 && (stricmp(argv[1],"--version")==0)){
-        printf("2.2.0.\n");
-        return 0;
-    }
+    unsigned int do_singleflag = 0;
+    unsigned int wantsr = 0, wantdur = 0,wantchans = 0;
     
     if(argc< 2){
         usage();
         exit(1);
     }
+    /* CDP version number */
+    if(argc==2 && (stricmp(argv[1],"--version")==0)){
+        printf("2.2.1.\n");
+        return 0;
+    }
+    //RWD new, for TV scripting
+    if(argc>2 && argv[1][0] == '-'){
+        unsigned char uiflag = 0;
+        if(argv[1][1] == '\0'){
+            fprintf(stderr,"no flag option specified\n");
+            return 0;
+        }
+        else {
+            do_singleflag = 1;
+            uiflag = argv[1][1];
+            switch(uiflag){
+                case 'c':
+                    wantchans = 1;
+                    break;
+                case 'r':
+                    wantsr = 1;
+                    break;
+                case 'd':
+                    wantdur = 1;
+                    break;
+                default:
+                    fprintf(stderr,"unrecognised flag %s\n",argv[1]);
+                    return 0;
+                    break;
+            }
+        }
+        argv++;
+        argc--;
+    }
+
     if(sflinit("sfprops")){
-        fprintf(stderr,"SFPROPS: unable to initialize CDP Sound Filing System\n");
+        if(do_singleflag)
+            printf("0\n");
+        else
+            fprintf(stderr,"SFPROPS: unable to initialize CDP Sound Filing System\n");
         exit(1);
     }
     if((ifd = sndopenEx(argv[1],0,CDP_OPEN_RDONLY)) < 0){
-        fprintf(stderr,"SFPROPS: unable to open infile %s: %s\n",argv[1], sferrstr());
+        if(do_singleflag)
+            printf("0\n");
+        else
+            fprintf(stderr,"SFPROPS: unable to open infile %s: %s\n",argv[1], sferrstr());
         exit(1);
     }
 
     if(!snd_headread(ifd,&props)){
-        fprintf(stderr,"SFPROPS: unable to read infile header\n");
+        if(do_singleflag)
+            printf("0\n");
+        else
+            fprintf(stderr,"SFPROPS: unable to read infile header\n");
         exit(1);
     }
 
     srate = (double) props.srate;
+    if(do_singleflag && wantsr){
+        printf("%u\n",props.srate);
+        sndcloseEx(ifd);
+        return 0;
+    }
     filesize = sndsizeEx(ifd);
     nframes = filesize/ props.chans;        /*assume soundfile for now */
+    if(do_singleflag && wantdur){
+        float dur = nframes / srate;
+        printf("%f\n",dur);
+        sndcloseEx(ifd);
+        return 0;
+    }
+    if(do_singleflag && wantchans){
+        printf("%u\n",props.chans);
+        sndcloseEx(ifd);
+        return 0;
+    }
     name = snd_getfilename(ifd);
     printf("Properties of %s:\n",name);
     printf("File type:  ");
