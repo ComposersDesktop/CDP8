@@ -226,16 +226,16 @@ typedef unsigned long DWORD;
 
 #ifdef NOTDEF
 // moved to sffuncs.h
-#define MSBFIRST        (1)
-#define LSBFIRST        (1)
+# define MSBFIRST        (1)
+# define LSBFIRST        (1)
 /*RWD May 2007:  revise defines to recognise both forms of MAC (__PPC__) */
-#if defined(__I86__) || defined(_X86_) || defined(__i386__) || defined(__i486__) || defined(_IBMR2) || defined(__LITTLE_ENDIAN__)
-#undef MSBFIRST
-#elif defined(M68000) || defined(__sgi) || defined (__ppc__) || defined(__BIG_ENDIAN__)
-#undef LSBFIRST
-#else
-#error  "Unknown byte order for this processor"
-#endif
+# if defined(__I86__) || defined(_X86_) || defined(__i386__) || defined(__i486__) || defined(_IBMR2) || defined(__LITTLE_ENDIAN__)
+#  undef MSBFIRST
+# elif defined(M68000) || defined(__sgi) || defined (__ppc__) || defined(__BIG_ENDIAN__)
+#  undef LSBFIRST
+# else
+#  error  "Unknown byte order for this processor"
+# endif
 
 #if defined(MSBFIRST) && defined(LSBFIRST)
 #error  "Internal: can't be both MSB and LSB"
@@ -642,18 +642,18 @@ doread(struct sf_file *f, char *buf, int cnt)
 }
 #endif
 
-
+/* RWD 31/11/23 : ~msf funcs used to read char strings (TAG name in Aiff/WAVE), lsf to read numbers */
 static int
 read_w_lsf(WORD *wp, struct sf_file *f)
 {
     WORD w;
     if(doread(f, (char *)&w, sizeof(WORD)))
         return 1;
-#ifdef MSBFIRST
-    *wp = REVWBYTES(w);
-#else
+//#ifdef MSBFIRST
+//    *wp = REVWBYTES(w);
+//#else
     *wp = w;
-#endif
+//#endif
     return 0;
 }
 
@@ -663,11 +663,11 @@ read_w_msf(WORD *wp, struct sf_file *f)
     WORD w;
     if(doread(f, (char *)&w, sizeof(WORD)))
         return 1;
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
     *wp = REVWBYTES(w);
-#else
-    *wp = w;
-#endif
+//#else
+//    *wp = w;
+//#endif
     return 0;
 }
 
@@ -677,11 +677,11 @@ read_dw_lsf(DWORD *dwp, struct sf_file *f)
     DWORD dw;
     if(doread(f, (char *)&dw, sizeof(DWORD)))
         return 1;
-#ifdef MSBFIRST
-    *dwp = REVDWBYTES(dw);
-#else
+//#ifdef MSBFIRST
+//    *dwp = REVDWBYTES(dw);
+//#else
     *dwp = dw;
-#endif
+//#endif
     return 0;
 }
 
@@ -691,11 +691,11 @@ read_dw_msf(DWORD *dwp, struct sf_file *f)
     DWORD dw;
     if(doread(f, (char *)&dw, sizeof(DWORD)))
         return 1;
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
     *dwp = REVDWBYTES(dw);
-#else
-    *dwp = dw;
-#endif
+//#else
+//    *dwp = dw;
+//#endif
     return 0;
 }
 
@@ -724,36 +724,36 @@ dowrite(struct sf_file *f, char *buf, int cnt)
 static int
 write_w_lsf(WORD w, struct sf_file *f)
 {
-#ifdef MSBFIRST
-    w = REVWBYTES(w);
-#endif
+//#ifdef MSBFIRST
+//    w = REVWBYTES(w);
+//#endif
     return dowrite(f, (char *)&w, sizeof(WORD));
 }
 
 static int
 write_w_msf(WORD w, struct sf_file *f)
 {
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
     w = REVWBYTES(w);
-#endif
+//#endif
     return dowrite(f, (char *)&w, sizeof(WORD));
 }
 
 static int
 write_dw_lsf(DWORD dw, struct sf_file *f)
 {
-#ifdef MSBFIRST
-    dw = REVDWBYTES(dw);
-#endif
+//#ifdef MSBFIRST
+//    dw = REVDWBYTES(dw);
+//#endif
     return dowrite(f, (char *)&dw, sizeof(DWORD));
 }
 
 static int
 write_dw_msf(DWORD dw, struct sf_file *f)
 {
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
     dw = REVDWBYTES(dw);
-#endif
+//#endif
     return dowrite(f, (char *)&dw, sizeof(DWORD));
 }
 
@@ -778,10 +778,10 @@ static int write_peak_lsf(int channels, struct sf_file *f)
         //peak[0] = *pdw;
         peak[0] = ssamp.lsamp;
         peak[1] = f->peaks[i].position;
-#ifdef MSBFIRST
-        peak[0] = REVDWBYTES(peak[0]);
-        peak[1]  = REVDWBYTES(peak[1]);
-#endif
+//#ifdef MSBFIRST
+//        peak[0] = REVDWBYTES(peak[0]);
+//        peak[1]  = REVDWBYTES(peak[1]);
+//#endif
         if(dowrite(f,(char *) peak, 2 * sizeof(DWORD)))
             return 1;
     }
@@ -802,10 +802,10 @@ static int read_peak_lsf(int channels, struct sf_file *f)
     for(i=0;i < channels; i++){
         if(doread(f,(char *)peak,2 * sizeof(DWORD)))
             return 1;
-#ifdef MSBFIRST
-        peak[0] = REVDWBYTES(peak[0]);
-        peak[1]  = REVDWBYTES(peak[1]);
-#endif
+//#ifdef MSBFIRST
+//        peak[0] = REVDWBYTES(peak[0]);
+//        peak[1]  = REVDWBYTES(peak[1]);
+//#endif
         ssamp.lsamp = peak[0];
         //f->peaks[i].value = *(float *) &(peak[0]);          /* RWD TODO: replaced with union */
         f->peaks[i].value = ssamp.fsamp;
@@ -826,10 +826,10 @@ static int write_peak_msf(int channels, struct sf_file *f)
         // peak[0] = *pdw;
         peak[0] = ssamp.lsamp;
         peak[1] = f->peaks[i].position;
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
         peak[0] = REVDWBYTES(peak[0]);
         peak[1]  = REVDWBYTES(peak[1]);
-#endif
+//#endif
         if(dowrite(f,(char *) peak, 2 * sizeof(DWORD)))
             return 1;
         
@@ -846,10 +846,10 @@ static int read_peak_msf(int channels, struct sf_file *f)
     for(i=0;i < channels; i++){
         if(doread(f,(char *)peak,2 * sizeof(DWORD)))
             return 1;
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
         peak[0] = REVDWBYTES(peak[0]);
         peak[1]  = REVDWBYTES(peak[1]);
-#endif
+//#endif
         ssamp.lsamp = peak[0];
         //f->peaks[i].value = *(float *) &(peak[0]);        /* RWD replaced with union */
         f->peaks[i].value = ssamp.fsamp;

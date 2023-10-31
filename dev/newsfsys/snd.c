@@ -1006,28 +1006,28 @@ fgetfloatEx(float *fp, int sfd,int expect_floats)
             mask = _rsf_getbitmask(sfp->fd);
             if(mask==0)
                 return -1;
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
             ssamp.bytes[1] = sfp->next[0];
             ssamp.bytes[2] = sfp->next[1];
             ssamp.bytes[3] = sfp->next[2];
-#else
-            ssamp.bytes[0] = sfp->next[0];
-            ssamp.bytes[1] = sfp->next[1];
-            ssamp.bytes[2] = sfp->next[2];
-#endif
+//#else
+//            ssamp.bytes[0] = sfp->next[0];
+//            ssamp.bytes[1] = sfp->next[1];
+//            ssamp.bytes[2] = sfp->next[2];
+//#endif
             *fp = (float)((double)(ssamp.lsamp & mask) / MAXINT);
             sfp->next += 3;
             break;
         case(SAMP_2424):
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
             ssamp.bytes[1] = sfp->next[0];
             ssamp.bytes[2] = sfp->next[1];
             ssamp.bytes[3] = sfp->next[2];
-#else
-            ssamp.bytes[0] = sfp->next[0];
-            ssamp.bytes[1] = sfp->next[1];
-            ssamp.bytes[2] = sfp->next[2];
-#endif
+//#else
+//            ssamp.bytes[0] = sfp->next[0];
+//            ssamp.bytes[1] = sfp->next[1];
+//            ssamp.bytes[2] = sfp->next[2];
+//#endif
             *fp = (float)((double)(ssamp.lsamp) / MAXINT);
             sfp->next += 3;
             break;
@@ -1106,30 +1106,30 @@ fputfloatEx(float *fp, int sfd)
     case(SAMP_2024):
         /*ssamp.lsamp = (int) floor(0.5 + *fp * MAXINT);*/
         ssamp.lsamp = (int) cdp_round(*fp * MAXINT);
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
         sfp->next[0] = ssamp.bytes[1] & 0xf0;
         sfp->next[1] = ssamp.bytes[2];
         sfp->next[2] = ssamp.bytes[3];
-#else
-        sfp->next[0] = ssamp.bytes[0] & 0xf0;
-        sfp->next[1] = ssamp.bytes[1];
-        sfp->next[2] = ssamp.bytes[2];
-#endif
+//#else
+//        sfp->next[0] = ssamp.bytes[0] & 0xf0;
+//        sfp->next[1] = ssamp.bytes[1];
+//        sfp->next[2] = ssamp.bytes[2];
+//#endif
         sfp->next += 3;
         break;
 
     case(SAMP_2424):
         /*ssamp.lsamp = (int) floor(0.5 + *fp * MAXINT);*/
         ssamp.lsamp = (int) cdp_round(*fp * MAXINT);
-#ifdef LSBFIRST
+//#ifdef LSBFIRST
         sfp->next[0] = ssamp.bytes[1];
         sfp->next[1] = ssamp.bytes[2];
         sfp->next[2] = ssamp.bytes[3];
-#else
-        sfp->next[0] = ssamp.bytes[0];
-        sfp->next[1] = ssamp.bytes[1];
-        sfp->next[2] = ssamp.bytes[2];
-#endif
+//#else
+//        sfp->next[0] = ssamp.bytes[0];
+//        sfp->next[1] = ssamp.bytes[1];
+//        sfp->next[2] = ssamp.bytes[2];
+//#endif
         sfp->next += 3;
         break;
     case(SAMP_LONG):

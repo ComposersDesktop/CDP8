@@ -191,11 +191,12 @@ extern int sf_headread(int fd,SFPROPS *props);
 #define SF_MAGIC        (0x15927624)    /* value of _sfmagic() */
 #define SF_CMAGIC       (0x27182835)    /* magic number for configuration */
 #define SF_UNLKMAGIC    (0x46689275)    /* magic value for rdiskunlck() */
-
+/* RWD 31/11/23 time to eliminate MSBFIRST etc*/
+#if 0
 #define MSBFIRST        (1)
 #define LSBFIRST        (1)
 /* RWD extended set of symbols ! Now works for Mac universal Binary build */
-#if defined(__I86__) || defined(_X86_) || defined(__x86_64) || defined(__i386__) || defined(__i486__) || defined(_IBMR2)
+#if defined(__I86__) || defined(_X86_) || defined(__x86_64) || defined(__ARM64)
 #undef MSBFIRST
 #elif defined(M68000) || defined(__sgi) || defined (__POWERPC__)
 #undef LSBFIRST
@@ -205,6 +206,8 @@ extern int sf_headread(int fd,SFPROPS *props);
 
 #if defined(MSBFIRST) && defined(LSBFIRST)
 #error  "Internal: can't be both MSB and LSB"
+#endif
+
 #endif
 
 #define REVDWBYTES(t)   ( (((t)&0xff) << 24) | (((t)&0xff00) << 8) | (((t)&0xff0000) >> 8) | (((t)>>24) & 0xff) )
