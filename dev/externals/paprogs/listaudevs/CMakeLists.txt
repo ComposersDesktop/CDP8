@@ -18,10 +18,10 @@ else()
 #    NB winmm must appear after any module that references it. Yes, that's weird.
     set(EXTRA_LIBRARIES1 dsound winspool ${PA} winmm ${EXTRA_LIBRARIES})
   else()
-link_directories (/usr/local/lib)
+    link_directories (/usr/local/lib)
     find_library(PA NAMES libportaudio.a)
     set(CMAKE_C_FLAGS "-O3 -Wall -Dlinux -Dunix -fomit-frame-pointer -funroll-loops")
-    set(EXTRA_LIBRARIES1 jack asound pthread ${PA} ${EXTRA_LIBRARIES})
+    set(EXTRA_LIBRARIES1 pthread ${PA} ${EXTRA_LIBRARIES} jack asound)
   endif()
 endif()
 
