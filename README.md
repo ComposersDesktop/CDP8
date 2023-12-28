@@ -1,5 +1,5 @@
 # CDP System Software, Release 8.
-### Version 8.0.1 (Beta)
+### Full release as of 24 October 2023
 
 #### Copyright (c) 2022 Composers Desktop Project Ltd
 
@@ -29,10 +29,11 @@ What's New?
 *  ***PVOCEX*** (.pvx) analysis file support for all pvoc-related programs. This is the standard phase vocoder analysis file format used in Csound. See also the downloadable utilities (Mac, Win32), with example files, in the companion PVXTOOLS distribution:
 *  play program **pvplay** will play  mono/stereo .pvx files.
 *  classic CDP directory utility **dirsf** now recognises .pvx files with format details.
+*  See also Tabula Vigilans (TV): some bugs fixed, full MIDI device I/O now working on Linux.
 
 What's needed?
 
-* Users to build, test, ask questions, report bugs!
+* Developers to get involved (whether CDP8 programs or TV), especially to add new software, create new user interfaces, create libraries, and so many other things we have not thought of. Join the new **cdp-dev** mailing list (see *building.txt* for details); get immediate news of any updates pushed to github.
 
 
-[updated 27/12/2022]
+[updated 28/12/2023]
