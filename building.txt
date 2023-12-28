@@ -29,7 +29,7 @@ Windows:  install the Msys/MinGW linux-like environment.
  
  
  
- MacOS:    install Xcode along with the command line tools. This should also install Git.
+MacOS:    install Xcode along with the command line tools. This should also install Git.
                Otherwise, see: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
            install CMake (see above).
  
@@ -77,4 +77,23 @@ To Build the CDP programs
    All compiled programs will be written to the top-level Release/ directory.
 
    
+
+CDP Developer mailing list
+
+We have recently created this to support all CDP-oriented builders and developers,
+be they focussed on existing code or on new projects.
+
+To subscribe, go to: 
+
+    http://rwdobson.com/mailman/listinfo/cdp-dev_rwdobson.com
+
+and fill in the form as indicated.
+
+Information on any updates to the github repositories will be posted to this list.
+
+
+
+
+
+
    
