@@ -29,11 +29,11 @@ endif()
 
 link_directories(../../lib)
 
-include_directories(../../include ../portaudio/include ../portaudio/src/common /usr/local/include)
+include_directories(${COMMON_DIR} ../../include ../portaudio/include ../portaudio/src/common /usr/local/include)
 if(MINGW)
     add_executable(recsf recsf.c cmakedummy.cpp)
 else()
-    add_executable(recsf recsf.c)
+    add_executable(recsf recsf.c ${COMMON_DIR}/pa_ringbuffer.c)
 endif()
 target_link_libraries(recsf portsf ${EXTRA_LIBRARIES1})
 

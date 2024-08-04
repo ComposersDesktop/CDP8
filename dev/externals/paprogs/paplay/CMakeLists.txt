@@ -30,12 +30,12 @@ else()
 endif()
 
 link_directories(../../lib )
-include_directories(../../include ../include ../portaudio/include ../portaudio/src/common /usr/local/include)
+include_directories(${COMMON_DIR} ../../include ../include ../portaudio/include ../portaudio/src/common /usr/local/include)
 
 if(MINGW)
 add_executable(paplay paplay.c fmhfuncs.c cmakedummy.cpp)
 else()
-add_executable(paplay paplay.c fmhfuncs.c )
+add_executable(paplay paplay.c fmhfuncs.c ${COMMON_DIR}/pa_ringbuffer.c)
 endif()
 target_link_libraries(paplay ${EXTRA_LIBRARIES1})
 

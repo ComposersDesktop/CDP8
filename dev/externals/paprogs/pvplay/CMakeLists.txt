@@ -30,9 +30,9 @@ endif()
 # ../portaudio/lib/.libs
 link_directories( ../../lib  ../../../newsfsys ../../../pvxio2)
 # need /usr/local/include here?
-include_directories(/usr/local/include ../../../newinclude ../include ../portaudio/include ../portaudio/src/common)
+include_directories(${COMMON_DIR} /usr/local/include ../../../newinclude ../include ../portaudio/include ../portaudio/src/common)
 #../portaudio/src/common/pa_ringbuffer.c
-add_executable(pvplay pvplay.cpp pvoc2.cpp fmhfuncs.c pvthreads.cpp mxfft.c)
+add_executable(pvplay pvplay.cpp pvoc2.cpp fmhfuncs.c pvthreads.cpp mxfft.c ${COMMON_DIR}/pa_ringbuffer.c)
 target_link_libraries(pvplay sfsys pvxio2 ${EXTRA_LIBRARIES1})
 
 my_install(pvplay)
