@@ -35,7 +35,13 @@ include_directories(${COMMON_DIR} ../../include ../include ../portaudio/include 
 if(MINGW)
 add_executable(paplay paplay.c fmhfuncs.c cmakedummy.cpp)
 else()
-add_executable(paplay paplay.c fmhfuncs.c ${COMMON_DIR}/pa_mac_core.c ${COMMON_DIR}/pa_ringbuffer.c)
+add_executable(
+        paplay
+        paplay.c
+        fmhfuncs.c
+        ${COMMON_DIR}/pa_ringbuffer.c
+        $<$<PLATFORM_ID:Darwin>:${COMMON_DIR}/pa_mac_core.c>
+)
 endif()
 target_link_libraries(paplay ${EXTRA_LIBRARIES1})
 
