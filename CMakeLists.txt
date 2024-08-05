@@ -255,6 +255,7 @@ endif()
 
 #add_compiler_flags(${LIBCDP_CFLAGS} TARGETS ${CDPLIB})
 
+add_subdirectory(libaaio)
 add_subdirectory(dev)
 
 # # uninstall target

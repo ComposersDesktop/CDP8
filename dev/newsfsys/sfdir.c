@@ -51,7 +51,7 @@ static int
 selfn(const struct dirent *d)
 #else
     static int
-    selfn(struct dirent *d)
+    selfn(const struct dirent *d)
 #endif
 {
     char *dotp = strrchr(d->d_name, '.');

@@ -1,6 +1,11 @@
 # CDP System Software, Release 8.
 ### Full release as of 24 October 2023
 
+
+This is a fork to make the commandline utils work for macOS arm64 and raspberry pi
+requires portaudio v19.7.0
+
+
 #### Copyright (c) 2022 Composers Desktop Project Ltd
 
 ![The CDP logo]( http://composersdesktop.com/logo.gif) 

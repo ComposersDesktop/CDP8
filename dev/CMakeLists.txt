@@ -1,5 +1,7 @@
 find_library(ALSA_LIBRARY alsa)
 
+set(AAIOLIB aaio)
+
 add_subdirectory(cdp2k)
 add_subdirectory(newsfsys)
 add_subdirectory(pvxio2)
