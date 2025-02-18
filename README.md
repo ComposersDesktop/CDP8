@@ -1,7 +1,7 @@
 # CDP System Software, Release 8.
 ### Full release as of 24 October 2023
 
-#### Copyright (c) 2022 Composers Desktop Project Ltd
+#### Copyright (c) 2022 Composers Desktop Project
 
 ![The CDP logo]( http://composersdesktop.com/logo.gif) 
 
