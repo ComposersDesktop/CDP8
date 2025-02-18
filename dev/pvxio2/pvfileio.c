@@ -1482,7 +1482,7 @@ int32_t pvoc_seek_mcframe(int32_t ifd, int32_t offset, int32_t mode)
         fprintf(stderr,"pvoc_seek_mcframe: files[%d]->nFrames = %d\n",ifd,files[ifd]->nFrames);
 #endif
         files[ifd]->FramePos = files[ifd]->nFrames - (offset * files[ifd]->fmtdata.nChannels);
-        files[ifd]->curpos = files[ifd]->FramePos * files[ifd]->pvdata.dwFrameAlign;
+        files[ifd]->curpos = files[ifd]->datachunkoffset + files[ifd]->FramePos * files[ifd]->pvdata.dwFrameAlign;
 #ifdef _DEBUG
         fprintf(stderr,"pvoc_seek_mcframe: got curpos = %d\n",files[ifd]->curpos);
 #endif
