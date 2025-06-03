@@ -1,6 +1,6 @@
 # CDP System Software, Release 8.
 
-> Este fork aplica cambios mínimos para permitir la compilación en macOS con Apple Silicon.
+> Fork adaptado para macOS ARM64. Requiere PortAudio (solo si se usan los módulos correspondientes). Guía de compilación [aquí](README_BUILD_ARM.md).
 
 ### Full release as of 24 October 2023
 
