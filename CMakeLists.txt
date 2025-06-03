@@ -8,7 +8,6 @@ project(CDP)
 
 set(LIBAAIO_TAR "${CMAKE_SOURCE_DIR}/libaaio/libaaio-0.3.1.tar.bz2")
 set(LIBAAIO_DIR "${CMAKE_SOURCE_DIR}/libaaio/libaaio-0.3.1")
-include_directories(${LIBAAIO_DIR})
 
 if(NOT EXISTS "${LIBAAIO_DIR}/CMakeLists.txt")
   message(STATUS "Descomprimiendo libaaio-0.3.1.tar.bz2...")
@@ -26,22 +25,25 @@ else()
   message(STATUS "libaaio-0.3.1 ya descomprimido")
 endif()
 
+add_subdirectory(libaaio)
+set(AAIOLIB aaio)
+
 # -----------------------------
-# INCLUDES Y CONFIGURACIONES
+# CONFIGURACIONES BÁSICAS
 # -----------------------------
 
 if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
   set(CMAKE_COMPILER_IS_CLANG 1)
 endif()
 
-message(STATUS "${CMAKE_HOME_DIRECTORY}")
+message(STATUS "CMake Home Directory: ${CMAKE_HOME_DIRECTORY}")
 message(STATUS "Installing to ${CMAKE_INSTALL_PREFIX}")
 
 set(CMAKE_CXX_FLAGS_RELEASE "-O3 -std=c++11 -stdlib=libc++")
 set(CMAKE_C_FLAGS_RELEASE "-O3")
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_HOME_DIRECTORY}/Release")
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/Release")
 message(STATUS "Building to ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}")
 
 set(EXECUTABLE_INSTALL_DIR "bin")
@@ -52,7 +54,6 @@ endfunction()
 
 set(LIBRARY_INSTALL_DIR "lib")
 message(STATUS "LIBRARY INSTALL DIR: ${LIBRARY_INSTALL_DIR}")
-
 
 # -----------------------------
 # DEPENDENCIAS Y CHECKS
@@ -101,14 +102,13 @@ if(APPLE)
   set(CMAKE_OSX_ARCHITECTURES arm64)
 endif()
 
-find_file(CUSTOM_CMAKE "Custom.cmake" HINTS ${CMAKE_HOME_DIRECTORY})
+find_file(CUSTOM_CMAKE "Custom.cmake" HINTS ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_HOME_DIRECTORY})
 if(CUSTOM_CMAKE)
   message(STATUS "Including Custom.cmake file: ${CUSTOM_CMAKE}")
   include(${CUSTOM_CMAKE})
 else()
   message(STATUS "Not using Custom.cmake file.")
 endif()
-
 
 # -----------------------------
 # FLAGS ADICIONALES
@@ -127,7 +127,6 @@ if(CMAKE_COMPILER_IS_GNUCC OR CMAKE_COMPILER_IS_GNUCXX)
   add_definitions("-Wno-format")
 endif()
 
-
 # -----------------------------
 # DIRECTORIOS DE INCLUDES
 # -----------------------------
@@ -136,41 +135,9 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(./dev/include)
 include_directories(./dev/newinclude)
 
-include_directories(${CMAKE_SOURCE_DIR}/externals/portaudio)
-
-# -----------------------------
-# PORTAUDIO (usando Brew)
-# -----------------------------
-
-find_path(PORTAUDIO_INCLUDE_DIR portaudio.h
-  PATHS /opt/homebrew/include /usr/local/include /usr/include
-)
-
-find_library(PORTAUDIO_LIBRARY
-  NAMES portaudio
-  PATHS /opt/homebrew/lib /usr/local/lib /usr/lib
-)
-
-if(PORTAUDIO_INCLUDE_DIR AND PORTAUDIO_LIBRARY)
-  message(STATUS "PortAudio encontrado en: ${PORTAUDIO_INCLUDE_DIR}")
-  include_directories(${PORTAUDIO_INCLUDE_DIR})
-else()
-  message(FATAL_ERROR "No se encontró PortAudio. Instálalo con: brew install portaudio")
-endif()
-
-
 # -----------------------------
 # FLAGS POR PLATAFORMA
 # -----------------------------
-
-if(WIN32 AND NOT MSVC)
-  if(EXISTS "C:/MinGW/include")
-    include_directories(C:/MinGW/include)
-  else()
-    MESSAGE(STATUS "MinGW include dir not found")
-  endif()
-  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--add-stdcall-alias")
-endif()
 
 if(WIN32)
   set(CMAKE_SHARED_LIBRARY_PREFIX "")
@@ -179,10 +146,17 @@ if(WIN32)
     kernel32 user32 ole32 winspool odbc32 gdi32
     comdlg32 advapi32 shell32 oleaut32 uuid)
 else()
-  set(EXTRA_LIBRARIES "m")
+  set(EXTRA_LIBRARIES m)
 endif()
 
-list(APPEND EXTRA_LIBRARIES ${LIBCDP_LIBS})
+if(WIN32 AND NOT MSVC)
+  if(EXISTS "C:/MinGW/include")
+    include_directories(C:/MinGW/include)
+  else()
+    MESSAGE(STATUS "MinGW include dir not found at C:/MinGW/include")
+  endif()
+  set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -Wl,--add-stdcall-alias")
+endif()
 
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
   set(LINUX YES)
@@ -204,47 +178,47 @@ TEST_BIG_ENDIAN(BIG_ENDIAN)
 SET(BUILD_SHARED_LIBS OFF)
 
 # -----------------------------
-# PAPROGS (PortAudio programs)
+# PORTAUDIO (OPCIONAL)
 # -----------------------------
+# Activa USE_LOCAL_PORTAUDIO si necesitas compilar los programas que usan PortAudio.
+# Requiere tener PortAudio instalado en el sistema (ej: brew install portaudio en macOS).
+# Si está OFF, se omiten todos los programas relacionados con PortAudio.
 
-option(USE_LOCAL_PORTAUDIO "Build and use PA programs" OFF)
+option(USE_LOCAL_PORTAUDIO "Build and use PA programs" ON)
 
 if(USE_LOCAL_PORTAUDIO)
-  message(STATUS "paprogs to be built")
+  message(STATUS "USE_LOCAL_PORTAUDIO está ON: Se construirán los paprogs y se buscará PortAudio.")
 
-  # Cabeceras internas de PortAudio para RingBuffer
   include_directories(${CMAKE_SOURCE_DIR}/externals/portaudio)
 
-  # Busca PortAudio instalado en el sistema
   find_path(PORTAUDIO_INCLUDE_DIR portaudio.h
     PATHS /opt/homebrew/include /usr/local/include /usr/include
+    NO_DEFAULT_PATH
   )
 
   find_library(PORTAUDIO_LIBRARY
     NAMES portaudio
     PATHS /opt/homebrew/lib /usr/local/lib /usr/lib
+    NO_DEFAULT_PATH
   )
 
   if(PORTAUDIO_INCLUDE_DIR AND PORTAUDIO_LIBRARY)
-    message(STATUS "PortAudio encontrado en: ${PORTAUDIO_INCLUDE_DIR}")
+    message(STATUS "PortAudio encontrado para paprogs en: ${PORTAUDIO_INCLUDE_DIR}")
     include_directories(${PORTAUDIO_INCLUDE_DIR})
-    list(APPEND LIBCDP_LIBS ${PORTAUDIO_LIBRARY})
 
-    # Añadir biblioteca interna para RingBuffer
     add_library(portaudio_ringbuffer STATIC
       ${CMAKE_SOURCE_DIR}/externals/portaudio/pa_ringbuffer.c
     )
     target_include_directories(portaudio_ringbuffer PUBLIC
       ${CMAKE_SOURCE_DIR}/externals/portaudio
     )
-
-    # Añadir esta lib al resto
-    list(APPEND LIBCDP_LIBS portaudio_ringbuffer)
   else()
-    message(FATAL_ERROR "No se encontró PortAudio. Instálalo con: brew install portaudio")
+    message(FATAL_ERROR "USE_LOCAL_PORTAUDIO está ON pero no se encontró PortAudio. Por favor, instálalo (ej: brew install portaudio) o desactiva la opción USE_LOCAL_PORTAUDIO.")
   endif()
 else()
-  message(STATUS "paprogs not built")
+  message(STATUS "USE_LOCAL_PORTAUDIO está OFF: No se construirán los paprogs, se omite la búsqueda de PortAudio.")
+  set(PORTAUDIO_INCLUDE_DIR "")
+  set(PORTAUDIO_LIBRARY "")
 endif()
 
 # -----------------------------
@@ -253,17 +227,23 @@ endif()
 
 set(LIBCDP_LIBS)
 
-if(AAIOLIB)
+if(AAIOLIB AND TARGET ${AAIOLIB})
   list(APPEND LIBCDP_LIBS ${AAIOLIB})
 endif()
 
 if(USE_LOCAL_PORTAUDIO)
-  list(APPEND LIBCDP_LIBS ${PORTAUDIO_LIBRARY})
-  list(APPEND LIBCDP_LIBS portaudio_ringbuffer)
+  if(PORTAUDIO_LIBRARY)
+    list(APPEND LIBCDP_LIBS ${PORTAUDIO_LIBRARY})
+  endif()
+  if(TARGET portaudio_ringbuffer)
+    list(APPEND LIBCDP_LIBS portaudio_ringbuffer)
+  endif()
 endif()
 
 if(WIN32)
-  list(APPEND LIBCDP_LIBS "${CDP_WINDOWS_LIBRARIES}")
+  if(CDP_WINDOWS_LIBRARIES)
+    list(APPEND LIBCDP_LIBS ${CDP_WINDOWS_LIBRARIES})
+  endif()
 endif()
 
 if(LINUX)
@@ -290,25 +270,11 @@ if(WIN32)
   add_definitions(-DWIN32 -D_WIN32)
 endif()
 
-
 # -----------------------------
 # SUBDIRECTORIOS
 # -----------------------------
+
 add_subdirectory(dev)
-add_subdirectory(libaaio)
-set(AAIOLIB aaio)
-list(APPEND LIBCDP_LIBS ${AAIOLIB})
-
-
-# -----------------------------
-# OPCIONAL: etags
-# -----------------------------
-
-if(UNIX)
-  add_custom_target(tags COMMAND etags `find ${CMAKE_CURRENT_SOURCE_DIR} -name \\*.cc -or -name \\*.hh -or -name \\*.cpp -or -name \\*.h -or -name \\*.c | grep -v " " `)
-  add_custom_target(etags DEPENDS tags)
-endif()
-
 
 # -----------------------------
 # PACKAGING
