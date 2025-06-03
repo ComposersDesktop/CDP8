@@ -1,5 +1,7 @@
 build/
 Release/
+libaaio/libaaio-0.3.1/
+
 *.o
 *.a
 *.so
@@ -26,3 +28,6 @@ install_manifest.txt
 
 *.tar.gz
 *.zip
+
+
+
