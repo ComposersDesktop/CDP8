@@ -155,10 +155,10 @@ int main(int argc,char *argv[])
     }
     if(!sloom) {
         if(argc == 1) {
-            usage1();   
+            usage1();
             return(FAILED);
         } else if(argc == 2) {
-            usage2(argv[1]);    
+            usage2(argv[1]);
             return(FAILED);
         }
     }
@@ -203,12 +203,12 @@ int main(int argc,char *argv[])
         //parse_TK_data() =
         if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-            return(exit_status);         
+            return(exit_status);
         }
     }
     //ap = dz->application;
 
-    // parse_infile_and_hone_type() = 
+    // parse_infile_and_hone_type() =
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -218,19 +218,19 @@ int main(int argc,char *argv[])
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
-    if((exit_status = open_first_infile(cmdline[0],dz))<0) {    
-        print_messages_and_close_sndfiles(exit_status,is_launched,dz);  
+    if((exit_status = open_first_infile(cmdline[0],dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
     cmdlinecnt--;
     cmdline++;
     if(dz->mode == 1 || dz->mode == 2) {
         if((exit_status = handle_extra_infiles(&cmdline,&cmdlinecnt,dz))<0) {
-            print_messages_and_close_sndfiles(exit_status,is_launched,dz);      
+            print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
     }
-    // handle_outfile() = 
+    // handle_outfile() =
     if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -299,15 +299,15 @@ int main(int argc,char *argv[])
 
 int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist)
 {
-    ap->special_data   = (char)special_data;       
+    ap->special_data   = (char)special_data;
     ap->param_cnt      = (char)paramcnt;
     ap->max_param_cnt  = (char)maxparamcnt;
     if(ap->max_param_cnt>0) {
-        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {    
+        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->param_list,paramlist); 
+        strcpy(ap->param_list,paramlist);
     }
     return(FINISHED);
 }
@@ -328,16 +328,16 @@ int set_vflgs
             sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->option_flags,optflags); 
+        strcpy(ap->option_flags,optflags);
     }
-    ap->vflag_cnt = (char) vflagcnt;           
+    ap->vflag_cnt = (char) vflagcnt;
     ap->variant_param_cnt = (char) vparamcnt;
     if(vflagcnt) {
         if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->variant_list,varlist);       
+        strcpy(ap->variant_list,varlist);
         if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
             return(MEMORY_ERROR);
@@ -357,30 +357,30 @@ int application_init(dataptr dz)
     int tipc, brkcnt;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
-        initialise_vflags(dz);    
+        initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
-        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
             return(exit_status);
     }
     brkcnt = tipc;
     //THERE ARE NO INPUTFILE brktables USED IN THIS PROCESS
     if(brkcnt>0) {
-        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
             return(exit_status);
     }
-    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
-        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
-        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
             return(exit_status);
-    }                                                      
-    if((exit_status = mark_parameter_types(dz,ap))<0)     
+    }
+    if((exit_status = mark_parameter_types(dz,ap))<0)
         return(exit_status);
     
     // establish_infile_constants() replaced by
@@ -588,19 +588,19 @@ int setup_newtex_application(dataptr dz)
     ap = dz->application;
     // SEE parstruct FOR EXPLANATION of next 2 functions
     switch(dz->mode) {
-    case(0): 
+    case(0):
         if((exit_status = set_param_data(ap,NTEX_TRANPOS,9,5,"diDDi0000"))<0)
             return(FAILED);
         if((exit_status = set_vflgs(ap,"sneEcCr",7,"dIididd","xj",2,0,"00"))<0)
             return(exit_status);
         break;
-    case(1): 
+    case(1):
         if((exit_status = set_param_data(ap,0,9,6,"diDDid000"))<0)
             return(FAILED);
         if((exit_status = set_vflgs(ap,"sneEcCr",7,"diididd","xj",2,0,"00"))<0)
             return(exit_status);
         break;
-    case(2): 
+    case(2):
         if((exit_status = set_param_data(ap,0,9,8,"diDDi0DDD"))<0)
             return(FAILED);
         if((exit_status = set_vflgs(ap,"sneEcCr",7,"diididd","xj",2,0,"00"))<0)
@@ -611,17 +611,17 @@ int setup_newtex_application(dataptr dz)
     dz->has_otherfile = FALSE;
     // assign_process_logic -->
     switch(dz->mode) {
-    case(0): 
+    case(0):
         dz->input_data_type = SNDFILES_ONLY;
         break;
-    case(1): 
+    case(1):
         dz->input_data_type = MANY_SNDFILES;
         break;
-    case(2): 
+    case(2):
         dz->input_data_type = ONE_OR_MANY_SNDFILES;
         break;
     }
-    dz->process_type    = UNEQUAL_SNDFILE;  
+    dz->process_type    = UNEQUAL_SNDFILE;
     dz->outfiletype     = SNDFILE_OUT;
     return application_init(dz);    //GLOBAL
 }
@@ -763,14 +763,14 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             return(DATA_ERROR);
         }
         switch(cnt) {
-        case(1):    
+        case(1):
             if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
                 sprintf(errstr,"Cannot read process no. sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
 
-        case(2):    
+        case(2):
             if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
                 sprintf(errstr,"Cannot read mode no. sent from TK\n");
                 return(DATA_ERROR);
@@ -783,7 +783,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             //ap = dz->application;
             break;
 
-        case(3):    
+        case(3):
             if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
                 sprintf(errstr,"Cannot read infilecnt sent from TK\n");
                 return(DATA_ERROR);
@@ -795,137 +795,137 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
                 return(exit_status);
             break;
-        case(INPUT_FILETYPE+4): 
+        case(INPUT_FILETYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
                 sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FILESIZE+4): 
+        case(INPUT_FILESIZE+4):
             if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = filesize;   
+            dz->insams[0] = filesize;
             break;
-        case(INPUT_INSAMS+4):   
+        case(INPUT_INSAMS+4):
             if(sscanf(argv[cnt],"%d",&insams)!=1) {
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams; 
+            dz->insams[0] = insams;
             break;
-        case(INPUT_SRATE+4):    
+        case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
                 sprintf(errstr,"Cannot read srate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_CHANNELS+4): 
+        case(INPUT_CHANNELS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
                 sprintf(errstr,"Cannot read channels sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_STYPE+4):    
+        case(INPUT_STYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
                 sprintf(errstr,"Cannot read stype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGSTYPE+4):    
+        case(INPUT_ORIGSTYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
                 sprintf(errstr,"Cannot read origstype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGRATE+4): 
+        case(INPUT_ORIGRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
                 sprintf(errstr,"Cannot read origrate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MLEN+4): 
+        case(INPUT_MLEN+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
                 sprintf(errstr,"Cannot read Mlen sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DFAC+4): 
+        case(INPUT_DFAC+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
                 sprintf(errstr,"Cannot read Dfac sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGCHANS+4):    
+        case(INPUT_ORIGCHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_SPECENVCNT+4):   
+        case(INPUT_SPECENVCNT+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
                 sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->specenvcnt = dz->infile->specenvcnt;
             break;
-        case(INPUT_WANTED+4):   
+        case(INPUT_WANTED+4):
             if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
                 sprintf(errstr,"Cannot read wanted sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_WLENGTH+4):  
+        case(INPUT_WLENGTH+4):
             if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
                 sprintf(errstr,"Cannot read wlength sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_OUT_CHANS+4):    
+        case(INPUT_OUT_CHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
                 sprintf(errstr,"Cannot read out_chans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
             /* RWD these chanegs to samps - tk will have to deal with that! */
-        case(INPUT_DESCRIPTOR_BYTES+4): 
+        case(INPUT_DESCRIPTOR_BYTES+4):
             if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
                 sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_IS_TRANSPOS+4):  
+        case(INPUT_IS_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
                 sprintf(errstr,"Cannot read is_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_TRANSPOS+4):    
+        case(INPUT_COULD_BE_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
                 sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_PITCH+4):   
+        case(INPUT_COULD_BE_PITCH+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
                 sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DIFFERENT_SRATES+4): 
+        case(INPUT_DIFFERENT_SRATES+4):
             if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
                 sprintf(errstr,"Cannot read different_srates sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DUPLICATE_SNDS+4):   
+        case(INPUT_DUPLICATE_SNDS+4):
             if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
                 sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_BRKSIZE+4):  
+        case(INPUT_BRKSIZE+4):
             if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
                 sprintf(errstr,"Cannot read brksize sent from TK\n");
                 return(DATA_ERROR);
@@ -962,74 +962,74 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 break;
             }
             break;
-        case(INPUT_NUMSIZE+4):  
+        case(INPUT_NUMSIZE+4):
             if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
                 sprintf(errstr,"Cannot read numsize sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_LINECNT+4):  
+        case(INPUT_LINECNT+4):
             if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
                 sprintf(errstr,"Cannot read linecnt sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ALL_WORDS+4):    
+        case(INPUT_ALL_WORDS+4):
             if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
                 sprintf(errstr,"Cannot read all_words sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ARATE+4):    
+        case(INPUT_ARATE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
                 sprintf(errstr,"Cannot read arate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FRAMETIME+4):    
+        case(INPUT_FRAMETIME+4):
             if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
                 sprintf(errstr,"Cannot read frametime sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->frametime = (float)dummy;
             break;
-        case(INPUT_WINDOW_SIZE+4):  
+        case(INPUT_WINDOW_SIZE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
                 sprintf(errstr,"Cannot read window_size sent from TK\n");
                     return(DATA_ERROR);
             }
             break;
-        case(INPUT_NYQUIST+4):  
+        case(INPUT_NYQUIST+4):
             if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
                 sprintf(errstr,"Cannot read nyquist sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DURATION+4): 
+        case(INPUT_DURATION+4):
             if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
                 sprintf(errstr,"Cannot read duration sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINBRK+4):   
+        case(INPUT_MINBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
                 sprintf(errstr,"Cannot read minbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXBRK+4):   
+        case(INPUT_MAXBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
                 sprintf(errstr,"Cannot read maxbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINNUM+4):   
+        case(INPUT_MINNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
                 sprintf(errstr,"Cannot read minnum sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXNUM+4):   
+        case(INPUT_MAXNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
                 sprintf(errstr,"Cannot read maxnum sent from TK\n");
                 return(DATA_ERROR);
@@ -1048,7 +1048,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 
     if(true_cnt)
         cnt = true_cnt;
-    *cmdlinecnt = 0;        
+    *cmdlinecnt = 0;
 
     while(cnt < argc) {
         if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
@@ -1124,7 +1124,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
     return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz) 
+int read_special_data(char *str,dataptr dz)
 {
     return(FINISHED);
 }
@@ -1164,7 +1164,7 @@ int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{   
+{
     int n;
     if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
@@ -1180,7 +1180,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     }
     if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -1207,9 +1207,8 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
 
 int usage2(char *str)
 {
-    int k;
-    if(!strcmp(str,"newtex")) {
-        fprintf(stdout,
+    if (!strcmp(str, "newtex")) {
+        fprintf(stderr,
         "USAGE:\n"
         "newtex newtex 1 inf outf transposes dur chans maxrange step spacetype\n"
         "    [-ssplice] [-nnumber] [-x] [-rrotspeed] [-j] [-efrom -Etime] [-cto -Ctime]\n"
@@ -1236,7 +1235,7 @@ int usage2(char *str)
         "DUR       Duration of output sound.\n"
         "CHANS     Number of output channels.\n"
         "MAXRANGE  (Mode 0) Range of transpositions of input (in 8vas).\n"
-        "          (Mode 1) Number of simultaneous soundings of any src.\n"   
+        "          (Mode 1) Number of simultaneous soundings of any src.\n"
         "STEP      Average time between changes to stream-content of output.\n"
         "SPLICE    Splice-lengths for component entry and exit, in mS.\n"
         "NUMBER    Number of components chosen for each event.\n"
@@ -1250,42 +1249,35 @@ int usage2(char *str)
         "ROTSPEED  rotation speed (for certain spatialisation types).\n"
         "-e  -E    (Emerge) sound emerges from channel \"from\" over time \"time\" at start.\n"
         "-c  -C    (Converge) Sound converges to channel \"to\" over time \"time\" at end.\n"
-        "NB: Flags with NO params must be placed AFTER any flags WITH params, on the cmdline.\n" 
+        "NB: Flags with NO params must be placed AFTER any flags WITH params, on the cmdline.\n"
         "MAXRANGE, STEP, NUMBER, LOC, AMB and GSTEP can vary over time.\n"
         "\n"
-        "Hit key 's' to continue to \"SPACETYPE\" information, or 'e' to exit.\n");
-
-        while((k = getch())!='s' && k != 'e')
-            ;
-        if(k == 's') {
-            fprintf(stderr,
-            "\n"    
-            "SPACETYPE options.\n"  
-            "\n"    
-            "0   Spatial position set at random.\n" 
-            "\n"    
-            "(For 8-channel output only)\n"
-            "\n"    
-            "1   Positions alternate between Left and Right sides, but are otherwise random.\n" 
-            "2   Positions alternate between Front and Back, but are otherwise random.\n"
-            "3   Rotating clockwise or anticlockwise.\n"    
-            "4   Random permutations of all 8 channels.\n"  
-            "5   ... plus all possible pairs of channels.\n"    
-            "6   ... plus all possible meaningful small and large triangles.\n" 
-            "7   ... plus square, diamond and all-at-once.\n"   
-            "      In types 4 to 7, all members of perm used before next perm starts.\n"    
-            "8   Alternate between all-left and all-right.\n"   
-            "9   Alternate between all-front and all-back.\n"   
-            "10  Alternate between all-square and all-diamond.\n"   
-            "11  Rotate triangle formed by lspkrs 2-apart clockwise.\n" 
-            "12  Rotate triangle formed by lspkrs 3-apart clockwise.\n" 
-            "13  Rotate triangle formed by lspkrs 2-apart anticlockwise.\n" 
-            "14  Rotate triangle formed by lspkrs 3-apart anticlockwise.\n");
-        }
-    } else
-        fprintf(stdout,"Unknown option '%s'\n",str);
+        "SPACETYPE options:\n"
+        "0   Spatial position set at random.\n"
+        "(For 8-channel output only)\n"
+        "1   Positions alternate between Left and Right sides, but are otherwise random.\n"
+        "2   Positions alternate between Front and Back, but are otherwise random.\n"
+        "3   Rotating clockwise or anticlockwise.\n"
+        "4   Random permutations of all 8 channels.\n"
+        "5   ... plus all possible pairs of channels.\n"
+        "6   ... plus all possible meaningful small and large triangles.\n"
+        "7   ... plus square, diamond and all-at-once.\n"
+        "      In types 4 to 7, all members of perm used before next perm starts.\n"
+        "8   Alternate between all-left and all-right.\n"
+        "9   Alternate between all-front and all-back.\n"
+        "10  Alternate between all-square and all-diamond.\n"
+        "11  Rotate triangle formed by lspkrs 2-apart clockwise.\n"
+        "12  Rotate triangle formed by lspkrs 3-apart clockwise.\n"
+        "13  Rotate triangle formed by lspkrs 2-apart anticlockwise.\n"
+        "14  Rotate triangle formed by lspkrs 3-apart anticlockwise.\n"
+        );
+    } else {
+        fprintf(stdout, "Unknown option '%s'\n", str);
+    }
     return(USAGE_ONLY);
 }
+
+/**************************** usage3 *************************/
 
 int usage3(char *str1,char *str2)
 {
@@ -1390,7 +1382,7 @@ int newtex_param_preprocess (int **perm,int **permon,int **permoff,int **superpe
  *  address 0p|1                (mpcnt)+1       | (mpcnt*2)+2    |          |
  *          |t|                 |               (mpcnt*2)+1      |          |
  *          |r|                 |               | | (mpcnt*2)+3  (mpcnt*3)+4|
- *  lengths | | maxsteps        |   maxsteps    | |m| | linelen of srcdata 
+ *  lengths | | maxsteps        |   maxsteps    | |m| | linelen of srcdata
  *          |t|                                 |t|p|t|
  *          |o|                                 |o|c|o|
  *          |t|                                 |t|n|t|
@@ -1403,7 +1395,7 @@ int newtex_param_preprocess (int **perm,int **permon,int **permoff,int **superpe
  *                                                                | | | infileno associated with stream
  *                                                                | | | | itabptr(integer pointer to input buffers) MODE 1 only
  *                                                                | | | | | lastloc (MODE 2/3)
- * iparray  |-----------------|-----------------|-----------------|-| | | (mpcnt*3)+4 
+ * iparray  |-----------------|-----------------|-----------------|-| | | (mpcnt*3)+4
  *          | on-off flags    | leftmost chan   |       spo       | | | (mpcnt*3)+3
  *          |   (mpcnt)       |    (mpcnt)      |     (mpcnt)     | | (mpcnt*3)+2   MODE 2/3    | |
  *          |                 |                 |                 | (mpcnt*3)+1     (readpos)   special_onoff2
@@ -1413,14 +1405,14 @@ int newtex_param_preprocess (int **perm,int **permon,int **permoff,int **superpe
  *                                                                | mpcnt | | |                 | |
  *                                                                | | mpcnt | |     maxsteps    mpcnt
  *  (splcntrs = splice counters)                                  | | | mpcnt |                 | |
- *  (spo = orig values of splice counters)                        | | | | mpcnt 
+ *  (spo = orig values of splice counters)                        | | | | mpcnt
  *  (mpcnt = max number of streams)                               | | | | | mpcnt
  *  (maxsteps = total number of timesteps in process)
  */
 
     dz->temp_sampsize = (partialscnt * 2) + 4;  //  Remember base of transpos/level data
 
-//  A pointer for every src and every src transposition (this is a float-pointer, interpolating in input buffers)       
+//  A pointer for every src and every src transposition (this is a float-pointer, interpolating in input buffers)
     if((dz->parray[0] = (double *)malloc(dz->itemcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for sine table pointers.\n");
         return(MEMORY_ERROR);
@@ -1721,7 +1713,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
     total_partialcnt = partialcnt;
 /******************************** ARRAYS ********************************
  *
- * MODE 0 arrays                                    | | 
+ * MODE 0 arrays                                    | |
  * pcnt = partialcnt mpcnt = maxpartialcnt          positions
  * (partials+all transpositions)                  | | |
  *          | |                                   current
@@ -1749,17 +1741,17 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
  *                                                                | | | infileno associated with stream
  *                                                                | | | | itabptr(integer pointer to input buffers) MODE 1 only
  *                                                                | | | | | |
- * iparray  |-----------------|-----------------|-----------------|-| | | (mpcnt*3)+4 
+ * iparray  |-----------------|-----------------|-----------------|-| | | (mpcnt*3)+4
  *          | on-off flags    | leftmost chan   |       spo       | | | (mpcnt*3)+3
  *          |   (mpcnt)       |    (mpcnt)      |     (mpcnt)     | | (mpcnt*3)+2
- *          |                 |                 |                 | (mpcnt*3)+1    MODE 2/3 (readpos) 
+ *          |                 |                 |                 | (mpcnt*3)+1    MODE 2/3 (readpos)
  *  address 0               mpcnt             mpcnt*2             (mpcnt*3) | |-----------------|
  *          |                 |                 |                 | | | | | (mpcnt*3)+5         |
  *  lengths |   maxsteps      |  maxsteps       |   maxsteps      mpcnt | | | (mpcnt*3)+6       |
  *                                                                | mpcnt | | |                 |
  *                                                                | | mpcnt | |     maxsteps    |
  *  (splcntrs = splice counters)                                  | | | mpcnt |                 |
- *  (spo = orig values of splice counters)                        | | | | mpcnt 
+ *  (spo = orig values of splice counters)                        | | | | mpcnt
  *  (mpcnt = max number of streams)                               | | | | | mpcnt
  *  (maxsteps = total number of timesteps in process)
  */
@@ -1802,7 +1794,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
         n++;
     }
     switch(dz->mode) {
-    case(1):                                //  Set delays between parallel streams     
+    case(1):                                //  Set delays between parallel streams
         k = partialcnt/dz->infilecnt;
         for(n=0;n < dz->infilecnt;n++) {    //  Where more than 1 use of a file
             sublen = dz->iparam[NTEX_DEL];
@@ -1839,7 +1831,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
             sprintf(errstr,"Sound read error with input soundfile %d: %s\n",n+1,sferrstr());
             return(SYSTEM_ERROR);
         }
-    }   
+    }
     nexttime = 0.0;         //  initialise "nexttime" to trigger 1st setting of partials
     steptimes[0] = nexttime;//  initial steptime set to zero
     stepcnt = 0;
@@ -1937,7 +1929,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                 //  If Jump flag set, do spatialisation for ALL partials FIRST
                 
                 special_onoff = 0;
-                if(dz->vflag[NTX_JUMP]) {               
+                if(dz->vflag[NTX_JUMP]) {
                     if(dz->iparam[NTEX_EFROM] && (time < dz->param[NTEX_ETIME]))
                         pos = emergepos(dz->iparam[NTEX_EFROM],chans,time,dz->param[NTEX_ETIME]);
                     else if(dz->iparam[NTEX_CTO] && (time > dz->param[NTEX_CTIME]))
@@ -2024,7 +2016,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                         if(dz->vflag[NTX_X])                    //  If Exclusive, Force currently OFF-partials to top of list
                             xclusive(perm,permon,permoff,max_partials_cnt,partials_in_play,onoff,stepcnt);
                         for(n=0;n<partials_in_play;n++)             //  Switch first p_in_p partials in perm, ON
-                            onoff[perm[n]][stepcnt] = S_ON; 
+                            onoff[perm[n]][stepcnt] = S_ON;
                         while(n < max_partials_cnt) {               //  and switch remainder of those in range off
                             onoff[perm[n]][stepcnt] = S_OFF;
                             n++;
@@ -2052,7 +2044,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                                                                     
                                 } else if(onoff[n][stepcnt-1] == S_OFF) {
                                     origspl[n][stepcnt] = splen;
-                                    splcntr[n] = splen;             //  Partial is switched on              
+                                    splcntr[n] = splen;             //  Partial is switched on
                                     llev[n][stepcnt] = (drand48() * 0.5) + 0.5; //  Set new (rand)level
                                     if(spacetyp == 0) {
                                         if(dz->vflag[NTX_JUMP]) {   //  If Jump flag in use, leftmost chan and levels already set
@@ -2099,7 +2091,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                     if(dz->vflag[NTX_X])                    //  If Exclusive, Force currently OFF-partials to top of list
                         xclusive(perm,permon,permoff,max_partials_cnt,partials_in_play,onoff,stepcnt);
                     for(n=0;n<partials_in_play;n++)             //  Switch first p_in_p partials in perm, ON
-                        onoff[perm[n]][stepcnt] = S_ON; 
+                        onoff[perm[n]][stepcnt] = S_ON;
                     while(n < max_partials_cnt) {               //  and switch remainder of those in range off
                         onoff[perm[n]][stepcnt] = S_OFF;
                         n++;
@@ -2121,7 +2113,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                                 splcntr[n] = splen * 2;             // Fade out/in in initiated
                             } else {
                                 origspl[n][stepcnt] = splen;
-                                splcntr[n] = splen;             //  Partial is switched on              
+                                splcntr[n] = splen;             //  Partial is switched on
                                 llev[n][stepcnt] = (drand48() * 0.5) + 0.5; //  Set new (rand)level
                                 if(spacetyp == 0) {
                                     if(dz->vflag[NTX_JUMP]) {   //  If Jump flag in use, leftmost chan and levels already set
@@ -2236,7 +2228,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                         indownsplice = 0;           //  Up-splice
                         localspliceval = (double)(splen - splcntr[n])/(double)splen;
                     }
-                    val *= localspliceval;          //  Upfade, splcntr falling, splen-splcntr rising 
+                    val *= localspliceval;          //  Upfade, splcntr falling, splen-splcntr rising
                     splcntr[n]--;                   //  Advance splicecnt towards zero
                 } else if(dz->mode == 2)
                     special_onoff2[n] = 0;
@@ -2256,7 +2248,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                     valr = val * rlev[n][stepcnt];
                     val *= llev[n][stepcnt];
                 }
-                if(spacetyp > 0) {  
+                if(spacetyp > 0) {
                     output_special_spatialisation_sample(obuf,sampcnt,switchpos,chans,val,valr,l_most,r_most,spacetyp);
                     sampcnt += chans;
                 } else {
@@ -2305,7 +2297,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                         valr = val * rlev[n][stepcnt];
                         val *= llev[n][stepcnt];
                     }
-                    if(spacetyp > 0) {  
+                    if(spacetyp > 0) {
                         output_special_spatialisation_sample(obuf,sampcnt,switchpos,chans,val,valr,l_most,r_most,spacetyp);
                         sampcnt += chans;
                     } else {
@@ -2355,7 +2347,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
         if(!inendsplice && (total_samps_synthed >= endsplicestart)) {
             inendsplice = 1;
             spliceval = 1.0;
-        } 
+        }
         if(instartsplice && (total_samps_synthed >= startspliceend))
             instartsplice = 0;
     }
@@ -2453,7 +2445,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                             special_onoff2[n] = 1;      //  In mode 2, stick to previous values for lev,pos and loc, until dnsplice done
                         localspliceval = (double)(splcntr[n] - splen)/(double)splen;
                         indownsplice = 1;           //  Down-splice
-                    } else {    
+                    } else {
                         if(dz->mode == 2 && splcntr[n] == splen) {
                             special_onoff2[n] = 0;
                             itabptr[n] = loc[n][stepcnt];   //  Only at start of upsplice, for Modes2 and 3, set new itabptr
@@ -2461,7 +2453,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                         localspliceval = (double)(splen - splcntr[n])/(double)splen;
                         indownsplice = 0;           //  Up-splice
                     }
-                    val *= localspliceval;          //  Upfade, splcntr falling, splen-splcntr rising 
+                    val *= localspliceval;          //  Upfade, splcntr falling, splen-splcntr rising
                     splcntr[n]--;                   //  Advance splicecnt towards zero
                 } else if(dz->mode == 2)
                     special_onoff2[n] = 0;
@@ -2479,14 +2471,14 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                     val =  val * vall;
                 } else {                        //  If spatialisation, get spatial contributions
                     if(dz->mode == 2 && special_onoff2[n]) {
-                        valr = val * rlev[n][stepcnt-1];        //  The level has been changed, but this only takes effect 
+                        valr = val * rlev[n][stepcnt-1];        //  The level has been changed, but this only takes effect
                         val  = val * llev[n][stepcnt-1];        //  after the downsplice part of the off/on splice
                     } else {
                         valr = val * rlev[n][stepcnt];
-                        val  = val * llev[n][stepcnt];  
+                        val  = val * llev[n][stepcnt];
                     }
-                }                   
-                if(spacetyp > 0) {  
+                }
+                if(spacetyp > 0) {
                     output_special_spatialisation_sample(obuf,sampcnt,switchpos,chans,val,valr,l_most,r_most,spacetyp);
                     sampcnt += chans;
                 } else {
@@ -2534,9 +2526,9 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
                         val =  val * vall;
                     } else {                    //  If spatialisation, get spatial contributions
                         valr = val * rlev[n][stepcnt-1];
-                        val  = val * llev[n][stepcnt-1];    
+                        val  = val * llev[n][stepcnt-1];
                     }
-                    if(spacetyp > 0) {  
+                    if(spacetyp > 0) {
                         output_special_spatialisation_sample(obuf,sampcnt,switchpos,chans,val,valr,l_most,r_most,spacetyp);
                         sampcnt += chans;
                     } else {
@@ -2588,7 +2580,7 @@ int newtex(int *perm,int *permon,int *permoff,int *superperm, double minrate,int
         if(!inendsplice && (total_samps_synthed >= endsplicestart)) {
             inendsplice = 1;
             spliceval = 1.0;
-        } 
+        }
         if(instartsplice && (total_samps_synthed >= startspliceend))
             instartsplice = 0;
     }
@@ -2640,7 +2632,7 @@ void get_current_partial_vals(double time,double *pvals,int partialcnt,dataptr d
     int m, n;
     double  hival, loval, hitime, lotime, timediff, timefrac, valdiff, partialval;
     double *thispartial;
-    for(n = 0;n < partialcnt;n++ ) {    
+    for(n = 0;n < partialcnt;n++ ) {
         thispartial = dz->parray[dz->temp_sampsize + n];
         m = 0;
         while(thispartial[m] < time) {
@@ -2789,7 +2781,7 @@ int handle_the_special_data(char *str,dataptr dz)
     partialcnt = (entrycnt - 1)/2;
 
 /*
- * MODE 0 arrays                                    | | 
+ * MODE 0 arrays                                    | |
  * pcnt = partialcnt mpcnt = maxpartialcnt          positions
  * (partials+all transpositions)                  | | |
  *          | |                                   current
@@ -2816,11 +2808,11 @@ int handle_the_special_data(char *str,dataptr dz)
         if((exit_status = get_maxvalue_in_brktable(&maxtrans,NTEX_MAX,dz))<0)
             return PROGRAM_ERROR;
         imaxtrans = (int)ceil(maxtrans);
-    } else 
+    } else
         imaxtrans = (int)ceil(dz->param[NTEX_MAX]);
     totalpartials = partialcnt * imaxtrans;
 
-    dz->array_cnt = (totalpartials * 2) + 1;    //  An array for every component-and-transposition, every candt-level, 
+    dz->array_cnt = (totalpartials * 2) + 1;    //  An array for every component-and-transposition, every candt-level,
                                                 //  and tab-incr-pointers
     dz->array_cnt += (totalpartials * 2) + 3;   //  An array for the left and right level of every partial-and-partial-transposition.
                                                 //  + Array for the steptimes, + Array for the transpostions of componenets at current-time
@@ -2830,7 +2822,7 @@ int handle_the_special_data(char *str,dataptr dz)
         sprintf(errstr,"INSUFFICIENT MEMORY to create partial data arrays.\n");
         return(MEMORY_ERROR);
     }
-    zz = totalpartials * 2; 
+    zz = totalpartials * 2;
     for(n=0,m=(totalpartials*2) + 4;n < zz;n++,m++) {           //  2 entries (time and value) for every line in the data.
         if((dz->parray[m] = (double *)malloc((linecnt * 2) * sizeof(double)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY to store partial data.\n");
@@ -2870,7 +2862,7 @@ int handle_the_special_data(char *str,dataptr dz)
             cnt++;
         }
         if(cnt) {
-            timepos += 2;                               //  Advance pointers in pno and level tables        
+            timepos += 2;                               //  Advance pointers in pno and level tables
             valpos  +=2;
         }
     }
@@ -2907,7 +2899,7 @@ int handle_the_special_data(char *str,dataptr dz)
 
         for(n = pstart, m = lstart; n < nupno_cnt-1; n++,m++) {
             for(nn = n+1, mm = m+1; nn < nupno_cnt;nn++, mm++) {
-                if(dz->parray[nn][1] < dz->parray[n][1]) {                      //  Sort of first transposition in array    
+                if(dz->parray[nn][1] < dz->parray[n][1]) {                      //  Sort of first transposition in array
                     sortptr = dz->parray[nn];
                     dz->parray[nn] = dz->parray[n];
                     dz->parray[n] = sortptr;
@@ -2929,7 +2921,7 @@ int otherwise(dataptr dz)
     int exit_status, imaxmult;
     double maxmult;
 /*
- * MODE 1 arrays                                    | | 
+ * MODE 1 arrays                                    | |
  * pcnt = partialcnt mpcnt = maxpartialcnt          positions
  * (partials+all transpositions)                  | | |
  *          | |                                   current
@@ -2955,7 +2947,7 @@ int otherwise(dataptr dz)
         if((exit_status = get_maxvalue_in_brktable(&maxmult,NTEX_MAX,dz))<0)
             return PROGRAM_ERROR;
         imaxmult = (int)ceil(maxmult);
-    } else 
+    } else
         imaxmult = (int)ceil(dz->param[NTEX_MAX]);
     
     dz->itemcnt = dz->infilecnt * imaxmult; // max number of streams
@@ -2994,7 +2986,7 @@ int create_newtex_sndbufs(dataptr dz)
         }
         lastbigbufsize = bigbufsize;
     }
-    dz->buflen = NTEX_OBUFSIZE * dz->iparam[NTEX_CHANS];    
+    dz->buflen = NTEX_OBUFSIZE * dz->iparam[NTEX_CHANS];
     bigbufsize += (dz->buflen + (safety * dz->iparam[NTEX_CHANS])) * sizeof(float);
     if(bigbufsize < lastbigbufsize) {
         sprintf(errstr,"Insufficient memory to store the input soundfiles in buffers.\n");
@@ -3078,9 +3070,9 @@ void pancalc(double position,double *leftgain,double *rightgain)
     else
         dirflag = SIGNAL_TO_RIGHT;
 
-    if(position < 0) 
+    if(position < 0)
         relpos = -position;
-    else 
+    else
         relpos = position;
     if(relpos <= 1.0){      /* between the speakers */
         temp = 1.0 + (relpos * relpos);
@@ -3110,7 +3102,7 @@ void sort_partials_into_ascending_frq_order(int mpcnt,double *pvals,double *tabp
     int n, nn, itemp;
     int *iptr;
 /*
- * MODE 0 arrays                                    | | 
+ * MODE 0 arrays                                    | |
  * pcnt = partialcnt mpcnt = maxpartialcnt          positions
  * (partials+all transpositions)                  | | |
  *          | |                                   current
@@ -3137,7 +3129,7 @@ void sort_partials_into_ascending_frq_order(int mpcnt,double *pvals,double *tabp
  *                                                                | | | infileno associated with stream
  *                                                                | | | | itabptr(integer pointer to input buffers) MODE 1 only
  *                                                                | | | | | | last-locus
- * iparray  |-----------------|-----------------|-----------------|-| | | (mpcnt*3)+4 
+ * iparray  |-----------------|-----------------|-----------------|-| | | (mpcnt*3)+4
  *          | on-off flags    | leftmost chan   |       spo       | | | (mpcnt*3)+3
  *          |   (mpcnt)       |    (mpcnt)      |     (mpcnt)     | | (mpcnt*3)+2
  *          |                 |                 |                 | (mpcnt*3)+1    MODE 3/4 (readpos)
@@ -3147,8 +3139,8 @@ void sort_partials_into_ascending_frq_order(int mpcnt,double *pvals,double *tabp
  *                                                                | mpcnt | | |                 |
  *                                                                | | mpcnt | |     maxsteps    |
  *  (splcntrs = splice counters)                                  | | | mpcnt |                 |
- *  (spo = orig values of splice counters)                        | | | | mpcnt 
- *                                                                | | | | | mpcnt 
+ *  (spo = orig values of splice counters)                        | | | | mpcnt
+ *                                                                | | | | | mpcnt
  *
  *
  */
@@ -3234,7 +3226,7 @@ void resort_partials_into_original_frq_order(int mpcnt,double *pvals,double *tab
             int **origspl,int *splordr,int *strmsrc,dataptr dz)
 {
 /*
- * MODE 0 arrays                                    | | 
+ * MODE 0 arrays                                    | |
  * pcnt = partialcnt mpcnt = maxpartialcnt          positions
  * (partials+all transpositions)                  | | |
  *          | |                                   current
@@ -3417,9 +3409,9 @@ void spacebox(double *pos, int *switchpos, double posstep, int chans, int spacet
     switch(spacetyp) {
     case(SB_LRRAND):                //  Alternate Left and Right sides, random position
         *pos = chans/2 * drand48(); //  Random choice of half of chan positions
-        if(*switchpos)              //  If switch on, put in 2nd half   
+        if(*switchpos)              //  If switch on, put in 2nd half
             *pos += chans/2;
-        *switchpos = -(*switchpos); 
+        *switchpos = -(*switchpos);
         break;
     case(SB_FBRAND):                //  Alternate Front and Back sides, random position
         *pos = chans/2 * drand48(); //  Simil for front and back
@@ -3432,7 +3424,7 @@ void spacebox(double *pos, int *switchpos, double posstep, int chans, int spacet
             if(*pos >= chans)
                 *pos -= chans;
         }
-        *switchpos = -(*switchpos); 
+        *switchpos = -(*switchpos);
         break;
     case(SB_ROTATE):                //  Rotating clockwise or anticlockwise
         *pos += posstep;
@@ -3446,10 +3438,10 @@ void spacebox(double *pos, int *switchpos, double posstep, int chans, int spacet
     case(SB_SUPERSPACE3):
     case(SB_SUPERSPACE4):           //  Get item in current permutaion of possibilities
         *switchpos = superperm[configcnt];
-        break;  
+        break;
     case(SB_LR):                    //  Alternate all-left/all-right    Switch between the 2 alternatives
     case(SB_FB):                    //  Alternate all-back/all-front
-    case(SB_FRAMESWITCH):           //  Switch all-square/all-diamond   
+    case(SB_FRAMESWITCH):           //  Switch all-square/all-diamond
         *switchpos = !(*switchpos);
         break;
     case(SB_TRIROT1):               //  Rotate triangle formed by spkrs 2-apart clockwise
@@ -3514,7 +3506,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
             for(k = 1;k < chans/2;k++)
                 obuf[sampcnt+k] = (float)(obuf[sampcnt+k] + val);
         }
-        break;      
+        break;
     case(SB_FB):
         if(switchpos) {
             for(k = 0;k < chans;k++) {
@@ -3525,7 +3517,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
             for(k = 3;k < 6;k++)
                 obuf[sampcnt+k] = (float)(obuf[sampcnt+k] + val);
         }
-        break;      
+        break;
     case(SB_TRIROT1):
     case(SB_ANTITRIROT1):
         tri1 = switchpos;
@@ -3536,7 +3528,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                 obuf[sampcnt] = (float)(obuf[sampcnt] + val);
             sampcnt++;
         }
-        break;      
+        break;
     case(SB_TRIROT2):
     case(SB_ANTITRIROT2):
         tri1 = switchpos;
@@ -3547,7 +3539,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                 obuf[sampcnt] = (float)(obuf[sampcnt] + val);
             sampcnt++;
         }
-        break;      
+        break;
     case(SB_FRAMESWITCH):
         if(switchpos) {
             for(k = 0;k< chans;k++) {   //  SQUARE
@@ -3576,7 +3568,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                 obuf[sampcnt+switchpos] = (float)(obuf[sampcnt+switchpos] + val);
                 switchpos += chans/2;           //  4 - 7
                 obuf[sampcnt+switchpos] = (float)(obuf[sampcnt+switchpos] + val);
-            } else {                            //  0 - 23  
+            } else {                            //  0 - 23
                 a = switchpos/3;                //  0-7 = a
                 b = switchpos - (a*3);          //  0-2
                 b++;                            //  1-3
@@ -3610,20 +3602,20 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                     obuf[sampcnt] = (float)(obuf[sampcnt] + val);
                 sampcnt++;
             }
-            break;      
+            break;
         } else if(switchpos == 53) {            //  DIAMOND
             for(k = 0;k< chans;k++) {
                 if(ODD(k))                      //  1,3,5,7
                     obuf[sampcnt] = (float)(obuf[sampcnt] + val);
                 sampcnt++;
             }
-            break;      
+            break;
         } else {                                //  54 ALL
             for(k = 0;k< chans;k++) {           //  0,1,2,3,4,5,6,7
                 obuf[sampcnt] = (float)(obuf[sampcnt] + val);
                 sampcnt++;
             }
-            break;      
+            break;
         }
         break;
     default:        //  STEREO POSITIONED BETWEEN SOME PAIR OF CHANNELS
@@ -3634,13 +3626,13 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                 obuf[sampcnt] = (float)(obuf[sampcnt] + valr);
             sampcnt++;
         }
-    }       
+    }
 }
 
 /***************************** GET_POS *******************************/
 
 void get_drunkpos(int *here,int thisdur,int sndlen,int grain,int n,int *loc,int stepcnt,dataptr dz)
-{                                          
+{
     int step = 0;
     if(dz->iparam[NTEX_AMB] > 0 && (step = get_step(grain,dz))!=0)
         *here = get_new_pos(*here,dz->iparam[NTEX_AMB],dz->iparam[NTEX_LOC],step,sndlen,thisdur);
@@ -3690,8 +3682,8 @@ int get_new_pos(int here,int ambitus,int locus,int step,int sndlen,int thisdur)
         if(otherstray >= 0 && otherstray <= ambitus)
             here = locus + otherstray;                  /* try reversing step */
         else if(otherstray <0 && otherstray >= -ambitus)
-            here = locus + otherstray;                      
-        else {                                              
+            here = locus + otherstray;
+        else {
             newstep = abs(new_stray) % ambitus;         /* otherwise take modulus */
             if(step >= 0)
                 here = locus + newstep;
@@ -3709,7 +3701,7 @@ int get_new_pos(int here,int ambitus,int locus,int step,int sndlen,int thisdur)
 
 void bounce_off_src_end_if_necessary(int *here,int thisdur,int sndlen)
 {
-    int diff, gap;                                  /* if "here" too near end */                        
+    int diff, gap;                                  /* if "here" too near end */
     if((diff = sndlen - *here) < thisdur) {         /* else Bounce off end */
         gap = thisdur - diff;
         *here -= 2 * gap;

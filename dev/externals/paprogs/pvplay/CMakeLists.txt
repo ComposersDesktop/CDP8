@@ -1,38 +1,22 @@
-if(APPLE)
-# -mmacosx-version-min=10.9
-  set(CMAKE_C_FLAGS "-O2 -Wall  -Dunix  -DMAC -DPA_USE_COREAUDIO  -fomit-frame-pointer -funroll-loops")
-  set(CMAKE_CXX_FLAGS "-O2 -Wall  -Dunix -DMAC -DPA_USE_COREAUDIO -fomit-frame-pointer -mmacosx-version-min=10.9 -funroll-loops -std=c++11 -stdlib=libc++")
-  include_directories ( /Developer/Headers/FlatCarbon )
-  find_library(COREAUDIOLIB CoreAudio)
-  find_library(AUDIOTOOLBOX AudioToolbox)
-  find_library(AULIB AudioUnit)
-  find_library(CARBONLIB Carbon)
-  link_directories (/usr/local/lib)
-  find_library(PA NAMES libportaudio.a)
-  find_library(AAIOLIB NAMES libaaio.a)
-  set(EXTRA_LIBRARIES1 pthread ${AAIOLIB} ${PA} ${COREAUDIOLIB} ${AUDIOTOOLBOX} ${AULIB} ${CARBONLIB} ${EXTRA_LIBRARIES})
-else()
-  if(MINGW)
-    set(CMAKE_C_FLAGS "-O3 -DWIN32 -D_WIN32 -DUSE_ASIO -fomit-frame-pointer -funroll-loops")
-    set(CMAKE_CXX_FLAGS "-O3 -DWIN32 -D_WIN32 -DUSE_ASIO -fomit-frame-pointer -funroll-loops -static-libgcc -static-libstdc++")
-    link_directories(/usr/local/lib)
-    find_library(PA NAMES libportaudio.a)
-#    NB winmm must appear after any module that references it. Yes, that's weird.
-    set(EXTRA_LIBRARIES1 dsound winspool ${PA} winmm ${EXTRA_LIBRARIES})
-  else()
-    link_directories (/usr/local/lib)
-    find_library(AAIOLIB NAMES libaaio.a)
-    find_library(PA NAMES libportaudio.a)
-    set(CMAKE_C_FLAGS "-O3 -Wall -Dlinux -Dunix -fomit-frame-pointer -funroll-loops")
-    set(EXTRA_LIBRARIES1 pthread ${AAIOLIB} ${PA}  ${EXTRA_LIBRARIES} asound jack)
-  endif()
-endif()
-# ../portaudio/lib/.libs
-link_directories( ../../lib  ../../../newsfsys ../../../pvxio2)
-# need /usr/local/include here?
-include_directories(/usr/local/include ../../../newinclude ../include ../portaudio/include ../portaudio/src/common)
-#../portaudio/src/common/pa_ringbuffer.c
-add_executable(pvplay pvplay.cpp pvoc2.cpp fmhfuncs.c pvthreads.cpp mxfft.c)
-target_link_libraries(pvplay sfsys pvxio2 ${EXTRA_LIBRARIES1})
+add_executable(pvplay
+    pvplay.cpp
+    pvoc2.cpp
+    fmhfuncs.c
+    pvthreads.cpp
+    mxfft.c
+)
+
+target_include_directories(pvplay PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${CMAKE_SOURCE_DIR}/dev/newinclude
+    ${CMAKE_SOURCE_DIR}/dev/externals/portaudio/include
+)
+
+# Vincular con bibliotecas internas de CDP
+target_link_libraries(pvplay
+    sfsys
+    pvxio2
+    ${LIBCDP_LIBS}
+)
 
 my_install(pvplay)

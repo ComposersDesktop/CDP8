@@ -38,7 +38,7 @@ filtraged:	filtrage.o
 	$(CC) $(CFLAGS) filtrage.o -o filtraged -lm  $(SFSYS) $(CDP2K)
 
 fractured:	fracture.o
-	$(CC) $(CFLAGS) fracture.o -o fractured -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
+	# $(CC) $(CFLAGS) fracture.o -o fractured -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
 
 glistend:	glisten.o
 	$(CC) $(CFLAGS) glisten.o -o glistend -lm  $(SFSYS) $(CDP2K)
@@ -47,7 +47,7 @@ isolated:	isolate.o
 	$(CC) $(CFLAGS) isolate.o -o isolatded -lm  $(SFSYS) $(CDP2K)
 
 iterfofd:	iterfof.o
-	$(CC) $(CFLAGS) iterfof.o -o iterfofd -lm /usr/local/lib/libaaio.a  $(SFSYS) $(CDP2K)
+	# $(CC) $(CFLAGS) iterfof.o -o iterfofd -lm /usr/local/lib/libaaio.a  $(SFSYS) $(CDP2K)
 
 iterlined:	iterline.o
 	$(CC) $(CFLAGS) iterline.o -o iterlined -lm  $(SFSYS) $(CDP2K)
@@ -65,10 +65,10 @@ newmorphd:	newmorph.o
 	$(CC) $(CFLAGS) newmorph.o -o newmorphd -lm  $(SFSYS) $(CDP2K)
 
 newsynthd:	synthesis.o
-	$(CC) $(CFLAGS) synthesis.o -o newsynthd -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
+	# $(CC) $(CFLAGS) synthesis.o -o newsynthd -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
 
 newtexd:	newtex.o
-	$(CC) $(CFLAGS) newtex.o -o newtexd -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
+	# $(CC) $(CFLAGS) newtex.o -o newtexd -lm /usr/local/lib/libaaio.a $(SFSYS) $(CDP2K)
 
 packetd:	packet.o
 	$(CC) $(CFLAGS) packet.o -o packetd -lm  $(SFSYS) $(CDP2K)

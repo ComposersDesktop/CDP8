@@ -1,25 +1,17 @@
 if(APPLE)
    set(CMAKE_C_FLAGS "-O2 -Wall  -Dunix")
-   link_directories (/usr/local/lib)
-   find_library(AAIOLIB NAMES libaaio.a)
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")
   else()
     set(CMAKE_C_FLAGS "-O2 -Wall -Dlinux -Dunix")
-    link_directories (/usr/local/lib)
-    find_library(AAIOLIB NAMES libaaio.a)
   endif()
 endif()
 
+include_directories(../newinclude)
+include_directories(../newinclude ${CMAKE_SOURCE_DIR}/externals/libaaio/libaaio-0.3.1)
 
 link_directories(../cdp2k ../newsfsys ../pvxio2)
-
-include_directories(../newinclude /usr/local/include)
-#OUT
-#add_executable(aminomap aminomap.c)
-#target_link_libraries(aminomap ${EXTRA_LIBRARIES})
-#my_install(aminomap)
 
 add_executable(bounce bounce.c)
 target_link_libraries(bounce  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
@@ -214,7 +206,7 @@ target_link_libraries(splinter  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(splinter)
 
 add_executable(strands strands.c)
-target_link_libraries(strands  cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
+target_link_libraries(strands  cdp2k sfsys pvxio2 ${LIBCDP_LIBS} ${EXTRA_LIBRARIES})
 
 my_install(strands)
 
@@ -234,7 +226,7 @@ target_link_libraries(synspline  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(synspline)
 
 add_executable(newsynth synthesis.c)
-target_link_libraries(newsynth  cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
+target_link_libraries(newsynth  cdp2k sfsys pvxio2 ${LIBCDP_LIBS} ${EXTRA_LIBRARIES})
 
 my_install(newsynth)
 

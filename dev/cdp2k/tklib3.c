@@ -142,50 +142,50 @@ int application_init(dataptr dz)
     int tipc, brkcnt;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
-        initialise_vflags(dz);    
+        initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
-        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
             return(exit_status);
     }
     brkcnt = tipc;
 
-    if(dz->input_data_type==BRKFILES_ONLY                      
-    || dz->input_data_type==UNRANGED_BRKFILE_ONLY 
-    || dz->input_data_type==DB_BRKFILES_ONLY 
-    || dz->input_data_type==SNDFILE_AND_BRKFILE 
-    || dz->input_data_type==SNDFILE_AND_UNRANGED_BRKFILE 
-    || dz->input_data_type==SNDFILE_AND_DB_BRKFILE 
+    if(dz->input_data_type==BRKFILES_ONLY
+    || dz->input_data_type==UNRANGED_BRKFILE_ONLY
+    || dz->input_data_type==DB_BRKFILES_ONLY
+    || dz->input_data_type==SNDFILE_AND_BRKFILE
+    || dz->input_data_type==SNDFILE_AND_UNRANGED_BRKFILE
+    || dz->input_data_type==SNDFILE_AND_DB_BRKFILE
     || dz->input_data_type==ALL_FILES
     || dz->input_data_type==ANY_NUMBER_OF_ANY_FILES
     || dz->outfiletype==BRKFILE_OUT) {
-        dz->extrabrkno = brkcnt;              
+        dz->extrabrkno = brkcnt;
         brkcnt++;       /* extra brktable for input or output brkpntfile data */
     }
     if(brkcnt>0) {
-        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
             return(exit_status);
     }
 
-    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
-        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
-        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
             return(exit_status);
-    }                                                      
-    if((exit_status = mark_parameter_types(dz,ap))<0)     
+    }
+    if((exit_status = mark_parameter_types(dz,ap))<0)
             return(exit_status);
 
     if((exit_status = establish_infile_constants(dz))<0)
         return(exit_status);
-    if((exit_status = establish_bufptrs_and_extra_buffers(dz))<0)   
+    if((exit_status = establish_bufptrs_and_extra_buffers(dz))<0)
         return(exit_status);
-    if((exit_status = setup_internal_arrays_and_array_pointers(dz))<0)   
+    if((exit_status = setup_internal_arrays_and_array_pointers(dz))<0)
         return(exit_status);
     return(FINISHED);
 }
@@ -237,7 +237,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     }
     if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)  ))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)  ))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -426,7 +426,7 @@ int establish_infile_constants(dataptr dz)
 {
     switch(dz->input_data_type) {
 
-    case(MIXFILES_ONLY):        case(SNDLIST_ONLY):         
+    case(MIXFILES_ONLY):        case(SNDLIST_ONLY):
     case(SND_OR_MIXLIST_ONLY):  case(SND_SYNC_OR_MIXLIST_ONLY):
     case(BRKFILES_ONLY):        case(DB_BRKFILES_ONLY):     case(UNRANGED_BRKFILE_ONLY):
     case(WORDLIST_ONLY):
@@ -440,11 +440,11 @@ int establish_infile_constants(dataptr dz)
     case(FORMANTFILE_ONLY):
         dz->infilecnt = 1;
         break;
-    case(TWO_SNDFILES):     
+    case(TWO_SNDFILES):
     case(SNDFILE_AND_ENVFILE):  case(SNDFILE_AND_BRKFILE):  case(SNDFILE_AND_DB_BRKFILE):
     case(TWO_ANALFILES):        case(ANAL_WITH_PITCHDATA):  case(ANAL_WITH_TRANSPOS):
     case(ANAL_AND_FORMANTS):    case(PITCH_AND_FORMANTS):   case(PITCH_AND_PITCH):
-    case(PITCH_AND_TRANSPOS):   case(TRANSPOS_AND_TRANSPOS):case(SNDFILE_AND_UNRANGED_BRKFILE): 
+    case(PITCH_AND_TRANSPOS):   case(TRANSPOS_AND_TRANSPOS):case(SNDFILE_AND_UNRANGED_BRKFILE):
         dz->infilecnt = 2;
         break;
     case(THREE_ANALFILES):
@@ -474,7 +474,7 @@ int establish_infile_constants(dataptr dz)
 void setup_process_logic(int input,int processing,int output,dataptr dz)
 {
     dz->input_data_type = input;
-    dz->process_type    = processing;   
+    dz->process_type    = processing;
     dz->outfiletype     = output;
 }
 
@@ -507,7 +507,7 @@ int set_internalparam_data(const char *this_paramlist,aplptr ap)
             sprintf(errstr,"set_internalparam_data()\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->internal_param_list,this_paramlist); 
+        strcpy(ap->internal_param_list,this_paramlist);
     }
     ap->internal_param_cnt = (char ) count;        /*RWD added cast */
     return(FINISHED);
@@ -526,7 +526,7 @@ int read_samps(float *bbuf,dataptr dz)
         sprintf(errstr,"Can't read samples from input soundfile.\n");
         return(SYSTEM_ERROR);
     }
-    dz->samps_left -= dz->ssampsread;   
+    dz->samps_left -= dz->ssampsread;
     dz->total_samps_read += dz->ssampsread;
 
 
@@ -566,15 +566,15 @@ int read_value_from_brktable(double thistime,int paramno,dataptr dz)
     p = dz->brkptr[paramno];
     if(thistime <= *(dz->brk[paramno])) {
         dz->param[paramno] = dz->firstval[paramno];
-        if(dz->is_int[paramno])                         
+        if(dz->is_int[paramno])
             dz->iparam[paramno] = round(dz->param[paramno]);
         return(FINISHED);
     } else if(thistime >= dz->lastind[paramno]) {
         dz->param[paramno] = dz->lastval[paramno];
-        if(dz->is_int[paramno])                         
+        if(dz->is_int[paramno])
             dz->iparam[paramno] = round(dz->param[paramno]);
         return(FINISHED);
-    } 
+    }
     if(thistime > *(p)) {
         while(*(p)<thistime)
             p += 2;
@@ -591,7 +591,7 @@ int read_value_from_brktable(double thistime,int paramno,dataptr dz)
     val   *= (hival - loval);
     val   += loval;
     dz->param[paramno] = val;
-    if(dz->is_int[paramno])                         
+    if(dz->is_int[paramno])
         dz->iparam[paramno] = round(dz->param[paramno]);
     dz->brkptr[paramno] = p;
     return(FINISHED);
@@ -723,7 +723,7 @@ int make_map(int dmncnt,int imgcnt,int mapping,char *domain,char *image,dataptr 
 
 /************************** CONSISTENT_DOMAIN_AND_IMAGE ********************************/
 
-int consistent_domain_and_image(int dmncnt,int imgcnt,char *domain,char *image,dataptr dz)  
+int consistent_domain_and_image(int dmncnt,int imgcnt,char *domain,char *image,dataptr dz)
 {
     int n, m, OK;
     for(n=0;n<dz->iparam[dmncnt]-1;n++) {
@@ -865,22 +865,22 @@ int establish_bottom_frqs_of_channels(dataptr dz)
 int establish_testtone_amps(dataptr dz)
 {
     int n;
-    if((dz->windowbuf[TESTPAMP] = 
+    if((dz->windowbuf[TESTPAMP] =
     (float *)realloc((char *)dz->windowbuf[TESTPAMP],PARTIALS_IN_TEST_TONE * sizeof(float)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for testtone amp array.\n");
         return(MEMORY_ERROR);
     }
-    if((dz->windowbuf[TOTPAMP]  = 
+    if((dz->windowbuf[TOTPAMP]  =
     (float *)realloc((char *)dz->windowbuf[TOTPAMP],PARTIALS_IN_TEST_TONE * sizeof(float)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for testtone totalamp array.\n");
         return(MEMORY_ERROR);
     }
     dz->windowbuf[TOTPAMP][0] = dz->windowbuf[TESTPAMP][0] = 1.0f;
     for(n = 1; n < PARTIALS_IN_TEST_TONE; n++)    /* ACTUAL PARTIAL AMPS */
-        dz->windowbuf[TESTPAMP][n] 
+        dz->windowbuf[TESTPAMP][n]
                 = (float)(dz->windowbuf[TESTPAMP][n-1] * PARTIAL_DECIMATION);
     for(n = 1; n < PARTIALS_IN_TEST_TONE; n++)    /* SUM OF PARTIAL AMPS */
-        dz->windowbuf[TOTPAMP][n] = 
+        dz->windowbuf[TOTPAMP][n] =
             (float)(dz->windowbuf[TOTPAMP][n-1] + dz->windowbuf[TESTPAMP][n]);
     return(FINISHED);
 }
@@ -889,14 +889,14 @@ int establish_testtone_amps(dataptr dz)
 
 int setup_ring(dataptr dz)
 {
-    chvptr /*last,*/ head;                  
+    chvptr /*last,*/ head;
     if((dz->ringhead = (chvptr)malloc(sizeof(struct chanval)))==NULL)    {
         sprintf(errstr,"INSUFFICIENT MEMORY for ring buffer.\n");
         return(MEMORY_ERROR);
     }
     head = dz->ringhead;
     head->next = head;                         /* Initialise its pointers to self-point */
-    head->last = head;     
+    head->last = head;
 //  last = head;                                /* Mark current end of ring at ringhead */
     dz->ringsize = 1;
     return(FINISHED);
@@ -986,7 +986,7 @@ int setup_stability_arrays_and_constants(int stability_val,int sval_less_one,dat
     dz->stable->sbuf[0]   = dz->stable->sbufstore;
     for(n=1;n<dz->iparam[stability_val]+1;n++)
         dz->stable->sbuf[n] = dz->stable->sbuf[n-1] + dz->wanted;
-    if((dz->stable->specstore = 
+    if((dz->stable->specstore =
     (float *)malloc(((dz->infile->specenvcnt * dz->iparam[stability_val])+1) * sizeof(float)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for stability spectral store.\n");
         return(MEMORY_ERROR);
@@ -998,7 +998,7 @@ int setup_stability_arrays_and_constants(int stability_val,int sval_less_one,dat
     dz->stable->spec[0]   = dz->stable->specstore;
     for(n=1;n<dz->iparam[stability_val]+1;n++)
         dz->stable->spec[n] = dz->stable->spec[n-1] + dz->infile->specenvcnt;
-    if((dz->stable->fpkstore  = 
+    if((dz->stable->fpkstore  =
     (int *)malloc(((dz->iparam[stability_val] * dz->infile->specenvcnt)+1)*sizeof(int)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for stability peaks store.\n");
         return(MEMORY_ERROR);
@@ -1031,7 +1031,7 @@ int setup_stability_arrays_and_constants(int stability_val,int sval_less_one,dat
     dz->stable->specstore[dz->infile->specenvcnt * dz->iparam[stability_val]] = 0.0f;
     dz->stable->spec[dz->iparam[stability_val]] = (float *)0;
     dz->stable->fpkstore[dz->iparam[stability_val] * dz->infile->specenvcnt] = 0;
-    dz->stable->fpk[dz->iparam[stability_val]] = (int *)0; 
+    dz->stable->fpk[dz->iparam[stability_val]] = (int *)0;
     dz->stable->total_pkcnt[dz->iparam[stability_val]] = 0;
     dz->stable->design_score[dz->infile->specenvcnt] = 0;  /* array for designing filter */
     dz->stable->des[dz->infile->specenvcnt] = (desptr)0;
@@ -1100,7 +1100,7 @@ int outer_loop(dataptr dz)
     if(samps_read < 0) {
         sprintf(errstr,"Sound read error.\n");
         return(SYSTEM_ERROR);
-    }  
+    }
     return(FINISHED);
 }
 
@@ -1111,7 +1111,7 @@ int outer_loop(dataptr dz)
 
 int initialise_window_frqs(dataptr dz)
 {   int cc, vc;
-    double thisfrq = GLIS_REFERENCE_FRQ;                 
+    double thisfrq = GLIS_REFERENCE_FRQ;
     if(dz->mode!=SELFGLIS) {
         do {
             cc = (int)((thisfrq + dz->halfchwidth)/dz->chwidth);    /* TRUNCATE */
@@ -1158,7 +1158,7 @@ int normalise(double pre_totalamp,double post_totalamp,dataptr dz)
 
     if(post_totalamp < VERY_TINY_VAL) {
         if(!dz->zeroset) {
-            fprintf(stdout,"WARNING: Zero-amp spectral window(s) encountered: orig window(s) substituted.\n");    
+            fprintf(stdout,"WARNING: Zero-amp spectral window(s) encountered: orig window(s) substituted.\n");
             fflush(stdout);
             dz->zeroset = TRUE;
         }
@@ -1180,13 +1180,13 @@ int initialise_ring_vals(int thissize,double initial_amp,dataptr dz)
     if((change_in_size = thissize - dz->ringsize)!=0) {
         if(change_in_size>0) {
             if((exit_status = extend_ring(change_in_size,dz))<0)    /* If ring gets bigger,   extend it */
-                return(exit_status); 
+                return(exit_status);
         } else {
              if((exit_status = shrink_ring(-change_in_size,dz))<0)  /* If ring gets smaller,  shrink it */
                 return(exit_status);
         }
     }
-    tthis = dz->ringhead;             
+    tthis = dz->ringhead;
     do {                          /* Enter initval at all ring locations */
         tthis->val = (float)initial_amp;
     } while ((tthis = tthis->next) != dz->ringhead);
@@ -1197,7 +1197,7 @@ int initialise_ring_vals(int thissize,double initial_amp,dataptr dz)
 /************************* EXTEND_RING *****************************/
 
 int extend_ring(int change_in_size,dataptr dz)
-{   int n;          
+{   int n;
     chvptr tthis, head, last;
     head = dz->ringhead;
     last = head->last;         /* Mark current end of ring  */
@@ -1239,7 +1239,7 @@ int shrink_ring(int change_in_size,dataptr dz)
 int if_one_of_loudest_chans_store_in_ring(int vc,dataptr dz)
 {
     int exit_status;
-    chvptr loudest = dz->ringhead;      
+    chvptr loudest = dz->ringhead;
     do {                                          /* COMPARE LOUDNESS WITH THOSE IN RING  */
         if(dz->flbufptr[0][vc] > loudest->val) {      /* IF LOUDER */
             if((exit_status = rearrange_ring_to_allow_new_entry_and_return_entry_address(&loudest,dz))<0)
@@ -1257,12 +1257,12 @@ int if_one_of_loudest_chans_store_in_ring(int vc,dataptr dz)
 int if_one_of_quietest_chans_store_in_ring(int vc,dataptr dz)
 {
     int exit_status;
-    chvptr quietest = dz->ringhead;  
+    chvptr quietest = dz->ringhead;
     do {                                           /* COMPARE QUIETNESS WITH THOSE IN RING */
         if(dz->flbufptr[0][vc] < quietest->val) {   /* IF QUIETER */
             if((exit_status = rearrange_ring_to_allow_new_entry_and_return_entry_address(&quietest,dz))<0)
                 return(exit_status);
-            quietest->loc = vc;           
+            quietest->loc = vc;
             quietest->val = dz->flbufptr[0][vc];
             break;
         }
@@ -1284,7 +1284,7 @@ int rearrange_ring_to_allow_new_entry_and_return_entry_address(chvptr *here,data
     if(*here==head) {       /* IF place of insertion is start of ring.... */
         dz->ringhead = head->last;   /* Move head of ring back one place. */
         *here = dz->ringhead;        /* New value will be written there,  */
-        return(FINISHED);        
+        return(FINISHED);
     }              /* automatically deleting previous final item in ring. */
             
     this          = head->last;  /* OTHERWISE: unlink last item from ring */
@@ -1298,7 +1298,7 @@ int rearrange_ring_to_allow_new_entry_and_return_entry_address(chvptr *here,data
     this->next    = *here;
     (*here)->last = this;
     *here = this;     /* Return address of new current position ('this') */
-    return(FINISHED);     
+    return(FINISHED);
 }
 
 /****************************** CHOOSE_BITFLAG_AND_RESET_MASK_IF_NESS ****************************/
@@ -1318,7 +1318,7 @@ int choose_bflagno_and_reset_mask_if_ness(int *bflagno,int cc,int *mask,int long
  *  loudness for further comparison.
  */
 
-int move_data_into_appropriate_channel(int vc,int truevc,float thisamp,float thisfrq,dataptr dz)    
+int move_data_into_appropriate_channel(int vc,int truevc,float thisamp,float thisfrq,dataptr dz)
 {
     if(dz->flbufptr[0][AMPP] > dz->windowbuf[0][truevc]) {
         dz->windowbuf[0][truevc++] = thisamp;
@@ -1444,7 +1444,7 @@ int specbare(int *pitchcnt,dataptr dz)
     if(pitch < 0.0)             /*   UNPITCHED WINDOW : marked in specpich */
         return(FINISHED);
     upper_freqdiff = (pitch * error_range) - pitch;
-    lower_freqdiff =  pitch - (pitch * one_over_error_range);    
+    lower_freqdiff =  pitch - (pitch * one_over_error_range);
 
     while(vc < dz->wanted && (thisfrq = pitch * (double)++n) < dz->nyquist) {
         frq_close_above_next_partial = thisfrq + upper_freqdiff;
@@ -1503,7 +1503,7 @@ int eliminate_all_but_loudest_channel_near_this_partial_frq(int *vvc,double frq_
     }
     *vvc = vc;
     return(FINISHED);
-}           
+}
 
 /*********************** KEEP_ALL_CHANNELS_NEAR_PARTIAL_FRQ ******************/
 
@@ -1622,7 +1622,7 @@ int get_statechanges(int avcnt,int scantableno,int avpitcharrayno,int statechang
             bbrk[n] = ONLEVEL;
         if(dz->brksize[scantableno]) {
              /* move along by an (averaged) BLOK of windows */
-            ttime += dz->frametime * BLOKCNT;   
+            ttime += dz->frametime * BLOKCNT;
             if((exit_status = read_value_from_brktable(ttime,scantableno,dz))<0)
                 return(exit_status);
             window_cnt = round(dz->param[scantableno]/dz->frametime);
@@ -1634,7 +1634,7 @@ int get_statechanges(int avcnt,int scantableno,int avpitcharrayno,int statechang
     }
     n = 0;
      /* Set types at very start, equal to actual first type already set */
-    while(!bbrk[n]) {         
+    while(!bbrk[n]) {
         if(++n >= avcnt)
             break;
     }
@@ -1714,7 +1714,7 @@ int read_both_files(int *windows_in_buf,int *got,dataptr dz)
     *got = max(samps_read,samps_read2);
     dz->flbufptr[0] = dz->bigfbuf;
     dz->flbufptr[1] = dz->flbufptr[2];
-    *windows_in_buf = *got/dz->wanted;    
+    *windows_in_buf = *got/dz->wanted;
     return(FINISHED);
 }
 
@@ -1770,15 +1770,15 @@ int read_either_file(int *samps_read,int file_to_keep,dataptr dz)
     return(FINISHED);
 }
 
-/****************************** SCORE_PEAKS ******************************/ 
+/****************************** SCORE_PEAKS ******************************/
 
 int score_peaks(int *peakscore,int sl1_var,int stabl_var,dataptr dz)
 {
     int n, m;
     if(dz->total_windows>dz->iparam[sl1_var]) {
-        for(n = 0;n < dz->stable->total_pkcnt[dz->iparam[sl1_var]]; n++) {      /* Add in the peaks in the last buf calcd */    
+        for(n = 0;n < dz->stable->total_pkcnt[dz->iparam[sl1_var]]; n++) {      /* Add in the peaks in the last buf calcd */
             dz->stable->design_score[dz->stable->fpk[dz->iparam[sl1_var]][n]]++;            /* to the existing scores!! */
-            (*peakscore)++;                 
+            (*peakscore)++;
         }
     } else {
         for(m=0;m<dz->iparam[stabl_var];m++) {                  /* For every stored array of peaks */
@@ -1796,7 +1796,7 @@ int score_peaks(int *peakscore,int sl1_var,int stabl_var,dataptr dz)
  *  If any channel is used as a peak (score > 0),store channel-no and score
  *  in a design_struct, and preset the amp_total to zero (see amplitude_poll).
  *  Count the total number of such peaks.
- */                    
+ */
 
 int collect_scores(int *cnt,int *descnt,dataptr dz)
 {
@@ -1824,9 +1824,9 @@ int collect_scores(int *cnt,int *descnt,dataptr dz)
  *
  * Sort peak channels into descending order ofabundance
  */
-int sort_design(int no_of_design_elements,dataptr dz) 
+int sort_design(int no_of_design_elements,dataptr dz)
 {
-    int n, m, a, b;   
+    int n, m, a, b;
     for(n=1;n<no_of_design_elements;n++) {
         a = dz->stable->des[n]->chan;
         b = dz->stable->des[n]->score;
@@ -1870,7 +1870,7 @@ int sort_equivalent_scores(int this_pkcnt,dataptr dz)
     while(n <this_pkcnt) {
         if(dz->stable->des[n]->score == dz->stable->des[dz->itemcnt]->score)
             n++;
-        else    
+        else
             break;
     }
     top = n;
@@ -1879,7 +1879,7 @@ int sort_equivalent_scores(int this_pkcnt,dataptr dz)
     return do_amplitude_poll(bot,top,dz);
 }
 
-/****************************** DO_AMPLITUDE_POLL ***************************/ 
+/****************************** DO_AMPLITUDE_POLL ***************************/
 
 int do_amplitude_poll(int bot,int top,dataptr dz)
 {
@@ -1897,22 +1897,22 @@ int do_amplitude_poll(int bot,int top,dataptr dz)
             if((thisamp = dz->stable->des[n]->amp)>ampmax) {
                 ampmax = thisamp;
                 here   = n;
-            }          
+            }
         }
         dz->peakno[nextpeak++] = dz->stable->des[here]->chan; /* Set next peak channel to this maxamp channel */
-        dz->stable->des[here]->amp = 0.0;             /* zero amptotal in chosen des, to eliminate from next search */ 
+        dz->stable->des[here]->amp = 0.0;             /* zero amptotal in chosen des, to eliminate from next search */
     }
     return(FINISHED);
 }
  
-/****************************** UNSCORE_PEAKS ******************************/ 
+/****************************** UNSCORE_PEAKS ******************************/
 
 int unscore_peaks(int *peakscore,dataptr dz)
 {
     int n;
-    for(n = 0;n < dz->stable->total_pkcnt[0]; n++) {    /* Subtract score of peaks buffer no longer in use */   
+    for(n = 0;n < dz->stable->total_pkcnt[0]; n++) {    /* Subtract score of peaks buffer no longer in use */
         dz->stable->design_score[dz->stable->fpk[0][n]]--;          /* from the existing scores!! */
-        (*peakscore)--;                 
+        (*peakscore)--;
     }
     return(FINISHED);
 }
@@ -1928,7 +1928,7 @@ static void setup_pitchzero(int paramno,dataptr dz);
 void handle_pitch_zeros(dataptr dz)
 {
     switch(dz->process) {
-    case(ARPE): 
+    case(ARPE):
         setup_pitchzero(ARPE_LOFRQ,dz);
         setup_pitchzero(ARPE_HIFRQ,dz);
         break;
@@ -2011,8 +2011,8 @@ void setup_pitchzero(int paramno,dataptr dz)
                 *p = SPEC_MINFRQ;
             p+=2;
         }
-    } else if(dz->param[paramno] < SPEC_MINFRQ) 
-        dz->param[paramno] = 0.0;   
+    } else if(dz->param[paramno] < SPEC_MINFRQ)
+        dz->param[paramno] = 0.0;
 }
 
 /************************************ CHECK_DEPTH_VALS *************************************/
@@ -2124,7 +2124,7 @@ int allocate_single_buffer(dataptr dz)
 //TW MOVED THIS LINE: to get correct value of buflen (NOT after the +1)
     dz->buflen = buffersize;
     buffersize += 1;
-    if((dz->bigfbuf = (float*) malloc(buffersize * sizeof(float)))==NULL) {  
+    if((dz->bigfbuf = (float*) malloc(buffersize * sizeof(float)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for sound buffers.\n");
         return(MEMORY_ERROR);
     }
@@ -2152,7 +2152,7 @@ int allocate_double_buffer(dataptr dz)
         return(MEMORY_ERROR);
     }
     dz->big_fsize = dz->buflen;
-    dz->flbufptr[2]  = dz->bigfbuf + dz->big_fsize;   
+    dz->flbufptr[2]  = dz->bigfbuf + dz->big_fsize;
     dz->flbufptr[3]  = dz->flbufptr[2] + dz->big_fsize;
     return(FINISHED);
 }
@@ -2174,7 +2174,7 @@ int allocate_triple_buffer(dataptr dz)
         return(MEMORY_ERROR);
     }
     dz->big_fsize = dz->buflen;
-    dz->flbufptr[2]  = dz->bigfbuf + dz->big_fsize;   
+    dz->flbufptr[2]  = dz->bigfbuf + dz->big_fsize;
     dz->flbufptr[3]  = dz->flbufptr[2] + dz->big_fsize;
     dz->flbufptr[4]  = dz->flbufptr[3] + dz->big_fsize;
     return(FINISHED);
@@ -2297,15 +2297,28 @@ int get_mode_from_cmdline(char *str,dataptr dz)
 
 /******************************** USAGE1 ********************************/
 
-int usage(int argc,char *argv[])
+//int usage(int argc,char *argv[])
+//{
+//    switch(argc) {
+//    case(1): return usage1();
+//    case(2): return usage2(argv[1]);
+//    case(3): return usage3(argv[1],argv[2]);
+//    }
+//    sprintf(errstr,"Incorrect call to usage()\n");
+//    return(PROGRAM_ERROR);
+//}
+
+int usage(int argc, char *argv[])
 {
-    switch(argc) {
-    case(1): return usage1();
-    case(2): return usage2(argv[1]);
-    case(3): return usage3(argv[1],argv[2]);
+    switch (argc) {
+        case 1: return usage1();
+        case 2: return usage2(argv[1]);
+        case 3:
+            fprintf(stderr, "Insufficient parameters on command line.\n");
+            return USAGE_ONLY;
     }
-    sprintf(errstr,"Incorrect call to usage()\n");
-    return(PROGRAM_ERROR);
+    sprintf(errstr, "Incorrect call to usage()\n");
+    return PROGRAM_ERROR;
 }
 
 /******************************** USAGE1 ********************************/
@@ -2403,8 +2416,8 @@ int get_the_vowels(char *filename,double **times,int **vowels,int *vcnt,dataptr 
                         sprintf(errstr,"INSUFFICIENT MEMORY to reallocate table of vowels.\n");
                         return(MEMORY_ERROR);
                     }
-                    t = *times + n;     
-                    v = *vowels + n;        
+                    t = *times + n;
+                    v = *vowels + n;
                 }
             }
             istime = !istime;
@@ -2483,7 +2496,7 @@ int get_vowel (char *str)
  *
  */
 
-int close_and_delete_tempfile(char *newfilename,dataptr dz) 
+int close_and_delete_tempfile(char *newfilename,dataptr dz)
 {
     /*RWD Nov 2003: use sndunlink before calling this for soundfiles! */
     if(sndunlink(dz->ifd[0])){
@@ -2505,4 +2518,3 @@ int close_and_delete_tempfile(char *newfilename,dataptr dz)
 #endif
     return FINISHED;
 }
-

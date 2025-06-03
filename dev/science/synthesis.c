@@ -167,10 +167,10 @@ int main(int argc,char *argv[])
     }
     if(!sloom) {
         if(argc == 1) {
-            usage1();   
+            usage1();
             return(FAILED);
         } else if(argc == 2) {
-            usage2(argv[1]);    
+            usage2(argv[1]);
             return(FAILED);
         }
     }
@@ -212,12 +212,12 @@ int main(int argc,char *argv[])
         //parse_TK_data() =
         if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-            return(exit_status);         
+            return(exit_status);
         }
     }
 //    ap = dz->application;
     dz->infile->channels = 1;
-    // parse_infile_and_hone_type() = 
+    // parse_infile_and_hone_type() =
     // setup_param_ranges_and_defaults() =
     if((exit_status = setup_synthesis_param_ranges_and_defaults(dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -225,7 +225,7 @@ int main(int argc,char *argv[])
     }
     // open_first_infile() : redundant
     // handle_extra_infiles() : redundant
-    // handle_outfile() = 
+    // handle_outfile() =
     if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -248,7 +248,7 @@ int main(int argc,char *argv[])
             print_messages_and_close_sndfiles(exit_status,is_launched,dz);
             return(FAILED);
         }
-    }       
+    }
     if(dz->mode == 4) {
         if((dz->parray = (double **)malloc(sizeof(double *)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY to create sinetable array.\n");
@@ -312,15 +312,15 @@ int main(int argc,char *argv[])
 
 int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist)
 {
-    ap->special_data   = (char)special_data;       
+    ap->special_data   = (char)special_data;
     ap->param_cnt      = (char)paramcnt;
     ap->max_param_cnt  = (char)maxparamcnt;
     if(ap->max_param_cnt>0) {
-        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {    
+        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->param_list,paramlist); 
+        strcpy(ap->param_list,paramlist);
     }
     return(FINISHED);
 }
@@ -341,16 +341,16 @@ int set_vflgs
             sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->option_flags,optflags); 
+        strcpy(ap->option_flags,optflags);
     }
-    ap->vflag_cnt = (char) vflagcnt;           
+    ap->vflag_cnt = (char) vflagcnt;
     ap->variant_param_cnt = (char) vparamcnt;
     if(vflagcnt) {
         if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->variant_list,varlist);       
+        strcpy(ap->variant_list,varlist);
         if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
             return(MEMORY_ERROR);
@@ -370,30 +370,30 @@ int application_init(dataptr dz)
     int tipc, brkcnt;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
-        initialise_vflags(dz);    
+        initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
-        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
             return(exit_status);
     }
     brkcnt = tipc;
     //THERE ARE NO INPUTFILE brktables USED IN THIS PROCESS
     if(brkcnt>0) {
-        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
             return(exit_status);
     }
-    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
-        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
-        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
             return(exit_status);
-    }                                                      
-    if((exit_status = mark_parameter_types(dz,ap))<0)     
+    }
+    if((exit_status = mark_parameter_types(dz,ap))<0)
         return(exit_status);
     
     // establish_infile_constants() replaced by
@@ -599,31 +599,31 @@ int setup_synthesizer_application(dataptr dz)
     ap = dz->application;
     // SEE parstruct FOR EXPLANATION of next 2 functions
     switch(dz->mode) {
-    case(0): 
+    case(0):
         if((exit_status = set_param_data(ap,SYN_PARTIALS,3,3,"idD"))<0)
             return(FAILED);
         if((exit_status = set_vflgs(ap,"",0,"","",0,0,""))<0)
             return(exit_status);
         break;
-    case(1): 
+    case(1):
         if((exit_status = set_param_data(ap,SYN_PARTIALS,3,3,"idD"))<0)
             return(FAILED);
         if((exit_status = set_vflgs(ap,"nc",2,"DD","f",1,0,"0"))<0)
             return(exit_status);
         break;
-    case(2): 
+    case(2):
         if((exit_status = set_param_data(ap,SYN_PARTIALS,6,6,"idDiiD"))<0)
             return(FAILED);
         if((exit_status = set_vflgs(ap,"udfsneEcCtr",11,"ddddiididid","azmxj",5,0,"00000"))<0)
             return(exit_status);
         break;
-    case(3): 
+    case(3):
         if((exit_status = set_param_data(ap,0,9,9,"idDididDD"))<0)
             return(FAILED);
         if((exit_status = set_vflgs(ap,"rf",2,"Di","e",1,0,"0"))<0)
             return(exit_status);
         break;
-    case(4): 
+    case(4):
         if((exit_status = set_param_data(ap,0,6,6,"idDDdd"))<0)
             return(FAILED);
         if((exit_status = set_vflgs(ap,"",0,"","",0,0,""))<0)
@@ -634,7 +634,7 @@ int setup_synthesizer_application(dataptr dz)
     dz->has_otherfile = FALSE;
     // assign_process_logic -->
     dz->input_data_type = NO_FILE_AT_ALL;
-    dz->process_type    = UNEQUAL_SNDFILE;  
+    dz->process_type    = UNEQUAL_SNDFILE;
     dz->outfiletype     = SNDFILE_OUT;
     return application_init(dz);    //GLOBAL
 }
@@ -797,14 +797,14 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             return(DATA_ERROR);
         }
         switch(cnt) {
-        case(1):    
+        case(1):
             if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
                 sprintf(errstr,"Cannot read process no. sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
 
-        case(2):    
+        case(2):
             if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
                 sprintf(errstr,"Cannot read mode no. sent from TK\n");
                 return(DATA_ERROR);
@@ -817,7 +817,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 //            ap = dz->application;
             break;
 
-        case(3):    
+        case(3):
             if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
                 sprintf(errstr,"Cannot read infilecnt sent from TK\n");
                 return(DATA_ERROR);
@@ -829,137 +829,137 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
                 return(exit_status);
             break;
-        case(INPUT_FILETYPE+4): 
+        case(INPUT_FILETYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
                 sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FILESIZE+4): 
+        case(INPUT_FILESIZE+4):
             if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = filesize;   
+            dz->insams[0] = filesize;
             break;
-        case(INPUT_INSAMS+4):   
+        case(INPUT_INSAMS+4):
             if(sscanf(argv[cnt],"%d",&insams)!=1) {
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams; 
+            dz->insams[0] = insams;
             break;
-        case(INPUT_SRATE+4):    
+        case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
                 sprintf(errstr,"Cannot read srate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_CHANNELS+4): 
+        case(INPUT_CHANNELS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
                 sprintf(errstr,"Cannot read channels sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_STYPE+4):    
+        case(INPUT_STYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
                 sprintf(errstr,"Cannot read stype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGSTYPE+4):    
+        case(INPUT_ORIGSTYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
                 sprintf(errstr,"Cannot read origstype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGRATE+4): 
+        case(INPUT_ORIGRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
                 sprintf(errstr,"Cannot read origrate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MLEN+4): 
+        case(INPUT_MLEN+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
                 sprintf(errstr,"Cannot read Mlen sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DFAC+4): 
+        case(INPUT_DFAC+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
                 sprintf(errstr,"Cannot read Dfac sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGCHANS+4):    
+        case(INPUT_ORIGCHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_SPECENVCNT+4):   
+        case(INPUT_SPECENVCNT+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
                 sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->specenvcnt = dz->infile->specenvcnt;
             break;
-        case(INPUT_WANTED+4):   
+        case(INPUT_WANTED+4):
             if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
                 sprintf(errstr,"Cannot read wanted sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_WLENGTH+4):  
+        case(INPUT_WLENGTH+4):
             if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
                 sprintf(errstr,"Cannot read wlength sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_OUT_CHANS+4):    
+        case(INPUT_OUT_CHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
                 sprintf(errstr,"Cannot read out_chans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
             /* RWD these chanegs to samps - tk will have to deal with that! */
-        case(INPUT_DESCRIPTOR_BYTES+4): 
+        case(INPUT_DESCRIPTOR_BYTES+4):
             if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
                 sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_IS_TRANSPOS+4):  
+        case(INPUT_IS_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
                 sprintf(errstr,"Cannot read is_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_TRANSPOS+4):    
+        case(INPUT_COULD_BE_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
                 sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_PITCH+4):   
+        case(INPUT_COULD_BE_PITCH+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
                 sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DIFFERENT_SRATES+4): 
+        case(INPUT_DIFFERENT_SRATES+4):
             if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
                 sprintf(errstr,"Cannot read different_srates sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DUPLICATE_SNDS+4):   
+        case(INPUT_DUPLICATE_SNDS+4):
             if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
                 sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_BRKSIZE+4):  
+        case(INPUT_BRKSIZE+4):
             if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
                 sprintf(errstr,"Cannot read brksize sent from TK\n");
                 return(DATA_ERROR);
@@ -996,74 +996,74 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 break;
             }
             break;
-        case(INPUT_NUMSIZE+4):  
+        case(INPUT_NUMSIZE+4):
             if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
                 sprintf(errstr,"Cannot read numsize sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_LINECNT+4):  
+        case(INPUT_LINECNT+4):
             if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
                 sprintf(errstr,"Cannot read linecnt sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ALL_WORDS+4):    
+        case(INPUT_ALL_WORDS+4):
             if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
                 sprintf(errstr,"Cannot read all_words sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ARATE+4):    
+        case(INPUT_ARATE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
                 sprintf(errstr,"Cannot read arate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FRAMETIME+4):    
+        case(INPUT_FRAMETIME+4):
             if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
                 sprintf(errstr,"Cannot read frametime sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->frametime = (float)dummy;
             break;
-        case(INPUT_WINDOW_SIZE+4):  
+        case(INPUT_WINDOW_SIZE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
                 sprintf(errstr,"Cannot read window_size sent from TK\n");
                     return(DATA_ERROR);
             }
             break;
-        case(INPUT_NYQUIST+4):  
+        case(INPUT_NYQUIST+4):
             if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
                 sprintf(errstr,"Cannot read nyquist sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DURATION+4): 
+        case(INPUT_DURATION+4):
             if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
                 sprintf(errstr,"Cannot read duration sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINBRK+4):   
+        case(INPUT_MINBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
                 sprintf(errstr,"Cannot read minbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXBRK+4):   
+        case(INPUT_MAXBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
                 sprintf(errstr,"Cannot read maxbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINNUM+4):   
+        case(INPUT_MINNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
                 sprintf(errstr,"Cannot read minnum sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXNUM+4):   
+        case(INPUT_MAXNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
                 sprintf(errstr,"Cannot read maxnum sent from TK\n");
                 return(DATA_ERROR);
@@ -1082,7 +1082,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 
     if(true_cnt)
         cnt = true_cnt;
-    *cmdlinecnt = 0;        
+    *cmdlinecnt = 0;
 
     while(cnt < argc) {
         if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
@@ -1158,7 +1158,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
     return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz) 
+int read_special_data(char *str,dataptr dz)
 {
     return(FINISHED);
 }
@@ -1198,7 +1198,7 @@ int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{   
+{
     int n;
     if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
@@ -1214,7 +1214,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     }
     if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -1241,7 +1241,6 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
 
 int usage2(char *str)
 {
-    int k;
     if(!strcmp(str,"synthesis")) {
         fprintf(stderr,
         "USAGE:\n"
@@ -1262,170 +1261,51 @@ int usage2(char *str)
         "MODE 4 Fractally arrayed spikes.\n"
         "MODE 5 Duffing damped oscillator (frq, amplitude and damping can vary through time).\n"
         "\n"
-        "Hit key '1' '2 '3' '4' or '5 to see more on individual modes, or 'e' to exit.\n"
-        "\n");
-        while((k = getch())!='1' && k != '2' && k != '3' && k != '4' && k != '5' && k != 'e')
-            ;
-        if(k == '1') {
-            fprintf(stderr,
-            "newsynth synthesis 1 outf spectrum srate dur frq\n"
-            "\n"
-            "SPECTRUM  Listing of partial ratios and relative levels, against time.\n"
-            "      Data: text file of data lines. Every line has same number of entries.\n"
-            "      1ST ENTRY on each line is time. Times must start at zero and increase.\n"
-            "      ALL EVEN NUMBERED ENTRIES are partial numbers.\n"
-            "      For tone-generation, the first partial number on each line must be 1.\n"
-            "      Partial numbers must increase from entry to entry.\n"
-            "      ALL OTHER ODD NUMBERED ENTRIES are partial levels, and may have any value.\n"
-            "      -ve values invert the phase of the partial.\n"
-            "SRATE     Sample rate of synthesized sound.\n"
-            "DUR       Duration of synthesized sound.\n"
-            "FRQ       Possibly time-varying Fundamental frq of output (0.001 to 10000Hz) OR\n");
-        } else if(k == '2') {
-            fprintf(stderr,
-            "newsynth synthesis 2 outf spectrum srate dur frq [-nnarrowing] [-ccentring]\n"
-            "\n"
-            "SPECTRUM  Listing of partial ratios and relative levels, against time.\n"
-            "      Data: text file of data lines. Every line has same number of entries.\n"
-            "      1ST ENTRY on each line is time. Times must start at zero and increase.\n"
-            "      ALL EVEN NUMBERED ENTRIES are partial numbers.\n"
-            "      For tone-generation, the first partial number on each line must be 1.\n"
-            "      Partial numbers must increase from entry to entry.\n"
-            "      ALL OTHER ODD NUMBERED ENTRIES are partial levels, and may have any value.\n"
-            "      -ve values invert the phase of the partial.\n"
-            "SRATE     Sample rate of synthesized sound.\n"
-            "DUR       Duration of synthesized sound.\n"
-            "FRQ       Possibly time-varying Fundamental frq of output (0.001 to 10000Hz) OR\n"
-            "NARROWING Narrowing of packet envelope (0 - 1000).\n"
-            "          Values below 1.0 broaden the packet.\n"
-            "          Values very close to zero may produce clicks (square-wave envelope).\n"
-            "          Very high vals with very high frqs may produce click-impulses or silence.\n"
-            "CENTRING  Centring of peak of packet envelope.\n"
-            "          0  peak at centre: -1 peak at start: 1 peak at end.\n");
-        } else if(k == '3') {
-            fprintf(stderr,
-            "newsynth synthesis 3 outf spectrum srate dur frq chans maxrange step\n"
-            "    [-urise] [-dfall] [-fsteady] [-ssplice] [-nN] [-a] [-z] [-x]\n"
-            "    [-tspacetype] [-rrotspeed] [[-m] [-j] [efrom -Etime] [cto -Ctime]]\n"
-            "\n"
-            "SPECTRUM  Listing of partial ratios and relative levels, against time.\n"
-            "      Data: text file of data lines. Every line has same number of entries.\n"
-            "      1ST ENTRY on each line is time. Times must start at zero and increase.\n"
-            "      ALL EVEN NUMBERED ENTRIES are partial numbers.\n"
-            "      For tone-generation, the first partial number on each line must be 1.\n"
-            "      Partial numbers must increase from entry to entry.\n"
-            "      ALL OTHER ODD NUMBERED ENTRIES are partial levels, and may have any value.\n"
-            "      -ve values invert the phase of the partial.\n"
-            "SRATE     Sample rate of synthesized sound.\n"
-            "DUR       Duration of synthesized sound.\n"
-            "FRQ       Possibly time-varying Fundamental frq of output (0.001 to 10000Hz) OR\n"
-            "CHANS     Number of output channels.\n"
-            "MAXRANGE  Max range of transposition of spectral components (in whole 8vas).\n"
-            "STEP      Average time between changes to partial-content of output.\n"
-            "RISE      Time to expand to maximum range.\n"
-            "FALL      Time to return to initial range, before end.\n"
-            "STEADY    Duration of steady state at sound end.\n"
-            "SPLICE    Splices for partial entry and exit, in mS.\n"
-            "-nN       (Number) Same fixed number (N) of partials chosen for each event.\n"
-            "-a        Initial rise in number of partials from only-the-fundamental.\n"
-            "-z        Fall in number of partials , during \"steady state\" to fundamental.\n"
-            "-x        (Xclusive) change all partials (as far as poss) from event to event.\n"
-            "-m        (Move) Distribute partials in space.\n"
-            "-j        (Jump) All partials assigned to same location for any one event.\n"
-            "SPACETYPE Type of output spatialisation.\n"
-            "ROTSPEED  rotation speed (for certain spatialisation types).\n"
-            "-e  -E    (Emerge) sound emerges from channel \"from\" over time \"time\" at start.\n"
-            "-c  -C    (Converge) Sound converges to channel \"to\" over time \"time\" at end.\n"
-            "NB: Flags -j,-e,-E,-c,-C only operational if -m set.\n"          
-            "NB: Flags with NO params must be placed AFTER any flags WITH params, on the cmdline.\n"          
-            "\n"
-            "Hit key 's' to continue to \"SPACETYPE\" info , or 'e' to exit.\n"
-            "\n");
-            while((k = getch())!='s' && k != 'e')
-                ;
-            if(k == 's') {
-                fprintf(stderr,
-                "\n"    
-                "SPACETYPE options : For 8-channel output only.\n"  
-                "\n"    
-                "1   Positions alternate between Left and Right sides, but are otherwise random.\n" 
-                "2   Positions alternate between Front and Back, but are otherwise random.\n"
-                "3   Rotating clockwise or anticlockwise.\n"    
-                "4   Random permutations of all 8 channels.\n"  
-                "5   ... plus all possible pairs of channels.\n"    
-                "6   ... plus all possible meaningful small and large triangles.\n" 
-                "7   ... plus square, diamond and all-at-once.\n"   
-                "      In types 4 to 7, all members of perm used before next perm starts.\n"    
-                "8   Alternate between all-left and all-right.\n"   
-                "9   Alternate between all-front and all-back.\n"   
-                "10  Alternate between all-square and all-diamond.\n"   
-                "11  Rotate triangle formed by lspkrs 2-apart clockwise.\n" 
-                "12  Rotate triangle formed by lspkrs 3-apart clockwise.\n" 
-                "13  Rotate triangle formed by lspkrs 2-apart anticlockwise.\n" 
-                "14  Rotate triangle formed by lspkrs 3-apart anticlockwise.\n");
-            }
-        } else if(k == '4') {
-            fprintf(stderr,
-            "\n"    
-            "MODE 4 parameters: .\n"    
-            "\n"    
-            "newsynth synthesis 4 outf srate dur frq atk ea dec ed atoh gtow [-fflv] [-rrnd|-e]\n"
-            "\n"
-            "SRATE     Sample rate of synthesized sound.\n"
-            "DUR       Duration of synthesized sound.\n"
-            "FRQ       Possibly time-varying Fundamental frq of output (0.001 to 10000Hz) OR\n"
-            "\n"
-            "Waveform consists of spikes distributed fractally over wavelen.\n"
-            "\n"
-            "ATK  Length of spike attack in samples.\n" 
-            "EA   Rise curve of attack: > 1 rise slow-then-fast : >1 fast-then-slow.\n"
-            "DEC  Length of spike decay in samples.\n"  
-            "ED   Fall curve of decay: > 1 fall fast-then-slow : >1 slow-then-fast.\n"
-            "\n"
-            "Spike placement frame\n"
-            " _________wavelen__________\n"
-            "|                          |\n"
-            " ___grouplen____\n"
-            "|               |\n"
-            " 1/2 grouplen\n"
-            " _______\n"
-            "|       |\n"
-            " _a_     _a_    |\n"
-            "|   |   |   |   |\n" 
-            "|   |_b_|   |_b_|__________\n" 
-            "                  trailing\n"
-            "                | silence  |\n"
-            "ATOH Ratio of on-time (a) to 1/2-grouplen (see diagram) in grouplen.\n"    
-            "     (which determines relative length of \"a\" (ON) and \"b\" (OFF).\n"
-            "GTOW Ratio of grouplen to total-wavelength.\n" 
-            "     (which determines length of trailing silence (see diagram).\n"
-            "Blocks \"a\" then subdivided in same proportions again, etc. iteratively.\n"   
-            "Spikes then placed at start of each \"a\" block in each subdivision.\n"    
-            "FLV  Alternate \"a\" blocks in waveforn assigned +ve and -ve values.\n"    
-            "     \"FLV\" determines at which fractal level this +- switch takes place.\n"  
-            "     Level 0 uses the large blocks in the uppermost (slowest) level.\n"    
-            "     NB Maximum level of \"flv\" will depend on various other parameters.\n"   
-            "     If \"flv\" is set too high it will be reset to the max fractal level\n"   
-            "     achievable with the current parameters.\n"    
-            "RND  Subdivision places 2nd \"a\" seg randomly between true pos & grouplen-end.\n" 
-            "-e   Subdivision places 2nd \"a\" at END of grouplen.\n"   
-            "     (-e and RAND cannot be used together).\n" 
-            "\n"
-            "FRQ,ATOH,GTOW and RND can vary in time.\n");
-        } else if(k == '5') {
-
-            fprintf(stderr,
-            "newsynth synthesis 5 outf srate dur frq damping k b\n"
-            "\n"
-            "SRATE     Sample rate of synthesized sound.\n"
-            "DUR       Duration of synthesized sound.\n"
-            "FRQ       Possibly time-varying Fundamental frq of forcing oscillation (1-200Hz).\n"
-            "DAMPING   Possibly time-varying damping of forced oscillation (0.15 to 2).\n"
-            "K, B      Coefficients determe nature of damping. (k -10 to 10 : b 20 to 50)\n"
-            "\n");
-        }
-    } else
-        fprintf(stdout,"Unknown option '%s'\n",str);
+        "=== MODE 1 ===\n"
+        "newsynth synthesis 1 outf spectrum srate dur frq\n"
+        "SPECTRUM: text file where each line contains a time followed by alternating\n"
+        "partial number and partial level entries. Times must increase. First partial must be 1.\n"
+        "Negative levels invert the phase.\n"
+        "FRQ: fundamental frequency (can vary with time, 0.001 to 10000Hz).\n"
+        "\n"
+        "=== MODE 2 ===\n"
+        "newsynth synthesis 2 outf spectrum srate dur frq [-nnarrowing] [-ccentring]\n"
+        "As above, plus:\n"
+        "NARROWING: affects width of packet envelope (0–1000). Lower = wider, near 0 = clicks.\n"
+        "CENTRING: peak of packet envelope: 0=center, -1=start, 1=end.\n"
+        "\n"
+        "=== MODE 3 ===\n"
+        "newsynth synthesis 3 outf spectrum srate dur frq chans maxrange step\n"
+        "SPECTRUM: as above.\n"
+        "CHANS: number of output channels.\n"
+        "MAXRANGE: range of spectral spread (in octaves).\n"
+        "STEP: average time between content changes.\n"
+        "RISE/FALL/STEADY: durations of transition phases.\n"
+        "SPLICE: fade lengths in ms.\n"
+        "-nN: fixed number of partials per event.\n"
+        "-a/-z: rise or fall in number of partials.\n"
+        "-x: exclusive selection of partials.\n"
+        "-m/-j: spatial movement/jump.\n"
+        "-e/-E/-c/-C: spatial emergence/convergence parameters (with -m only).\n"
+        "SPACETYPE/ROTSPEED: defines and modulates spatialisation pattern.\n"
+        "\n"
+        "SPACETYPE options (8-channel only):\n"
+        "1: L/R alt | 2: F/B alt | 3: rotation | 4–7: permuted patterns (channels/pairs/triangles)\n"
+        "8–10: side/face alternations | 11–14: rotating triangle setups.\n"
+        "\n"
+        "=== MODE 4 ===\n"
+        "newsynth synthesis 4 outf srate dur frq atk ea dec ed atoh gtow [-fflv] [-rrnd|-e]\n"
+        "Fractal spike synthesis. Spikes in nested segments. ATOH/GTOW define placement.\n"
+        "ATK/EA: spike attack | DEC/ED: spike decay\n"
+        "FLV: level flipping by fractal level | RND: random offset | -e: align at segment end.\n"
+        "\n"
+        "=== MODE 5 ===\n"
+        "newsynth synthesis 5 outf srate dur frq damping k b\n"
+        "Duffing oscillator synthesis.\n"
+        "FRQ: forcing frequency | DAMPING: range 0.15–2 | K/B: damping coefficients.\n");
+    } else {
+        fprintf(stdout, "Unknown option '%s'\n", str);
+    }
     return(USAGE_ONLY);
 }
 
@@ -1577,17 +1457,17 @@ int synthesis_param_preprocess (int **perm,int **permon,int **permoff,int **supe
  * iparray  |-----------------|-----------------|-----------------|-| switchpos
  *          | on-off flags    | leftmost chan   |       spo       |s|porder
  *          |   (mpcnt)       |    (mpcnt)      |     (mpcnt)     |p| | (mpcnt*3)+2
- *          |                 |                 |                 |l| (mpcnt*3)+1 
+ *          |                 |                 |                 |l| (mpcnt*3)+1
  *  address 0               mpcnt             mpcnt*2             (mpcnt*3)
  *          |                 |                 |                 |c| |
  *  lengths |   maxsteps      |  maxsteps       |   maxsteps      |nmpcnt
  *                                                                |t| mpcnt
  *                                                                |r| |
  *  (splcntrs = splice counters)                                  |s| |
- *  (spo = orig values of splice counters)      
+ *  (spo = orig values of splice counters)
  */
 
-//  A sine-table pointer for every partial and every partial transposition      
+//  A sine-table pointer for every partial and every partial transposition
         if((dz->parray[pntarray] = (double *)malloc(dz->itemcnt * sizeof(double)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for sine table pointers.\n");
             return(MEMORY_ERROR);
@@ -1802,14 +1682,14 @@ int synthesis_param_preprocess (int **perm,int **permon,int **permoff,int **supe
  * iparray  |-----------------|-----------------|-----------------|-| switchpos
  *          | on-off flags    | leftmost chan   |       spo       |s|porder
  *          |   (mpcnt)       |    (mpcnt)      |     (mpcnt)     |p| | (mpcnt*3)+2
- *          |                 |                 |                 |l| (mpcnt*3)+1 
+ *          |                 |                 |                 |l| (mpcnt*3)+1
  *  address 0               mpcnt             mpcnt*2             (mpcnt*3)
  *          |                 |                 |                 |c| |
  *  lengths |   maxsteps      |  maxsteps       |   maxsteps      |nmpcnt
  *                                                                |t| mpcnt
  *                                                                |r| |
  *  (splcntrs = splice counters)                                  |s| |
- *  (spo = orig values of splice counters)      
+ *  (spo = orig values of splice counters)
  */
 
 int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,int maxsteps,dataptr dz)
@@ -1931,7 +1811,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
             if(!inendsplice && (total_samps_synthed >= endsplicestart)) {
                 inendsplice = 1;
                 spliceval = 1.0;
-            } 
+            }
             if(instartsplice && (total_samps_synthed >= startspliceend))
                 instartsplice = 0;
             break;
@@ -2056,8 +1936,8 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                             max_partials_cnt = min(max_partials_cnt,total_partialcnt);  //  FAILSAFE
                         } else                                      //  Otherwise, use maximum octave range
                             max_partials_cnt = total_partialcnt;
-                    } else                                          
-                        max_partials_cnt = total_partialcnt;            
+                    } else
+                        max_partials_cnt = total_partialcnt;
                                                                     //  P-and-ts we'll actually use at this moment (random)
                     if(dz->iparam[SYNTH_NUM] > 0)
                         partials_in_play = min(dz->iparam[SYNTH_NUM],max_partials_cnt);
@@ -2068,7 +1948,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                     
                     special_onoff = 0;
                     if(dz->vflag[SYN_SPACED]) {
-                        if(dz->vflag[SYN_JUMP]) {               
+                        if(dz->vflag[SYN_JUMP]) {
                             if(dz->iparam[SYNTH_EFROM] && (time < dz->param[SYNTH_ETIME]))
                                 pos = emergepos(dz->iparam[SYNTH_EFROM],chans,time,dz->param[SYNTH_ETIME]);
                             else if(dz->iparam[SYNTH_CTO] && (time > dz->param[SYNTH_CTIME]))
@@ -2096,7 +1976,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                                 origspl[n][stepcnt] = splen;        //  Mark as fade-up
                                 splcntr[n] = splen;                 //  Set splice-counter to count back down to zero
                                 llev[n][stepcnt] = (drand48() * 0.5) + 0.5; //  Set new (rand)level [llev stands in for mono level]
-                                if(dz->vflag[SYN_SPACED] && (spacetyp == 0)) {      //  If SPATIALISED 
+                                if(dz->vflag[SYN_SPACED] && (spacetyp == 0)) {      //  If SPATIALISED
                                     
                                     if(dz->vflag[SYN_JUMP]) {       //  If Jump flag in use, leftmost chan and levels already set
                                         lmost[n][stepcnt] = jlmost;
@@ -2160,7 +2040,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                         if(dz->vflag[SYN_X])                        //  If Exclusuve, Force currently OFF-partials to top of list
                             xclusive(perm,permon,permoff,max_partials_cnt,partials_in_play,onoff,stepcnt);
                         for(n=0;n<partials_in_play;n++)             //  Switch first p_in_p partials in perm, ON
-                            onoff[perm[n]][stepcnt] = S_ON; 
+                            onoff[perm[n]][stepcnt] = S_ON;
                         while(n < max_partials_cnt) {               //  and switch remainder of those in range off
                             onoff[perm[n]][stepcnt] = S_OFF;
                             n++;
@@ -2191,7 +2071,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                                                                     
                                 } else if(onoff[n][stepcnt-1] == S_OFF) {
                                     origspl[n][stepcnt] = splen;
-                                    splcntr[n] = splen;             //  Partial is switched on              
+                                    splcntr[n] = splen;             //  Partial is switched on
                                     llev[n][stepcnt] = (drand48() * 0.5) + 0.5; //  Set new (rand)level
                                     if(dz->vflag[SYN_SPACED] && (spacetyp == 0)) {      //  If SPATIALISED...etc
                                         if(dz->vflag[SYN_JUMP]) {   //  If Jump flag in use, leftmost chan and levels already set
@@ -2260,7 +2140,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                             indownsplice = 0;           //  Up-splice
                             localspliceval = (double)(splen - splcntr[n])/(double)splen;
                         }
-                        val *= localspliceval;          //  Upfade, splcntr falling, splen-splcntr rising 
+                        val *= localspliceval;          //  Upfade, splcntr falling, splen-splcntr rising
                         splcntr[n]--;                   //  Advance splicecnt towards zero
                     }
                     if(dz->vflag[SYN_SPACED]) {         //  If spatialisation, get spatial contributions
@@ -2283,7 +2163,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                     } else
                         val *= llev[n][stepcnt];        //  Or just incorporate calculated atten for this element
                     if(dz->vflag[SYN_SPACED]) {         //  if spatialised, find rightmost channel from leftmost
-                        if(spacetyp > 0) {  
+                        if(spacetyp > 0) {
                             output_special_spatialisation_sample(obuf,sampcnt,switchpos,chans,val,valr,l_most,r_most,spacetyp);
                             sampcnt += chans;
                         } else {
@@ -2331,7 +2211,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                         } else
                             val *= llev[n][stepcnt];
                         if(dz->vflag[SYN_SPACED]) {
-                            if(spacetyp > 0) {  
+                            if(spacetyp > 0) {
                                 output_special_spatialisation_sample(obuf,sampcnt,switchpos,chans,val,valr,l_most,r_most,spacetyp);
                                 sampcnt += chans;
                             } else {
@@ -2384,7 +2264,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
             if(!inendsplice && (total_samps_synthed >= endsplicestart)) {
                 inendsplice = 1;
                 spliceval = 1.0;
-            } 
+            }
             if(instartsplice && (total_samps_synthed >= startspliceend))
                 instartsplice = 0;
             break;
@@ -2453,7 +2333,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
             if(!inendsplice && (total_samps_synthed >= endsplicestart)) {
                 inendsplice = 1;
                 spliceval = 1.0;
-            } 
+            }
             if(instartsplice && (total_samps_synthed >= startspliceend))
                 instartsplice = 0;
             if(++sampcnt >= dz->buflen) {
@@ -2471,7 +2351,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
             for(n=0;n<dz->itemcnt;n++)                  //  Zero sine-table pointers for all partials, at start of packet
                 sinptr[n] = 0.0;
             for(kk = 0; kk<packet_dur;kk++) {
-                for(n=0;n<dz->itemcnt;n++) {            //  If not holding partial values steady WITHIN packets, 
+                for(n=0;n<dz->itemcnt;n++) {            //  If not holding partial values steady WITHIN packets,
                     if(!dz->vflag[0])                   //  use absolute time to update partial frqs and levels.
                         time = (double)(total_samps_synthed + n)/srate; //  Otherwise use packet_start-time,
                     loindex = (int)floor(sinptr[n]);    //  Read from sintable, using partial-increment
@@ -2528,11 +2408,11 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                         if(splcntr[n] > splen) {        //  This indicates an OFF/ON splice
                             localspliceval = (double)(splcntr[n] - splen)/(double)splen;
                             indownsplice = 1;           //  Down-splice
-                        } else {    
+                        } else {
                             localspliceval = (double)(splen - splcntr[n])/(double)splen;
                             indownsplice = 0;           //  Up-splice
                         }
-                        val *= localspliceval;          //  Upfade, splcntr falling, splen-splcntr rising 
+                        val *= localspliceval;          //  Upfade, splcntr falling, splen-splcntr rising
                         splcntr[n]--;                   //  Advance splicecnt towards zero
                     }
                     if(dz->vflag[SYN_SPACED]) {         //  If spatialisation, get spatial contributions
@@ -2550,12 +2430,12 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                             val =  val * vall;
                         } else {                        //  If spatialisation, get spatial contributions
                             valr = val * rlev[n][stepcnt];
-                            val  = val * llev[n][stepcnt];  
-                        }                   
+                            val  = val * llev[n][stepcnt];
+                        }
                     } else
                         val  = val * llev[n][stepcnt];  //  Or just incorporate calculated atten for this element
                     if(dz->vflag[SYN_SPACED]) {         //  if spatialised, find rightmost channel from leftmost
-                        if(spacetyp > 0) {  
+                        if(spacetyp > 0) {
                             output_special_spatialisation_sample(obuf,sampcnt,switchpos,chans,val,valr,l_most,r_most,spacetyp);
                             sampcnt += chans;
                         } else {
@@ -2597,12 +2477,12 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
                                 val =  val * vall;
                             } else {                    //  If spatialisation, get spatial contributions
                                 valr = val * rlev[n][stepcnt-1];
-                                val  = val * llev[n][stepcnt-1];    
+                                val  = val * llev[n][stepcnt-1];
                             }
                         } else
-                            val  = val * llev[n][stepcnt-1];    
+                            val  = val * llev[n][stepcnt-1];
                         if(dz->vflag[SYN_SPACED]) {     //  As fadeout of last sound, keep PREVIOUS STEP spatial coords
-                            if(spacetyp > 0) {  
+                            if(spacetyp > 0) {
                                 output_special_spatialisation_sample(obuf,sampcnt,switchpos,chans,val,valr,l_most,r_most,spacetyp);
                                 sampcnt += chans;
                             } else {
@@ -2657,7 +2537,7 @@ int synthesis(int *perm,int *permon,int *permoff,int *superperm, double minrate,
             if(!inendsplice && (total_samps_synthed >= endsplicestart)) {
                 inendsplice = 1;
                 spliceval = 1.0;
-            } 
+            }
             if(instartsplice && (total_samps_synthed >= startspliceend))
                 instartsplice = 0;
             break;
@@ -2714,7 +2594,7 @@ void get_current_partial_vals(double time,double *pvals,int partialcnt,dataptr d
     int m, n;
     double  hival, loval, hitime, lotime, timediff, timefrac, valdiff, partialval;
     double *thispartial;
-    for(n = 0;n < partialcnt;n++ ) {    
+    for(n = 0;n < partialcnt;n++ ) {
         thispartial = dz->parray[n];
         m = 0;
         while(thispartial[m] < time) {
@@ -2879,14 +2759,14 @@ int handle_the_special_data(char *str,dataptr dz)
  *          of timesteps used)    |n|l|                                   |l|t|
  */
         totalpartials = partialcnt * dz->iparam[SYNTH_MAX];
-        dz->array_cnt = (totalpartials * 2) + 2;//  An array for every partial-and-partial-transposition, every pandp-level, 
+        dz->array_cnt = (totalpartials * 2) + 2;//  An array for every partial-and-partial-transposition, every pandp-level,
                                                 //  and Sin-table + sintab-incr-pointers
         dz->temp_sampsize = dz->array_cnt;
         dz->array_cnt += (totalpartials * 2) + 3;   //  An array for the left and right level of every partial-and-partial-transposition.
                                                     //  and One array for the steptimes, and one array for the frqs of partials at current-time
         dz->itemcnt = totalpartials;                //  Array for every partial-pno and partial-level + Array for position at every step.
     } else {
-        dz->array_cnt = (partialcnt * 2) + 5;   //  An array for every partial-pno, every partial-level, 
+        dz->array_cnt = (partialcnt * 2) + 5;   //  An array for every partial-pno, every partial-level,
                                                 //  + snd-sintable + sintab-incr-pointers + packet envelope + 2 packet-envelope-temp-arrays
         dz->itemcnt = partialcnt;               //  Array for every partial-pno and partial-level.
     }
@@ -2895,7 +2775,7 @@ int handle_the_special_data(char *str,dataptr dz)
         return(MEMORY_ERROR);
     }
     if(dz->mode == 2)
-        zz = totalpartials * 2; 
+        zz = totalpartials * 2;
     else
         zz = partialcnt * 2;
     for(n=0;n <zz;n++) {            //  2 entries (time and value) for every line in the data.
@@ -2937,7 +2817,7 @@ int handle_the_special_data(char *str,dataptr dz)
             cnt++;
         }
         if(cnt) {
-            timepos += 2;                               //  Advance pointers in pno and level tables        
+            timepos += 2;                               //  Advance pointers in pno and level tables
             valpos  +=2;
         }
     }
@@ -2976,7 +2856,7 @@ int handle_the_special_data(char *str,dataptr dz)
 
             for(n = 0, m = lstart; n < nupno_cnt-1; n++,m++) {
                 for(nn = n+1, mm = m+1; nn < nupno_cnt;nn++, mm++) {
-                    if(dz->parray[nn][1] < dz->parray[n][1]) {                      //  Sort of first partialval in array   
+                    if(dz->parray[nn][1] < dz->parray[n][1]) {                      //  Sort of first partialval in array
                         sortptr = dz->parray[nn];
                         dz->parray[nn] = dz->parray[n];
                         dz->parray[n] = sortptr;
@@ -3052,7 +2932,7 @@ int create_synthesizer_sndbufs(dataptr dz)
     if(bigbufsize <=0)
         bigbufsize  = framesize * sizeof(float);
 
-    dz->buflen = bigbufsize / sizeof(float);    
+    dz->buflen = bigbufsize / sizeof(float);
     dz->buflen = (dz->buflen / framesize)  * framesize;
     bigbufsize = dz->buflen * sizeof(float);
     if((dz->bigbuf = (float *)malloc(bigbufsize  * dz->bufcnt)) == NULL) {
@@ -3140,7 +3020,7 @@ int generate_packet_envelope (dataptr dz)
             if(dz->param[SYNTH_CTR] < 0.0) {
                 frac = 1.0 + dz->param[SYNTH_CTR];
                 isneg = 1;
-            } else 
+            } else
                 frac = 1.0 - dz->param[SYNTH_CTR];
             if(isneg) {
                 lotabincr = 1.0/frac;
@@ -3192,7 +3072,7 @@ int modify_packet_envelope (dataptr dz)
             if(dz->param[SYNTH_CTR] < 0.0) {
                 frac = 1.0 + dz->param[SYNTH_CTR];
                 isneg = 1;
-            } else 
+            } else
                 frac = 1.0 - dz->param[SYNTH_CTR];
             if(isneg) {
                 lotabincr = 1.0/frac;
@@ -3268,9 +3148,9 @@ void pancalc(double position,double *leftgain,double *rightgain)
     else
         dirflag = SIGNAL_TO_RIGHT;
 
-    if(position < 0) 
+    if(position < 0)
         relpos = -position;
-    else 
+    else
         relpos = position;
     if(relpos <= 1.0){      /* between the speakers */
         temp = 1.0 + (relpos * relpos);
@@ -3524,9 +3404,9 @@ void spacebox(double *pos, int *switchpos, double posstep, int chans, int spacet
     switch(spacetyp) {
     case(SB_LRRAND):                //  Alternate Left and Right sides, random position
         *pos = chans/2 * drand48(); //  Random choice of half of chan positions
-        if(*switchpos)              //  If switch on, put in 2nd half   
+        if(*switchpos)              //  If switch on, put in 2nd half
             *pos += chans/2;
-        *switchpos = -(*switchpos); 
+        *switchpos = -(*switchpos);
         break;
     case(SB_FBRAND):                //  Alternate Front and Back sides, random position
         *pos = chans/2 * drand48(); //  Simil for front and back
@@ -3539,7 +3419,7 @@ void spacebox(double *pos, int *switchpos, double posstep, int chans, int spacet
             if(*pos >= chans)
                 *pos -= chans;
         }
-        *switchpos = -(*switchpos); 
+        *switchpos = -(*switchpos);
         break;
     case(SB_ROTATE):                //  Rotating clockwise or anticlockwise
         *pos += posstep;
@@ -3553,10 +3433,10 @@ void spacebox(double *pos, int *switchpos, double posstep, int chans, int spacet
     case(SB_SUPERSPACE3):
     case(SB_SUPERSPACE4):           //  Get item in current permutaion of possibilities
         *switchpos = superperm[configcnt];
-        break;  
+        break;
     case(SB_LR):                    //  Alternate all-left/all-right    Switch between the 2 alternatives
     case(SB_FB):                    //  Alternate all-back/all-front
-    case(SB_FRAMESWITCH):           //  Switch all-square/all-diamond   
+    case(SB_FRAMESWITCH):           //  Switch all-square/all-diamond
         *switchpos = !(*switchpos);
         break;
     case(SB_TRIROT1):               //  Rotate triangle formed by spkrs 2-apart clockwise
@@ -3621,7 +3501,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
             for(k = 1;k < chans/2;k++)
                 obuf[sampcnt+k] = (float)(obuf[sampcnt+k] + val);
         }
-        break;      
+        break;
     case(SB_FB):
         if(switchpos) {
             for(k = 0;k < chans;k++) {
@@ -3632,7 +3512,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
             for(k = 3;k < 6;k++)
                 obuf[sampcnt+k] = (float)(obuf[sampcnt+k] + val);
         }
-        break;      
+        break;
     case(SB_TRIROT1):
     case(SB_ANTITRIROT1):
         tri1 = switchpos;
@@ -3643,7 +3523,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                 obuf[sampcnt] = (float)(obuf[sampcnt] + val);
             sampcnt++;
         }
-        break;      
+        break;
     case(SB_TRIROT2):
     case(SB_ANTITRIROT2):
         tri1 = switchpos;
@@ -3654,7 +3534,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                 obuf[sampcnt] = (float)(obuf[sampcnt] + val);
             sampcnt++;
         }
-        break;      
+        break;
     case(SB_FRAMESWITCH):
         if(switchpos) {
             for(k = 0;k< chans;k++) {   //  SQUARE
@@ -3683,7 +3563,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                 obuf[sampcnt+switchpos] = (float)(obuf[sampcnt+switchpos] + val);
                 switchpos += chans/2;           //  4 - 7
                 obuf[sampcnt+switchpos] = (float)(obuf[sampcnt+switchpos] + val);
-            } else {                            //  0 - 23  
+            } else {                            //  0 - 23
                 a = switchpos/3;                //  0-7 = a
                 b = switchpos - (a*3);          //  0-2
                 b++;                            //  1-3
@@ -3717,20 +3597,20 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                     obuf[sampcnt] = (float)(obuf[sampcnt] + val);
                 sampcnt++;
             }
-            break;      
+            break;
         } else if(switchpos == 53) {            //  DIAMOND
             for(k = 0;k< chans;k++) {
                 if(ODD(k))                      //  1,3,5,7
                     obuf[sampcnt] = (float)(obuf[sampcnt] + val);
                 sampcnt++;
             }
-            break;      
+            break;
         } else {                                //  54 ALL
             for(k = 0;k< chans;k++) {           //  0,1,2,3,4,5,6,7
                 obuf[sampcnt] = (float)(obuf[sampcnt] + val);
                 sampcnt++;
             }
-            break;      
+            break;
         }
         break;
     default:        //  STEREO POSITIONED BETWEEN SOME PAIR OF CHANNELS
@@ -3741,7 +3621,7 @@ void output_special_spatialisation_sample(float *obuf,int sampcnt,int switchpos,
                 obuf[sampcnt] = (float)(obuf[sampcnt] + valr);
             sampcnt++;
         }
-    }       
+    }
 }
 
 /**************************** DUFFING *************************/
@@ -3836,7 +3716,7 @@ int duffing(dataptr dz)
 
 double sinread(double *tabpos,double frq,dataptr dz)
 {
-    double tabincr, val, valdiff, timefrac, *sintab = dz->parray[0]; 
+    double tabincr, val, valdiff, timefrac, *sintab = dz->parray[0];
     int lopos, hipos;
     lopos = (int)floor(*tabpos);
     hipos = (int)ceil(*tabpos);
@@ -3889,13 +3769,13 @@ int check_synth_param_validity_and_consistency(dataptr dz)
 
 /************************************ FRACTAL ***********************************
  *
- *    a    b    a    b  
+ *    a    b    a    b
  *  ____      ____
  * |    |    |    |
  * |    |    |    |
  * |    |____|    |____|_________________
- *                      
- * |_________|         |    
+ *
+ * |_________|         |
  * halfgrouplen = h    |
  *                     |
  * |___________________|_________________|
@@ -3938,7 +3818,7 @@ int fractal(dataptr dz)
     float *ibuf = dz->sampbuf[0];       //  length to copy to obuf depends on input frq/wavelen
     float *obuf = dz->sampbuf[1];       //  length to OUTPUT depends only on dz->buflen
     int outdur, endsplicestart, total_samps_written;
-    int frac = MAXFRAC;                 //  unrealistic huge value, reduced during Pass 1 
+    int frac = MAXFRAC;                 //  unrealistic huge value, reduced during Pass 1
     int fraccnt;                        //  counts depth of fractalisation
     int *asub;                          //  samplelen of each layer of fractalisation
     int wavelen, total_wavelen, grouplen, halfgrouplen, total_grouplen, bufpos, obufpos, obufend, samps_to_write, samps_written, endpos, rlen;
@@ -3978,7 +3858,7 @@ int fractal(dataptr dz)
         total_samps_written += wavelen;
         grouplen = (int)floor((double)wavelen * dz->param[SYNTH_GTOW]);
         halfgrouplen = grouplen/2;
-        fraccnt = 0;                            //  initialise count of fractal levels  
+        fraccnt = 0;                            //  initialise count of fractal levels
         asub[fraccnt]  = (int)floor((double)halfgrouplen * dz->param[SYNTH_ATOH]);
         memset((char *)ibuf,0,dz->buflen * sizeof(float));  //  Clear buffer
 
@@ -3990,13 +3870,13 @@ int fractal(dataptr dz)
             wavelen = asub[fraccnt];            //  Proceed to next fractal subdivision
             grouplen = (int)floor((double)wavelen * dz->param[SYNTH_GTOW]);
             halfgrouplen = grouplen/2;
-            fraccnt++;                          //  count fractal subdivisions  
+            fraccnt++;                          //  count fractal subdivisions
             asub[fraccnt]  = (int)floor((double)halfgrouplen * dz->param[SYNTH_ATOH]);
         }
         time += dur;                            //  Advance time by duration of current wavecycle
         if(fraccnt < frac)
-            frac = fraccnt;                     //  "frac" gets the (limit of) minimum degree of fractalisation conpatible with input params 
-                                                //  i.e. minimum fractalisation = frac - 1  
+            frac = fraccnt;                     //  "frac" gets the (limit of) minimum degree of fractalisation conpatible with input params
+                                                //  i.e. minimum fractalisation = frac - 1
     }
     frac--;     // Maximum depth of fractalisation
     if(frac < 0) {
@@ -4010,7 +3890,7 @@ int fractal(dataptr dz)
         fprintf(stdout,"WARNING: Flip Level (%d) exceeds max possible fractalisation (%d) : adjusting.\n",dz->iparam[SYNTH_FLEVEL],frac-1);
         fflush(stdout);
     }
-    while(dz->iparam[SYNTH_FLEVEL] > frac)      //  Adjust +- flip level, if it exceeds max fractalisation 
+    while(dz->iparam[SYNTH_FLEVEL] > frac)      //  Adjust +- flip level, if it exceeds max fractalisation
         dz->iparam[SYNTH_FLEVEL]--;
 
     //  PASS 2 : OUTPUT SOUND, FRACTALISING ONLY TO MAX-POSSIBLE
@@ -4033,7 +3913,7 @@ int fractal(dataptr dz)
         grouplen = (int)floor((double)wavelen * dz->param[SYNTH_GTOW]);
         total_grouplen = grouplen;
         halfgrouplen = grouplen/2;
-        fraccnt = 0;                            //  initialise count of fractal levels  
+        fraccnt = 0;                            //  initialise count of fractal levels
         asub[fraccnt]  = (int)floor((double)halfgrouplen * dz->param[SYNTH_ATOH]);
         memset((char *)ibuf,0,dz->buflen * sizeof(float));  //  Clear buffer
         //  LOOP THROUGH EACH LEVEL OF FRACTALISATION, MARKING SPIKE-ENTRY POINTS
@@ -4073,7 +3953,7 @@ int fractal(dataptr dz)
             wavelen = asub[fraccnt];            //  Proceed to next fractal subdivision
             grouplen = (int)floor((double)wavelen * dz->param[SYNTH_GTOW]);
             halfgrouplen = grouplen/2;
-            fraccnt++;                          //  count fractal subdivisions  
+            fraccnt++;                          //  count fractal subdivisions
             asub[fraccnt]  = (int)floor((double)halfgrouplen * dz->param[SYNTH_ATOH]);
         }
 
@@ -4091,8 +3971,8 @@ int fractal(dataptr dz)
                     for(n = 0; n< dz->spikelen;n++)         //  invert the spike
                         spikebuf[n] = (float)(spikebuf[n] * -1.0);
                     spikecnt = 0;                           //  and reset spikecnt to zero
-                }   
-            } else 
+                }
+            } else
                 bufpos++;
         }
 
@@ -4100,10 +3980,10 @@ int fractal(dataptr dz)
         
         if(total_samps_written > endsplicestart) {
             if(splicepos == 0) {                    //  If splice has not started
-                spliceseg = total_samps_written - endsplicestart; 
+                spliceseg = total_samps_written - endsplicestart;
                 bufpos = total_wavelen - spliceseg; //  Start in buf where splice should start
             } else
-                bufpos = 0;                         //  Else, already in splice, start from bufstart    
+                bufpos = 0;                         //  Else, already in splice, start from bufstart
             while(splicepos < splicelen) {
                 spliceratio -= spliceincr;
                 spliceratio = max(spliceratio,0.0);

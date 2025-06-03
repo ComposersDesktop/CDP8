@@ -1,4 +1,6 @@
-find_library(ALSA_LIBRARY alsa)
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  find_library(ALSA_LIBRARY alsa)
+endif()
 
 add_subdirectory(cdp2k)
 add_subdirectory(newsfsys)

@@ -95,7 +95,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
             sprintf(errstr,"Unknown case for MOD_SPACE in establish_bufptrs_and_extra_buffers()\n");
             return(PROGRAM_ERROR);
         }
-        break;              
+        break;
 //TW NEW CASES
     case(SCALED_PAN):           dz->extra_bufcnt = 0;   dz->bufcnt = 3;     break;
     case(FIND_PANPOS):          dz->extra_bufcnt = 0;   dz->bufcnt = 1;     break;
@@ -112,7 +112,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
             sprintf(errstr,"Unknown case for MOD_PITCH in establish_bufptrs_and_extra_buffers()\n");
             return(PROGRAM_ERROR);
         }
-        break;              
+        break;
     case(MOD_REVECHO):
         switch(dz->mode) {
         case(MOD_STADIUM):      dz->extra_bufcnt = 0;   dz->bufcnt = 4;     break;
@@ -159,7 +159,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
 
 int setup_internal_arrays_and_array_pointers(dataptr dz)
 {
-    int n;       
+    int n;
     dz->ptr_cnt    = -1;        //base constructor...process
     dz->array_cnt  = -1;
     dz->iarray_cnt = -1;
@@ -180,7 +180,7 @@ int setup_internal_arrays_and_array_pointers(dataptr dz)
         break;
     case(MOD_REVECHO):
         switch(dz->mode) {
-        case(MOD_STADIUM): dz->array_cnt=5;dz->iarray_cnt=0; dz->larray_cnt=1; dz->ptr_cnt = 0; dz->fptr_cnt = 0; break;        
+        case(MOD_STADIUM): dz->array_cnt=5;dz->iarray_cnt=0; dz->larray_cnt=1; dz->ptr_cnt = 0; dz->fptr_cnt = 0; break;
         default:           dz->array_cnt=1;dz->iarray_cnt=0; dz->larray_cnt=0; dz->ptr_cnt = 0; dz->fptr_cnt = 0; break;
         }
         break;
@@ -213,11 +213,11 @@ ANY APPLICATION DEALING WITH A NUMLIST INPUT: MUST establish AT LEAST 1 double a
 
 
     if(dz->array_cnt < 0 || dz->iarray_cnt < 0 || dz->larray_cnt < 0 || dz->ptr_cnt < 0 || dz->fptr_cnt < 0) {
-        sprintf(errstr,"array_cnt not set in setup_internal_arrays_and_array_pointers()\n");       
+        sprintf(errstr,"array_cnt not set in setup_internal_arrays_and_array_pointers()\n");
         return(PROGRAM_ERROR);
     }
 
-    if(dz->array_cnt > 0) {  
+    if(dz->array_cnt > 0) {
         if((dz->parray  = (double **)malloc(dz->array_cnt * sizeof(double *)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for internal double arrays.\n");
             return(MEMORY_ERROR);
@@ -233,7 +233,7 @@ ANY APPLICATION DEALING WITH A NUMLIST INPUT: MUST establish AT LEAST 1 double a
         for(n=0;n<dz->iarray_cnt;n++)
             dz->iparray[n] = NULL;
     }
-    if(dz->larray_cnt > 0) {      
+    if(dz->larray_cnt > 0) {
         if((dz->lparray = (int    **)malloc(dz->larray_cnt * sizeof(int *)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for internal int arrays.\n");
             return(MEMORY_ERROR);
@@ -241,7 +241,7 @@ ANY APPLICATION DEALING WITH A NUMLIST INPUT: MUST establish AT LEAST 1 double a
         for(n=0;n<dz->larray_cnt;n++)
             dz->lparray[n] = NULL;
     }
-    if(dz->ptr_cnt > 0)   {       
+    if(dz->ptr_cnt > 0)   {
         if((dz->ptr     = (double  **)malloc(dz->ptr_cnt  * sizeof(double *)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for internal pointer arrays.\n");
             return(MEMORY_ERROR);
@@ -249,7 +249,7 @@ ANY APPLICATION DEALING WITH A NUMLIST INPUT: MUST establish AT LEAST 1 double a
         for(n=0;n<dz->ptr_cnt;n++)
             dz->ptr[n] = NULL;
     }
-    if(dz->fptr_cnt > 0)   {      
+    if(dz->fptr_cnt > 0)   {
         if((dz->fptr = (float  **)malloc(dz->fptr_cnt * sizeof(float *)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for internal float-pointer arrays.\n");
             return(MEMORY_ERROR);
@@ -263,30 +263,30 @@ ANY APPLICATION DEALING WITH A NUMLIST INPUT: MUST establish AT LEAST 1 double a
 /****************************** ASSIGN_PROCESS_LOGIC *********************************/
 
 int assign_process_logic(dataptr dz)
-{                        
+{
     switch(dz->process) {
-    case(MOD_LOUDNESS):       
+    case(MOD_LOUDNESS):
         switch(dz->mode) {
-        case(LOUDNESS_GAIN):    
+        case(LOUDNESS_GAIN):
         case(LOUDNESS_DBGAIN):
         case(LOUDNESS_NORM):
         case(LOUDNESS_SET):
-        case(LOUD_PROPOR):    
+        case(LOUD_PROPOR):
         case(LOUD_DB_PROPOR):
-        case(LOUDNESS_PHASE):   
+        case(LOUDNESS_PHASE):
             setup_process_logic(SNDFILES_ONLY,  EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;
-        case(LOUDNESS_BALANCE): 
+        case(LOUDNESS_BALANCE):
             setup_process_logic(TWO_SNDFILES,   EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;
-        case(LOUDNESS_LOUDEST): 
+        case(LOUDNESS_LOUDEST):
             setup_process_logic(MANY_SNDFILES,  OTHER_PROCESS,      NO_OUTPUTFILE,  dz);    break;
-        case(LOUDNESS_EQUALISE): 
+        case(LOUDNESS_EQUALISE):
             setup_process_logic(MANY_SNDFILES,  UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);    break;
         default:
             sprintf(errstr,"Unknown case for MOD_LOUDNESS in assign_process_logic()\n");
             return(PROGRAM_ERROR);
         }
         break;
-    case(MOD_SPACE):          
+    case(MOD_SPACE):
         switch(dz->mode) {
         case(MOD_PAN):          setup_process_logic(SNDFILES_ONLY,  UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);    break;
         case(MOD_MIRROR):       setup_process_logic(SNDFILES_ONLY,  EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;
@@ -301,7 +301,7 @@ int assign_process_logic(dataptr dz)
     case(SCALED_PAN):       setup_process_logic(SNDFILES_ONLY,  UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);        break;
     case(FIND_PANPOS):      setup_process_logic(SNDFILES_ONLY,  SCREEN_MESSAGE,     NO_OUTPUTFILE,  dz);        break;
 
-    case(MOD_PITCH):          
+    case(MOD_PITCH):
         switch(dz->mode) {
         case(MOD_TRANSPOS):            setup_process_logic(SNDFILES_ONLY,UNEQUAL_SNDFILE,SNDFILE_OUT,   dz);    break;
         case(MOD_TRANSPOS_SEMIT):      setup_process_logic(SNDFILES_ONLY,UNEQUAL_SNDFILE,SNDFILE_OUT,   dz);    break;
@@ -317,13 +317,13 @@ int assign_process_logic(dataptr dz)
     case(MOD_REVECHO):    setup_process_logic(SNDFILES_ONLY,        UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);    break;
     case(MOD_RADICAL):
         switch(dz->mode) {
-        case(MOD_REVERSE): setup_process_logic(SNDFILES_ONLY,       EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;      
+        case(MOD_REVERSE): setup_process_logic(SNDFILES_ONLY,       EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;
         case(MOD_LOBIT):
-        case(MOD_LOBIT2):  setup_process_logic(SNDFILES_ONLY,       EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;      
-        case(MOD_SCRUB):   setup_process_logic(SNDFILES_ONLY,       UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);    break;      
-        case(MOD_SHRED):   setup_process_logic(SNDFILES_ONLY,       EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;      
-        case(MOD_RINGMOD): setup_process_logic(SNDFILES_ONLY,       EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;      
-        case(MOD_CROSSMOD): setup_process_logic(TWO_SNDFILES,       UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);    break;      
+        case(MOD_LOBIT2):  setup_process_logic(SNDFILES_ONLY,       EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;
+        case(MOD_SCRUB):   setup_process_logic(SNDFILES_ONLY,       UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);    break;
+        case(MOD_SHRED):   setup_process_logic(SNDFILES_ONLY,       EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;
+        case(MOD_RINGMOD): setup_process_logic(SNDFILES_ONLY,       EQUAL_SNDFILE,      SNDFILE_OUT,    dz);    break;
+        case(MOD_CROSSMOD): setup_process_logic(TWO_SNDFILES,       UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);    break;
         }
         break;
     case(BRASSAGE):       setup_process_logic(SNDFILES_ONLY,        UNEQUAL_SNDFILE,    SNDFILE_OUT,    dz);    break;
@@ -375,13 +375,13 @@ void set_legal_infile_structure(dataptr dz)
     case(MOD_RADICAL):
         if(dz->mode==MOD_CROSSMOD)
             dz->has_otherfile = TRUE;
-        else 
+        else
             dz->has_otherfile = FALSE;
         break;
     case(MOD_LOUDNESS):
         if(dz->mode==LOUDNESS_BALANCE)
             dz->has_otherfile = TRUE;
-        else 
+        else
             dz->has_otherfile = FALSE;
         break;
     default:
@@ -400,18 +400,18 @@ int set_legal_internalparam_structure(int process,int mode,aplptr ap)
 {
     int exit_status = FINISHED;
     switch(process) {
-    case(MOD_LOUDNESS):         exit_status = set_internalparam_data("",ap);        break;      
-    case(MOD_SPACE):            exit_status = set_internalparam_data("",ap);        break;      
+    case(MOD_LOUDNESS):         exit_status = set_internalparam_data("",ap);        break;
+    case(MOD_SPACE):            exit_status = set_internalparam_data("",ap);        break;
 //TW UPDATES
-    case(SCALED_PAN):           exit_status = set_internalparam_data("",ap);        break;      
-    case(FIND_PANPOS):          exit_status = set_internalparam_data("",ap);        break;      
+    case(SCALED_PAN):           exit_status = set_internalparam_data("",ap);        break;
+    case(FIND_PANPOS):          exit_status = set_internalparam_data("",ap);        break;
 
     case(MOD_PITCH):
         switch(mode) {
         case(MOD_ACCEL):        exit_status = set_internalparam_data(  "iiid",ap);  break;
         case(MOD_VIBRATO):      exit_status = set_internalparam_data( "iiiid",ap);  break;
         default:                exit_status = set_internalparam_data("iiiiid",ap);  break;
-        }       
+        }
         break;
     case(MOD_REVECHO):
         switch(mode) {
@@ -450,7 +450,7 @@ int set_legal_internalparam_structure(int process,int mode,aplptr ap)
             sprintf(errstr,"Unknown case for BRASSAGE in set_legal_internalparam_structure()\n");
             return(PROGRAM_ERROR);
         }
-        break;                         
+        break;
     case(SAUSAGE):      exit_status = set_internalparam_data("ddddiiiiiiiiiiiiiiiiii",ap);  break;
     case(SIN_TAB):      exit_status = set_internalparam_data("",ap);                        break;
 //TW UPDATES
@@ -465,7 +465,7 @@ int set_legal_internalparam_structure(int process,int mode,aplptr ap)
         sprintf(errstr,"Unknown process in set_legal_internalparam_structure()\n");
         return(PROGRAM_ERROR);
     }
-    return(exit_status);        
+    return(exit_status);
 }
 
 /********************************************************************************************/
@@ -474,7 +474,7 @@ int set_legal_internalparam_structure(int process,int mode,aplptr ap)
 
 /********************** READ_SPECIAL_DATA ************************/
 
-int read_special_data(char *str,dataptr dz)    
+int read_special_data(char *str,dataptr dz)
 {
     aplptr ap = dz->application;
 
@@ -495,7 +495,7 @@ int read_special_data(char *str,dataptr dz)
 
 /****************************** PARAM_PREPROCESS *********************************/
 
-int param_preprocess(dataptr dz)    
+int param_preprocess(dataptr dz)
 {
     int exit_status = FINISHED;
 #ifdef MULTICHAN
@@ -503,13 +503,13 @@ int param_preprocess(dataptr dz)
 #endif
     switch(dz->process) {
     case(MOD_LOUDNESS):
-        return(FINISHED);           
+        return(FINISHED);
     case(MOD_RADICAL):
         switch(dz->mode) {
         case(MOD_SHRED):    return shred_preprocess(dz);
         case(MOD_SCRUB):    return scrub_preprocess(dz);
         case(MOD_RINGMOD):  return create_rm_sintab(dz);
-        default:            return(FINISHED);           
+        default:            return(FINISHED);
         }
         break;
     case(MOD_SPACE):        return modspace_preprocess(dz);
@@ -526,7 +526,7 @@ int param_preprocess(dataptr dz)
         n = dz->infile->channels;
         dz->infile->channels = dz->outfile->channels;
 #endif
-        if(dz->mode==GRS_REVERB || dz->mode==GRS_BRASSAGE || dz->mode == GRS_FULL_MONTY){               
+        if(dz->mode==GRS_REVERB || dz->mode==GRS_BRASSAGE || dz->mode == GRS_FULL_MONTY){
             if((exit_status = create_sized_outfile(dz->outfilename,dz))<0)
                 return(exit_status);
         }
@@ -545,8 +545,8 @@ int param_preprocess(dataptr dz)
     case(SHUDDER):      return FINISHED;
 
 /* TEMPORARY TEST ROUTINE */
-    case(WORDCNT):          
-        return FINISHED;        
+    case(WORDCNT):
+        return FINISHED;
 /* TEMPORARY TEST ROUTINE */
     default:
         sprintf(errstr,"PROGRAMMING PROBLEM: Unknown process in param_preprocess()\n");
@@ -562,7 +562,7 @@ int param_preprocess(dataptr dz)
 /**************************** GROUCHO_PROCESS_FILE ****************************/
 
 int groucho_process_file(dataptr dz)   /* FUNCTIONS FOUND IN PROCESS.C */
-{   
+{
     /*int exit_status = FINISHED;*/
 
     if(dz->process==BRASSAGE || dz->process==SAUSAGE)
@@ -585,7 +585,7 @@ int groucho_process_file(dataptr dz)   /* FUNCTIONS FOUND IN PROCESS.C */
     case(FIND_PANPOS):  return findpan(dz);
 
     case(MOD_PITCH):    return process_varispeed(dz);
-    case(MOD_REVECHO):  
+    case(MOD_REVECHO):
         switch(dz->mode) {
         case(MOD_STADIUM):  return do_stadium(dz);
         case(MOD_DELAY):
@@ -595,7 +595,7 @@ int groucho_process_file(dataptr dz)   /* FUNCTIONS FOUND IN PROCESS.C */
             return(PROGRAM_ERROR);
         }
         break;
-    case(MOD_RADICAL):  
+    case(MOD_RADICAL):
         switch(dz->mode) {
         case(MOD_REVERSE):  return do_reversing(dz);
         case(MOD_SHRED):    return shred_process(dz);
@@ -638,7 +638,7 @@ int check_param_validity_and_consistency(dataptr dz)
     switch(dz->process) {
     case(MOD_SPACE):    return modspace_pconsistency(dz);
 //TW UPDATE
-    case(SCALED_PAN):   
+    case(SCALED_PAN):
         if(dz->infile->channels!=MONO) {
             sprintf(errstr,"ERROR: SCALED PAN only works with MONO input files.\n");
             return(DATA_ERROR);
@@ -668,7 +668,7 @@ int check_param_validity_and_consistency(dataptr dz)
     case(FIND_PANPOS):  return FINISHED;
 
 /* TEMPORARY TEST ROUTINE */
-    case(WORDCNT):      return FINISHED;        
+    case(WORDCNT):      return FINISHED;
 /* TEMPORARY TEST ROUTINE */
     }
     return(FINISHED);
@@ -683,9 +683,9 @@ int check_param_validity_and_consistency(dataptr dz)
 int allocate_large_buffers(dataptr dz)
 {
     switch(dz->process) {
-    case(MOD_LOUDNESS):         
+    case(MOD_LOUDNESS):
         return create_sndbufs(dz);
-    case(MOD_SPACE):            
+    case(MOD_SPACE):
         if(dz->mode!=MOD_MIRRORPAN)
             return create_sndbufs(dz);
         return(FINISHED);
@@ -715,7 +715,7 @@ int allocate_large_buffers(dataptr dz)
     case(SHUDDER):      return create_sndbufs(dz);
 
 /* TEMPORARY TEST ROUTINE */
-    case(WORDCNT):          
+    case(WORDCNT):
         return(FINISHED);
 /* TEMPORARY TEST ROUTINE */
     default:
@@ -738,7 +738,7 @@ int create_granula_buffers(dataptr dz)
 //TW All buffers are in floats, so this not needed
 //  int   lfactor = sizeof(int)/sizeof(float);
     if(dz->iparray[GRS_FLAGS][G_SPACE_FLAG])
-        convert_to_stereo = TRUE;                           
+        convert_to_stereo = TRUE;
     if((dz->extrabuf[GRS_GBUF] = (float *)malloc(dz->iparam[GRS_GLBUF_SMPXS] * sizeof(float)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY to create grain buffer.\n");     /* GRAIN BUFFER */
         return(MEMORY_ERROR);
@@ -746,14 +746,14 @@ int create_granula_buffers(dataptr dz)
                 /* CALCULATE NUMBER OF BUFFER CHUNKS REQUIRED : bufdivisor */
 
     if(dz->iparam[GRS_CHANNELS]>0)
-        bufdivisor += 2;                
+        bufdivisor += 2;
 //TW All buffers are in floats
-//  bufdivisor += 1 + 1 + lfactor;      
-    bufdivisor += 3;        
+//  bufdivisor += 1 + 1 + lfactor;
+    bufdivisor += 3;
     if(convert_to_stereo)
 //TW All buffers are in floats
-//      bufdivisor += 1 + lfactor;      
-        bufdivisor += 2;        
+//      bufdivisor += 1 + lfactor;
+        bufdivisor += 2;
 
     enough_memory = 0;
     if((exit_status = grab_an_appropriate_block_of_memory(bufdivisor,dz))<0)
@@ -769,10 +769,10 @@ int create_granula_buffers(dataptr dz)
             sprintf(errstr,"INSUFFICIENT MEMORY to create sound buffers.\n");
             return(MEMORY_ERROR);
         }
-        if(dz->iparam[GRS_CHANNELS])                
-            overall_size += 2 * dz->iparam[GRS_BUF_SMPXS];  
+        if(dz->iparam[GRS_CHANNELS])
+            overall_size += 2 * dz->iparam[GRS_BUF_SMPXS];
         if(overall_size<0) {                                                 /* overflow */
-            sprintf(errstr,"INSUFFICIENT MEMORY for sound buffers.\n"); 
+            sprintf(errstr,"INSUFFICIENT MEMORY for sound buffers.\n");
             return(MEMORY_ERROR);
         }
         if((dz->bigbuf=(float *)malloc(overall_size * sizeof(float)))==NULL) {
@@ -781,14 +781,14 @@ int create_granula_buffers(dataptr dz)
         }
                     /* SET SIZE OF inbuf, outbuf, AND Lbuf (FOR CALCS IN LONGS) */
         outbuflen   = dz->buflen;
-        if(convert_to_stereo)                   
+        if(convert_to_stereo)
             outbuflen *= 2;
         if(dz->iparam[GRS_CHANNELS]) {
             stereo_buflen = dz->buflen * 2;
             stereo_bufxs  = dz->iparam[GRS_BUF_SMPXS] * 2;      /**** CHANGED MAY 1998 ****/
-        }                                        
-        dz->iparam[GRS_LONGS_BUFLEN] = outbuflen;           
-        if(dz->iparam[GRS_LBUF_SMPXS] <= dz->iparam[GRS_LONGS_BUFLEN])                                      
+        }
+        dz->iparam[GRS_LONGS_BUFLEN] = outbuflen;
+        if(dz->iparam[GRS_LBUF_SMPXS] <= dz->iparam[GRS_LONGS_BUFLEN])
             enough_memory = 1;
         else {
             if((/*dz->bigbufsize*/dz->buflen += bbb_size) < 0) {    /* overflow */
@@ -797,18 +797,18 @@ int create_granula_buffers(dataptr dz)
             }
         }
     }
-                /* DIVIDE UP ALLOCATED MEMORY IN SPECIALISED BUFFERS */ 
+                /* DIVIDE UP ALLOCATED MEMORY IN SPECIALISED BUFFERS */
                                                                     
-    if(dz->iparam[GRS_CHANNELS]) {                      
-        dz->sampbuf[GRS_SBUF] = dz->bigbuf;                                  
-        dz->sampbuf[GRS_BUF]  = dz->sampbuf[GRS_SBUF] + stereo_buflen + stereo_bufxs;            
-    } else                                               
-        dz->sampbuf[GRS_BUF]     = dz->bigbuf;                      /* buf: complete input buffer with wrap-around space */                 
+    if(dz->iparam[GRS_CHANNELS]) {
+        dz->sampbuf[GRS_SBUF] = dz->bigbuf;
+        dz->sampbuf[GRS_BUF]  = dz->sampbuf[GRS_SBUF] + stereo_buflen + stereo_bufxs;
+    } else
+        dz->sampbuf[GRS_BUF]     = dz->bigbuf;                      /* buf: complete input buffer with wrap-around space */
     dz->sbufptr[GRS_BUF]   = dz->sampbuf[GRS_BUF] + dz->buflen;                /* bufend:   start of wrap-around area */
     tailend                = dz->sbufptr[GRS_BUF] + dz->iparam[GRS_BUF_SMPXS]; /* tailend:  end of wrap-around area */
-    dz->sampbuf[GRS_IBUF]  = dz->sampbuf[GRS_BUF] + dz->iparam[GRS_BUF_SMPXS]; /* ibuf: input buffer 'base' after wrap-around begins */                  
+    dz->sampbuf[GRS_IBUF]  = dz->sampbuf[GRS_BUF] + dz->iparam[GRS_BUF_SMPXS]; /* ibuf: input buffer 'base' after wrap-around begins */
     dz->fptr[GRS_LBUF]     = /*(int *)*/tailend;                                   /* Lbuf: buffer for calculations */
-    dz->fptr[GRS_LBUFEND]  = dz->fptr[GRS_LBUF] + dz->iparam[GRS_LONGS_BUFLEN];/* Lbufend:  start of Lbuf wrap-around area */ 
+    dz->fptr[GRS_LBUFEND]  = dz->fptr[GRS_LBUF] + dz->iparam[GRS_LONGS_BUFLEN];/* Lbufend:  start of Lbuf wrap-around area */
     dz->fptr[GRS_LTAILEND] = dz->fptr[GRS_LBUFEND] + dz->iparam[GRS_LBUF_SMPXS];/* Ltailend: end of Lbuf wrap-around area */
     dz->fptr[GRS_LBUFMID]  = dz->fptr[GRS_LBUF]    + dz->iparam[GRS_LBUF_SMPXS];/* Lbufmid:  Lbuf 'base' after wrap-around begins */
     dz->sampbuf[GRS_OBUF]  = (dz->fptr[GRS_LTAILEND]);                  /* obuf:     output buffer */
@@ -828,7 +828,7 @@ int create_granula_buffers(dataptr dz)
     float *tailend;
     int  multichan_buflen = 0, multichan_bufxs = 0, grainbuflen, bbb_size;
     if(dz->iparray[GRS_FLAGS][G_SPACE_FLAG])
-        spatialise_output = TRUE;                           
+        spatialise_output = TRUE;
     if((dz->extrabuf[GRS_GBUF] = (float *)malloc(dz->iparam[GRS_GLBUF_SMPXS] * sizeof(float)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY to create grain buffer.\n");     /* GRAIN BUFFER */
         return(MEMORY_ERROR);
@@ -836,8 +836,8 @@ int create_granula_buffers(dataptr dz)
                 /* CALCULATE NUMBER OF BUFFER CHUNKS REQUIRED : bufdivisor */
 
     if(dz->iparam[GRS_CHANNELS]>0)
-        bufdivisor += chans;                
-    bufdivisor += 3;        
+        bufdivisor += chans;
+    bufdivisor += 3;
 
 // MARCH 2010
 //  if(spatialise_output)
@@ -857,10 +857,10 @@ int create_granula_buffers(dataptr dz)
             sprintf(errstr,"INSUFFICIENT MEMORY to create sound buffers.\n");
             return(MEMORY_ERROR);
         }
-        if(dz->iparam[GRS_CHANNELS])                
-            overall_size += chans * dz->iparam[GRS_BUF_SMPXS];  
+        if(dz->iparam[GRS_CHANNELS])
+            overall_size += chans * dz->iparam[GRS_BUF_SMPXS];
         if(overall_size<0) {                                                 /* overflow */
-            sprintf(errstr,"INSUFFICIENT MEMORY for sound buffers.\n"); 
+            sprintf(errstr,"INSUFFICIENT MEMORY for sound buffers.\n");
             return(MEMORY_ERROR);
         }
         if((dz->bigbuf=(float *)malloc(overall_size * sizeof(float)))==NULL) {
@@ -869,13 +869,13 @@ int create_granula_buffers(dataptr dz)
         }
                     /* SET SIZE OF inbuf, outbuf, AND Lbuf (FOR CALCS IN LONGS) */
     
-        grainbuflen   = dz->buflen * dz->iparam[GRS_INCHANS];   
+        grainbuflen   = dz->buflen * dz->iparam[GRS_INCHANS];
         if(dz->iparam[GRS_CHANNELS]) {
             multichan_buflen = dz->buflen * chans;
             multichan_bufxs  = dz->iparam[GRS_BUF_SMPXS] * chans;       /**** CHANGED MAY 1998 ****/
-        }                                        
-        dz->iparam[GRS_LONGS_BUFLEN] = grainbuflen;         
-        if(dz->iparam[GRS_LBUF_SMPXS] <= dz->iparam[GRS_LONGS_BUFLEN])                                      
+        }
+        dz->iparam[GRS_LONGS_BUFLEN] = grainbuflen;
+        if(dz->iparam[GRS_LBUF_SMPXS] <= dz->iparam[GRS_LONGS_BUFLEN])
             enough_memory = 1;
         else {
             if((dz->buflen += bbb_size) < 0) {  /* overflow */
@@ -884,18 +884,18 @@ int create_granula_buffers(dataptr dz)
             }
         }
     }
-                /* DIVIDE UP ALLOCATED MEMORY IN SPECIALISED BUFFERS */ 
+                /* DIVIDE UP ALLOCATED MEMORY IN SPECIALISED BUFFERS */
                                                                     
-    if(dz->iparam[GRS_CHANNELS]) {                      
-        dz->sampbuf[GRS_SBUF] = dz->bigbuf;                                  
-        dz->sampbuf[GRS_BUF]  = dz->sampbuf[GRS_SBUF] + multichan_buflen + multichan_bufxs;          
-    } else                                               
-        dz->sampbuf[GRS_BUF]     = dz->bigbuf;                      /* buf: complete input buffer with wrap-around space */                 
+    if(dz->iparam[GRS_CHANNELS]) {
+        dz->sampbuf[GRS_SBUF] = dz->bigbuf;
+        dz->sampbuf[GRS_BUF]  = dz->sampbuf[GRS_SBUF] + multichan_buflen + multichan_bufxs;
+    } else
+        dz->sampbuf[GRS_BUF]     = dz->bigbuf;                      /* buf: complete input buffer with wrap-around space */
     dz->sbufptr[GRS_BUF]   = dz->sampbuf[GRS_BUF] + dz->buflen;                /* bufend:   start of wrap-around area */
     tailend                = dz->sbufptr[GRS_BUF] + dz->iparam[GRS_BUF_SMPXS]; /* tailend:  end of wrap-around area */
-    dz->sampbuf[GRS_IBUF]  = dz->sampbuf[GRS_BUF] + dz->iparam[GRS_BUF_SMPXS]; /* ibuf: input buffer 'base' after wrap-around begins */                  
+    dz->sampbuf[GRS_IBUF]  = dz->sampbuf[GRS_BUF] + dz->iparam[GRS_BUF_SMPXS]; /* ibuf: input buffer 'base' after wrap-around begins */
     dz->fptr[GRS_LBUF]     = /*(int *)*/tailend;                                   /* Lbuf: buffer for calculations */
-    dz->fptr[GRS_LBUFEND]  = dz->fptr[GRS_LBUF] + dz->iparam[GRS_LONGS_BUFLEN];/* Lbufend:  start of Lbuf wrap-around area */ 
+    dz->fptr[GRS_LBUFEND]  = dz->fptr[GRS_LBUF] + dz->iparam[GRS_LONGS_BUFLEN];/* Lbufend:  start of Lbuf wrap-around area */
     dz->fptr[GRS_LTAILEND] = dz->fptr[GRS_LBUFEND] + dz->iparam[GRS_LBUF_SMPXS];/* Ltailend: end of Lbuf wrap-around area */
     dz->fptr[GRS_LBUFMID]  = dz->fptr[GRS_LBUF]    + dz->iparam[GRS_LBUF_SMPXS];/* Lbufmid:  Lbuf 'base' after wrap-around begins */
     dz->sampbuf[GRS_OBUF]  = (dz->fptr[GRS_LTAILEND]);                  /* obuf:     output buffer */
@@ -908,7 +908,7 @@ int create_granula_buffers(dataptr dz)
 
 #endif
 
-/*  INPUT BUFFER :-     
+/*  INPUT BUFFER :-
  *
  *  |-----------BUFLEN-----------|
  *
@@ -926,7 +926,7 @@ int create_granula_buffers(dataptr dz)
  *  Lbuf       Lbufmid    Lbufend
  *  |____________|_______________|_Lbuf_smpxs_|
  *                               /
- *  |_Lbuf_smpxs_|         <<-COPY___________/  
+ *  |_Lbuf_smpxs_|         <<-COPY___________/
  *
  */
 
@@ -950,7 +950,7 @@ int grab_an_appropriate_block_of_memory(int bufdivisor,dataptr dz)
                 /* CALCULATE SIZE OF BUFFER REQUIRED : dz->bigbufsize */
 
         dz->buflen -= dz->iparam[GRS_BUF_SMPXS] + dz->iparam[GRS_LBUF_SMPXS];   /* Allow for overflow areas */
-        if(dz->iparam[GRS_CHANNELS])                
+        if(dz->iparam[GRS_CHANNELS])
             dz->buflen -= 2 * dz->iparam[GRS_BUF_SMPXS];    /* Allow for overflow space in additional stereo inbuf */
         dz->buflen /= bufdivisor;                           /* get unit buffersize */
         sector_blok = F_SECSIZE;                            /* Read and write buf sizes must be multiples of SECSIZE ... for now */
@@ -979,7 +979,7 @@ int grab_an_appropriate_block_of_memory(int bufdivisor,dataptr dz)
                 /* CALCULATE SIZE OF BUFFER REQUIRED : dz->bigbufsize */
 
         dz->buflen -= dz->iparam[GRS_BUF_SMPXS] + dz->iparam[GRS_LBUF_SMPXS];   /* Allow for overflow areas */
-        if(dz->iparam[GRS_CHANNELS])                
+        if(dz->iparam[GRS_CHANNELS])
             dz->buflen -= chans * dz->iparam[GRS_BUF_SMPXS];    /* Allow for overflow space in additional multichannel inbuf */
         dz->buflen /= bufdivisor;                           /* get unit buffersize */
         sector_blok = F_SECSIZE;                            /* Read and write buf sizes must be multiples of SECSIZE ... for now */
@@ -1052,21 +1052,21 @@ int usage1(void)
 }
 
 /******************************** USAGE2 ********************************/
- /*RWD 9:2001 usage message changes for loudness */
+/* RWD 9:2001 usage message changes for loudness */
 int usage2(char *str)
 {
-    if (!strcmp(str,"loudness")) {       
+    if (!strcmp(str,"loudness")) {
         fprintf(stdout,
         "ADJUST LOUDNESS OF A SOUNDFILE\n\n"
         "USAGE: modify loudness 1 infile         outfile gain\n"
         "OR:    modify loudness 11-12 infile     outfile gain\n"
-        "OR:    modify loudness 2 infile         outfile gain\n"        /* NORMALISE IF NESS */
-        "OR:    modify loudness 3 infile         outfile [-llevel]\n"       /* NORMALISE IF NESS */
-        "OR:    modify loudness 4 infile         outfile [-llevel]\n"       /* FORCE TO SET LEVEL */
-        "OR:    modify loudness 5 infile infile2 outfile\n"                 /* BALANCE */
-        "OR:    modify loudness 6 infile outfile\n"                         /* INVERT PHASE */
-        "OR:    modify loudness 7 infile infile2 etc.\n"                    /* FIND LOUDEST */
-        "OR:    modify loudness 8 infile infile2 etc. outfile\n\n"          /* NORMALISE TO LOUDEST */
+        "OR:    modify loudness 2 infile         outfile gain\n"
+        "OR:    modify loudness 3 infile         outfile [-llevel]\n"
+        "OR:    modify loudness 4 infile         outfile [-llevel]\n"
+        "OR:    modify loudness 5 infile infile2 outfile\n"
+        "OR:    modify loudness 6 infile outfile\n"
+        "OR:    modify loudness 7 infile infile2 etc.\n"
+        "OR:    modify loudness 8 infile infile2 etc. outfile\n\n"
         "WHERE MODES ARE\n"
         "1) GAIN:         adjust level by factor GAIN.\n"
         "2) dBGAIN:       adjust level by GAIN dB. Range +-96.0\n"
@@ -1078,16 +1078,14 @@ int usage2(char *str)
         "8) EQUALISE:     force all files to level of loudest file.\n"
         "11) PROPORTIONAL:    adjust level with envelope stretched to dur of sound.\n"
         "12) PROPORTIONAL dB: adjust level with dB envelope stretched to dur of sound.\n"
-        "                 Infiles are rescaled in input order, with output names as\n" 
-//TW    "                 outfile, outfile1, outfile2, outfile3 etc.\n"     
-        "                 outfile0, outfile1, outfile2, outfile3 etc.\n"        
-        );
-    } else if(!strcmp(str,"space")) {        
+        "                 Infiles are rescaled in input order, with output names as\n"
+        "                 outfile0, outfile1, outfile2, outfile3 etc.\n");
+    } else if(!strcmp(str,"space")) {
         fprintf(stdout,
         "CREATE OR ALTER DISTRIBUTION OF SOUND IN STEREO SPACE\n\n"
         "USAGE: modify space 1 infile outfile pan [-pprescale]\n"
         "OR:    modify space 2 infile outfile\n"
-        "OR:    modify space 3 infile outfile\n"        
+        "OR:    modify space 3 infile outfile\n"
         "OR:    modify space 4 infile outfile narrowing\n\n"
         "WHERE MODES ARE\n"
         "1) PAN:         Position or move mono sound in a stereo field.\n"
@@ -1100,45 +1098,43 @@ int usage2(char *str)
         "                .5  narrows stereo image by half.\n"
         "                0   converts stereo image to mono.\n"
         "                -ve vals work similarly, but also invert stereo image.\n");
-//TW UPDATES
-    } else if(!strcmp(str,"spaceform")) {        
+    } else if(!strcmp(str,"spaceform")) {
         fprintf(stdout,
         "CREATE A SINUSOIDAL SPATIAL DISTRIBUTION DATA FILE\n\n"
         "USAGE: modify spaceform outpanfile cyclelen width dur quantisation phase\n\n"
         "CYCLELEN     is the duration of one complete sinusoidal pan cycle\n"
         "WIDTH        is the width of the pan (from 0 to full width,1)\n"
-        "DUR          is the duration of the output file.\n" 
-        "QUANTISATION is time step between successive space-position specifications.\n" 
-        "PHASE        is the angular position at which the pan starts.\n" 
-        "             0 is full left, 360 is full right.\n" 
+        "DUR          is the duration of the output file.\n"
+        "QUANTISATION is time step between successive space-position specifications.\n"
+        "PHASE        is the angular position at which the pan starts.\n"
+        "             0 is full left, 360 is full right.\n"
         "cyclelen and width may vary over time\n");
-    } else if(!strcmp(str,"scaledpan")) {        
+    } else if(!strcmp(str,"scaledpan")) {
         fprintf(stdout,
         "DISTRIBUTE SOUND IN STEREO SPACE, SCALING PAN DATA TO SNDFILE DURATION\n\n"
         "USAGE: modify scaledpan infile outfile pan [-pprescale]\n\n"
         "PAN      breakpoint file of time, position pairs.\n"
         "         Positions sound in a stereo field, from -1 (Left) to 1 (Right) or beyond.\n"
         "PRESCALE reduces input level to avoid clipping (default 0.7)\n");
-    } else if(!strcmp(str,"findpan")) {      
+    } else if(!strcmp(str,"findpan")) {
         fprintf(stdout,
         "FIND STEREO-PAN POSITION OF A SOUND IN A STEREO FILE\n\n"
         "USAGE: modify findpan infile time\n\n"
         "Process assumes file contains a sound which has previously been panned to a position\n"
         "in the stereo field. The process will give misleading results if this is not the case.\n");
-    } else if(!strcmp(str,"stack")) {        
+    } else if(!strcmp(str,"stack")) {
         fprintf(stdout,
         "CREATE A MIX WHICH STACKS TRANPOSED VERSIONS OF SOURCE ON ONE ANOTHER\n\n"
         "USAGE: modify stack infile outfile transpos count lean atk-offset gain dur [-s] [-n]\n\n"
-        "TRANSPOS   when numeric, is (semitone) transposition between successive copies\n"
-        "           or (as a file) a set of transposition values for each stack component.\n"
-        "COUNT      is the number of copies in the stack.\n"
-        "LEAN       is the loudness of the highest component, relative to the lowest.\n" 
-        "ATK_OFFSET is time at which attack of sound occurs.\n" 
-        "GAIN       is an overall amplifying factor on the ouptut sound.\n"
-        "DUR        how much of the output to make (a proportion, from 0 to 1).\n"
-        "-s         see the relative levels of the layers in the stack.\n"
-        "-n         Normalise the output.\n");
-    } else if(!strcmp(str,"convolve")) {         
+        "TRANSPOS   numeric semitone shift or file of values per component.\n"
+        "COUNT      number of copies in the stack.\n"
+        "LEAN       loudness of top component relative to base.\n"
+        "ATK_OFFSET time offset for component onset.\n"
+        "GAIN       overall amplification of output.\n"
+        "DUR        proportion of output duration (0 to 1).\n"
+        "-s         display relative layer levels.\n"
+        "-n         normalise output.\n");
+    } else if(!strcmp(str,"convolve")) {
         fprintf(stdout,
         "CONVOLVE THE FIRST SOUND WITH THE SECOND\n\n"
         "USAGE: modify convolve 1 infile1 infile2 outfile\n"
@@ -1146,242 +1142,9 @@ int usage2(char *str)
         "TRANSPOSFILE is textfile of time / semitone-transposition pairs\n"
         "infile2 must NOT be longer than infile1\n"
         "and both files must have the same channel count.\n");
-    } else if(!strcmp(str,"shudder")) {      
-        fprintf(stdout,
-        "SHUDDER A STEREO FILE\n\n"
-        "USAGE: modify shudder infile outfile\n"
-        "         starttime  frq  scatter  stereo_spread  mindepth  maxdepth  minwidth  maxwidth [-b]\n\n"
-        "START_TIME    is time when Shuddering will begin.\n"
-        "FREQUENCY     is (average) frequency of the shuddering.\n"
-        "SCATTER       randomises the shudder events, in time. (0 - 1)\n"
-        "STEREO_SPREAD positions the shudder events in space. (0 - 1)\n"
-        "DEPTH         amplitude of shudders (each gets randval btwn MIN & MAX) Range 0-1\n"
-        "EVENT WIDTH   durations of shudder events (each gets randval btwn MIN & MAX)\n"
-        "-b            Balance average level of the stereo channels\n");
-    } else if(!strcmp(str,"speed")) {        
-        fprintf(stdout,
-        "CHANGE THE SPEED & PITCH OF THE SRC SOUND.\n\n"
-        "USAGE: modify speed 1 infile outfile     speed             [-o]\n"
-        "OR:    modify speed 2 infile outfile     semitone-transpos [-o]\n"
-        "OR:    modify speed 3 infile outtextfile speed             [-o]\n"
-        "OR:    modify speed 4 infile outtextfile semitone-transpos [-o]\n"
-        "OR:    modify speed 5 infile outfile     accel  goaltime   [-sstarttime]\n"
-        "OR:    modify speed 6 infile outfile    vibrate vibdepth\n"
-        "WHERE MODES ARE\n"
-        "1)  Vary speed/pitch of a sound.\n"
-        "2)  Vary speed/pitch by constant (fractional) no. of semitones.\n"
-        "3)  Get information on varying speed in a time-changing manner.\n"
-        "4)  Get info on time-variable speedchange in semitones.\n"
-        "    -o  brkpnt times read as outfile times (default: as infile times).\n"
-        "5)  Accelerate or decelerate a sound.\n"
-        "    ACCEL:     multiplication of speed reached by GOALTIME.\n"
-        "    GOALTIME:  time in OUTPUT file at which accelerated speed reached.\n"
-        "               If infile not exhausted there, it continues to accel.\n"
-        "               If insound finishes before GOALTIME reached,\n"
-        "               outfile won't reach specified acceleration value.\n"
-        "    STARTTIME: time in input/output file at which accel begins.\n"
-        "6)  Add vibrato to a sound.\n"
-        "    VIBRATE:   is rate of vibrato shaking in cycles-per-second.\n"
-        "    VIBDEPTH:  is vibrato depth in (possibly fractional) semitones.\n"
-        "    both of these may vary in time.\n"); 
-    } else if(!strcmp(str,"revecho")) {      
-        fprintf(stdout,
-        "CREATE REVERB, ECHO, OR RESONANCE AROUND SOUND\n\n"
-        "USAGE: modify revecho 1 infl outfl delay mix feedback tail [-pprescale] [-i]\n"
-        "OR:    modify revecho 2 infl outfl delay mix feedback\n"
-        "                                   lfomod lfofreq lfophase lfodelay\n"
-        "                                   tail [-pprescale] [-sseed]\n"
-        "OR:    modify revecho 3 infl outfl [-ggain] [-rroll_off] [-ssize] [-ecount] [-n]\n\n"
-        "WHERE MODES ARE\n"
-        "1) STANDARD DELAY with feedback, & mix (0=dry) of original & delayed signal.\n"
-        "2) VARYING DELAY  with low frequency oscillator varying delay time.\n"
-        "3) STADIUM ECHO   create stadium P.A. type echos.\n\n"
-        "DELAY     Delay time, in milliseconds.\n"
-        "MIX       amount of delayed signal in final mix: 0 gives 'dry' result.\n"
-        "FEEDBACK  produces resonance related to delay time (with short times).\n"
-        "TAIL      is time to allow delayed signal to decay to zero.\n"
-        "PRESCALE  prescales input level, to avoid overload.\n"
-        "-i        inverts the dry signal (for phasing effects).\n"
-        "LFOMOD    is the depth of delay-variation sweep.\n"
-        "LFOFREQ   is the freq of the sweep: -ve vals give random oscillations.\n"
-        "LFOPHASE  is the start phase of the sweep.\n"
-        "LFODELAY  is the time before the seep begins.\n"
-        "SEED      Nonzero value gives reproducible output (with same seed)\n"
-        "          where random oscillations are used.\n"
-        "GAIN      to apply to input signal: Default is %lf\n"
-        "SIZE      multiplies average time between echoes: (Default time 0.1 secs).\n"
-        "ROLL_OFF  rate of loss of level across stadium (default 1)\n"
-        "COUNT     number of stadium echoes: Default (max) is %d\n"
-        "-n        Normalise the output, preventing overload,\n",STAD_PREGAIN_DFLT,MAX_ECHOCNT);
-    } else if(!strcmp(str,"radical")) {      
-        fprintf(stdout,
-        "RADICAL CHANGES TO THE SOUND.\n\n"
-        "USAGE: modify radical 1 infile outfile\n"
-        "OR:    modify radical 2 infile outfile repeats chunklen [-sscatter] [-n]\n"
-        "OR:    modify radical 3 infile outfile dur [-ldown] [-hup] [-sstart] [-eend] [-f]\n"
-        "OR:    modify radical 4 infile outfile  bit_resolution  srate_division\n"
-        "OR:    modify radical 5 infile outfile  modulating-frq\n"
-        "OR:    modify radical 6 infile1 infile2 outfile\n\n"
-        "OR:    modify radical 7 infile1 outfile bit_resolution\n\n"
-        "MODES ARE\n"
-        "1) REVERSE:         sound plays backwards.\n"
-        "2) SHRED:           sound is shredded, within its existing duration.\n"
-        "                    REPEATS   no. of repeats of shredding process.\n"
-        "                    CHUNKLEN  average length of chunks to cut & permute.\n"
-        "                    SCATTER   randomisation of cuts (0 to K): default 1.\n"
-        "                    where K = total no. of chunks (snd-duration/chunklen).\n"
-        "                    If scatter = 0, reorders without shredding.\n"
-        "                    NB:  chunklen * scatter MUST be < program's snd buffer.\n"
-        "                    NB2: If Input sound > internal buffer len,\n"
-        "                    each buffer of sound shredded independently.\n"
-        "                    -n flag gives a slightly smoother output\n"
-        "3) SCRUB BACK & FORTH: as if handwinding over a tape-head.\n"
-        "                    DUR       is minimum length of outfile required.\n"
-        "                    DOWN      is lowest downward transposition (semitones).\n"
-        "                    UP        is highest upward transposition (semitones).\n"
-        "                    START     scrubs starts before time 'start' secs.\n"
-        "                    END       scrubs end after time 'end' secs.\n"
-        "                    -f        single forwards scrub only (ignores \"DUR\")\n"
-        "4) LOSE RESOLUTION: sound converted to lower srate, or bit-resolution.\n"
-        "                    BIT_RESOLUTION  range(1 - 16): default 16-bit.\n"
-        "                    SRATE_DIVISION  range(1-256): default 1 (normal)\n"
-        "                    entered value will be rounded to a power of 2.\n"
-        "5) RING MODULATE:   against input modulating frequency, creating sidebands.\n"
-        "6) CROSS MODULATE:  Two infiles are multiplied, creating complex sidebands.\n"
-        "                    Any combo of mono & stereo files works but,\n"
-        "                    files with more channels must have same channel count.\n"
-        "7) QUANTISE:        sound converted to specific bit-resolution (mid-rise).\n"
-        "                    BIT_RESOLUTION  range(1 - 16): default 16-bit.\n");
-    } else if(!strcmp(str,"brassage")) {         /* BRASSAGE = GRANULA */
-        fprintf(stdout, /* NB has to use direct fprintf as 2 screenfulls */
-        "GRANULAR RECONSTITUTION OF SOUNDFILE\n\n"
-        "MODES ARE...\n"
-        "1) PITCHSHIFT      4) SCRAMBLE\n"
-        "2) TIMESTRETCH     5) GRANULATE\n"
-        "3) REVERB          6) BRASSAGE\n"
-        "                   7) FULL MONTY\n"
-//TW temporary cmdline restriction
-        "USAGE:\n"
-        "modify brassage 1 infile outfile pitchshift\n"
-        "modify brassage 2 infile outfile velocity\n"
-        "modify brassage 3 infile outfile density pitch amp [-rrange]\n"
-        "modify brassage 4 infile outfile grainsize [-rrange]\n"
-        "modify brassage 5 infile outfile density \n\n"
-        "modify brassage 6 infile outfile velocity density grainsize pitchshft amp space\n"
-        "          bsplice esplice\n"
-        "          [-rrange] [-jjitter] [-loutlength] [-cchannel] [-x] [-n]\n\n"
-        "modify brassage 7 infile outfile velocity density hvelocity hdensity\n"
-        "          grainsize  pitchshift  amp  space  bsplice  esplice\n"
-        "          hgrainsize hpitchshift hamp hspace hbsplice hesplice\n"
-        "          [-rrange] [-jjitter] [-loutlength] [-cchannel] [-x] [-n]\n"
-        "\n"
-
-#ifdef IS_PC
-        "MORE??? ----- (hit keyboard)\n");
-        while(!kbhit())
-            ;
-        if(kbhit()) {
-#else
-        "\n");
-#endif
-
-            fprintf(stdout,
-            "VELOCITY:  speed of advance in infile, relative to outfile. (>=0)\n"
-            "           This is inverse of timestretch, (& permits infinite timestretch).\n"
-            "DENSITY:   amount of grain overlap (>0 : <1 leaves intergrain silence)\n"
-            "           Extremely small values will cease to perform predictably.\n"
-            "GRAINSIZE: grainsize in MS (must be > 2 * splicelen) (Default %.0lf)\n"
-            "PITCHSHIFT:is pitchshift in +|- (fractions of) semitones.\n"
-            "AMP:       is gain on grains (range 0-1)             (Default 1.0)\n"
-            "           use only if you want amp to vary (over a range &/or in time)\n"
-            "BSPLICE:   length of startsplices on grains,in MS (Default %.0lf)\n"
-            "ESPLICE:   length of endsplices   on grains,in MS (Default %.0lf)\n"
-            "SPACE:     set stereo position in outputfile. 0=L,1=R    (Range 0-1).\n"
-#ifndef MULTICHAN
-            "           Space flag on STEREO input, mixes it to mono before acting.\n"
-#else
-            "           Set space param to zero, to force multichan output.\n"
-            "           Otherwise multichan input mixes to mono\n"
-            "           (or selects 1 channel of your choice - see below)\n"
-            "           before generating a spatialised stereo output.\n"
-#endif
-            "RANGE:     of search for nextgrain, before infile 'now'  (Default 0 MS).\n"
-            "JITTER:    Randomisation of grain position (Range 0-1) Default (%.2lf).\n"
-            "OUTLENGTH: maximum outfile length (if end of data not reached).\n"
-            "           Set to zero (Default) for this parameter to be ignored.\n"
-            "           BUT if VELOCITY is ANYWHERE 0: OUTLENGTH must be given.\n"
-#ifndef MULTICHAN
-            "CHANNEL    Extract & work on just 1 channel of stereo snd: Range(1-2).\n"
-#else
-            "CHANNEL    Extract/work on 1 chan of multichan snd: Range(1-chancnt) OR\n"
-            "           (For -ve values) e.g. val -N, spatialise to N-channel space.\n"
-#endif
-            "           Set to zero (Default) for this parameter to be ignored.\n"
-            "-x:        do exponential splices           (Default: linear).\n"
-            "-n:        no interpolation for pitch vals, (quick but dirty).\n"
-            "\n"
-            "HVELOCITY,HDENSITY,HGRAINSIZE,HPITCHSHIFT,HAMP,HBSPLICE,HESPLICE,HSPACE\n"
-            "allow a range of values to be specified for any of these params. e.g. With\n"
-            "PITCHSHIFT & HPITCHSHIFT set, random pitchshift chosen between these limits.\n"
-            "AND NB PITCHSHIFT & HPITCHSHIFT can both vary through time.\n\n"
-            "All params, except OUTLENGTH and CHANNEL, can vary through time.\n",
-            GRS_DEFAULT_GRAINSIZE,GRS_DEFAULT_SPLICELEN,GRS_DEFAULT_SPLICELEN,GRS_DEFAULT_SCATTER);
-
-#ifdef IS_PC
-        }
-#endif
-
-     } else if (!strcmp(str,"sausage")) {
-        fprintf(stdout, 
-        "GRANULAR RECONSTITUTION OF SEVERAL SOUNDFILES SCRAMBLED TOGETHER.\n\n"
-//TW temporary cmdline restriction
-        "USAGE       (name of outfile must NOT end with a '1')\n"
-        "modify sausage infile [infile2 ...] outfile velocity density\n"
-        "  hvelocity hdensity grainsize  pitchshift  amp  space  bsplice  esplice\n"
-        "  hgrainsize hpitchshift hamp hspace hbsplice hesplice\n"
-        "  [-rrange] [-jjitter] [-loutlength] [-cchannel] [-d] [-x] [-n]\n\n"
-        "VELOCITY:  speed of advance in infiles, relative to outfile. (>=0)\n"
-        "           inverse of timestretch, (permits infinite timestretch).\n"
-        "DENSITY:   grain overlap (>0 : <1 leaves intergrain silence)\n"
-        "           Extremely small values don't perform predictably.\n"
-        "GRAINSIZE: grainsize in MS (must be > 2 * splicelen) (Default %.0lf)\n"
-        "PITCHSHIFT:pitchshift in +|- (fractions of) semitones.\n"
-        "AMP:       gain on grains (range 0-1) (Default 1.0)\n"
-        "           use if amp variation required (over a range &/or in time)\n"
-        "BSPLICE:   grain-startsplice length,in MS (Default %.0lf)\n"
-        "ESPLICE:   grain-endsplice length,in MS (Default %.0lf)\n"
-        "SPACE:     stereo position in outputfile. 0=L,1=R    (Range 0-1).\n"
-#ifndef MULTICHAN
-        "           Space flag on STEREO input, mixes to mono before acting.\n"
-#else
-        "           Set all space params to zero, to force multichan output.\n"
-        "           Otherwise multichan input mixes to mono\n"
-        "           (or selects 1 channel of your choice - see below)\n"
-        "           before generating a spatialised stereo output.\n"
-#endif
-        "RANGE:     of search for nextgrain, before infile 'now'  (Default 0 MS).\n"
-        "JITTER:    Randomisation of grain position (Range 0-1) Default (%.2lf).\n"
-        "OUTLENGTH: max outfile length (if end of data not reached).\n"
-        "           Set to zero (Default) to ignore.\n"
-        "           BUT if VELOCITY is ANYWHERE 0: OUTLENGTH must be given.\n"
-#ifndef MULTICHAN
-        "CHANNEL:   work on just 1 channel of stereo snd: Range(1-2).\n"
-#else
-        "CHANNEL:   work on just 1 chan of multichan snd: Range(1-chancnt).\n"
-        "           or (for -ve vals) e.g val -N, spatialise to N-channel space.\n"
-#endif
-        "           Set to zero (Default) to ignore.\n"
-        "-x:        do exponential splices           (Default: linear).\n"
-        "-n:        no interpolation for pitch vals, (quick but dirty).\n"
-        "\n"
-        "HVELOCITY,HDENSITY,HGRAINSIZE,HPITCHSHIFT,HAMP,HBSPLICE,HESPLICE,HSPACE\n"
-        "allow a range of values to be specified for any of these params. e.g. With\n"
-        "PITCHSHIFT & HPITCHSHIFT set, random pitchshift chosen between these limits.\n"
-        "AND NB PITCHSHIFT & HPITCHSHIFT can both vary through time.\n\n"
-        "All params, except OUTLENGTH and CHANNEL, can vary through time.\n",
-        GRS_DEFAULT_GRAINSIZE,GRS_DEFAULT_SPLICELEN,GRS_DEFAULT_SPLICELEN,GRS_DEFAULT_SCATTER);
-    } else
+    } else {
         fprintf(stdout,"Unknown option '%s'\n",str);
+    }
     return(USAGE_ONLY);
 }
 
@@ -1436,7 +1199,7 @@ int read_stackdata(char *str,dataptr dz)
     int n = 0, m;
     FILE *fp;
 
-    if(!sloom) {                
+    if(!sloom) {
     /* NEW CMDLINE convention: filenames CAN start with numbers: */
     /* BUT can't BE numbers in their entirety (e.g. 123.456) */
         if(value_is_numeric(str)) {
@@ -1451,15 +1214,15 @@ int read_stackdata(char *str,dataptr dz)
                 return(DATA_ERROR);
             }
             do_file = 1;
-        }   
+        }
     } else {                    /* TK convention, all numeric values are preceded by NUMERICVAL_MARKER */
-        if(str[0]==NUMERICVAL_MARKER) {      
-            str++;              
+        if(str[0]==NUMERICVAL_MARKER) {
+            str++;
             if(strlen(str)<=0 || sscanf(str,"%lf",&dummy)!=1) {
                 sprintf(errstr,"Invalid parameter value (%s) encountered.\n",str);
                 return(DATA_ERROR);
             }
-        } else 
+        } else
             do_file = 1;
     }
     if(do_file) {
@@ -1486,15 +1249,15 @@ int read_stackdata(char *str,dataptr dz)
                 p++;
                 if(++n >= arraysize) {
                     arraysize += SMALLARRAY;
-                    if((dz->parray[STACK_TRANS] = 
+                    if((dz->parray[STACK_TRANS] =
                     (double *)realloc((char *)(dz->parray[STACK_TRANS]),arraysize * sizeof(double)))==NULL) {
                         sprintf(errstr,"INSUFFICIENT MEMORY to reallocate transposition data from file %s.\n",str);
                         return(MEMORY_ERROR);
                     }
-                    p = dz->parray[STACK_TRANS] + n;        
+                    p = dz->parray[STACK_TRANS] + n;
                 }
             }
-        }       
+        }
         if(n == 0) {
             sprintf(errstr,"No data in file %s\n",str);
             return(DATA_ERROR);
@@ -1709,7 +1472,7 @@ int read_loudness(char *str,dataptr dz)
                     sprintf(errstr,"INSUFFICIENT MEMORY to reallocate loudness data from file %s.\n",str);
                     return(MEMORY_ERROR);
                 }
-                p = dz->brk[LOUD_GAIN] + n;     
+                p = dz->brk[LOUD_GAIN] + n;
             }
             istime = !istime;
         }
@@ -1752,7 +1515,7 @@ int setup_and_init_brktable_constants(dataptr dz)
     }
     if((dz->firstval = (double  *)malloc(sizeof(double)  ))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(sizeof(double)  ))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");

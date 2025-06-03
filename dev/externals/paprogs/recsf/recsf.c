@@ -4,13 +4,13 @@
  * http://www.composersdesktop.com
  * This file is part of the CDP System.
  * The CDP System is free software; you can redistribute it
- * and/or modify it under the terms of the GNU Lesser General Public 
- * License as published by the Free Software Foundation; either 
- * version 2.1 of the License, or (at your option) any later version. 
+ * and/or modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
  *
- * The CDP System is distributed in the hope that it will be useful, 
- * but WITHOUT ANY WARRANTY; without even the implied warranty of 
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  
+ * The CDP System is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  * See the GNU Lesser General Public License for more details.
  * You should have received a copy of the GNU Lesser General Public
  * License along with the CDP System; if not, write to the Free Software
@@ -66,6 +66,42 @@ extern int stricmp(const char *a, const char *b);
 #include "pa_ringbuffer.h"
 #include "pa_util.h"
 #include "portsf.h"
+
+#ifndef _WIN32
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+
+int kbhit(void) {
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+
+    // Guardar configuración terminal actual
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+    if (ch != EOF) {
+        ungetc(ch, stdin);
+        return 1;
+    }
+
+    return 0;
+}
+#endif
+
+
 
 #ifndef min
 #define min(x,y)  ((x) < (y) ? (x) : (y))
@@ -144,20 +180,20 @@ void alarm_wakeup (int i)
         int dBmin = -DBRANGE;
         int i;
         for(i=0;i < DBRANGE/2;i++){
-            g_pdata->peakstr[i] = dBpeak > dBmin+(i*2) ? '*' : '.';    
+            g_pdata->peakstr[i] = dBpeak > dBmin+(i*2) ? '*' : '.';
         }
         //printf("%.4f secs\r",(float)(g_pdata->frames_played /(double) g_pdata->srate));
         g_pdata->lastTime = Pa_GetStreamTime(g_pdata->stream ) - g_pdata->startTime;
         //printf("%.2f secs\r", g_pdata->lastTime);
         if(g_pdata->showlevels)
             printf("%.2f secs\t\t\%s\r", g_pdata->lastTime,g_pdata->peakstr );
-        else 
+        else
             printf("%.2f secs\r", g_pdata->lastTime);
         fflush(stdout);
     }
     tout_val.it_interval.tv_sec = 0;
     tout_val.it_interval.tv_usec = 0;
-    tout_val.it_value.tv_sec = 0; 
+    tout_val.it_value.tv_sec = 0;
     tout_val.it_value.tv_usec = 250000;
     
     setitimer(ITIMER_REAL, &tout_val,0);
@@ -171,7 +207,7 @@ void finishedCallback(void *userData)
     psfdata *pdata = (psfdata*) userData;
     //printf("stream finished!\n");
     pdata->finished = 1;
-    file_recording = 0;    
+    file_recording = 0;
 }
 
 
@@ -188,10 +224,10 @@ VOID CALLBACK TimerCallback(PVOID lpParam, BOOLEAN TimerOrWaitFired)
         int dBval = dBmin;
         int i;
         for(i=0;i < DBRANGE/2;i++) {
-            pdata->peakstr[i] = dBpeak > dBmin+(i*2) ? '*' : '.';    
+            pdata->peakstr[i] = dBpeak > dBmin+(i*2) ? '*' : '.';
         }
         pdata->lastTime = Pa_GetStreamTime(pdata->stream ) - pdata->startTime;
-        printf("%.2f secs\t\t%s\r", pdata->lastTime,pdata->peakstr ); 
+        printf("%.2f secs\t\t%s\r", pdata->lastTime,pdata->peakstr );
         fflush(stdout);
         SetEvent(ghEvent);
     }
@@ -225,12 +261,12 @@ static unsigned int __stdcall threadFunctionWriteFile(void* ptr)
             //printf("flushing ring buffer...\n");
 
             ring_buffer_size_t elementsRead = PaUtil_GetRingBufferReadRegions(&pData->ringbuf, elementsInBuffer, ptr + 0, sizes + 0, ptr + 1, sizes + 1);
-            if (elementsRead > 0) {       
+            if (elementsRead > 0) {
                 int i;
 
                 for (i = 0; i < 2 && ptr[i] != NULL; ++i)  {
                     unsigned long towrite = sizes[i];
-                    if(pData->frames_to_write){  
+                    if(pData->frames_to_write){
                         if(pData->frames_written + towrite > pData->frames_to_write)
                             towrite = pData->frames_to_write - pData->frames_written;
                     }
@@ -258,12 +294,12 @@ static unsigned int __stdcall threadFunctionWriteFile(void* ptr)
             
             /* By using PaUtil_GetRingBufferReadRegions, we can read directly from the ring buffer */
             ring_buffer_size_t elementsRead = PaUtil_GetRingBufferReadRegions(&pData->ringbuf, elementsInBuffer, ptr + 0, sizes + 0, ptr + 1, sizes + 1);
-            if (elementsRead > 0) {       
+            if (elementsRead > 0) {
                 int i;
 
                 for (i = 0; i < 2 && ptr[i] != NULL; ++i)  {
                     unsigned long towrite = sizes[i];
-                    if(pData->frames_to_write){  
+                    if(pData->frames_to_write){
                         if(pData->frames_written + towrite > pData->frames_to_write)
                             towrite = pData->frames_to_write - pData->frames_written;
                     }
@@ -308,7 +344,7 @@ static PaError startThread( psfdata* pdata, threadfunc fn )
     pdata->flag = 1;
 #ifdef _WIN32
     pdata->hThread = (void*)_beginthreadex(NULL, 0, fn, pdata, 0, NULL);
-    if (pdata->hThread == NULL) 
+    if (pdata->hThread == NULL)
         return paUnanticipatedHostError;
     /* Wait for thread to startup */
     while (pdata->flag) {
@@ -324,7 +360,7 @@ static PaError startThread( psfdata* pdata, threadfunc fn )
     /* Wait for thread to startup */
     while (pdata->flag) {
         Pa_Sleep(10);
-    } 
+    }
 #endif
 #endif
     return paNoError;
@@ -456,10 +492,10 @@ int main(int argc,char **argv)
     unsigned long LmaxdurMins = 0;
 
 #ifdef unix
-    struct itimerval tout_val;    
+    struct itimerval tout_val;
     tout_val.it_interval.tv_sec = 0;
     tout_val.it_interval.tv_usec = 0;
-    tout_val.it_value.tv_sec = 0; 
+    tout_val.it_value.tv_sec = 0;
     tout_val.it_value.tv_usec = 200000;
 #endif
 
@@ -632,7 +668,7 @@ int main(int argc,char **argv)
             return 1;
     }
     // find max recording time, with safety margin
-    frameBlocksize *= props.chans; 
+    frameBlocksize *= props.chans;
     maxdurFrames = (pow(2.0,32.0) / frameBlocksize) - 1000;
     LmaxdurFrames = (unsigned long) maxdurFrames;
     LmaxdurSecs =  LmaxdurFrames / props.srate;
@@ -680,7 +716,7 @@ int main(int argc,char **argv)
     if(sfdata.ofd < 0){
         printf("Sorry - unable to create outfile\n");
         goto error;
-    } 
+    }
 
     fpeaks = (PSF_CHPEAK *) calloc(props.chans,sizeof(PSF_CHPEAK));
     if(fpeaks==NULL){
@@ -691,7 +727,8 @@ int main(int argc,char **argv)
         ringframelen <<= 1;
     printf("File buffer size = %ld\n",ringframelen);
     // NB ring buffer sized for decoded data, hence outchans here; otherwise inchans = outchans
-    sfdata.ringbufData = (float *) PaUtil_AllocateMemory( ringframelen * sizeof(float) * props.chans); /* From now on, recordedSamples is initialised. */
+    sfdata.ringbufData = (float *) malloc(ringframelen * sizeof(float) * props.chans);
+    /* From now on, recordedSamples is initialised. */
     if( sfdata.ringbufData == NULL )   {
         puts("Could not allocate play buffer.\n");
         goto error;
@@ -717,7 +754,7 @@ int main(int argc,char **argv)
     g_pdata = &sfdata;
 
     inputParameters.device = device;   /*Pa_GetDefaultOutputDevice(); */ /* default output device */
-    inputParameters.channelCount = props.chans;                     
+    inputParameters.channelCount = props.chans;
     inputParameters.sampleFormat = paFloat32;             /* 32 bit floating point output */
     inputParameters.suggestedLatency = Pa_GetDeviceInfo( inputParameters.device )->defaultHighInputLatency;
     inputParameters.hostApiSpecificStreamInfo = NULL;
@@ -739,11 +776,11 @@ int main(int argc,char **argv)
             printf("(DS)\n");
             /* set this IF we are using Dsound device. */
             directSoundStreamInfo.size = sizeof(PaWinDirectSoundStreamInfo);
-            directSoundStreamInfo.hostApiType = paDirectSound; 
+            directSoundStreamInfo.hostApiType = paDirectSound;
             directSoundStreamInfo.version = 2;
             directSoundStreamInfo.flags = paWinDirectSoundUseChannelMask;
             directSoundStreamInfo.channelMask = 0;
-            inputParameters.hostApiSpecificStreamInfo = &directSoundStreamInfo; 
+            inputParameters.hostApiSpecificStreamInfo = &directSoundStreamInfo;
         }
         else if(apiinfo->type == paASIO)
             printf("(ASIO)\n");
@@ -761,11 +798,11 @@ int main(int argc,char **argv)
 
     err = Pa_OpenStream(
                         &stream,
-                        &inputParameters, 
+                        &inputParameters,
                         NULL,  /* No output */
                         props.srate,
-                        frames_per_buffer,          
-                        paClipOff,  
+                        frames_per_buffer,
+                        paClipOff,
                         recordCallback,
                         &sfdata );
 
@@ -784,19 +821,19 @@ int main(int argc,char **argv)
 
     file_recording = 1;
     if(waitkey){
-        printf("Press any key to start:\n");    
-        while (!kbhit()){   
+        printf("Press any key to start:\n");
+        while (!kbhit()){
             if(!file_recording)  //check for instant CTRL-C
-                goto error;     
+             goto error;
         };
-#ifdef WIN32
+    #ifdef _WIN32
         if(kbhit())
-            _getch();            //prevent display of char
-#endif
+         _getch();            //prevent display of char
+    #endif
     }
 
     // set up timer
-#ifdef unix   
+#ifdef unix
     setitimer(ITIMER_REAL, &tout_val,0);
     signal(SIGALRM,alarm_wakeup); /* set the Alarm signal capture */
 #endif
@@ -813,7 +850,7 @@ int main(int argc,char **argv)
     }
 #endif
     err = Pa_StartStream( stream );
-    if( err != paNoError ) 
+    if( err != paNoError )
         goto error;
 
     printf("Hit CTRL-C to stop.\n");
@@ -831,7 +868,7 @@ int main(int argc,char **argv)
 
     // need to stop thread explicitly?
 
-    err = Pa_CloseStream( stream ); 
+    err = Pa_CloseStream( stream );
     if( err != paNoError ) {
         printf("Error closing stream\n");
         goto error;
@@ -875,8 +912,9 @@ error:
 //    CloseHandle(ghEvent);
 //    DeleteTimerQueue(hTimerQueue);
 //#endif
-    if( sfdata.ringbufData )       
-        PaUtil_FreeMemory(sfdata.ringbufData);
+    if( sfdata.ringbufData )
+        free(sfdata.ringbufData);
+        sfdata.ringbufData = NULL;
     if(sfdata.ofd >=0)
         psf_sndClose(sfdata.ofd);
     if(fpeaks)
@@ -927,7 +965,7 @@ int show_devices(void)
         //              continue;
         //#endif
         nInputDevices++;
-        if( p == Pa_GetDefaultInputDevice() ) 
+        if( p == Pa_GetDefaultInputDevice() )
             printf("*");
         else
             printf(" ");
@@ -939,7 +977,7 @@ int show_devices(void)
         printf("(%s)\t%d\t%d\t%d\t%s\n",apiname,p,
                pdi->maxInputChannels,
                pdi->maxOutputChannels,
-               pdi->name);  
+               pdi->name);
 #else
         printf("%d\t%d\t%d\t%s\n",p,
                pdi->maxInputChannels,

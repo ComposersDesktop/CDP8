@@ -54,6 +54,50 @@
 #include <sys/timeb.h>
 #endif
 
+#ifndef _WIN32
+#include <termios.h>
+#include <unistd.h>
+#include <fcntl.h>
+
+// Emulación de kbhit() y getch() para sistemas Unix/macOS
+int kbhit(void) {
+    struct termios oldt, newt;
+    int ch;
+    int oldf;
+
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+
+    ch = getchar();
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+
+    if (ch != EOF) {
+        ungetc(ch, stdin);
+        return 1;
+    }
+
+    return 0;
+}
+
+int getch(void) {
+    struct termios oldt, newt;
+    int ch;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return ch;
+}
+#endif
+
 #include <signal.h>
 
 #if defined unix || defined linux
@@ -1136,7 +1180,7 @@ void usage(void){
         }
         // if doing channel map,  precompute into mem buffer
         if(nFramesToPlay <= ringframelen){
-            sfdata.membuf =  (float *) PaUtil_AllocateMemory(nFramesToPlay * sizeof(float) * /*inchans*/ outchans);
+            sfdata.membuf =  (float *) malloc(nFramesToPlay * sizeof(float) * /*inchans*/ outchans);
             if( sfdata.membuf == NULL )   {
                 puts("Could not allocate memory play buffer.\n");
                 goto error;
@@ -1153,7 +1197,7 @@ void usage(void){
                 ringframelen <<= 1;
 
             // NB ring buffer sized for decoded data, hence outchans here; otherwise inchans = outchans
-            sfdata.ringbufData = (float *) PaUtil_AllocateMemory( ringframelen * sizeof(float) * outchans); /* From now on, recordedSamples is initialised. */
+            sfdata.ringbufData = (float *) malloc( ringframelen * sizeof(float) * outchans); /* From now on, recordedSamples is initialised. */
             if( sfdata.ringbufData == NULL )   {
                 puts("Could not allocate play buffer.\n");
                 goto error;
@@ -1170,7 +1214,7 @@ void usage(void){
 
         // worst case, ring buffer is empty! So need enough space
         // NB inchans may well be > outchans
-        sfdata.inbuf = (float *) PaUtil_AllocateMemory(ringframelen * sizeof(float) * inchans);
+        sfdata.inbuf = (float *) malloc(ringframelen * sizeof(float) * inchans);
         if(sfdata.inbuf==NULL){
             puts("No memory for read buffer\n");
             goto error;
@@ -1338,16 +1382,18 @@ void usage(void){
         file_playing = 1; // need this for c/l test below!
 
         if(waitkey){
-            printf("Press any key to start:\n");
-            while (!kbhit()){
-                if(!file_playing)        //check for instant CTRL-C
-                    goto error;
-            };
-#ifdef _WIN32
-            if(kbhit())
-                _getch();                        //prevent display of char
-#endif
-        }
+   			 printf("Press any key to start:\n");
+  			  while (!kbhit()){
+    			    if(!file_playing) // check for instant CTRL-C
+    			        goto error;
+			#ifdef _WIN32
+   			     Sleep(10); // evitar uso excesivo de CPU en Windows
+			#else
+ 			       usleep(10000); // evitar uso excesivo de CPU en Unix/macOS
+			#endif
+    		}
+   			 getch(); // evita mostrar el carácter en ambas plataformas
+		}
 
         // should this go in read thread func too?
         if(from_frame > 0){
@@ -1507,11 +1553,11 @@ void usage(void){
         DeleteTimerQueue(hTimerQueue);
 #endif
         if( sfdata.ringbufData )
-            PaUtil_FreeMemory(sfdata.ringbufData);
+    		free(sfdata.ringbufData);
         if(sfdata.inbuf)
-            PaUtil_FreeMemory(sfdata.inbuf);
+    		free(sfdata.inbuf);
         if(sfdata.membuf)
-            PaUtil_FreeMemory(sfdata.membuf);
+            free(sfdata.membuf);
         if(sfdata.orderptr)
             free(sfdata.orderptr);
         if(ifd >=0)

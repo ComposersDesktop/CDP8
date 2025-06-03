@@ -1,20 +1,16 @@
 if(APPLE)
   set(CMAKE_C_FLAGS "-O2 -Wall -Dunix")
-  link_directories (/usr/local/lib)
-  find_library(AAIOLIB NAMES libaaio.a)
 else()
   if(MINGW)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")
   else()
     set(CMAKE_C_FLAGS "-O2 -Wall -Dlinux -Dunix")
-    link_directories (/usr/local/lib)
-    find_library(AAIOLIB NAMES libaaio.a)
   endif()
 endif()
 
 link_directories(../cdp2k ../newsfsys ../pvxio2)
 
-include_directories(../newinclude /usr/local/include)
+include_directories(../newinclude)
 
 add_executable(cantor cantor.c)
 target_link_libraries(cantor cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
@@ -45,7 +41,7 @@ add_executable(fracture fracture.c)
 if(MINGW)
 target_link_libraries(fracture cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 else()
-target_link_libraries(fracture cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
+target_link_libraries(fracture cdp2k sfsys pvxio2 ${LIBCDP_LIBS} ${EXTRA_LIBRARIES})
 endif()
 my_install(fracture)
 
@@ -63,7 +59,7 @@ add_executable(iterfof iterfof.c)
 if(MINGW)
 target_link_libraries(iterfof cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 else()
-target_link_libraries(iterfof ${AAIOLIB} cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+target_link_libraries(iterfof cdp2k sfsys pvxio2 ${LIBCDP_LIBS} ${EXTRA_LIBRARIES})
 endif()
 my_install(iterfof)
 
@@ -93,7 +89,7 @@ target_link_libraries(newmorph cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(newmorph)
 
 add_executable(newtex newtex.c)
-target_link_libraries(newtex ${AAIOLIB} cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+target_link_libraries(newtex cdp2k sfsys pvxio2 ${LIBCDP_LIBS} ${EXTRA_LIBRARIES})
 
 my_install(newtex)
 

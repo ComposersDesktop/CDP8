@@ -46,13 +46,8 @@
 #include "scandir.h"
 #endif
 
-#if defined WIN32 || defined linux
-static int
-selfn(const struct dirent *d)
-#else
-    static int
-    selfn(struct dirent *d)
-#endif
+// cambio
+static int selfn(const struct dirent *d)
 {
     char *dotp = strrchr(d->d_name, '.');
 

@@ -25,7 +25,7 @@
 
 
 //
-//  BUG dz->brksize[ITF_DEL] IS 14 .... should be much bigger ... this is 
+//  BUG dz->brksize[ITF_DEL] IS 14 .... should be much bigger ... this is
 
 
 
@@ -52,6 +52,9 @@
 #include <pnames.h>
 #include <extdcon.h>
 #include <limits.h>
+
+#include "cdpmain.h"
+
 #ifdef unix
 #include <aaio.h>
 #endif
@@ -137,10 +140,10 @@ int main(int argc,char *argv[])
     }
     if(!sloom) {
         if(argc == 1) {
-            usage1();   
+            usage1();
             return(FAILED);
         } else if(argc == 2) {
-            usage2(argv[1]);    
+            usage2(argv[1]);
             return(FAILED);
         }
     }
@@ -175,12 +178,12 @@ int main(int argc,char *argv[])
         //parse_TK_data() =
         if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-            return(exit_status);         
+            return(exit_status);
         }
     }
 //    ap = dz->application;
 
-    // parse_infile_and_hone_type() = 
+    // parse_infile_and_hone_type() =
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -191,15 +194,15 @@ int main(int argc,char *argv[])
         return(FAILED);
     }
     // open_first_infile        CDP LIB
-    if((exit_status = open_first_infile(cmdline[0],dz))<0) {    
-        print_messages_and_close_sndfiles(exit_status,is_launched,dz);  
+    if((exit_status = open_first_infile(cmdline[0],dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
     cmdlinecnt--;
     cmdline++;
 
 //  handle_extra_infiles() : redundant
-    // handle_outfile() = 
+    // handle_outfile() =
     if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -254,15 +257,15 @@ int main(int argc,char *argv[])
 
 int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist)
 {
-    ap->special_data   = (char)special_data;       
+    ap->special_data   = (char)special_data;
     ap->param_cnt      = (char)paramcnt;
     ap->max_param_cnt  = (char)maxparamcnt;
     if(ap->max_param_cnt>0) {
-        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {    
+        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->param_list,paramlist); 
+        strcpy(ap->param_list,paramlist);
     }
     return(FINISHED);
 }
@@ -283,16 +286,16 @@ int set_vflgs
             sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->option_flags,optflags); 
+        strcpy(ap->option_flags,optflags);
     }
-    ap->vflag_cnt = (char) vflagcnt;           
+    ap->vflag_cnt = (char) vflagcnt;
     ap->variant_param_cnt = (char) vparamcnt;
     if(vflagcnt) {
         if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->variant_list,varlist);       
+        strcpy(ap->variant_list,varlist);
         if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
             return(MEMORY_ERROR);
@@ -312,30 +315,30 @@ int application_init(dataptr dz)
     int tipc, brkcnt;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
-        initialise_vflags(dz);    
+        initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
-        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
             return(exit_status);
     }
     brkcnt = tipc;
     //THERE ARE NO INPUTFILE brktables USED IN THIS PROCESS
     if(brkcnt>0) {
-        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
             return(exit_status);
     }
-    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
-        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
-        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
             return(exit_status);
-    }                                                      
-    if((exit_status = mark_parameter_types(dz,ap))<0)     
+    }
+    if((exit_status = mark_parameter_types(dz,ap))<0)
         return(exit_status);
     
     // establish_infile_constants() replaced by
@@ -451,7 +454,7 @@ int handle_the_outfile(int *cmdlinecnt,char ***cmdline,dataptr dz)
             return(DATA_ERROR);
         }
     }
-    strcpy(dz->outfilename,filename);      
+    strcpy(dz->outfilename,filename);
     if((exit_status = create_sized_outfile(filename,dz))<0)
         return(exit_status);
     (*cmdline)++;
@@ -536,7 +539,7 @@ int setup_iterfof_application(dataptr dz)
     dz->has_otherfile = FALSE;
     // assign_process_logic -->
     dz->input_data_type = SNDFILES_ONLY;
-    dz->process_type    = UNEQUAL_SNDFILE;  
+    dz->process_type    = UNEQUAL_SNDFILE;
     dz->outfiletype     = SNDFILE_OUT;
     dz->maxmode = 4;
     return application_init(dz);    //GLOBAL
@@ -585,15 +588,15 @@ int setup_iterfof_param_ranges_and_defaults(dataptr dz)
     if(dz->mode <2) {
         ap->lo[ITF_DEL]     = -24;
         ap->hi[ITF_DEL]     = 12;
-        ap->default_val[ITF_DEL] = 0;   
+        ap->default_val[ITF_DEL] = 0;
     } else {
         ap->lo[ITF_DEL]     = 24;
         ap->hi[ITF_DEL]     = 96;
-        ap->default_val[ITF_DEL] = 60;  
+        ap->default_val[ITF_DEL] = 60;
     }
     ap->lo[ITF_DUR]     = dz->duration;
     ap->hi[ITF_DUR]     = BIG_TIME;
-    ap->default_val[ITF_DUR] = 20;  
+    ap->default_val[ITF_DUR] = 20;
     ap->lo[ITF_RAND]    = 0.0;
     ap->hi[ITF_RAND]    = 1.0;
     ap->default_val[ITF_RAND] = 0.0;
@@ -677,14 +680,14 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             return(DATA_ERROR);
         }
         switch(cnt) {
-        case(1):    
+        case(1):
             if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
                 sprintf(errstr,"Cannot read process no. sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
 
-        case(2):    
+        case(2):
             if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
                 sprintf(errstr,"Cannot read mode no. sent from TK\n");
                 return(DATA_ERROR);
@@ -697,7 +700,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 //            ap = dz->application;
             break;
 
-        case(3):    
+        case(3):
             if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
                 sprintf(errstr,"Cannot read infilecnt sent from TK\n");
                 return(DATA_ERROR);
@@ -709,137 +712,137 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
                 return(exit_status);
             break;
-        case(INPUT_FILETYPE+4): 
+        case(INPUT_FILETYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
                 sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FILESIZE+4): 
+        case(INPUT_FILESIZE+4):
             if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = filesize;   
+            dz->insams[0] = filesize;
             break;
-        case(INPUT_INSAMS+4):   
+        case(INPUT_INSAMS+4):
             if(sscanf(argv[cnt],"%d",&insams)!=1) {
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams; 
+            dz->insams[0] = insams;
             break;
-        case(INPUT_SRATE+4):    
+        case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
                 sprintf(errstr,"Cannot read srate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_CHANNELS+4): 
+        case(INPUT_CHANNELS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
                 sprintf(errstr,"Cannot read channels sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_STYPE+4):    
+        case(INPUT_STYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
                 sprintf(errstr,"Cannot read stype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGSTYPE+4):    
+        case(INPUT_ORIGSTYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
                 sprintf(errstr,"Cannot read origstype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGRATE+4): 
+        case(INPUT_ORIGRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
                 sprintf(errstr,"Cannot read origrate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MLEN+4): 
+        case(INPUT_MLEN+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
                 sprintf(errstr,"Cannot read Mlen sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DFAC+4): 
+        case(INPUT_DFAC+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
                 sprintf(errstr,"Cannot read Dfac sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGCHANS+4):    
+        case(INPUT_ORIGCHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_SPECENVCNT+4):   
+        case(INPUT_SPECENVCNT+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
                 sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->specenvcnt = dz->infile->specenvcnt;
             break;
-        case(INPUT_WANTED+4):   
+        case(INPUT_WANTED+4):
             if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
                 sprintf(errstr,"Cannot read wanted sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_WLENGTH+4):  
+        case(INPUT_WLENGTH+4):
             if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
                 sprintf(errstr,"Cannot read wlength sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_OUT_CHANS+4):    
+        case(INPUT_OUT_CHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
                 sprintf(errstr,"Cannot read out_chans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
             /* RWD these chanegs to samps - tk will have to deal with that! */
-        case(INPUT_DESCRIPTOR_BYTES+4): 
+        case(INPUT_DESCRIPTOR_BYTES+4):
             if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
                 sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_IS_TRANSPOS+4):  
+        case(INPUT_IS_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
                 sprintf(errstr,"Cannot read is_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_TRANSPOS+4):    
+        case(INPUT_COULD_BE_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
                 sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_PITCH+4):   
+        case(INPUT_COULD_BE_PITCH+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
                 sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DIFFERENT_SRATES+4): 
+        case(INPUT_DIFFERENT_SRATES+4):
             if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
                 sprintf(errstr,"Cannot read different_srates sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DUPLICATE_SNDS+4):   
+        case(INPUT_DUPLICATE_SNDS+4):
             if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
                 sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_BRKSIZE+4):  
+        case(INPUT_BRKSIZE+4):
             if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
                 sprintf(errstr,"Cannot read brksize sent from TK\n");
                 return(DATA_ERROR);
@@ -876,74 +879,74 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 break;
             }
             break;
-        case(INPUT_NUMSIZE+4):  
+        case(INPUT_NUMSIZE+4):
             if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
                 sprintf(errstr,"Cannot read numsize sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_LINECNT+4):  
+        case(INPUT_LINECNT+4):
             if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
                 sprintf(errstr,"Cannot read linecnt sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ALL_WORDS+4):    
+        case(INPUT_ALL_WORDS+4):
             if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
                 sprintf(errstr,"Cannot read all_words sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ARATE+4):    
+        case(INPUT_ARATE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
                 sprintf(errstr,"Cannot read arate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FRAMETIME+4):    
+        case(INPUT_FRAMETIME+4):
             if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
                 sprintf(errstr,"Cannot read frametime sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->frametime = (float)dummy;
             break;
-        case(INPUT_WINDOW_SIZE+4):  
+        case(INPUT_WINDOW_SIZE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
                 sprintf(errstr,"Cannot read window_size sent from TK\n");
                     return(DATA_ERROR);
             }
             break;
-        case(INPUT_NYQUIST+4):  
+        case(INPUT_NYQUIST+4):
             if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
                 sprintf(errstr,"Cannot read nyquist sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DURATION+4): 
+        case(INPUT_DURATION+4):
             if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
                 sprintf(errstr,"Cannot read duration sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINBRK+4):   
+        case(INPUT_MINBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
                 sprintf(errstr,"Cannot read minbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXBRK+4):   
+        case(INPUT_MAXBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
                 sprintf(errstr,"Cannot read maxbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINNUM+4):   
+        case(INPUT_MINNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
                 sprintf(errstr,"Cannot read minnum sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXNUM+4):   
+        case(INPUT_MAXNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
                 sprintf(errstr,"Cannot read maxnum sent from TK\n");
                 return(DATA_ERROR);
@@ -962,7 +965,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 
     if(true_cnt)
         cnt = true_cnt;
-    *cmdlinecnt = 0;        
+    *cmdlinecnt = 0;
 
     while(cnt < argc) {
         if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
@@ -1040,7 +1043,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
     return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz) 
+int read_special_data(char *str,dataptr dz)
 {
     return(FINISHED);
 }
@@ -1080,7 +1083,7 @@ int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{   
+{
     int n;
     if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
@@ -1096,7 +1099,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     }
     if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -1149,13 +1152,6 @@ int usage2(char *str)
         "\n"
         "SEED       the same seed-number will produce similar output on rerun.\n"
         "\n"
-        "(FOR MORE INFORMATION ----- hit any key)\n"
-        "\n");
-    }
-    while(!kbhit())
-        ;
-    if(kbhit()) {
-        fprintf(stderr,
         "Parameters of the line-elements\n"
         "\n"
         "PRAND      randomises pitch of segments (semitones in range +- 2)\n"
@@ -1181,14 +1177,9 @@ int usage2(char *str)
         "INTERVAL   Portamento interval (semitones : range 0 - 2)\n"
         "           Interval attained only by start of next note.\n"
         "           (If note fades before next note enters, interval not reached).\n");
-    } else
+    } else {
         fprintf(stderr,"Unknown option '%s'\n",str);
-    return(USAGE_ONLY);
-}
-
-int usage3(char *str1,char *str2)
-{
-    fprintf(stderr,"Insufficient parameters on command line.\n");
+    }
     return(USAGE_ONLY);
 }
 
@@ -1299,7 +1290,7 @@ int create_the_iterbufs(dataptr dz)
 
     infile_space = dz->insams[0] + 1;                   /* Allows for wraparound point for tansposition interps */
     overflow_size = dz->insams[0];
-    overflow_size *= 2;                                     /* Allows for transposition of source up to 1 octave lower */   
+    overflow_size *= 2;                                     /* Allows for transposition of source up to 1 octave lower */
     if((seccnt = overflow_size/F_SECSIZE) * F_SECSIZE < overflow_size)
         seccnt++;
     overflow_size = F_SECSIZE * overflow_size;
@@ -1322,7 +1313,7 @@ int create_the_iterbufs(dataptr dz)
     memset((char *)dz->sampbuf[0],0,(size_t)(infile_space * sizeof(float)));
     memset((char *)dz->sampbuf[1],0,(size_t)(dz->buflen * sizeof(float)));
     memset((char *)dz->sampbuf[2],0,(size_t)(overflow_size * sizeof(float)));
-    dz->infilespace = infile_space; 
+    dz->infilespace = infile_space;
     dz->overflowsize = overflow_size;
     return(FINISHED);
 }
@@ -1553,15 +1544,15 @@ int iterfof(dataptr dz)
             if(dz->brksize[ITF_TRIM]) {
                 if((exit_status = read_value_from_brktable(time,ITF_TRIM,dz))<0)
                     return exit_status;
-            }                                           
+            }
             trimdur = 0;                                //  Trim ZERO indicates no trim
-            if(dz->param[ITF_TRIM] > 0.0) 
+            if(dz->param[ITF_TRIM] > 0.0)
                 trimdur = (int)round(dz->param[ITF_TRIM] * srate);
 
             if(dz->brksize[ITF_TRBY]) {
                 if((exit_status = read_value_from_brktable(time,ITF_TRBY,dz))<0)
                     return exit_status;
-            }                                           
+            }
             trimfade = 0;                               //  Trimfade ZERO indicates no fade
             if(dz->param[ITF_TRBY] > 0.0)
                 trimfade = (int)round(dz->param[ITF_TRBY] * srate);
@@ -1574,7 +1565,7 @@ int iterfof(dataptr dz)
                 transposcnt = dz->insams[0];                //  Simply a 1-1 read from input buffer
                 getbuf = ibuf;                              //  Set to read from input buffer
             }
-            dozeros = 0;            
+            dozeros = 0;
             if(trimdur > 0) {                               //  If trim is to be done
                 dozeros = max(transposcnt - trimdur,0);     //  Can the trim be done on the length of sound available (some smaples will be zeroed) ??
                 if(dozeros  > 0) {                          //  If trim can be done
@@ -1599,7 +1590,7 @@ int iterfof(dataptr dz)
                 spliceincr = 1.0/(double)trimfade;
                 for(; n < fade_to;n++) {
                     spliceval = max(0.0,spliceval - spliceincr);
-                    splicer = pow(spliceval,dz->param[ITF_SLOP]); 
+                    splicer = pow(spliceval,dz->param[ITF_SLOP]);
                     obuf[obufpos] = (float)(obuf[obufpos] + (getbuf[n] * gain * splicer));
                     obufpos++;
                 }
@@ -1706,11 +1697,11 @@ int read_stepd_delay_value(double thistime,double *notestarttime,double *noteend
     }
     if(p < delend) {
         dz->param[ITF_DEL] = *(p-1);
-        currentnotestart = *(p-2); 
+        currentnotestart = *(p-2);
         *noteendtime = *p;
     }
     if(currentnotestart > *notestarttime) { //  IF in new note
-        if(dz->iparam[ITF_PORT] == 0)                                       
+        if(dz->iparam[ITF_PORT] == 0)
             *portint = 0.0;
         else {                              //  IF portamento is set
             if(dz->brksize[ITF_PINT]) {     //  Get portamento interval
@@ -1719,7 +1710,7 @@ int read_stepd_delay_value(double thistime,double *notestarttime,double *noteend
             }
             thisport = dz->param[ITF_PINT];
             switch(dz->iparam[ITF_PORT]) {  //  Portamento up, down or randomly up/dn
-            case(1):    
+            case(1):
                 break;
             case(-1):
                 thisport = -thisport;
@@ -1816,7 +1807,7 @@ int dovibrato(int *delays,dataptr dz)
     for(k=0;k < dz->itemcnt;k++) {
         if(cyclestart) {                    //  At the start of a vibrato sine-cycle
             time = (double)samptime/srate;  //  Reset all vibrato values
-            if(dz->brksize[ITF_VMIN]) {     
+            if(dz->brksize[ITF_VMIN]) {
                 if((exit_status = read_value_from_brktable(time,ITF_VMIN,dz))<0)
                     return exit_status;
             }
@@ -1934,7 +1925,7 @@ int read_lineportion_gain(double thistime,double *lasttime,double *linegain,doub
         }
         k--;
         p -= 2;                             //  We must be in previous brkfile portion, so step back to starttime of previous portion
-        portion_time = *p;  
+        portion_time = *p;
         if(portion_time > *lasttime) {      //  If starttime of current portion is NOT same as starttime of previous portion
             *linegain = linegains[k];       //  Reset the portion params
             *lasttime = portion_time;       //  And set new starttime for current portion
@@ -1954,7 +1945,7 @@ int read_lineportion_envelope(double thistime,double *envlasttime,int *linedur,i
     int dur, fade, gap, up_fade, slopes;
     int k = 0;
     if(dz->brksize[ITF_DEL]) {
-        del = dz->brk[ITF_DEL]; 
+        del = dz->brk[ITF_DEL];
         delend = dz->brk[ITF_DEL] + (dz->brksize[ITF_DEL] * 2);
         p = del;
         while(thistime >= *p) {             //  Step forward in portion-pitches brkfile until time in brkfile exceeds NOW (thistime)
@@ -1965,7 +1956,7 @@ int read_lineportion_envelope(double thistime,double *envlasttime,int *linedur,i
         }
         k--;
         p -= 2;                             //  We must be in previous brkfile portion, so step back to starttime of previous portion
-        portion_time = *p;  
+        portion_time = *p;
         if(portion_time > *envlasttime) {   //  If starttime of current portion is NOT same as starttime of previous portion
             p += 2;                         //  Find duration of new line-portion
             if(p >= delend) {
@@ -1984,7 +1975,7 @@ int read_lineportion_envelope(double thistime,double *envlasttime,int *linedur,i
             up_fade = (int)(upfades[k] * srate);
             if(up_fade < minfade)           //  Upfade cannot be less than a (no-clicks) minimum
                 up_fade = minfade;
-            fade = (int)(linefades[k] * srate);     
+            fade = (int)(linefades[k] * srate);
             if(fade < minfade)              //  Fade cannot be less than a (no-clicks) minimum
                 fade = minfade;
             if((slopes = up_fade + fade) >= dur) {
@@ -2003,7 +1994,7 @@ int read_lineportion_envelope(double thistime,double *envlasttime,int *linedur,i
             dur -= slopes;                  //  Duration (at full level) reduced by length of fades
             *upfade = up_fade;
             *upfadeincr = 1.0/(double)up_fade;
-            *linefadeincr = 1.0/fade;   
+            *linefadeincr = 1.0/fade;
             *linedur = dur;                 //  Set up line-counters
             *linefade = fade;
             *lineenv  = 1.0;                //  initialise line envelope to 1.0

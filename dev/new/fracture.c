@@ -44,6 +44,8 @@
 #include <string.h>
 #include <srates.h>
 
+#include "cdpmain.h"
+
 #ifdef unix
 #include <aaio.h>
 #endif
@@ -167,10 +169,10 @@ int main(int argc,char *argv[])
     }
     if(!sloom) {
         if(argc == 1) {
-            usage1();   
+            usage1();
             return(FAILED);
         } else if(argc == 2) {
-            usage2(argv[1]);    
+            usage2(argv[1]);
             return(FAILED);
         }
     }
@@ -205,12 +207,12 @@ int main(int argc,char *argv[])
         //parse_TK_data() =
         if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-            return(exit_status);         
+            return(exit_status);
         }
     }
 //    ap = dz->application;
 
-    // parse_infile_and_hone_type() = 
+    // parse_infile_and_hone_type() =
     if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -221,15 +223,15 @@ int main(int argc,char *argv[])
         return(FAILED);
     }
     // open_first_infile        CDP LIB
-    if((exit_status = open_first_infile(cmdline[0],dz))<0) {    
-        print_messages_and_close_sndfiles(exit_status,is_launched,dz);  
+    if((exit_status = open_first_infile(cmdline[0],dz))<0) {
+        print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
     cmdlinecnt--;
     cmdline++;
 
 //  handle_extra_infiles() : redundant
-    // handle_outfile() = 
+    // handle_outfile() =
     if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -257,7 +259,7 @@ int main(int argc,char *argv[])
         return(FAILED);
     }
     is_launched = TRUE;
-    if((exit_status = create_fracture_sndbufs(maxpulse,maxtrans,minfragmax,&ibuflen,&envbuflen,&overflow,&mbuflen,dz))<0) {                         
+    if((exit_status = create_fracture_sndbufs(maxpulse,maxtrans,minfragmax,&ibuflen,&envbuflen,&overflow,&mbuflen,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
     }
@@ -287,15 +289,15 @@ int main(int argc,char *argv[])
 
 int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist)
 {
-    ap->special_data   = (char)special_data;       
+    ap->special_data   = (char)special_data;
     ap->param_cnt      = (char)paramcnt;
     ap->max_param_cnt  = (char)maxparamcnt;
     if(ap->max_param_cnt>0) {
-        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {    
+        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->param_list,paramlist); 
+        strcpy(ap->param_list,paramlist);
     }
     return(FINISHED);
 }
@@ -316,16 +318,16 @@ int set_vflgs
             sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->option_flags,optflags); 
+        strcpy(ap->option_flags,optflags);
     }
-    ap->vflag_cnt = (char) vflagcnt;           
+    ap->vflag_cnt = (char) vflagcnt;
     ap->variant_param_cnt = (char) vparamcnt;
     if(vflagcnt) {
         if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->variant_list,varlist);       
+        strcpy(ap->variant_list,varlist);
         if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
             return(MEMORY_ERROR);
@@ -345,30 +347,30 @@ int application_init(dataptr dz)
     int tipc, brkcnt;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
-        initialise_vflags(dz);    
+        initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
-        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
             return(exit_status);
     }
     brkcnt = tipc;
     //THERE ARE NO INPUTFILE brktables USED IN THIS PROCESS
     if(brkcnt>0) {
-        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
             return(exit_status);
     }
-    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
-        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
-        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
             return(exit_status);
-    }                                                      
-    if((exit_status = mark_parameter_types(dz,ap))<0)     
+    }
+    if((exit_status = mark_parameter_types(dz,ap))<0)
         return(exit_status);
     
     // establish_infile_constants() replaced by
@@ -590,7 +592,7 @@ int setup_fracture_application(dataptr dz)
     dz->has_otherfile = FALSE;
     // assign_process_logic -->
     dz->input_data_type = SNDFILES_ONLY;
-    dz->process_type    = UNEQUAL_SNDFILE;  
+    dz->process_type    = UNEQUAL_SNDFILE;
     dz->outfiletype     = SNDFILE_OUT;
     return application_init(dz);    //GLOBAL
 }
@@ -749,14 +751,14 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             return(DATA_ERROR);
         }
         switch(cnt) {
-        case(1):    
+        case(1):
             if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
                 sprintf(errstr,"Cannot read process no. sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
 
-        case(2):    
+        case(2):
             if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
                 sprintf(errstr,"Cannot read mode no. sent from TK\n");
                 return(DATA_ERROR);
@@ -769,7 +771,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 //            ap = dz->application;
             break;
 
-        case(3):    
+        case(3):
             if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
                 sprintf(errstr,"Cannot read infilecnt sent from TK\n");
                 return(DATA_ERROR);
@@ -781,137 +783,137 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
                 return(exit_status);
             break;
-        case(INPUT_FILETYPE+4): 
+        case(INPUT_FILETYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
                 sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FILESIZE+4): 
+        case(INPUT_FILESIZE+4):
             if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = filesize;   
+            dz->insams[0] = filesize;
             break;
-        case(INPUT_INSAMS+4):   
+        case(INPUT_INSAMS+4):
             if(sscanf(argv[cnt],"%d",&insams)!=1) {
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams; 
+            dz->insams[0] = insams;
             break;
-        case(INPUT_SRATE+4):    
+        case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
                 sprintf(errstr,"Cannot read srate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_CHANNELS+4): 
+        case(INPUT_CHANNELS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
                 sprintf(errstr,"Cannot read channels sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_STYPE+4):    
+        case(INPUT_STYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
                 sprintf(errstr,"Cannot read stype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGSTYPE+4):    
+        case(INPUT_ORIGSTYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
                 sprintf(errstr,"Cannot read origstype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGRATE+4): 
+        case(INPUT_ORIGRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
                 sprintf(errstr,"Cannot read origrate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MLEN+4): 
+        case(INPUT_MLEN+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
                 sprintf(errstr,"Cannot read Mlen sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DFAC+4): 
+        case(INPUT_DFAC+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
                 sprintf(errstr,"Cannot read Dfac sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGCHANS+4):    
+        case(INPUT_ORIGCHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_SPECENVCNT+4):   
+        case(INPUT_SPECENVCNT+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
                 sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->specenvcnt = dz->infile->specenvcnt;
             break;
-        case(INPUT_WANTED+4):   
+        case(INPUT_WANTED+4):
             if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
                 sprintf(errstr,"Cannot read wanted sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_WLENGTH+4):  
+        case(INPUT_WLENGTH+4):
             if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
                 sprintf(errstr,"Cannot read wlength sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_OUT_CHANS+4):    
+        case(INPUT_OUT_CHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
                 sprintf(errstr,"Cannot read out_chans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
             /* RWD these chanegs to samps - tk will have to deal with that! */
-        case(INPUT_DESCRIPTOR_BYTES+4): 
+        case(INPUT_DESCRIPTOR_BYTES+4):
             if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
                 sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_IS_TRANSPOS+4):  
+        case(INPUT_IS_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
                 sprintf(errstr,"Cannot read is_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_TRANSPOS+4):    
+        case(INPUT_COULD_BE_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
                 sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_PITCH+4):   
+        case(INPUT_COULD_BE_PITCH+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
                 sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DIFFERENT_SRATES+4): 
+        case(INPUT_DIFFERENT_SRATES+4):
             if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
                 sprintf(errstr,"Cannot read different_srates sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DUPLICATE_SNDS+4):   
+        case(INPUT_DUPLICATE_SNDS+4):
             if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
                 sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_BRKSIZE+4):  
+        case(INPUT_BRKSIZE+4):
             if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
                 sprintf(errstr,"Cannot read brksize sent from TK\n");
                 return(DATA_ERROR);
@@ -948,74 +950,74 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 break;
             }
             break;
-        case(INPUT_NUMSIZE+4):  
+        case(INPUT_NUMSIZE+4):
             if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
                 sprintf(errstr,"Cannot read numsize sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_LINECNT+4):  
+        case(INPUT_LINECNT+4):
             if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
                 sprintf(errstr,"Cannot read linecnt sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ALL_WORDS+4):    
+        case(INPUT_ALL_WORDS+4):
             if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
                 sprintf(errstr,"Cannot read all_words sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ARATE+4):    
+        case(INPUT_ARATE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
                 sprintf(errstr,"Cannot read arate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FRAMETIME+4):    
+        case(INPUT_FRAMETIME+4):
             if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
                 sprintf(errstr,"Cannot read frametime sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->frametime = (float)dummy;
             break;
-        case(INPUT_WINDOW_SIZE+4):  
+        case(INPUT_WINDOW_SIZE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
                 sprintf(errstr,"Cannot read window_size sent from TK\n");
                     return(DATA_ERROR);
             }
             break;
-        case(INPUT_NYQUIST+4):  
+        case(INPUT_NYQUIST+4):
             if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
                 sprintf(errstr,"Cannot read nyquist sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DURATION+4): 
+        case(INPUT_DURATION+4):
             if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
                 sprintf(errstr,"Cannot read duration sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINBRK+4):   
+        case(INPUT_MINBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
                 sprintf(errstr,"Cannot read minbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXBRK+4):   
+        case(INPUT_MAXBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
                 sprintf(errstr,"Cannot read maxbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINNUM+4):   
+        case(INPUT_MINNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
                 sprintf(errstr,"Cannot read minnum sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXNUM+4):   
+        case(INPUT_MAXNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
                 sprintf(errstr,"Cannot read maxnum sent from TK\n");
                 return(DATA_ERROR);
@@ -1034,7 +1036,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 
     if(true_cnt)
         cnt = true_cnt;
-    *cmdlinecnt = 0;        
+    *cmdlinecnt = 0;
 
     while(cnt < argc) {
         if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
@@ -1110,7 +1112,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
     return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz) 
+int read_special_data(char *str,dataptr dz)
 {
     return(FINISHED);
 }
@@ -1183,7 +1185,7 @@ int check_fracture_param_validity_and_consistency(dataptr dz)
         if(dz->brksize[FRAC_FRONT]) {
             maxval = dz->brk[FRAC_FRONT][1];
             minval = maxval;
-            for(n=1,m=3;n<dz->brksize[FRAC_FRONT];n++,m+=2) {   
+            for(n=1,m=3;n<dz->brksize[FRAC_FRONT];n++,m+=2) {
                 if(dz->brk[FRAC_FRONT][m] > minval) {
                     sprintf(errstr,"Front value must move from high values to low values,\n");
                     return(DATA_ERROR);
@@ -1225,7 +1227,7 @@ int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{   
+{
     int n;
     if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
@@ -1241,7 +1243,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     }
     if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -1264,120 +1266,81 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     return(FINISHED);
 }
 
-/******************************** USAGE2 ********************************/
+/******************************** usage2 *******************************/
 
 int usage2(char *str)
 {
     if(!strcmp(str,"fracture")) {
         fprintf(stderr,
-        "USAGE:fracture fracture 1\n"
+        "USAGE: fracture fracture 1\n"
         "infil outfil etab chns strms pulse edpth stkint [-hseed] [-mmin] [-imax] [-rrrnd]\n"
         "[-pprnd] [-ddisp] [-vlrnd] [-eernd] [-srnd] [-ttrnd] [-y] [-l]\n"
         "\n"
         "OR\n"
         "\n"
-        "USAGE:fracture fracture 2\n"
+        "USAGE: fracture fracture 2\n"
         "infil outfil etab chns strms pulse edpth stkint cntre frnt depth rolloff [-hseed]\n"
         "[-mmin] [-imax] [-rrrnd] [-pprnd] [-ddisp] [-vlrnd] [-eernd] [-srnd] [-ttrnd]\n"
-        "[-aatten] [-zzpoint] [-ccontract] [] [-llopnt] [-ffmix] [-jffrq] [-kup] [-wdn] [-y]\n"
+        "[-aatten] [-zzpoint] [-ccontract] [-llopnt] [-ffmix] [-jffrq] [-kup] [-wdn] [-y]\n"
         "\n"
         "DISPERSE MONO SIGNAL INTO FRAGMENTS SPREAD OVER N-CHANNEL SPACE.\n"
         "\n"
         "Mode 1: Output is N-channel dispersal in N-channel space.\n"
-        "Mode 2: Output is stereo dispersal (posibly moving) in surround space.\n"
+        "Mode 2: Output is stereo dispersal (possibly moving) in surround space.\n"
         "\n"
-        "PRESS ANY KEY TO CONTINUE\n");
-        while(!kbhit())
-            ;
-        if(kbhit()) {
-            fprintf(stderr,
-            "ETAB     Textfile: Each line is a TIME followed by 7 PAIRS of envelope-data.\n"
-            "         envelope-data represented in form \"etime lev\"\n"
-            "         where \"etime\" is relative time WITHIN envelope (values between 0 & 1)\n"
-            "         and \"lev\" is level at etime (values 0-1). In each envelope-data set\n"
-            "         \"lev\" must start and end at zero and rise to a max value of 1.0\n"
-            "CHNS     Number of channels in output file (2-16). (Mode 2, multiples of 4 only).\n"
-            "STRMS    No. of spatial positions (streams) for resulting fragments ( >=4 ).\n"
-            "PULSE    Average gap btwn 1 set-of-frags (each in different strm) & next set.\n"
-            "         Disp = 0: all frags in sync at each (possibly randomised) pulse.\n"
-            "         Disp > 0: frags time-scattered around pulse centre. (see below).\n"
-            "EDPTH    Envelope depth. 1: env cuts down to zero, 0.75: cuts 3/4 way to zero,\n"
-            "(+STACK) 0.1: cuts only 1/10 way to zero,   0: env has no effect on source.\n"
-            "         Once depth exceeds 1, fragments begin to stack (but NOT before)\n"
-            "         (i.e. transposed copies added to fragment, synced at envelope peak).\n"
-            "         Depth 2 -> Stack 1: 1st transposed element added at full level.\n"
-            "         Depth 1.5 -> Stack 06.5: 1st transpd element added at 1/2 (0.5) level.\n"
-            "         Depth 2.5 -> Stack 1.5: 1st added at full level, 2nd at 1/2 level etc\n"
-            "STKINT   Interval of (upward) transposition in stack, in semitones (0-12).\n"
-            "         Default(0) is read as octave(12). NO ZEROS in stack brkpoint files.\n"
-            "SEED     If NOT zero, repeating process with same seed gives identical output.\n"
-            "MIN/MAX  Minimum/maximum duration of fragments. If zero, no minimum/maximum.\n"
-            "RRND     Randomisation of read-time in src. Range 0-1.\n"
-            "PRND     Randomisation of pulse-time in output. Range 0-1.\n"
-            "         In both cases, Max(1) scatters in range +- half-duration of pulse.\n"
-            "DISP     Dispersal (scatter) of output timings between different streams.\n"
-            "         If pulse(+prnd) gives time \"P\", then for disp 0: all frags are at \"P\"\n"
-            "         for disp 1: frags scattered within max range (+- half-dur of pulse).\n"
-            "LRND     Randomisation of levels (volume) of fragments. Range  0 - 1.\n"
-            "         0: All frags full level.  1: Frags at random levels between 0 & full.\n"
-            "ERND     Randomisation of envelope used. A time range (trange).\n"
-            "         Event at \"now\" reads etable at randtime btwn \"now\" & now-minus-trange.\n"
-            "SRND     Randomisation of stack. Range 0 - 1 (NB stack value (S) = DEPTH-1)\n"
-            "         0: Stack value is S.   1: Stack val selected at random between 0 & S.\n"
-            "TRND     Random tranpose of fragments. Range 0-1200 cents (1 octave upwards).\n"
-            "         Event pitch randomised between pitch+trnd and pitch-trnd.\n"
-            "-z       Permit stacking of very short events. Default = forbid, prevent clipping.\n"
-            "-l       For more than 2 output chans, lspkrs assumed to encircle listeners,\n"
-            "         with a single lspkr at centre front.\n"
-            "         Setting -l flag assumes linear array, with leftmost+rightmost lspkrs.\n"
-            "\n"
-            "NB: STKINT, MAX, RRND, LRND, SRND and TRND are INACTIVE if depth < 1.\n"
-            "All these params can timevary EXCEPT \"chns\", \"strms\" & \"seed\".\n"
-            "\n"
-            "PRESS KEY \"2\" TO SEE EXTRA OPTIONS AVAILABLE IN MODE 2\n"
-            "OR ANY OTHER KEY TO FINISH.\n");
-        }
-        if(getch()=='2') {  
-            fprintf(stderr,
-            "MODE 2 ONLY: Additional parameters.\n"
-            "\n"
-            "CNTRE    Channel from which stereo-image spreads out.\n"
-            "FRNT     Output leading edge: 1 = in cntr lspkr: -1= in lspkr opposite cntr.\n"
-            "         0 = on bisector of entire sound-surround space.\n"
-            "         2 = infinitely far away in direction of centre,\n"
-            "         -(2+(depth*2)) = infinitely far away in direction opposite to centre.\n"
-            "         If front moves, forward movement only (no reversals of direction)\n"
-            "         and if doesn't go to infinity, event itself fades to 0 from midtime.\n"
-            "DEPTH    maximum fraction of all output chans turned on, behind front.\n"
-            "ROLLOFF  level fall as signal is spread over several chans. Range 0-1.\n"
-            "         0 = no fall in level, 1 = level divided by number of chans in use.\n"
-            "ATTEN    Level Attenuation factor for distance, or sound fade-out.\n"
-            "         (Range >= 1 : 1 = linear).\n"
-            "ZPOINT   Point where image subtends zero angle(mono): 0 circle edge, 1 infinity\n"
-            "CONTRACT Contraction factor narrowing distant image width (>=1 : 1= linear).\n"
-            "LOPNT    Distance where lopas-filtering is total ( 0 circle edge, 1 infinity.\n"
-            "FMIX     Factor for mixing lopas-filtrd signal into orig, with distance (>=1).\n"
-            "FFREQ    Lo-pass filter cut-off frequency.\n"
-            "UP       If NOT zero, proportion of overall dur over which event fades from 0.\n"
-            "         This is independent of any fadeup-with-approach-to-circle.\n"
-            "DN       If NOT zero, proportion of overall dur over which event fades to 0.\n"
-            "         This is independent of any fadeout-with-distance-from-circle.\n"
-            "GAIN     Overall gain (0-1). If \"contract\" is very much faster than \"atten\",\n"
-            "         rare possibility of overload, as signal is forced to mono.\n"
-            "-z       Permit stacking of very short events. Default = forbid, prevent clipping.\n"
-            "\n"
-            "in MODE 2, of the additional parameters, only \"frnt\" can vary in time.\n");
-        }
-    } else
-        fprintf(stdout,"Unknown option '%s'\n",str);
+        "ETAB     Textfile: Each line is a TIME followed by 7 PAIRS of envelope-data.\n"
+        "         envelope-data represented in form \"etime lev\"\n"
+        "         where \"etime\" is relative time WITHIN envelope (values between 0 & 1)\n"
+        "         and \"lev\" is level at etime (values 0-1). In each envelope-data set\n"
+        "         \"lev\" must start and end at zero and rise to a max value of 1.0\n"
+        "CHNS     Number of channels in output file (2-16). (Mode 2, multiples of 4 only).\n"
+        "STRMS    No. of spatial positions (streams) for resulting fragments ( >=4 ).\n"
+        "PULSE    Average gap between sets of fragments. DISP controls scatter.\n"
+        "EDPTH    Envelope depth. Above 1 = stacking; below 1 = attenuation only.\n"
+        "STKINT   Stack interval in semitones (0-12), default = 12.\n"
+        "SEED     Random seed. If non-zero, makes process repeatable.\n"
+        "MIN/MAX  Minimum and maximum fragment durations.\n"
+        "RRND     Randomise read-time from source. (0-1).\n"
+        "PRND     Randomise pulse timing. (0-1).\n"
+        "DISP     Scatter of fragments at each pulse (0-1).\n"
+        "LRND     Level randomisation. (0-1).\n"
+        "ERND     Random envelope variation.\n"
+        "SRND     Random stack selection (0-1).\n"
+        "TRND     Random pitch transposition (in cents).\n"
+        "-z       Allow very short stacked fragments (default = off).\n"
+        "-l       Linear speaker layout mode (default = encircled).\n"
+        "\n"
+        "MODE 2 ONLY - EXTRA PARAMETERS:\n"
+        "CNTRE    Center channel for stereo image.\n"
+        "FRNT     Front image start position.\n"
+        "DEPTH    Max %% of channels to use behind front.\n"
+        "ROLLOFF  Attenuation over spatial spread.\n"
+        "ATTEN    Distance-based level attenuation (>=1).\n"
+        "ZPOINT   Point where image collapses to mono.\n"
+        "CONTRACT Spatial narrowing factor (>=1).\n"
+        "LOPNT    Distance where low-pass is maxed out.\n"
+        "FMIX     Low-pass signal mix factor.\n"
+        "FFREQ    Low-pass filter cutoff frequency.\n"
+        "UP/DN    Fade in/out over duration (%).\n"
+        "GAIN     Final gain control (0-1).\n"
+        "\n"
+        "NB: STKINT, MAX, RRND, LRND, SRND and TRND are inactive if depth < 1.\n"
+        "All params can timevary except: chns, strms, seed.\n"
+        );
+    } else {
+        fprintf(stdout, "Unknown option '%s'\n", str);
+    }
     return(USAGE_ONLY);
 }
 
-int usage3(char *str1,char *str2)
+/******************************** usage3 *******************************/
+
+int usage3(char *str1, char *str2)
 {
-    fprintf(stderr,"Insufficient parameters on command line.\n");
-    return(USAGE_ONLY);
+    fprintf(stderr, "Insufficient parameters on command line.\n");
+    return USAGE_ONLY;
 }
+
 
 /******************************** FRACTURE *******************************/
 
@@ -1406,7 +1369,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
  *  DOUBLE ARRAYS: S = number of streams                                    |               llev
  *                          |                                               |               | rlev
  *          |---------------|---------------|---------------|---------------|---------------| | pos
- *          |   depth       |   level       |   transpos    |   envreadtime |   stacking    | | | tempenv  
+ *          |   depth       |   level       |   transpos    |   envreadtime |   stacking    | | | tempenv
  *          |               |               |               |               |               5S| | | envdata
  *          |               |               |               |               |               | 5S+1| | stakcentre
  *  address 0               S               2S              3S              4S              | | 5S+2| | grptimes
@@ -1500,7 +1463,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
         maxscatrange = gp_stepdur/2.0;          //  Max range (+ve or -ve) over which events can be scattered
         for(n=0;n<strmcnt;n++) {                //  Get the output end-timings of the streams
             endtime = gp_stependtime;           //  Do scattering, if required
-            if(dz->param[FRAC_SCAT] > 0.0) {    //  Around the (already rand-offset) end-timing of the group    
+            if(dz->param[FRAC_SCAT] > 0.0) {    //  Around the (already rand-offset) end-timing of the group
                 if(dz->param[FRAC_MIN] > 0.0) {
                     scatter_ambit_stt = gp_stependtime - maxscatrange;
                     scatter_ambit_end = gp_stependtime + maxscatrange;
@@ -1522,7 +1485,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                         } else {                                    //  If NOT
                             endtime = scatter_ambit_stt;            //  force base into ambit of current gp-position
                             available_dur = maxscatrange * 2.0;     //  Length to scatter-amongst is whole ambit around gp-position
-                        }   
+                        }
                             //  Do randomisation within the remaining range
                         randscat = drand48();                       //  Range 0 to 1
                         randscat *= available_dur * dz->param[FRAC_SCAT];
@@ -1584,7 +1547,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
         //  FIND READ SAMPLE OF EACH STREAM, (RANDOMISED IF REQUIRED) AND MAX AND MINIMUM READ
 
         if(evcnt == 0) {        //  At very start, all segments are read at 0
-            for(n=0;n<strmcnt;n++)      
+            for(n=0;n<strmcnt;n++)
                 iread[n][evcnt] = 0;
             minread = 0;
             maxread = 0;
@@ -1599,16 +1562,16 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
             else
                 fracmax = dz->iparam[FRAC_MAX];
         } else {
-            for(n=0;n<strmcnt;n++) {                //  Scatter the output read-timings for the streams (if ness) 
+            for(n=0;n<strmcnt;n++) {                //  Scatter the output read-timings for the streams (if ness)
                 startdepth = depth[n][evcnt - 1];   //  Startdepth = previous end-depth
                 enddepth = depth[n][evcnt];
                 if(startdepth < 1 || enddepth < 1) {        //  If envelopes don't cut down to zero at both ends
                     iread[n][evcnt] = evend[n][evcnt - 1];  //  reads & writes in same place, avoid discontinuity in output sig
                     fracmax = 0;
-                } else {    
+                } else {
                     readtime = last_gp_stependtime;
                     if(dz->param[FRAC_INRND] > 0) {
-                        randscat = (drand48() * 2) - 1.0;   //  Around the timing START of the group    
+                        randscat = (drand48() * 2) - 1.0;   //  Around the timing START of the group
                         randscat *= (last_gp_stepdur/2.0) * dz->param[FRAC_INRND];
                         readtime += randscat;// Using the actual group step-duration as basis to calc rand offsets
                     }
@@ -1656,10 +1619,10 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
         //  FIND THE TIMES AT WHICH TO READ ENVELOPE-TEMPLATE, AND THE DEPTH
         
         if(evcnt == 0) {                                //  At very start, all envelope are read at 0
-            for(n=0;n<strmcnt;n++)      
+            for(n=0;n<strmcnt;n++)
                 eread[n][evcnt] = 0.0;
         } else {                                        //  Otherwise,
-            for(n=0;n<strmcnt;n++) {                    //  initially set envelope read position to start of segment, for each stream       
+            for(n=0;n<strmcnt;n++) {                    //  initially set envelope read position to start of segment, for each stream
                 eread[n][evcnt] = (double)(evend[n][evcnt - 1])/srate;
                 if(dz->param[FRAC_ENVRND] > 0.0) {      //  If the envelope reading is scattered over a time-range
                     maxeoffset = min(dz->param[FRAC_ENVRND],eread[n][evcnt]);
@@ -1690,7 +1653,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                 startdepth = depth[n][evcnt - 1];       //  Startdepth = previous end-depth
             enddepth = depth[n][evcnt];
             stack = 0;
-            if(startdepth >= 1.0 && enddepth >= 1.0) {  
+            if(startdepth >= 1.0 && enddepth >= 1.0) {
                 
                 //  If depth values beyond 1, this represents stacking.
 
@@ -1716,7 +1679,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
 
             //  COPY APPROPRIATE INPUT SAMPLES TO ENVELOPE BUFFER, AND DO ENVELOPING
             
-            if(evcnt == 0) 
+            if(evcnt == 0)
                 ldur = evend[n][0];
             else
                 ldur = evend[n][evcnt] - evend[n][evcnt-1];
@@ -1730,7 +1693,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
             memcpy((char *)ebuf,(char *)(ibuf + iptr[n]),ldur * sizeof(float));
             stim = 0;
             etim = 2;
-            lbas  = tempenv[stim+1];                    //  Start of envelope segment   
+            lbas  = tempenv[stim+1];                    //  Start of envelope segment
             tdiff = tempenv[etim] - tempenv[stim];      //  Timestep in envelope segment
             ldiff = tempenv[etim+1] - tempenv[stim+1];  //  Level step in envelope segment
             for(sampcnt=0;sampcnt<ldur;sampcnt++) {
@@ -1744,13 +1707,13 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                         if(etim >= 14) {                //  Gets default value at table end
                             toget = 0;
                             break;
-                        } else {                        
+                        } else {
                             lbas  = tempenv[stim+1];    //  and resetting segment constants
                             tdiff = tempenv[etim] - tempenv[stim];
                             ldiff = tempenv[etim+1] - tempenv[stim+1];
                         }
                     }
-                    if(toget) {                         //  Interp in envelope table                                
+                    if(toget) {                         //  Interp in envelope table
                         eval = (frac - tempenv[stim])/tdiff;
                         eval *= ldiff;
                         eval += lbas;
@@ -1763,7 +1726,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
 
             if(stack > 0) {
                 dostack = 1;
-                if(ldur < 8192) {               //  Prevent stacking of very short events   
+                if(ldur < 8192) {               //  Prevent stacking of very short events
                     if(!dz->vflag[0]) {         //  Unless allowed
                         dostack = 0;
                         stack = 0;
@@ -1783,7 +1746,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                 thistack = (int)floor(stack);                               // e.g. 2.0     e.g. 2.3
                 while(thistack > 0) {                                       //  --> 2       --> 2
                     if(flteq((double)thistack,stack))
-                        level = 1.0;                                        //  level 1 
+                        level = 1.0;                                        //  level 1
                                                                             //  trans remains 2
                     else {
                         level = stack - (double)thistack;                   //  level 0.3
@@ -1802,7 +1765,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                         diff  = hival - loval;
                         diff *= frac;
                         val = loval + diff;                             //  Add the interpd val into stakbuffer
-                        stkbuf[stakwrite_at] = (float)(stkbuf[stakwrite_at] + val); //  (There may be more than 1 stack component to add)   
+                        stkbuf[stakwrite_at] = (float)(stkbuf[stakwrite_at] + val); //  (There may be more than 1 stack component to add)
                         stakwrite_at++;                                 //  Incr normally in stacking buffer
                         dsampcnt += incr;                               //  Incr transpositionwise in read-from buff
                     }
@@ -1824,7 +1787,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                     evlev[n][evcnt] = levrand;
                     for(m=0;m<ldur;m++)
                         ebuf[m] = (float)(ebuf[m] * evlev[n][evcnt]);
-                } else 
+                } else
                     evlev[n][evcnt] = 1.0;
 
                 //  IF PITCH IS RANDOMISED, GET A RANDOM PITCH-INCR READY TO READ ENVELOPED DATA TO OUTPUT BUFFER
@@ -1895,7 +1858,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
         normaliser = 0.95/maxsamp;
         fprintf(stdout,"INFO: Normalising by %lf secs\n",(double)normaliser);
         fflush(stdout);
-    }   
+    }
     for(n=0;n<strmcnt;n++) {                        //  In each stream
         endevent = evcnt-1;                         //  Find the last active event
         endeventend = evend[n][endevent];           //  i.e. last event NOT of zero length
@@ -1918,7 +1881,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
             dz->insams[0] = total_samps_written;    //  This forces sloom progress bar to proceed correctly, without mod to libraries
         else
             dz->insams[0] = (total_samps_written/STEREO) * dz->iparam[FRAC_CHANS];
-    }                                           
+    }
     sndseekEx(dz->ifd[0],0,0);
     reset_filedata_counters(dz);
     memset((char *)obuf,0,(dz->buflen + overflow) * sizeof(float)); //  reset output and overflow buffers
@@ -1997,7 +1960,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
             else
                 fracmax = dz->iparam[FRAC_MAX];
         } else {
-            for(n=0;n<strmcnt;n++) {                //  Scatter the output read-timings for the streams (if ness) 
+            for(n=0;n<strmcnt;n++) {                //  Scatter the output read-timings for the streams (if ness)
                 startdepth = depth[n][evcnt - 1];   //  Startdepth = previous end-depth
                 enddepth = depth[n][evcnt];
                 if(startdepth < 1 || enddepth < 1)  //  If envelopes don't cut down to zero at both ends
@@ -2050,7 +2013,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
             else                                        //  Else
                 startdepth = depth[n][evcnt - 1];       //  Startdepth = previous end-depth
             enddepth = depth[n][evcnt];
-            if(startdepth >= 1.0 && enddepth >= 1.0) {  
+            if(startdepth >= 1.0 && enddepth >= 1.0) {
                 startdepth = 1.0;
                 enddepth = 1.0;
             } else {
@@ -2079,7 +2042,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
             memcpy((char *)ebuf,(char *)(ibuf + iptr[n]),ldur * sizeof(float));
             stim = 0;
             etim = 2;
-            lbas  = tempenv[stim+1];                    //  Start of envelope segment   
+            lbas  = tempenv[stim+1];                    //  Start of envelope segment
             tdiff = tempenv[etim] - tempenv[stim];      //  Timestep in envelope segment
             ldiff = tempenv[etim+1] - tempenv[stim+1];  //  Level step in envelope segment
             for(sampcnt=0;sampcnt<ldur;sampcnt++) {
@@ -2099,7 +2062,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                             ldiff = tempenv[etim+1] - tempenv[stim+1];
                         }
                     }
-                    if(toget) {                         //  Interp in envelope table                                
+                    if(toget) {                         //  Interp in envelope table
                         eval = (frac - tempenv[stim])/tdiff;
                         eval *= ldiff;
                         eval += lbas;
@@ -2116,7 +2079,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                 thistack = (int)floor(stack);                               // e.g. 2.0     e.g. 2.3
                 while(thistack > 0) {                                       //  --> 2       --> 2
                     if(flteq((double)thistack,stack))
-                        level = 1.0;                                        //  level 1 
+                        level = 1.0;                                        //  level 1
                                                                             //  trans remains 2
                     else {
                         level = stack - (double)thistack;                   //  level 0.3
@@ -2135,7 +2098,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                         diff  = hival - loval;
                         diff *= frac;
                         val = loval + diff;                             //  Add the interpd val into stakbuffer
-                        stkbuf[stakwrite_at] = (float)(stkbuf[stakwrite_at] + val); //  (There may be more than 1 stack component to add)   
+                        stkbuf[stakwrite_at] = (float)(stkbuf[stakwrite_at] + val); //  (There may be more than 1 stack component to add)
                         stakwrite_at++;                                 //  Incr normally in stacking buffer
                         dsampcnt += incr;                               //  Incr transpositionwise in read-from buff
                     }
@@ -2155,7 +2118,7 @@ int fracture(int ibuflen,int envbuflen,int overflow,dataptr dz)
                     ebuf[m] = (float)(ebuf[m] * evlev[n][evcnt]);
             }
             
-                //  GET PITCH-INCR 
+                //  GET PITCH-INCR
 
             outincr = evpch[n][evcnt];
 
@@ -2449,7 +2412,7 @@ int fragment_param_preprocess (int *maxpulse,double *maxtrans,int *minfragmax,da
  *  DOUBLE ARRAYS: S = number of streams                                    |               llev
  *                          |                                               |               | rlev
  *          |---------------|---------------|---------------|---------------|---------------| | pos
- *          |   depth       |   level       |   transpos    |   envreadtime |   stacking    | | | tempenv  
+ *          |   depth       |   level       |   transpos    |   envreadtime |   stacking    | | | tempenv
  *          |               |               |               |               |               5S| | | envdata
  *          |               |               |               |               |               | 5S+1| | stakcentre
  *  address 0               S               2S              3S              4S              | | 5S+2| | grptimes
@@ -2467,7 +2430,7 @@ int fragment_param_preprocess (int *maxpulse,double *maxtrans,int *minfragmax,da
         sprintf(errstr,"INSUFFICIENT MEMORY for double arrays.\n");
         return(MEMORY_ERROR);
     }
-    for(n=0,m=1;n<strmcnt;n++,m++) {                                            //  Envelope depth/stack of each-event-in-each-stream 
+    for(n=0,m=1;n<strmcnt;n++,m++) {                                            //  Envelope depth/stack of each-event-in-each-stream
         if((dz->parray[n] = (double *)malloc(eventcnt * sizeof(double)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for stream %d depth array.\n",m);
             return(MEMORY_ERROR);
@@ -2527,7 +2490,7 @@ int fragment_param_preprocess (int *maxpulse,double *maxtrans,int *minfragmax,da
         sprintf(errstr,"INSUFFICIENT MEMORY for storing input envelope data.\n");
         return(MEMORY_ERROR);
     }
-    if(dz->mode > 0) {                                                              //  Channel levels in calculation of multichannel output 
+    if(dz->mode > 0) {                                                              //  Channel levels in calculation of multichannel output
         dz->outlevs = n;
         if((dz->parray[n] = (double *)malloc(dz->iparam[FRAC_CHANS] * sizeof(double)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY to store out-levels for multichannel output.\n");
@@ -2574,7 +2537,7 @@ int fragment_param_preprocess (int *maxpulse,double *maxtrans,int *minfragmax,da
         sprintf(errstr,"INSUFFICIENT MEMORY for ints arrays.\n");
         return(MEMORY_ERROR);
     }
-    for(n=0,m=1;n<strmcnt;n++,m++) {                            //  End sample for each-event-in-each-stream, counted in MONO 
+    for(n=0,m=1;n<strmcnt;n++,m++) {                            //  End sample for each-event-in-each-stream, counted in MONO
         if((dz->lparray[n] = (int *)malloc(eventcnt * sizeof(int)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for stream %d eventend sampletimes.\n",m);
             return(MEMORY_ERROR);
@@ -2585,7 +2548,7 @@ int fragment_param_preprocess (int *maxpulse,double *maxtrans,int *minfragmax,da
             sprintf(errstr,"INSUFFICIENT MEMORY for stream %d eventread sampletimes.\n",m);
             return(MEMORY_ERROR);
         }
-    }                                                           //  Pointers within CURRENT buffer, to start of segments to read, for each stream   
+    }                                                           //  Pointers within CURRENT buffer, to start of segments to read, for each stream
     if((dz->lparray[n++] = (int *)malloc(strmcnt * sizeof(int)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY for stream src Pointers in input buffers.\n");
         return(MEMORY_ERROR);
@@ -2618,13 +2581,13 @@ int fragment_param_preprocess (int *maxpulse,double *maxtrans,int *minfragmax,da
             for(n = 0;n<strmcnt;n++) {
                 pos[n] = ((chans - 1) * n)/(double)(strmcnt - 1);
                 lmost[n] = (int)floor(pos[n]);
-                pos[n]  -= lmost[n]; 
+                pos[n]  -= lmost[n];
             }
         } else {
             for(n = 0;n<strmcnt;n++) {
                 pos[n] = (chans * n)/(double)strmcnt;
                 lmost[n] = (int)floor(pos[n]);
-                pos[n]  -= lmost[n]; 
+                pos[n]  -= lmost[n];
             }
         }
         for(n = 0;n<strmcnt;n++) {
@@ -2685,7 +2648,7 @@ int create_fracture_sndbufs(int maxpulse,double maxtrans,int minfragmax,int *ibu
         *ibuflen = seccnt * framesize;
     }
     *envbuflen = maxpulse * 2;          //  Frag start and ends can be randomly displaced away from one another ... allow a maximum safety margin!!
-    *envbuflen += minfragmax;           //  If a minimum fragment-size specified, allows for length of minsize + any rand-extension 
+    *envbuflen += minfragmax;           //  If a minimum fragment-size specified, allows for length of minsize + any rand-extension
     *envbuflen += 16;   //  SAFETY
     seccnt = (*envbuflen)/framesize;
     if(seccnt * framesize != *envbuflen) {
@@ -2751,11 +2714,11 @@ int read_the_envelope(double now, dataptr dz)
     double time_of_envelope, lasttime, thistime, timediff, timefrac, val;
 
     for(n = 0,m= 0;m < dz->envcount; n+=15,m++) {   //  Step through the time values, at every 15th entry
-        time_of_envelope = envarray[n]; 
+        time_of_envelope = envarray[n];
         if(time_of_envelope >= now) {           //  Once time-of-envelope is beyond "now" time
             thisenv = m;                        //  Mark the two envelopes bracketing "now"
             lastenv = m-1;
-            if(lastenv < 0) {                   //  If there is no previous envelope, we must be at zero time 
+            if(lastenv < 0) {                   //  If there is no previous envelope, we must be at zero time
                 for(k=0;k<14;k++)               //  so copy envelope at zero time to output (temporary envelope)
                     tempenv[k] = envarray[k+1];
                 return FINISHED;
@@ -2791,7 +2754,7 @@ int read_the_envelope(double now, dataptr dz)
 }
 
 /**************************** GETSTAKCENTRE ****************************
- * 
+ *
  * Find time of (first) peak in envelope
  */
 
@@ -2835,9 +2798,9 @@ void pancalc(double position,double *leftgain,double *rightgain)
     else
         dirflag = SIGNAL_TO_RIGHT;
 
-    if(position < 0) 
+    if(position < 0)
         relpos = -position;
-    else 
+    else
         relpos = position;
     if(relpos <= 1.0){      /* between the speakers */
         temp = 1.0 + (relpos * relpos);
@@ -2922,15 +2885,15 @@ int panspread(int *sectcnt,double *centre,double *spread,int *cntrswitch,int *ou
             timeratio = (time - fadeoutat)/dz->param[FRAC_DN];
             timeratio = 1.0 - timeratio;
             atten = pow(timeratio,dz->param[FRAC_ATTEN]);
-        } else          
+        } else
             atten = 1.0;
         atten *= gain;                                  //  Factor in any externally imposed gain-limiting.
         if(*outside) {
             stereo_pos = 1.0 - *spread;                 //  Spread is to left of centre, incresing leftward, but stereo-position measured rightward
             relpos = fabs(0.5 - stereo_pos) * 2.0;      // position relative_to_stereo_centre : Range 0-1 goes to 1-0-1
-            temp = 1.0 + (relpos * relpos);             // calculate stereo-hole-in-middle compensation 
+            temp = 1.0 + (relpos * relpos);             // calculate stereo-hole-in-middle compensation
             holecompensate = ROOT2 / sqrt(temp);
-            left_leftchan_level = *spread       * levels[0] * holecompensate;   // contrib of left chan to left edge of shrunk image            
+            left_leftchan_level = *spread       * levels[0] * holecompensate;   // contrib of left chan to left edge of shrunk image
             left_ritechan_level = (1-(*spread)) * levels[0] * holecompensate;   // contrib of right chan to left edge of shrunk image
 
             //  ADD IN ANY FILTERED SOUND, TO STEREO IMAGE
@@ -3011,21 +2974,21 @@ int panspread(int *sectcnt,double *centre,double *spread,int *cntrswitch,int *ou
 }
 
 /* WITH CENTRE BETWEEN CHANNELS ...
- *      left_contrib_to_c_left =        *       rite_contrib_to_c_left =        *       left_contrib_to_c_rite =        *       rite_contrib_to_c_rite =        
- *          MAX of 1.0 AND              *           MIN of 0.0 AND              *           MAX of 0.0 AND              *           MAX of 1.0 AND              
- *    (1.0 + (2.0 * stereo_pos)/2.0;    *     (1.0 - (2.0 * stereo_pos)/2.0;    *     ((2.0 * stereo_pos) - 1.0)/2.0;   *     (3.0 - (2.0 * stereo_pos)/2.0;        
- *                                      *                                       *                                       *                                       
- *            POSITION OF CENTRE        *             POSITION OF CENTRE        *             POSITION OF CENTRE        *             POSITION OF CENTRE        
- *        c-left              c_rite    *         c-left              c_rite    *         c-left              c_rite    *         c-left              c_rite    
- *      1.0 | . . . .________|          *       1.0 |. . . . . . . . |          *       1.0 | . . . . . . . .|          *       1.0 |________  . . . |          
- *          |      /         |          *           |                |          *           |                |          *           |         \      |          
- *          |    /           |          *           |                |          *           |                |          *           |           \    |          
- *          |  /             |          *           |                |          *           |                |          *           |             \  |          
- *      0.5 |/ . . . . . . . |          *       0.5 |. . . . . . . . |          *       0.5 |. . . . . . . . |          *       0.5 |. . . . . . . .\|          
- *          |                |          *           |\               |          *           |               /|          *           |                |          
- *          |                |          *           |  \             |          *           |             /  |          *           |                |          
- *          |                |          *           |    \           |          *           |           /    |          *           |                |          
- *      0.0 | . . . . . .  . |          *       0.0 | . .  \_________|          *       0.0 |_________/ .  . |          *       0.0 | . . . . . . . .|          
+ *      left_contrib_to_c_left =        *       rite_contrib_to_c_left =        *       left_contrib_to_c_rite =        *       rite_contrib_to_c_rite =
+ *          MAX of 1.0 AND              *           MIN of 0.0 AND              *           MAX of 0.0 AND              *           MAX of 1.0 AND
+ *    (1.0 + (2.0 * stereo_pos)/2.0;    *     (1.0 - (2.0 * stereo_pos)/2.0;    *     ((2.0 * stereo_pos) - 1.0)/2.0;   *     (3.0 - (2.0 * stereo_pos)/2.0;
+ *                                      *                                       *                                       *
+ *            POSITION OF CENTRE        *             POSITION OF CENTRE        *             POSITION OF CENTRE        *             POSITION OF CENTRE
+ *        c-left              c_rite    *         c-left              c_rite    *         c-left              c_rite    *         c-left              c_rite
+ *      1.0 | . . . .________|          *       1.0 |. . . . . . . . |          *       1.0 | . . . . . . . .|          *       1.0 |________  . . . |
+ *          |      /         |          *           |                |          *           |                |          *           |         \      |
+ *          |    /           |          *           |                |          *           |                |          *           |           \    |
+ *          |  /             |          *           |                |          *           |                |          *           |             \  |
+ *      0.5 |/ . . . . . . . |          *       0.5 |. . . . . . . . |          *       0.5 |. . . . . . . . |          *       0.5 |. . . . . . . .\|
+ *          |                |          *           |\               |          *           |               /|          *           |                |
+ *          |                |          *           |  \             |          *           |             /  |          *           |                |
+ *          |                |          *           |    \           |          *           |           /    |          *           |                |
+ *      0.0 | . . . . . .  . |          *       0.0 | . .  \_________|          *       0.0 |_________/ .  . |          *       0.0 | . . . . . . . .|
  *
  */
 
@@ -3062,7 +3025,7 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
             centre += outchans;
         if(front >= 0)                                  //  Front moves from a spread of 1 lspkr-width (at 1)
             *spread = (1-front) * (outchans/2 - 1) + 1; //  to a spread of 1/2-of-lspkrs (outchans/2) at midline
-        else {                                              
+        else {
             front = -front;                             //  After midline, hole in lspkrs has same relation to (abs value of) front.
             *spread = (1-front) * (outchans/2 - 1) + 1;  // so calculate symmetrically
             *spread = outchans - *spread;               //  then subtract hole from total lspkrs
@@ -3071,7 +3034,7 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
         *outside = 1;
         if(front < -1) {                                //  If passed OUT of ring, place front at its TRAILING edge, for calculations
             front += (dz->param[FRAC_MDEPTH] * 2);
-            if(front <= -2)                             //  Once trailing edge of data reaches infinity, curtail output 
+            if(front <= -2)                             //  Once trailing edge of data reaches infinity, curtail output
                 return FINISHED;
             else if(front >= -1) {                      //  If trailing edge of front has (unlike true front) NOT left circle of lspkrs
                 centre -= 0.5;                          //  force the active centre to be BETWEEN 2 channels
@@ -3097,8 +3060,8 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
             ffront = fabs(front);                       //  Calculations for outside ring are symmetrical   (Range 1 to 2)
             ffront -= 1.0;                              //  Change range to 0-1 : ringedge-to-infinity      (Range 0 to 1)
 
-            maxlevel = pow((1.0 - ffront),dz->param[FRAC_ATTEN]);               //  As front increases, loudness decreases 
-                                                                                //  (and only 1channel active, so no scaling required for no. of chans              
+            maxlevel = pow((1.0 - ffront),dz->param[FRAC_ATTEN]);               //  As front increases, loudness decreases
+                                                                                //  (and only 1channel active, so no scaling required for no. of chans
             contraction_distance = min(1.0,ffront/dz->param[FRAC_ZPOINT]);      //  Fraction of distance towards zero-angle point, max 1.0
             *spread = pow((1.0 - contraction_distance),dz->param[FRAC_CONTRACT]);// As contraction_distance increases, width decreases
             halfspread = (*spread)/2.0;
@@ -3143,11 +3106,11 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
 
     // Set all channels fully within the spread to maxlevel
                                                                 
-    spredej_left = centre - halfspread;                         //  spredej_left and right could be determined 
+    spredej_left = centre - halfspread;                         //  spredej_left and right could be determined
     while(spredej_left  < 0)                                    //  by a "position-of-front" parameter
         spredej_left += (double)outchans;                       //  working backwards towards centre, using halfspread
-    spredej_right = centre + halfspread;                        
-    while(spredej_right >= outchans)                            //  Once this is done .. easier to deal with 
+    spredej_right = centre + halfspread;
+    while(spredej_right >= outchans)                            //  Once this is done .. easier to deal with
         spredej_right -= (double)outchans;                      //  distant (filtered) signalwith no (or limited) width
     spredej_left_leftchan  = (int)floor(spredej_left);          //  at trailing, or leading centre
     if((spredej_left_rightchan  = spredej_left_leftchan + 1) >= outchans)
@@ -3157,7 +3120,7 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
     hole = *spread - (depth * 2.0);                             //  Once available lspk-spread is < specified spread,
                                                                 //  there.s no hole in the middle.
     if(*spread >= outchans) {                                   //  Once available loudspeaker spread < 2
-        for(k = 0;k<outchans; k++)                              //  spread determined articially by how we deal with 
+        for(k = 0;k<outchans; k++)                              //  spread determined articially by how we deal with
             levels[k] = maxlevel;                               //  distance (beyond octagon) effect, and how we filter
         if(hole <= 0.0)                                         //  as we shrink the stereo width.
             return CONTINUE;
@@ -3181,7 +3144,7 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
         
         zleft  = centre - halfspread;
         zright = centre + halfspread;
-        if(zleft < 0.0) {       
+        if(zleft < 0.0) {
             zleft  += outchans;
             zright += outchans;
         }
@@ -3202,7 +3165,7 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
     stereopos_left  = spredej_left - (double)spredej_left_leftchan;
 
     relpos = fabs(0.5 - stereopos_left) * 2.0;      // position relative_to_stereo_centre : Range 0 - 1
-    temp = 1.0 + (relpos * relpos);                 // calculate stereo-hole-in-middle compensation 
+    temp = 1.0 + (relpos * relpos);                 // calculate stereo-hole-in-middle compensation
     holecompensate = ROOT2 / sqrt(temp);
 
     left_leftchan_level = (1 - stereopos_left) * maxlevel * holecompensate;
@@ -3212,7 +3175,7 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
     stereopos_right = spredej_right - (double)spredej_right_leftchan;
 
     relpos = fabs(0.5 - stereopos_right) * 2.0;     // position relative_to_stereo_centre : Range 0 - 1
-    temp = 1.0 + (relpos * relpos);                 // calculate stereo-hole-in-middle compensation 
+    temp = 1.0 + (relpos * relpos);                 // calculate stereo-hole-in-middle compensation
     holecompensate = ROOT2 / sqrt(temp);
 
     right_rightchan_level = stereopos_right * maxlevel * holecompensate;
@@ -3270,7 +3233,7 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
 
 /*
  *  POSITIONS OF MOVING FRONT
- *  2 = "+infinitely" distant: 1 = in plane of front-centre lspkr : 0 = in plane of midline:    
+ *  2 = "+infinitely" distant: 1 = in plane of front-centre lspkr : 0 = in plane of midline:
  *  -1 = in plane of read lspkr:   -2 = "-infinitely" distant
  *
  *  Depth-param now expressed as fraction of lspkr-space. 1 = chans, 1/2 = chans/2 etc ..... (so original spread param = depth *chans)
@@ -3281,17 +3244,17 @@ int spread_pan(double *thiscentre,int *cntrswitch,int *outside,double *spread,do
  *              x       x           spread = ((1 - front) * (chans/2 - 1)) + 1 and calculations can proceed as normal
  *                              For front in range 0 to -1,by symmetry
  *             x    0    x          spread = chans - (((1 + front) * (chans/2 - 1)) + 1)
- *                              
+ *
  *              x       x       As the front has a depth, and therefore a trailing edge which does not reach -1 at same time as true front,
  *                  -1          calculations relating to fade-out and filtering between -1 and -2, have to be based on trailing edge vals.
  *                              So trailing edge only reaches -2 when front is at -2+depth.
  *                              User needs to build this in to the "fonr" breakpoint file data.
- *                  -2          
+ *                  -2
  *                              With the new value of depth, trailing edge is at front + (depth * 2)
  *                              This is "+" as front always move +ve to -ve
  *                              and uses factor "2" because, when depth 1 = all lspkrs in use, but distance front to back (1 to -1) = 2.
- *                              So if 1/2 loudpseakers are activated, trailing edge is half-way back round space and: 
- *                              and "HALFway" for front means distance of "1" (Thus depth[1/2] * 2 = 1) 
+ *                              So if 1/2 loudpseakers are activated, trailing edge is half-way back round space and:
+ *                              and "HALFway" for front means distance of "1" (Thus depth[1/2] * 2 = 1)
  */
 
 
@@ -3342,7 +3305,7 @@ int do_lphp_filter_stereo(dataptr dz)
     
     double *den1 = dz->parray[fbase + FLT_DEN1];
     double *den2 = dz->parray[fbase + FLT_DEN2];
-    double *cn   = dz->parray[fbase + FLT_CN];  
+    double *cn   = dz->parray[fbase + FLT_CN];
 
     for(i=0; i < STEREO; i++) {
         index = i * FLT_LPHP_ARRAYS_PER_FILTER;
@@ -3386,7 +3349,7 @@ int lphp_filt_stereo(double *e1,double *e2,double *s1,double *s2,
             dz->scalefact *= .9999;
             if (op  > 0.0)
                 op = 1.0;
-            else 
+            else
                 op = -1.0;
         }
         buf[i] = (float)op;
@@ -3437,7 +3400,7 @@ int establish_order_of_filter(double passfrq,double stopfrq,dataptr dz)
     if ((xx - yy) == 0.0 )
         yy = yy - 1.0 ;
     filter_order = ((int)yy) + 1;
-    if (filter_order <= 1) 
+    if (filter_order <= 1)
         filter_order = 2;
     dz->fltcnt = filter_order/2 ;
     filter_order = 2 * dz->fltcnt;
@@ -3540,7 +3503,7 @@ void establish_echos(int *maxdelay,dataptr dz)
     double gain[]   = {0.500000,0.354813,0.354813,0.251189,0.125893,0.125893,0.063096,0.063096,0.031623,0.031623,0.012589,0.012589,0.005012,0.005012,0.002512,0.002512,0.002512,0.002512,0.002512,0.002512};
     double pan[]    = {.9,.5,-.5,0.1,.7,-.7,.3,-.3,.15,-.15,.85,-.85,.4,-.4,.6,-.6,.225,-.225,.775,-.775};
 
-    for(n=0;n < dz->iparam[FRAC_ECHOCNT]; n++) 
+    for(n=0;n < dz->iparam[FRAC_ECHOCNT]; n++)
         delay[n] = (int)round(tdelay[n] * dz->infile->srate * dz->param[STAD_SIZE]) * STEREO;
     *maxdelay = delay[dz->iparam[FRAC_ECHOCNT - 1]];
     if(dz->param[FRAC_EROLL]<1.0) {
@@ -3548,7 +3511,7 @@ void establish_echos(int *maxdelay,dataptr dz)
             gain[n] = pow(gain[n],dz->param[FRAC_EROLL]);
     }
     for(n=0;n<dz->iparam[FRAC_ECHOCNT];n++) {
-        if(pan[n] < 0.0) {  // LEFTWARDS 
+        if(pan[n] < 0.0) {  // LEFTWARDS
             gainl[n] = gain[n] * dz->param[FRAC_EPREGN];
             gainr[n] = gain[n] * dz->param[FRAC_EPREGN] * (1.0+pan[n]);
         } else {           // RIGHTWARDS

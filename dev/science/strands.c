@@ -55,7 +55,7 @@
 #endif
 
 #define STRAND_SRATE (44100)
-#define STRAND_MAXWARP  (3) //  Max timewarp, takes 0-1 line and, at max(min) cubes (or cube-roots) values, 
+#define STRAND_MAXWARP  (3) //  Max timewarp, takes 0-1 line and, at max(min) cubes (or cube-roots) values,
                             //      to give concave or convex distortion of 0-1 value line.
 #define WAVYFRAC    (0.4)   //  Boundary of band, during wavy-band-turbulence, can wander to max of 2/5 of bandwidth up or down.
 #define TURBPOW     (0.5)   //  Random 0-1 LEVEL values, raised to this power, to weight them towards louder vals dominating
@@ -73,7 +73,7 @@
 #define costable    specenv_type
 #define sinptrs     zeroset
 #define frqstores   fzeroset
-#define tessitura   is_flat 
+#define tessitura   is_flat
 #define scaler      is_sharp
 #define rotlevel    could_be_pitch
 #define levderivs   could_be_transpos
@@ -176,10 +176,10 @@ int main(int argc,char *argv[])
     }
     if(!sloom) {
         if(argc == 1) {
-            usage1();   
+            usage1();
             return(FAILED);
         } else if(argc == 2) {
-            usage2(argv[1]);    
+            usage2(argv[1]);
             return(FAILED);
         }
     }
@@ -214,13 +214,13 @@ int main(int argc,char *argv[])
         //parse_TK_data() =
         if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {
             exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-            return(exit_status);         
+            return(exit_status);
         }
     }
 //    ap = dz->application;
     dz->infile->channels = 2;
     dz->infile->srate = STRAND_SRATE;
-    // parse_infile_and_hone_type() = 
+    // parse_infile_and_hone_type() =
     // setup_param_ranges_and_defaults() =
     if((exit_status = setup_strands_param_ranges_and_defaults(dz))<0) {
         exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
@@ -228,7 +228,7 @@ int main(int argc,char *argv[])
     }
     // open_first_infile() : redundant
     // handle_extra_infiles() : redundant
-    // handle_outfile() = 
+    // handle_outfile() =
     if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,dz))<0) {
         print_messages_and_close_sndfiles(exit_status,is_launched,dz);
         return(FAILED);
@@ -307,15 +307,15 @@ int main(int argc,char *argv[])
 
 int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist)
 {
-    ap->special_data   = (char)special_data;       
+    ap->special_data   = (char)special_data;
     ap->param_cnt      = (char)paramcnt;
     ap->max_param_cnt  = (char)maxparamcnt;
     if(ap->max_param_cnt>0) {
-        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {    
+        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->param_list,paramlist); 
+        strcpy(ap->param_list,paramlist);
     }
     return(FINISHED);
 }
@@ -336,16 +336,16 @@ int set_vflgs
             sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->option_flags,optflags); 
+        strcpy(ap->option_flags,optflags);
     }
-    ap->vflag_cnt = (char) vflagcnt;           
+    ap->vflag_cnt = (char) vflagcnt;
     ap->variant_param_cnt = (char) vparamcnt;
     if(vflagcnt) {
         if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
             return(MEMORY_ERROR);
         }
-        strcpy(ap->variant_list,varlist);       
+        strcpy(ap->variant_list,varlist);
         if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
             return(MEMORY_ERROR);
@@ -365,30 +365,30 @@ int application_init(dataptr dz)
     int tipc, brkcnt;
     aplptr ap = dz->application;
     if(ap->vflag_cnt>0)
-        initialise_vflags(dz);    
+        initialise_vflags(dz);
     tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
     ap->total_input_param_cnt = (char)tipc;
     if(tipc>0) {
-        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)             
+        if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)        
+        if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
             return(exit_status);
-        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)    
+        if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
             return(exit_status);
     }
     brkcnt = tipc;
     //THERE ARE NO INPUTFILE brktables USED IN THIS PROCESS
     if(brkcnt>0) {
-        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)              
+        if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
             return(exit_status);
     }
-    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {         
-        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)   
+    if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
+        if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
             return(exit_status);
-        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)      
+        if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
             return(exit_status);
-    }                                                      
-    if((exit_status = mark_parameter_types(dz,ap))<0)     
+    }
+    if((exit_status = mark_parameter_types(dz,ap))<0)
         return(exit_status);
     
     // establish_infile_constants() replaced by
@@ -611,13 +611,13 @@ int setup_strands_application(dataptr dz)
     }
     dz->input_data_type = NO_FILE_AT_ALL;
     switch(dz->mode) {
-    case(0): 
-    case(2): 
-        dz->process_type    = TO_TEXTFILE;  
+    case(0):
+    case(2):
+        dz->process_type    = TO_TEXTFILE;
         dz->outfiletype     = TEXTFILE_OUT;
         break;
-    case(1): 
-        dz->process_type    = UNEQUAL_SNDFILE;  
+    case(1):
+        dz->process_type    = UNEQUAL_SNDFILE;
         dz->outfiletype     = SNDFILE_OUT;
         break;
     }
@@ -671,7 +671,7 @@ int setup_strands_param_ranges_and_defaults(dataptr dz)
     ap->hi[STRAND_BANDS] = 16;
     ap->default_val[STRAND_BANDS] = 4;
     if(dz->mode != 2) {
-        ap->lo[STRAND_THRDS] = 2;   
+        ap->lo[STRAND_THRDS] = 2;
         ap->hi[STRAND_THRDS] = 100;
         ap->default_val[STRAND_THRDS] = 3;
     }
@@ -740,14 +740,14 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             return(DATA_ERROR);
         }
         switch(cnt) {
-        case(1):    
+        case(1):
             if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
                 sprintf(errstr,"Cannot read process no. sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
 
-        case(2):    
+        case(2):
             if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
                 sprintf(errstr,"Cannot read mode no. sent from TK\n");
                 return(DATA_ERROR);
@@ -760,7 +760,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 //            ap = dz->application;
             break;
 
-        case(3):    
+        case(3):
             if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
                 sprintf(errstr,"Cannot read infilecnt sent from TK\n");
                 return(DATA_ERROR);
@@ -772,137 +772,137 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
             if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
                 return(exit_status);
             break;
-        case(INPUT_FILETYPE+4): 
+        case(INPUT_FILETYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
                 sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FILESIZE+4): 
+        case(INPUT_FILESIZE+4):
             if(sscanf(argv[cnt],"%d",&filesize)!=1) {
                 sprintf(errstr,"Cannot read infilesize sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = filesize;   
+            dz->insams[0] = filesize;
             break;
-        case(INPUT_INSAMS+4):   
+        case(INPUT_INSAMS+4):
             if(sscanf(argv[cnt],"%d",&insams)!=1) {
                 sprintf(errstr,"Cannot read insams sent from TK\n");
                 return(DATA_ERROR);
             }
-            dz->insams[0] = insams; 
+            dz->insams[0] = insams;
             break;
-        case(INPUT_SRATE+4):    
+        case(INPUT_SRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
                 sprintf(errstr,"Cannot read srate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_CHANNELS+4): 
+        case(INPUT_CHANNELS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
                 sprintf(errstr,"Cannot read channels sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_STYPE+4):    
+        case(INPUT_STYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
                 sprintf(errstr,"Cannot read stype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGSTYPE+4):    
+        case(INPUT_ORIGSTYPE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
                 sprintf(errstr,"Cannot read origstype sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGRATE+4): 
+        case(INPUT_ORIGRATE+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
                 sprintf(errstr,"Cannot read origrate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MLEN+4): 
+        case(INPUT_MLEN+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
                 sprintf(errstr,"Cannot read Mlen sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DFAC+4): 
+        case(INPUT_DFAC+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
                 sprintf(errstr,"Cannot read Dfac sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ORIGCHANS+4):    
+        case(INPUT_ORIGCHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
                 sprintf(errstr,"Cannot read origchans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_SPECENVCNT+4):   
+        case(INPUT_SPECENVCNT+4):
             if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
                 sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->specenvcnt = dz->infile->specenvcnt;
             break;
-        case(INPUT_WANTED+4):   
+        case(INPUT_WANTED+4):
             if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
                 sprintf(errstr,"Cannot read wanted sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_WLENGTH+4):  
+        case(INPUT_WLENGTH+4):
             if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
                 sprintf(errstr,"Cannot read wlength sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_OUT_CHANS+4):    
+        case(INPUT_OUT_CHANS+4):
             if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
                 sprintf(errstr,"Cannot read out_chans sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
             /* RWD these chanegs to samps - tk will have to deal with that! */
-        case(INPUT_DESCRIPTOR_BYTES+4): 
+        case(INPUT_DESCRIPTOR_BYTES+4):
             if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
                 sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_IS_TRANSPOS+4):  
+        case(INPUT_IS_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
                 sprintf(errstr,"Cannot read is_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_TRANSPOS+4):    
+        case(INPUT_COULD_BE_TRANSPOS+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
                 sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_COULD_BE_PITCH+4):   
+        case(INPUT_COULD_BE_PITCH+4):
             if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
                 sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DIFFERENT_SRATES+4): 
+        case(INPUT_DIFFERENT_SRATES+4):
             if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
                 sprintf(errstr,"Cannot read different_srates sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DUPLICATE_SNDS+4):   
+        case(INPUT_DUPLICATE_SNDS+4):
             if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
                 sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_BRKSIZE+4):  
+        case(INPUT_BRKSIZE+4):
             if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
                 sprintf(errstr,"Cannot read brksize sent from TK\n");
                 return(DATA_ERROR);
@@ -939,74 +939,74 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
                 break;
             }
             break;
-        case(INPUT_NUMSIZE+4):  
+        case(INPUT_NUMSIZE+4):
             if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
                 sprintf(errstr,"Cannot read numsize sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_LINECNT+4):  
+        case(INPUT_LINECNT+4):
             if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
                 sprintf(errstr,"Cannot read linecnt sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ALL_WORDS+4):    
+        case(INPUT_ALL_WORDS+4):
             if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
                 sprintf(errstr,"Cannot read all_words sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_ARATE+4):    
+        case(INPUT_ARATE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
                 sprintf(errstr,"Cannot read arate sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_FRAMETIME+4):    
+        case(INPUT_FRAMETIME+4):
             if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
                 sprintf(errstr,"Cannot read frametime sent from TK\n");
                 return(DATA_ERROR);
             }
             dz->frametime = (float)dummy;
             break;
-        case(INPUT_WINDOW_SIZE+4):  
+        case(INPUT_WINDOW_SIZE+4):
             if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
                 sprintf(errstr,"Cannot read window_size sent from TK\n");
                     return(DATA_ERROR);
             }
             break;
-        case(INPUT_NYQUIST+4):  
+        case(INPUT_NYQUIST+4):
             if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
                 sprintf(errstr,"Cannot read nyquist sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_DURATION+4): 
+        case(INPUT_DURATION+4):
             if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
                 sprintf(errstr,"Cannot read duration sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINBRK+4):   
+        case(INPUT_MINBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
                 sprintf(errstr,"Cannot read minbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXBRK+4):   
+        case(INPUT_MAXBRK+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
                 sprintf(errstr,"Cannot read maxbrk sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MINNUM+4):   
+        case(INPUT_MINNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
                 sprintf(errstr,"Cannot read minnum sent from TK\n");
                 return(DATA_ERROR);
             }
             break;
-        case(INPUT_MAXNUM+4):   
+        case(INPUT_MAXNUM+4):
             if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
                 sprintf(errstr,"Cannot read maxnum sent from TK\n");
                 return(DATA_ERROR);
@@ -1025,7 +1025,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 
     if(true_cnt)
         cnt = true_cnt;
-    *cmdlinecnt = 0;        
+    *cmdlinecnt = 0;
 
     while(cnt < argc) {
         if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
@@ -1101,7 +1101,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
     return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz) 
+int read_special_data(char *str,dataptr dz)
 {
     return(FINISHED);
 }
@@ -1141,7 +1141,7 @@ int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{   
+{
     int n;
     if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
@@ -1157,7 +1157,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
     }
     if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-        return(MEMORY_ERROR);                                                 
+        return(MEMORY_ERROR);
     }
     if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
         sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -1212,7 +1212,7 @@ int usage2(char *str)
         "RAND      Random variation of twist frq from band to band.\n"
         "SCAT      Random-warp of cycles of threads in same band.\n"
         "VORTEX WAVINESS\n"
-        "VAMP      ammount band-boundaries wander from fixed frqs.\n" 
+        "VAMP      ammount band-boundaries wander from fixed frqs.\n"
         "VMIN      min rate of oscillation of band boundaries.\n"
         "VMAX      max rate of oscillation of band boundaries.\n"
         "TURBULENCE\n"
@@ -1224,46 +1224,40 @@ int usage2(char *str)
         "\n"
         "-s        (Mode 2 only) - outputs each band in succesion.\n"
         "\n"
-        "Press any key to see further information.\n");
-        while(!kbhit())
-            ;
-        if(kbhit()) {
-            fprintf(stderr,
-            "\n"
-            "TWIST &   With twist ZERO, streams do not cycle round one another\n"
-            "LAMINAR   but stay at steady(ish) pitches .. (\"laminar flow\").\n"
-            "FLOW      To force laminar flow, use 2 adjacent brkpnt vals of zero\n"
-            "          (laminar flow is forced between the associated times).\n"
-            "          To move to twisted flow, follow a zero val by a non-zero val.\n"
-            "          To maintain twisted flow, follow non-zero val by non-zero val.\n"
-            "          To untwist the flow, follow a non-zero val by a zero val.\n"
-            "          \n"
-            "          During laminar flow,\n"
-            "          \"RAND\" controls pitch-jitter of laminae.\n"
-            "          \"SCAT\" controls level-jitter of laminae.\n"
-            "          \n"
-            "3D        Outputs 2 extra param sets for each stream.\n"
-            "          1st set can control loudness, or synth partial-cnt\n"
-            "          in creation of a synthesized output.\n"
-            "          2nd set can control a mix with reverb (etc) version,\n"
-            "          (parameter is level of modified source in that mix)\n"
-            "          both to simulate distance from the listener.\n"
-            "          In modes 1 & 3, this extra data is output in separate files\n"
-            "          AFTER all the pitchdata files have been output.\n"
-            "          The output order is ...\n"
-            "          all pitch data, all 1st controlfiles, all 2nd controlfiles.\n"
-            "\n"
-            "TURBULENT This can only happen (turb > 0.0) when twist > 0.0\n"
-            "FLOW      (i.e. there can be no turbulence during laminar flow\n"
-            "          or in the transitions to and from twisted flow).\n"
-            "\n"
-            "MODE 2 SOUND OUTPUT\n"
-            "          Intended only as sound-test for the data output in mode 1.\n"
-            "          Bands are output, equally spaced, across the stereo stage.\n"
-            "\n");
-        }
-    } else
-        fprintf(stdout,"Unknown option '%s'\n",str);
+        "=== CONTINUACIÓN ===\n"
+        "TWIST &   With twist ZERO, streams do not cycle round one another\n"
+        "LAMINAR   but stay at steady(ish) pitches .. (\"laminar flow\").\n"
+        "FLOW      To force laminar flow, use 2 adjacent brkpnt vals of zero\n"
+        "          (laminar flow is forced between the associated times).\n"
+        "          To move to twisted flow, follow a zero val by a non-zero val.\n"
+        "          To maintain twisted flow, follow non-zero val by non-zero val.\n"
+        "          To untwist the flow, follow a non-zero val by a zero val.\n"
+        "          \n"
+        "          During laminar flow,\n"
+        "          \"RAND\" controls pitch-jitter of laminae.\n"
+        "          \"SCAT\" controls level-jitter of laminae.\n"
+        "          \n"
+        "3D        Outputs 2 extra param sets for each stream.\n"
+        "          1st set can control loudness, or synth partial-cnt\n"
+        "          in creation of a synthesized output.\n"
+        "          2nd set can control a mix with reverb (etc) version,\n"
+        "          (parameter is level of modified source in that mix)\n"
+        "          both to simulate distance from the listener.\n"
+        "          In modes 1 & 3, this extra data is output in separate files\n"
+        "          AFTER all the pitchdata files have been output.\n"
+        "          The output order is ...\n"
+        "          all pitch data, all 1st controlfiles, all 2nd controlfiles.\n"
+        "\n"
+        "TURBULENT This can only happen (turb > 0.0) when twist > 0.0\n"
+        "FLOW      (i.e. there can be no turbulence during laminar flow\n"
+        "          or in the transitions to and from twisted flow).\n"
+        "\n"
+        "MODE 2 SOUND OUTPUT\n"
+        "          Intended only as sound-test for the data output in mode 1.\n"
+        "          Bands are output, equally spaced, across the stereo stage.\n");
+    } else {
+        fprintf(stdout,"Unknown option '%s'\n", str);
+    }
     return(USAGE_ONLY);
 }
 
@@ -1342,7 +1336,7 @@ int strands_param_preprocess(double *pitchrange,double *band_separation,double *
     //  SYNTHESIS ALSO NEEDS....
     //  2nd-derivs of frqdata for each strand, for cubic splining   (dz->itemcnt)
 
-    synth_arrays = dz->itemcnt;     
+    synth_arrays = dz->itemcnt;
 
     //  If 3D, outputs level data
     //  List of levels, at specific times, in each strand           (dz->itemcnt)
@@ -1366,11 +1360,11 @@ int strands_param_preprocess(double *pitchrange,double *band_separation,double *
     dz->sintable  = dz->itemcnt;                    //  +sintab     AAAAAAA B
     dz->costable  = dz->itemcnt + 1;                //  +sintab     AAAAAAA BC
     dz->sinptrs   = dz->itemcnt + 2;                //  +sinptrs    AAAAAAA BCD
-    dz->flowdata  = dz->itemcnt + 3;                //  +flowtpye   AAAAAAA BCDE 
+    dz->flowdata  = dz->itemcnt + 3;                //  +flowtpye   AAAAAAA BCDE
     dz->rotlevel  = dz->itemcnt + 4;                //  +rotlevel   AAAAAAA BCDE FFFFFFF
     dz->rotmix    = dz->rotlevel;   //  Used by different modes, (and for info only as variables defined as equivalent)
     dz->derivs    = dz->rotlevel + dz->itemcnt;     //  +levderivs  AAAAAAA BCDE FFFFFFF GGGGGGG
-    dz->levderivs = dz->rotlevel + dz->itemcnt;     //  +levderivs  AAAAAAA BCDE FFFFFFF GGGGGGG HHHHHHH 
+    dz->levderivs = dz->rotlevel + dz->itemcnt;     //  +levderivs  AAAAAAA BCDE FFFFFFF GGGGGGG HHHHHHH
 
     //  Establish sinetable: fixed size
     if((dz->parray[dz->sintable] = (double *)malloc((SYNTH_TABSIZE +1) * sizeof(double)))==NULL) {
@@ -1528,7 +1522,7 @@ int synthesis(dataptr dz)
                 for(m=0,n=threadbas;m<dz->iparam[STRAND_THRDS];n++,m++) {
                     thispitch = splint(n,time,0,dz);            //  Pitch read by cubic-splining between generated values in data output
                     thisfrq = miditohz(thispitch);
-                    val = sinread(0,&(sinptr[n]),thisfrq,&cycend,dz->scalefact,dz); 
+                    val = sinread(0,&(sinptr[n]),thisfrq,&cycend,dz->scalefact,dz);
                                                                 //  Use frq to read sinetable, using tabpointer for specific stream
                     if(dz->iparam[STRAND_3D]) {
                         level = splint(n,time,getlevel,dz);     //  Read corresponding level
@@ -1564,7 +1558,7 @@ int synthesis(dataptr dz)
                 if(!inendsplice && (outsamps_generated >= endsplicestart)) {
                     inendsplice = 1;
                     spliceval = 1.0;
-                } 
+                }
                 if(instartsplice && (outsamps_generated >= startspliceend))
                     instartsplice = 0;
             }
@@ -1580,7 +1574,7 @@ int synthesis(dataptr dz)
                 bandno = n/dz->iparam[STRAND_THRDS];
                 thispitch = splint(n,time,0,dz);            //  Pitch read by cubic-splining between generated values in data output
                 thisfrq = miditohz(thispitch);
-                val = sinread(0,&(sinptr[n]),thisfrq,&cycend,dz->scalefact,dz); 
+                val = sinread(0,&(sinptr[n]),thisfrq,&cycend,dz->scalefact,dz);
                                                             //  Use frq to read sinetable, using tabpointer for specific stream
                 if(dz->iparam[STRAND_3D]) {
                     level = splint(n,time,getlevel,dz);     //  Read corresponding level
@@ -1614,7 +1608,7 @@ int synthesis(dataptr dz)
             if(!inendsplice && (outsamps_generated >= endsplicestart)) {
                 inendsplice = 1;
                 spliceval = 1.0;
-            } 
+            }
             if(instartsplice && (outsamps_generated >= startspliceend))
                 instartsplice = 0;
         }
@@ -1649,7 +1643,7 @@ int synthesis(dataptr dz)
                 for(m=0,n=threadbas;m<dz->iparam[STRAND_THRDS];n++,m++) {
                     thispitch = splint(n,time,0,dz);                //  Frq read by cubic-splining between generated values in data output
                     thisfrq = miditohz(thispitch);
-                    val = sinread(0,&(sinptr[n]),thisfrq,&cycend,dz->scalefact,dz); 
+                    val = sinread(0,&(sinptr[n]),thisfrq,&cycend,dz->scalefact,dz);
                                                                 //  Use frq to read sinetable, using tabpointer for specific stream
                     if(dz->iparam[STRAND_3D]) {
                         level = splint(n,time,getlevel,dz);     //  Read corresponding level
@@ -1673,7 +1667,7 @@ int synthesis(dataptr dz)
                 if(!inendsplice && (outsamps_generated >= endsplicestart)) {
                     inendsplice = 1;
                     spliceval = 1.0;
-                } 
+                }
                 if(instartsplice && (outsamps_generated >= startspliceend))
                     instartsplice = 0;
                 if((sampcnt+=2) >= dz->buflen) {
@@ -1693,7 +1687,7 @@ int synthesis(dataptr dz)
                 bandno = n/dz->iparam[STRAND_THRDS];
                 thispitch = splint(n,time,0,dz);                //  Frq read by cubic-splining between generated values in data output
                 thisfrq = miditohz(thispitch);
-                val = sinread(0,&(sinptr[n]),thisfrq,&cycend,dz->scalefact,dz); 
+                val = sinread(0,&(sinptr[n]),thisfrq,&cycend,dz->scalefact,dz);
                                                             //  Use frq to read sinetable, using tabpointer for specific stream
                 if(dz->iparam[STRAND_3D]) {
                     level = splint(n,time,getlevel,dz);     //  Read corresponding level
@@ -1719,7 +1713,7 @@ int synthesis(dataptr dz)
             if(!inendsplice && (outsamps_generated >= endsplicestart)) {
                 inendsplice = 1;
                 spliceval = 1.0;
-            } 
+            }
             if(instartsplice && (outsamps_generated >= startspliceend))
                 instartsplice = 0;
             if((sampcnt+=2) >= dz->buflen) {
@@ -1763,7 +1757,7 @@ int create_strands_sndbufs(dataptr dz)
     if(bigbufsize <=0)
         bigbufsize  = framesize * sizeof(float);
 
-    dz->buflen = bigbufsize / sizeof(float);    
+    dz->buflen = bigbufsize / sizeof(float);
     dz->buflen = (dz->buflen / framesize)  * framesize;
     bigbufsize = dz->buflen * sizeof(float);
     if((dz->bigbuf = (float *)malloc(bigbufsize  * dz->bufcnt)) == NULL) {
@@ -1812,11 +1806,11 @@ double sinread(int iscos,double *tabpos,double frq,int *cycend,double scaling,da
 {
     double tabincr, val, valdiff, timefrac;
     int lopos, hipos;
-    double *sintab; 
+    double *sintab;
     if(iscos)
-        sintab = dz->parray[dz->costable]; 
+        sintab = dz->parray[dz->costable];
     else
-        sintab = dz->parray[dz->sintable]; 
+        sintab = dz->parray[dz->sintable];
     *cycend = 0;
     lopos = (int)floor(*tabpos);
     hipos = (int)ceil(*tabpos);
@@ -1838,7 +1832,7 @@ double sinread(int iscos,double *tabpos,double frq,int *cycend,double scaling,da
  * Establish 2nd dervatives table for cubic spline calculations.
  */
 
-int spline(int streamno,int islevel,dataptr dz) 
+int spline(int streamno,int islevel,dataptr dz)
 {
     double firstderivatzero = 0.0, firstderivatend = 0.0, qn, un, val1, val2;   // firstderiveatend is a guess
     double *datatab, *secondderiv, *u;
@@ -1899,7 +1893,7 @@ int spline(int streamno,int islevel,dataptr dz)
  * Establish 2nd dervatives table for cubic spline calculations.
  */
 
-int spline_level(int streamno,dataptr dz) 
+int spline_level(int streamno,dataptr dz)
 {
     double firstderivatzero = 0.0, firstderivatend = 0.0, qn, un, val1, val2;   // firstderiveatend is a guess
     double *levtab = dz->parray[dz->rotlevel + streamno];   //  The stored frq data already calcd for stream "streamno"
@@ -2026,7 +2020,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
         sprintf(errstr,"INSUFFICIENT MEMORY for storing twist cycle completion flags.\n");
         return(MEMORY_ERROR);
     }
-    for(bandno = 0;bandno < dz->iparam[STRAND_BANDS];bandno++) {                //  Initialise all cycle-end flags to 0 
+    for(bandno = 0;bandno < dz->iparam[STRAND_BANDS];bandno++) {                //  Initialise all cycle-end flags to 0
         lastcycendtime[bandno] = 0.0;
         cycend[bandno] = 0;
     }                                                                           //  frq of each laminar thread
@@ -2138,10 +2132,10 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
     //  Intialise band boundaries (before any gapping)
 
     bandhalfgap = dz->param[STRAND_GAP]/2.0;
-    bandtopmean[0] = dz->param[STRAND_BOT] + band_separation;   //  bandtopmean is generally in the gap between bands, 
+    bandtopmean[0] = dz->param[STRAND_BOT] + band_separation;   //  bandtopmean is generally in the gap between bands,
     for(bandno=1; bandno < dz->iparam[STRAND_BANDS]-1;bandno++) //  or at the top and bottom limits of entire pitchrange
         bandtopmean[bandno] = bandtopmean[bandno-1] + band_separation;
-    bandtopmean[bandno] = dz->param[STRAND_TOP];                //  bandtopmean is generally in the gap between bands, 
+    bandtopmean[bandno] = dz->param[STRAND_TOP];                //  bandtopmean is generally in the gap between bands,
 
     //  Initialise actual band limits (after gapping)
     
@@ -2183,7 +2177,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
             if(dz->param[STRAND_RAND] > 0.0) {          //  If randomised (from one band to another): generate random scatter
                 speedscat = drand48() * dz->param[STRAND_RAND];
                 speedscat += 1.0;                       //  Allowing frq-scatter in range *1 to (max)*2
-                if(drand48() < 0.5)                     //  and, at random, select N or 1/N (maximal range *1/2 to *2)  
+                if(drand48() < 0.5)                     //  and, at random, select N or 1/N (maximal range *1/2 to *2)
                     speedscat = 1.0/speedscat;
                 bandtwist[bandno] *= speedscat;         //  and set randomised value as true twist-frequency of band
             }
@@ -2224,16 +2218,16 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                 pitch += pitchwander;
                 entrycnt = outcnt * 2;                      //  Save pitch vals generated
                 dz->parray[th][entrycnt++] = time;
-                dz->parray[th][entrycnt++] = pitch;             
+                dz->parray[th][entrycnt++] = pitch;
                 if(dz->iparam[STRAND_3D]) {
                     level = dz->param[STRAND_SCAT] * drand48();
                     level = 1.0 - level;
                     entrycnt = outcnt * 2;                  //  Save level vals generated
                     dz->parray[dz->rotlevel+th][entrycnt++] = time;
-                    dz->parray[dz->rotlevel+th][entrycnt++] = level;                
-                    entrycnt = outcnt * 2;                  //  Dummy values for reverb-etc mix 
+                    dz->parray[dz->rotlevel+th][entrycnt++] = level;
+                    entrycnt = outcnt * 2;                  //  Dummy values for reverb-etc mix
                     dz->parray[dz->rotmix+th][entrycnt++] = time;
-                    dz->parray[dz->rotmix+th][entrycnt++] = 0.0;                
+                    dz->parray[dz->rotmix+th][entrycnt++] = 0.0;
                 }
             }
             break;
@@ -2280,7 +2274,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                     if(dz->param[STRAND_RAND] > 0.0) {          //  If randomised (from one band to another): generate random scatter
                         speedscat = drand48() * dz->param[STRAND_RAND];
                         speedscat += 1.0;                       //  Allowing frq-scatter in range *1 to (max)*2
-                        if(drand48() < 0.5)                     //  and, at random, select N or 1/N (maximal range *1/2 to *2)  
+                        if(drand48() < 0.5)                     //  and, at random, select N or 1/N (maximal range *1/2 to *2)
                             speedscat = 1.0/speedscat;
                         bandtwist[bandno] *= speedscat;         //  and set randomised value as true twist-frequency of band
                     }
@@ -2295,13 +2289,13 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                         if(dz->param[STRAND_TURB] > 0.0)                                //  The factor (1 - turbulence), with values (1->0) is used.
                             vamp *= pow((1 - dz->param[STRAND_TURB]),TURBFLATTEN);      //  TURBFLATTEN makes curve dip towards zero more quickly at start.
                         bandtop[bandno] = wavy(bandno,bandtopmean[bandno],tessitura,vamp,&(wavyfrq[bandno]),&(wtabpos[bandno]),&(wcycend[bandno]),dz->scaler,dz);
-                    //  Use halfgap to force band separation 
+                    //  Use halfgap to force band separation
                         bandtop[bandno] -= bandhalfgap;
                     } else
                         bandtop[bandno] = bandtopmean[bandno] - bandhalfgap;
-                }                                                       //  Use previously calcd value of top of next lowest band, 
+                }                                                       //  Use previously calcd value of top of next lowest band,
                 if(bandno > 0)                                          //  to find bottom boundary of current band.
-                    bandbot[bandno] = bandtop[bandno - 1] + dz->param[STRAND_GAP]; //   using gap to force band separation 
+                    bandbot[bandno] = bandtop[bandno - 1] + dz->param[STRAND_GAP]; //   using gap to force band separation
                 //  Use band minimum width to modify values, if ness
 
                 bandwidth = bandtop[bandno] - bandbot[bandno];
@@ -2326,7 +2320,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                 for(th=0;th<threadscnt;th++) {
                     lasttabpos = tabpos[threadbas+th];          //  Remember current table location
 
-                    if(thisturb == 2.0)                         //  TOTAL GLOBAL TURBULENCE 
+                    if(thisturb == 2.0)                         //  TOTAL GLOBAL TURBULENCE
                         pitch = globalturbpitch[threadbas+th];  //  use global turbulence pitch
 
                     else if(thisturb >= 1.0)                    //  TOTAL INBAND TURBULENCE or beyond
@@ -2334,20 +2328,20 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
 
                     else {  // turb < 1.0                       //  ELSE: (some degree of) TWISTING : Read sintable at correct location
                         if(th==0)                               //  ONLY lowest thread used to count cycles
-                            sinval = sinread(1,&(tabpos[threadbas]),bandtwist[bandno],&(cycend[bandno]),dz->scaler,dz); 
+                            sinval = sinread(1,&(tabpos[threadbas]),bandtwist[bandno],&(cycend[bandno]),dz->scaler,dz);
                         else
                             sinval = sinread(1,&(tabpos[threadbas+th]),bandtwist[bandno],&dummycycend,dz->scaler,dz);
                         pitch = sinval * halfbandwidth;         //  Expand -1-to +1 range to fit into bandwidth
                         pitch += bandcentre;
                     }
-                    if(thisturb > 0.0) {            //  If turbulent                            
-                        if(thisturb < 1.0)          //  MOVING TOWARDS INBAND TURBULENCE :  
+                    if(thisturb > 0.0) {            //  If turbulent
+                        if(thisturb < 1.0)          //  MOVING TOWARDS INBAND TURBULENCE :
                                                     //  pitch is from sinval : interpolate towards in-band turbulent pitch
                             pitch = ((1.0 - thisturb) * pitch) + (thisturb * localturbpitch[threadbas+th]);
 
                         else if(thisturb < 2.0) {   // thisturb >= 1.0
 
-                            gturb = thisturb - 1.0; //  MOVING TOWARDS GLOBAL TURBULENCE : 
+                            gturb = thisturb - 1.0; //  MOVING TOWARDS GLOBAL TURBULENCE :
                                                     //  pitch is from localturbpitch : interpolate towards global turbulent pitch
                             pitch = ((1.0 - gturb) * pitch) + (gturb * globalturbpitch[threadbas+th]);
                         }
@@ -2359,7 +2353,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                     if(rotup) {                             //  If band is to turn in radial direction
                     
                         switch(rotup) {         //  generate phase-shifted data for mixing filtered copy
-                        case(1):                        
+                        case(1):
                             thistabpos =  lasttabpos + piover2phaseshift;   //  Rotating UP at the front
                             while(thistabpos >= SYNTH_TABSIZE)
                                 thistabpos  -= (double)SYNTH_TABSIZE;
@@ -2465,7 +2459,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                 
                 if(flow_type == TOTWIST)
                     bandwidth *= transitfrac;           //  Twist bandwidth increases from zero to full as we do transit to twist
-                else    
+                else
                     bandwidth *= (1.0 - transitfrac);   //  Twist bandwidth decreases from full to zero as we do transit from twist
 
                 //  CALCUALTE POSITION IF IT WERE LAMINAR
@@ -2481,7 +2475,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                         pitchwander *= (drand48() * 2.0) - 1.0;
                     laminarpitch += pitchwander;
 
-                    //  INTERPOLATE  btween laminar position and band-centre of twisting-threads 
+                    //  INTERPOLATE  btween laminar position and band-centre of twisting-threads
 
                     if(flow_type == TOTWIST) {                      //  as we approach true twist
                         thisthreadcentre = (bandcentre - laminarpitch) * transitfrac;
@@ -2513,7 +2507,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                     
                     lasttabpos = tabpos[threadbas+th];
                     if(th==0)
-                        sinval = sinread(1,&(tabpos[threadbas]),bandtwist[bandno],&(cycend[bandno]),dz->scaler,dz); 
+                        sinval = sinread(1,&(tabpos[threadbas]),bandtwist[bandno],&(cycend[bandno]),dz->scaler,dz);
                     else
                         sinval = sinread(1,&(tabpos[threadbas+th]),bandtwist[bandno],&dummycycend,dz->scaler,dz);
 
@@ -2523,9 +2517,9 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                         pitch = sinval * upbandwidth;           //  Expand -1-to +1 range to fit into current halfbandwidth
                         pitch += thisthreadcentre;
                     } else {
-                        pitch = sinval * dnbandwidth;           //  NB sinval is initially -ve, 
+                        pitch = sinval * dnbandwidth;           //  NB sinval is initially -ve,
                         pitch += thisthreadcentre;              //  so adding it to bandcentre, takes it below bandcentre
-                    }                   
+                    }
                     entrycnt = outcnt * 2;
                     dz->parray[threadbas + th][entrycnt++] = time;
                     dz->parray[threadbas + th][entrycnt++] = pitch;
@@ -2540,7 +2534,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                         // calculate level for twisted flow
                         
                         switch(rotup) {
-                        case(1):                        
+                        case(1):
                             thistabpos =  lasttabpos + piover2phaseshift;   //  Rotating UP at the front
                             while(thistabpos >= SYNTH_TABSIZE)
                                 thistabpos  -= (double)SYNTH_TABSIZE;
@@ -2559,7 +2553,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                         level = sinval + 1.0;
                         level /= 2.0;
 
-                        //  Interpolate the two levels, according to 
+                        //  Interpolate the two levels, according to
 
                         if(flow_type == TOTWIST)                //  how far we are into transit to full twist
                             level = (level * transitfrac) + (lamlevel * (1.0 - transitfrac));
@@ -2573,7 +2567,7 @@ int strands(double pitchrange,double band_separation,double tessitura,int isturb
                         level = sinval + 1.0;
                         level /= 2.0;
 
-                        //  Interpolate the two mixlevels, according to 
+                        //  Interpolate the two mixlevels, according to
 
                         if(flow_type == TOTWIST)                //  how far we are into transit to full twist
                             level = level * transitfrac;
@@ -2610,10 +2604,10 @@ int output_strands(char *sfnam,dataptr dz)
     fflush(stdout);
     for(n=0;n < dz->itemcnt;n++) {
         if(sloom) {     //  Send valid message to progress-bar
-            dz->process_type = SCREEN_MESSAGE;      
+            dz->process_type = SCREEN_MESSAGE;
             dz->process      = FIND_PANPOS;
             display_virtual_time(n+1,dz);
-            dz->process_type = TO_TEXTFILE;     
+            dz->process_type = TO_TEXTFILE;
             dz->process      = STRANDS;
         }
         if(n > 0) {     //  Current datafile closed as next is opened
@@ -2629,16 +2623,16 @@ int output_strands(char *sfnam,dataptr dz)
                 return SYSTEM_ERROR;
             }
         }
-    }                   
+    }
     if(dz->iparam[STRAND_3D]) {
         fprintf(stdout,"INFO: Outputting 1st set of control threads %d to %d.\n",dz->itemcnt + 1,dz->itemcnt * 2);
         fflush(stdout);
         for(k = 0,n=dz->itemcnt;k < dz->itemcnt;n++,k++) {
             if(sloom) {     //  Send valid message to progress-bar
-                dz->process_type = SCREEN_MESSAGE;      
+                dz->process_type = SCREEN_MESSAGE;
                 dz->process      = FIND_PANPOS;
                 display_virtual_time(k+1,dz);
-                dz->process_type = TO_TEXTFILE;     
+                dz->process_type = TO_TEXTFILE;
                 dz->process      = STRANDS;
             }
             if((exit_status = create_next_outfile(n,sfnam,temp,dz))<0)
@@ -2652,15 +2646,15 @@ int output_strands(char *sfnam,dataptr dz)
                     return SYSTEM_ERROR;
                 }
             }
-        }                   
+        }
         fprintf(stdout,"INFO: Outputting 2nd set of control threads %d to %d.\n",(dz->itemcnt*2) + 1,dz->itemcnt * 3);
         fflush(stdout);
         for(k = 0,n=dz->itemcnt*2;k < dz->itemcnt;n++,k++) {
             if(sloom) {     //  Send valid message to progress-bar
-                dz->process_type = SCREEN_MESSAGE;      
+                dz->process_type = SCREEN_MESSAGE;
                 dz->process      = FIND_PANPOS;
                 display_virtual_time(k+1,dz);
-                dz->process_type = TO_TEXTFILE;     
+                dz->process_type = TO_TEXTFILE;
                 dz->process      = STRANDS;
             }
             if((exit_status = create_next_outfile(n,sfnam,temp,dz))<0)
@@ -2674,7 +2668,7 @@ int output_strands(char *sfnam,dataptr dz)
                     return SYSTEM_ERROR;
                 }
             }
-        }                   
+        }
     }                       //  Last datafile is closed on "complete_output"
     return FINISHED;
 }
@@ -2715,7 +2709,7 @@ void scatter_streamdata_in_last_cycle(double time,int bandno,int threadscnt,int 
         thisthread = dz->parray[m];                                     //  Get timewarp-value
         warp = (dz->param[STRAND_SCAT] * (STRAND_MAXWARP - 1.0));       //  Range of warping, some fraction of 1-to-maxwarp range
         warp *=  drand48();                                             //  Get random value in range
-        warp += 1.0;                                                    //  Add back the 1, so warp in range 1 to maxwarp   
+        warp += 1.0;                                                    //  Add back the 1, so warp in range 1 to maxwarp
         if(drand48() < 0.5)
             warp = 1.0/warp;                                            //  Warp then randomly gets value warp or 1/warp
         for(k=0,t=0;k < outcnt;k++,t+=2) {                              //  Search the existing stored values
@@ -2750,12 +2744,12 @@ double wavy(int bandno,double bandtop_mean,double tessitura,double amp,double *w
 
 /************************************** CHECK_TWIST_VARIABLE ****************************
  *
- *  Twist can be zero at start of file, 
- *  or be zero over a stretch of the file, 
+ *  Twist can be zero at start of file,
+ *  or be zero over a stretch of the file,
  *  i.e. there can be 2 adjacent zero values, but no more or less than 2, at any one location in the file.
  */
 
-int establish_flow_types(dataptr dz) 
+int establish_flow_types(dataptr dz)
 {
     int n, m, twisttime, twistval, t, v, k, f, d, lastflowtype, flowtype;
     int arraysize = dz->brksize[STRAND_TWIST];
@@ -2836,7 +2830,7 @@ int establish_flow_types(dataptr dz)
                     break;
                 case(FROMTWIST):
                 case(TWISTED):
-                    flow[f] = twist[twistval-2];            //  Twist value at start of transit (end of previous true-twist) 
+                    flow[f] = twist[twistval-2];            //  Twist value at start of transit (end of previous true-twist)
                     break;                                  //  or start of true-twist (only used where flow starts with twist at time zero)
                 case(LAMINAR):
                     flow[f] = 0;                            //  Value not used
@@ -2860,7 +2854,7 @@ int establish_flow_types(dataptr dz)
  *  Read off the type of flow being generated, from prestored table.
  */
 
-int get_flow_type(double time,double *transitstart,double *twistreffrq,double *transittime,dataptr dz) 
+int get_flow_type(double time,double *transitstart,double *twistreffrq,double *transittime,dataptr dz)
 {
     double *flow = dz->parray[dz->flowdata];
     int n = 0, t = 0, flow_type;
@@ -2872,7 +2866,7 @@ int get_flow_type(double time,double *transitstart,double *twistreffrq,double *t
         t += 4;
     }
     t -= 4;
-    *transitstart = flow[t]; 
+    *transitstart = flow[t];
     flow_type = (int)round(flow[t+1]);
     *twistreffrq = flow[t+2];
     *transittime = flow[t+3];
@@ -2955,12 +2949,12 @@ int check_turbulence_values(int *isturb,dataptr dz)
                     while(turbtime < flowstart) {   //  Advance in turbulence values into next flowtype
                         if(++turbcnt >= dz->brksize[STRAND_TURB])
                             break;
-                        tt += 2;    
+                        tt += 2;
                         vv += 2;
                         turbtime = turb[tt];
                         turbval  = turb[vv];
                     }
-                    if(turbtime < flowstart) {      //  If reached end of turbulence values, 
+                    if(turbtime < flowstart) {      //  If reached end of turbulence values,
                         if(turbval > 0.0)  {        //  test last turbulence value against all further flows
                             if(++n < dz->flowcnt) { //  (if there are any)
                                 starttime += 4;
@@ -2976,7 +2970,7 @@ int check_turbulence_values(int *isturb,dataptr dz)
                         }                           //  Then break out of outer test loop
                         break;
                     }
-                    //  ELSE turbtime >= flowstart : 
+                    //  ELSE turbtime >= flowstart :
                     //  Test turbulence values within the NON-twisted flow
                     if(turbval > 0.0) {
                         sprintf(errstr,"Turbulence at %lf in non-twisted flow.\n",turbtime);
@@ -2985,7 +2979,7 @@ int check_turbulence_values(int *isturb,dataptr dz)
                     while(turbtime < flowend) {
                         if(++turbcnt >= dz->brksize[STRAND_TURB])
                             break;
-                        tt += 2;    
+                        tt += 2;
                         vv += 2;
                         turbtime = turb[tt];
                         turbval  = turb[vv];
@@ -2994,7 +2988,7 @@ int check_turbulence_values(int *isturb,dataptr dz)
                             return DATA_ERROR;
                         }
                     }
-                    if(turbtime < flowend) {        //  Reached end of turbulence values, 
+                    if(turbtime < flowend) {        //  Reached end of turbulence values,
                         if(turbval > 0.0)  {        //  so test last turbulence value against all further flows
                             if(++n < dz->flowcnt) { //  (if there are any)
                                 starttime += 4;
@@ -3036,7 +3030,7 @@ int check_turbulence_values(int *isturb,dataptr dz)
  *  (1) grpcnt = streamcnt
  *
  *      e.g. streamcnt = 8  A B C D E F G H
- *           grpcnt = 8     
+ *           grpcnt = 8
  *          Reverse the entire set
  *                          H G F E D C B A
  *
@@ -3053,7 +3047,7 @@ int check_turbulence_values(int *isturb,dataptr dz)
  *  (3) grpcnt <= 2 * streamcnt, but divides streamcnt exactly
  *
  *      e.g. streamcnt = 8  A B C D E F G H
- *           grpcnt = 2     
+ *           grpcnt = 2
  *      Reverse each group in turn
  *                          B A c d e f g h
  *                          b a D C e f g h
@@ -3070,7 +3064,7 @@ int check_turbulence_values(int *isturb,dataptr dz)
  *                          c b a F E D g
  *      Then rotate the whole set
  *                          G c b a f e d
- *  OR 
+ *  OR
  *  (5) grpcnt <= 2 * streamcnt, but does NOT divide streamcnt exactly
  *      And remainder is > 1
  *
@@ -3167,12 +3161,12 @@ void turbulent_bandswap(int *perm,int streamcnt)
  *  streamcnt  = no of streams in band      (or total number of streams)
  *  pitchbot   = lowpitch boundary of band  (or of entire range)
  *  pitchrange = pitchwidth of band         (or of entire flow)
- *  perm       = section of the perm array beginning at the lowest thread in this band 
+ *  perm       = section of the perm array beginning at the lowest thread in this band
  *                                          (or entire perm array for all threads)
  */
 
 void assign_turbulence_pitches(int streamcnt,double pitchbot,double pitchrange,int *perm,double *turbpset,double *turbpitch)
-{   
+{
     int gotit = 0, n, m;
     double maxrand = 0.0, minrand = 0.0, randrange, scaleup, temp;
 
@@ -3212,7 +3206,7 @@ void assign_turbulence_pitches(int streamcnt,double pitchbot,double pitchrange,i
     }
     turbulent_bandswap(perm,streamcnt);         //  Permute order of streams, so all bands cross
     for(n=0;n < streamcnt;n++)                  //  Assign the pitches to the bands
-        turbpitch[perm[n]] = turbpset[n];               
+        turbpitch[perm[n]] = turbpset[n];
 }
 
 /************************************ PANCALC *******************************/
@@ -3229,9 +3223,9 @@ void pancalc(double position,double *leftgain,double *rightgain)
     else
         dirflag = SIGNAL_TO_RIGHT;
 
-    if(position < 0) 
+    if(position < 0)
         relpos = -position;
-    else 
+    else
         relpos = position;
     if(relpos <= 1.0){      /* between the speakers */
         temp = 1.0 + (relpos * relpos);

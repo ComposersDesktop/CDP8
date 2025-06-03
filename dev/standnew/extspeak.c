@@ -129,10 +129,10 @@ int main(int argc,char *argv[])
 	dz->trofcnt = 0;
 	if(!sloom) {
 		if(argc == 1) {
-			usage1();	
+			usage1();
 			return(FAILED);
 		} else if(argc == 2) {
-			usage2(argv[1]);	
+			usage2(argv[1]);
 			return(FAILED);
 		}
 	}
@@ -167,12 +167,12 @@ int main(int argc,char *argv[])
 		//parse_TK_data() =
 		if((exit_status = parse_sloom_data(argc,argv,&cmdline,&cmdlinecnt,dz))<0) {
 			exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
-			return(exit_status);		 
+			return(exit_status);
 		}
 	}
 	ap = dz->application;
 
-	// parse_infile_and_hone_type() = 
+	// parse_infile_and_hone_type() =
 	if((exit_status = parse_infile_and_check_type(cmdline,dz))<0) {
 		exit_status = print_messages_and_close_sndfiles(exit_status,is_launched,dz);
 		return(FAILED);
@@ -183,8 +183,8 @@ int main(int argc,char *argv[])
 		return(FAILED);
 	}
 	// open_first_infile		CDP LIB
-	if((exit_status = open_first_infile(cmdline[0],dz))<0) {	
-		print_messages_and_close_sndfiles(exit_status,is_launched,dz);	
+	if((exit_status = open_first_infile(cmdline[0],dz))<0) {
+		print_messages_and_close_sndfiles(exit_status,is_launched,dz);
 		return(FAILED);
 	}
 	cmdlinecnt--;
@@ -209,7 +209,7 @@ int main(int argc,char *argv[])
 		return(FAILED);
 	}
 
-	// handle_outfile() = 
+	// handle_outfile() =
 	if((exit_status = handle_the_outfile(&cmdlinecnt,&cmdline,dz))<0) {
 		fprintf(stdout,"\n **** If the outfile does NOT already exist ****\n **** May be TOO FEW PARAMS on commandline ****\n\n");
 		fflush(stdout);
@@ -352,15 +352,15 @@ int main(int argc,char *argv[])
 
 int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char *paramlist)
 {
-	ap->special_data   = (char)special_data;	   
+	ap->special_data   = (char)special_data;
 	ap->param_cnt      = (char)paramcnt;
 	ap->max_param_cnt  = (char)maxparamcnt;
 	if(ap->max_param_cnt>0) {
-		if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {	
+		if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {
 			sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
 			return(MEMORY_ERROR);
 		}
-		strcpy(ap->param_list,paramlist); 
+		strcpy(ap->param_list,paramlist);
 	}
 	return(FINISHED);
 }
@@ -381,16 +381,16 @@ int set_vflgs
 			sprintf(errstr,"INSUFFICIENT MEMORY: for option_flags\n");
 			return(MEMORY_ERROR);
 		}
-		strcpy(ap->option_flags,optflags); 
+		strcpy(ap->option_flags,optflags);
 	}
-	ap->vflag_cnt = (char) vflagcnt;		   
+	ap->vflag_cnt = (char) vflagcnt;
 	ap->variant_param_cnt = (char) vparamcnt;
 	if(vflagcnt) {
 		if((ap->variant_list  = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
 			sprintf(errstr,"INSUFFICIENT MEMORY: for variant_list\n");
 			return(MEMORY_ERROR);
 		}
-		strcpy(ap->variant_list,varlist);		
+		strcpy(ap->variant_list,varlist);
 		if((ap->variant_flags = (char *)malloc((size_t)(vflagcnt+1)))==NULL) {
 			sprintf(errstr,"INSUFFICIENT MEMORY: for variant_flags\n");
 			return(MEMORY_ERROR);
@@ -410,29 +410,29 @@ int application_init(dataptr dz)
 	int tipc, brkcnt;
 	aplptr ap = dz->application;
 	if(ap->vflag_cnt>0)
-		initialise_vflags(dz);	  
+		initialise_vflags(dz);
 	tipc  = ap->max_param_cnt + ap->option_cnt + ap->variant_param_cnt;
 	ap->total_input_param_cnt = (char)tipc;
 	if(tipc>0) {
-		if((exit_status = setup_input_param_range_stores(tipc,ap))<0)			  
+		if((exit_status = setup_input_param_range_stores(tipc,ap))<0)
 			return(exit_status);
-		if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)		  
+		if((exit_status = setup_input_param_defaultval_stores(tipc,ap))<0)
 			return(exit_status);
-		if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)	  
+		if((exit_status = setup_and_init_input_param_activity(dz,tipc))<0)
 			return(exit_status);
 	}
 	brkcnt = tipc;
 	if(brkcnt>0) {
-		if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)			  
+		if((exit_status = setup_and_init_input_brktable_constants(dz,brkcnt))<0)
 			return(exit_status);
 	}
-	if((storage_cnt = tipc + ap->internal_param_cnt)>0) {		  
-		if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)	  
+	if((storage_cnt = tipc + ap->internal_param_cnt)>0) {
+		if((exit_status = setup_parameter_storage_and_constants(storage_cnt,dz))<0)
 			return(exit_status);
-		if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)	  
+		if((exit_status = initialise_is_int_and_no_brk_constants(storage_cnt,dz))<0)
 			return(exit_status);
-	}													   
- 	if((exit_status = mark_parameter_types(dz,ap))<0)	  
+	}
+ 	if((exit_status = mark_parameter_types(dz,ap))<0)
 		return(exit_status);
 	
 	// establish_infile_constants() replaced by
@@ -675,7 +675,7 @@ int setup_extspeak_application(dataptr dz)
 	case(14):
 		exit_status = set_vflgs(ap,"",0,"","teo"    ,3,0,"000");
 		break;
-	case(16):	//	fall thro 
+	case(16):	//	fall thro
 	case(17):
 		exit_status = set_vflgs(ap,"",0,"","te"     ,2,0,"00");
 		break;
@@ -686,7 +686,7 @@ int setup_extspeak_application(dataptr dz)
 	dz->has_otherfile = FALSE;
 	// assign_process_logic -->
 	dz->input_data_type = MANY_SNDFILES;
-	dz->process_type	= UNEQUAL_SNDFILE;	
+	dz->process_type	= UNEQUAL_SNDFILE;
 	dz->outfiletype  	= SNDFILE_OUT;
 	return application_init(dz);	//GLOBAL
 }
@@ -774,14 +774,14 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 			return(DATA_ERROR);
 		}
 		switch(cnt) {
-		case(1):	
+		case(1):
 			if(sscanf(argv[cnt],"%d",&dz->process)!=1) {
 				sprintf(errstr,"Cannot read process no. sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
 
-		case(2):	
+		case(2):
 			if(sscanf(argv[cnt],"%d",&dz->mode)!=1) {
 				sprintf(errstr,"Cannot read mode no. sent from TK\n");
 				return(DATA_ERROR);
@@ -794,7 +794,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 			ap = dz->application;
 			break;
 
-		case(3):	
+		case(3):
 			if(sscanf(argv[cnt],"%d",&infilecnt)!=1) {
 				sprintf(errstr,"Cannot read infilecnt sent from TK\n");
 				return(DATA_ERROR);
@@ -806,137 +806,137 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 			if((exit_status = assign_file_data_storage(infilecnt,dz))<0)
 				return(exit_status);
 			break;
-		case(INPUT_FILETYPE+4):	
+		case(INPUT_FILETYPE+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->filetype)!=1) {
 				sprintf(errstr,"Cannot read filetype sent from TK (%s)\n",argv[cnt]);
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_FILESIZE+4):	
+		case(INPUT_FILESIZE+4):
 			if(sscanf(argv[cnt],"%d",&filesize)!=1) {
 				sprintf(errstr,"Cannot read infilesize sent from TK\n");
 				return(DATA_ERROR);
 			}
-			dz->insams[0] = filesize;	
+			dz->insams[0] = filesize;
 			break;
-		case(INPUT_INSAMS+4):	
+		case(INPUT_INSAMS+4):
 			if(sscanf(argv[cnt],"%d",&insams)!=1) {
 				sprintf(errstr,"Cannot read insams sent from TK\n");
 				return(DATA_ERROR);
 			}
-			dz->insams[0] = insams;	
+			dz->insams[0] = insams;
 			break;
-		case(INPUT_SRATE+4):	
+		case(INPUT_SRATE+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->srate)!=1) {
 				sprintf(errstr,"Cannot read srate sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_CHANNELS+4):	
+		case(INPUT_CHANNELS+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->channels)!=1) {
 				sprintf(errstr,"Cannot read channels sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_STYPE+4):	
+		case(INPUT_STYPE+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->stype)!=1) {
 				sprintf(errstr,"Cannot read stype sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_ORIGSTYPE+4):	
+		case(INPUT_ORIGSTYPE+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->origstype)!=1) {
 				sprintf(errstr,"Cannot read origstype sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_ORIGRATE+4):	
+		case(INPUT_ORIGRATE+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->origrate)!=1) {
 				sprintf(errstr,"Cannot read origrate sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_MLEN+4):	
+		case(INPUT_MLEN+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->Mlen)!=1) {
 				sprintf(errstr,"Cannot read Mlen sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_DFAC+4):	
+		case(INPUT_DFAC+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->Dfac)!=1) {
 				sprintf(errstr,"Cannot read Dfac sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_ORIGCHANS+4):	
+		case(INPUT_ORIGCHANS+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->origchans)!=1) {
 				sprintf(errstr,"Cannot read origchans sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_SPECENVCNT+4):	
+		case(INPUT_SPECENVCNT+4):
 			if(sscanf(argv[cnt],"%d",&dz->infile->specenvcnt)!=1) {
 				sprintf(errstr,"Cannot read specenvcnt sent from TK\n");
 				return(DATA_ERROR);
 			}
 			dz->specenvcnt = dz->infile->specenvcnt;
 			break;
-		case(INPUT_WANTED+4):	
+		case(INPUT_WANTED+4):
 			if(sscanf(argv[cnt],"%d",&dz->wanted)!=1) {
 				sprintf(errstr,"Cannot read wanted sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_WLENGTH+4):	
+		case(INPUT_WLENGTH+4):
 			if(sscanf(argv[cnt],"%d",&dz->wlength)!=1) {
 				sprintf(errstr,"Cannot read wlength sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_OUT_CHANS+4):	
+		case(INPUT_OUT_CHANS+4):
 			if(sscanf(argv[cnt],"%d",&dz->out_chans)!=1) {
 				sprintf(errstr,"Cannot read out_chans sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
 			/* RWD these chanegs to samps - tk will have to deal with that! */
-		case(INPUT_DESCRIPTOR_BYTES+4):	
+		case(INPUT_DESCRIPTOR_BYTES+4):
 			if(sscanf(argv[cnt],"%d",&dz->descriptor_samps)!=1) {
 				sprintf(errstr,"Cannot read descriptor_samps sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_IS_TRANSPOS+4):	
+		case(INPUT_IS_TRANSPOS+4):
 			if(sscanf(argv[cnt],"%d",&dz->is_transpos)!=1) {
 				sprintf(errstr,"Cannot read is_transpos sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_COULD_BE_TRANSPOS+4):	
+		case(INPUT_COULD_BE_TRANSPOS+4):
 			if(sscanf(argv[cnt],"%d",&dz->could_be_transpos)!=1) {
 				sprintf(errstr,"Cannot read could_be_transpos sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_COULD_BE_PITCH+4):	
+		case(INPUT_COULD_BE_PITCH+4):
 			if(sscanf(argv[cnt],"%d",&dz->could_be_pitch)!=1) {
 				sprintf(errstr,"Cannot read could_be_pitch sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_DIFFERENT_SRATES+4):	
+		case(INPUT_DIFFERENT_SRATES+4):
 			if(sscanf(argv[cnt],"%d",&dz->different_srates)!=1) {
 				sprintf(errstr,"Cannot read different_srates sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_DUPLICATE_SNDS+4):	
+		case(INPUT_DUPLICATE_SNDS+4):
 			if(sscanf(argv[cnt],"%d",&dz->duplicate_snds)!=1) {
 				sprintf(errstr,"Cannot read duplicate_snds sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_BRKSIZE+4):	
+		case(INPUT_BRKSIZE+4):
 			if(sscanf(argv[cnt],"%d",&inbrksize)!=1) {
 				sprintf(errstr,"Cannot read brksize sent from TK\n");
 				return(DATA_ERROR);
@@ -973,74 +973,74 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 				break;
 			}
 			break;
-		case(INPUT_NUMSIZE+4):	
+		case(INPUT_NUMSIZE+4):
 			if(sscanf(argv[cnt],"%d",&dz->numsize)!=1) {
 				sprintf(errstr,"Cannot read numsize sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_LINECNT+4):	
+		case(INPUT_LINECNT+4):
 			if(sscanf(argv[cnt],"%d",&dz->linecnt)!=1) {
 				sprintf(errstr,"Cannot read linecnt sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_ALL_WORDS+4):	
+		case(INPUT_ALL_WORDS+4):
 			if(sscanf(argv[cnt],"%d",&dz->all_words)!=1) {
 				sprintf(errstr,"Cannot read all_words sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_ARATE+4):	
+		case(INPUT_ARATE+4):
 			if(sscanf(argv[cnt],"%f",&dz->infile->arate)!=1) {
 				sprintf(errstr,"Cannot read arate sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_FRAMETIME+4):	
+		case(INPUT_FRAMETIME+4):
 			if(sscanf(argv[cnt],"%lf",&dummy)!=1) {
 				sprintf(errstr,"Cannot read frametime sent from TK\n");
 				return(DATA_ERROR);
 			}
 			dz->frametime = (float)dummy;
 			break;
-		case(INPUT_WINDOW_SIZE+4):	
+		case(INPUT_WINDOW_SIZE+4):
 			if(sscanf(argv[cnt],"%f",&dz->infile->window_size)!=1) {
 				sprintf(errstr,"Cannot read window_size sent from TK\n");
 					return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_NYQUIST+4):	
+		case(INPUT_NYQUIST+4):
 			if(sscanf(argv[cnt],"%lf",&dz->nyquist)!=1) {
 				sprintf(errstr,"Cannot read nyquist sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_DURATION+4):	
+		case(INPUT_DURATION+4):
 			if(sscanf(argv[cnt],"%lf",&dz->duration)!=1) {
 				sprintf(errstr,"Cannot read duration sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_MINBRK+4):	
+		case(INPUT_MINBRK+4):
 			if(sscanf(argv[cnt],"%lf",&dz->minbrk)!=1) {
 				sprintf(errstr,"Cannot read minbrk sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_MAXBRK+4):	
+		case(INPUT_MAXBRK+4):
 			if(sscanf(argv[cnt],"%lf",&dz->maxbrk)!=1) {
 				sprintf(errstr,"Cannot read maxbrk sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_MINNUM+4):	
+		case(INPUT_MINNUM+4):
 			if(sscanf(argv[cnt],"%lf",&dz->minnum)!=1) {
 				sprintf(errstr,"Cannot read minnum sent from TK\n");
 				return(DATA_ERROR);
 			}
 			break;
-		case(INPUT_MAXNUM+4):	
+		case(INPUT_MAXNUM+4):
 			if(sscanf(argv[cnt],"%lf",&dz->maxnum)!=1) {
 				sprintf(errstr,"Cannot read maxnum sent from TK\n");
 				return(DATA_ERROR);
@@ -1059,7 +1059,7 @@ int parse_sloom_data(int argc,char *argv[],char ***cmdline,int *cmdlinecnt,datap
 
 	if(true_cnt)
 		cnt = true_cnt;
-	*cmdlinecnt = 0;		
+	*cmdlinecnt = 0;
 
 	while(cnt < argc) {
 		if((exit_status = get_tk_cmdline_word(cmdlinecnt,cmdline,argv[cnt]))<0)
@@ -1135,7 +1135,7 @@ int establish_bufptrs_and_extra_buffers(dataptr dz)
 	return(FINISHED);
 }
 
-int read_special_data(char *str,dataptr dz)	
+int read_special_data(char *str,dataptr dz)
 {
 	return(FINISHED);
 }
@@ -1207,31 +1207,31 @@ int check_extspeak_param_validity_and_consistency(int XSPK_RRND,int XSPK_ORISZ,d
 			if(dz->vflag[XSPK_ORISZ] || dz->vflag[XSPK_ENV] || dz->vflag[XSPK_TRANSPOSE] ) {
 				if(dz->vflag[XSPK_ORISZ]) {
 					if(dz->vflag[XSPK_ENV] && dz->vflag[XSPK_TRANSPOSE])
-						fprintf(stdout,"WARNING: \"Original Size\" flag redundant : \"Envelope\" & \"Transpose\" Flags not operational when INSERTING the original syllables.\n"); 
+						fprintf(stdout,"WARNING: \"Original Size\" flag redundant : \"Envelope\" & \"Transpose\" Flags not operational when INSERTING the original syllables.\n");
 					else if(dz->vflag[XSPK_ENV])
-						fprintf(stdout,"WARNING: \"Original Size\" flag redundant : \"Envelope\" Flag not operational when INSERTING the original syllables.\n"); 
+						fprintf(stdout,"WARNING: \"Original Size\" flag redundant : \"Envelope\" Flag not operational when INSERTING the original syllables.\n");
 					else if(dz->vflag[XSPK_TRANSPOSE])
 						fprintf(stdout,"WARNING: \"Original Size\" flag redundant : \"Transpose\" Flag not operational when INSERTING the original syllables.\n");
-					else 
+					else
 						fprintf(stdout,"WARNING: \"Original Size\" flag redundant when INSERTING the original syllables.\n");
 				} else {
 					if(dz->vflag[XSPK_ENV] && dz->vflag[XSPK_TRANSPOSE])
-						fprintf(stdout,"WARNING: \"Envelope\" & \"Transpose\" Flags not operational when INSERTING the original syllables.\n"); 
+						fprintf(stdout,"WARNING: \"Envelope\" & \"Transpose\" Flags not operational when INSERTING the original syllables.\n");
 					else if(dz->vflag[XSPK_ENV])
-						fprintf(stdout,"WARNING: \"Envelope\" Flag not operational when INSERTING the original syllables.\n"); 
+						fprintf(stdout,"WARNING: \"Envelope\" Flag not operational when INSERTING the original syllables.\n");
 					else
-						fprintf(stdout,"WARNING: \"Transpose\" Flag not operational when INSERTING the original syllables.\n"); 
+						fprintf(stdout,"WARNING: \"Transpose\" Flag not operational when INSERTING the original syllables.\n");
 				}
 				fflush(stdout);
 			}
 			dz->vflag[XSPK_TRANSPOSE] = 0;
 			dz->vflag[XSPK_ENV]       = 0;
 			dz->vflag[XSPK_ORISZ]    = 1;
-		}	
+		}
 	}
 	if(dz->mode < 3 || (dz->mode >= 6  && dz->mode < 9) || (dz->mode >= 12  && dz->mode < 15)) {
 		if(dz->vflag[XSPK_ORISZ] && dz->vflag[XSPK_TRANSPOSE]) {
-			fprintf(stdout,"WARNING: \"Keep original size\" Flag makes \"Transposition\" Flag redundant.\n"); 
+			fprintf(stdout,"WARNING: \"Keep original size\" Flag makes \"Transposition\" Flag redundant.\n");
 			fflush(stdout);
 		}
 	}
@@ -1278,7 +1278,7 @@ int get_the_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 /******************************** SETUP_AND_INIT_INPUT_BRKTABLE_CONSTANTS ********************************/
 
 int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
-{	
+{
 	int n;
 	if((dz->brk      = (double **)malloc(brkcnt * sizeof(double *)))==NULL) {
 		sprintf(errstr,"setup_and_init_input_brktable_constants(): 1\n");
@@ -1294,7 +1294,7 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
 	}
 	if((dz->firstval = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
 		sprintf(errstr,"setup_and_init_input_brktable_constants(): 3\n");
-		return(MEMORY_ERROR);												  
+		return(MEMORY_ERROR);
 	}
 	if((dz->lastind  = (double  *)malloc(brkcnt * sizeof(double)))==NULL) {
 		sprintf(errstr,"setup_and_init_input_brktable_constants(): 4\n");
@@ -1321,203 +1321,153 @@ int setup_and_init_input_brktable_constants(dataptr dz,int brkcnt)
 
 int usage2(char *str)
 {
-	if(!strcmp(str,"extspeak")) {
-		fprintf(stderr,
-	    "\nUSAGE:  extspeak extspeak 1-18 infile0 infile1 [infile2..] outfile params\n"
-		"PARAMS for each mode\n"
-	    "1)          wsize splice offset N gain seed [-t] [-e] [-k] [-i] [-o] [-r]\n"
-	    "2)          wsize splice offset N gain seed [-t] [-e] [-k] [-i] [-o] \n"
-	    "3)  pattern wsize splice offset N gain      [-t] [-e] [-k] [-i] [-o] \n"
-	    "4)          wsize splice offset N gain seed [-t] [-e] [-k]           [-r]\n"
-	    "5)          wsize splice offset N gain seed [-t] [-e] [-k]\n"
-	    "6)  pattern wsize splice offset N gain      [-t] [-e] [-k]\n"
-	    "7)  cuts          splice offset N gain seed [-t] [-e] [-k] [-i] [-o] [-r]\n"
-	    "8)  cuts          splice offset N gain seed [-t] [-e] [-k] [-i] [-o] \n"
-	    "9)  cutspat       splice offset N gain      [-t] [-e] [-k] [-i] [-o] \n"
-	    "10) cuts          splice offset N gain seed [-t] [-e] [-k]           [-r]\n"
-	    "11) cuts          splice offset N gain seed [-t] [-e] [-k]\n"
-	    "12) cutspat       splice offset N gain      [-t] [-e] [-k]\n"
-	    "13) cuts+targets  splice          gain seed [-t] [-e]           [-o] [-r]\n"
-	    "14) cuts+targets  splice          gain seed [-t] [-e]           [-o]\n"
-	    "15) cuts+tgts+pat splice          gain      [-t] [-e]           [-o]\n"
-	    "16) cuts+targets  splice          gain seed [-t] [-e]                [-r]\n"
-	    "17) cuts+targets  splice          gain seed [-t] [-e]\n"
-	    "18) cuts+tgts+pat splice          gain      [-t] [-e]\n"
-		"MODES 1-3,6-9   REPLACE  - or INJECT BETWEEN - syllabs of infile0 ...\n"
-		"MODES 12-15     REPLACE SPECIFIED syllabs of infile0 ...\n"
-		"MODES 4-6,10-12 MIX INTO selected syllabs of infile0 ...\n"
-		"MODES 16-18     MIX INTO SPECIFIED syllabs of infile0 ...\n"
-		"      ... NEW SYLLABLES, each taken from one of the other input files.\n"
-		"MODES 1/4/7/10/13/16  Select syllabs from each file in turn OR (-r) at random.\n"
-		"MODES 2/5/8/11/14/17  Rand-permute order of syllabs. Once ALL used, permute again.\n"
-		"MODES 3/6/9/12/15/18  Select infile following specified ordering-pattern.\n"
-		"\n"
-		"PATTERN Pattern in a Textfile : the specific sequence of syllables to be inserted.\n"
-		"        e.g. \"1 5 2\" means, use infile1 infile5 infile2 in that order (then repeat).\n"
-		"CUTS    Modes 7,8,10,11 List of Times, in a Textfile : location of syllable-starts\n"
-		"        in infile0 (zero time, and time at very end of file, not required).\n"
-		"CUTSPAT Modes 9 and 12 List of Times, in a Textfile : location of syllable-starts\n"
-		"        FOLLOWED BY single line with \"#\", followed by PATTERN Data (see above).\n"
-		"CUTS+TARGETS    List of Times, in a Textfile : location of syllable-starts\n"
-		"        FOLLOWED BY single line with \"#\", followed by SYLLABLES TO TARGET Data.\n"
-		"CUTS+TGTS+PAT   List of Times, in a Textfile : location of syllable-starts\n"
-		"        FOLLOWED BY single line with \"#\", followed by SYLLABLES TO TARGET Data\n"
-		"        FOLLOWED BY single line with \"#\", followed by PATTERN Data (see above).\n"
-		"If there is NO CUTS/CUTSPAT, infile0 divided into \"syllables\" by automatic process.\n"
-		"\n"
-		"FOR MORE INFORMATION ----- hit any key on keyboard\n");
-	} else {
-		fprintf(stdout,"Unknown option '%s'\n",str);
-		return USAGE_ONLY;
-	}
-	_getch();
-	while(!kbhit())
-		;
-	if(kbhit()) {
-		fprintf(stderr,
-		"\n"
-		"In \"Syllables to Target\" data, the COUNT OF SYLLABLES in infile0\n"
-		"is ONE MORE than the number of edit-points you have listed\n"
-		"(assuming there are no edits at zero or at the file end).\n"
-		"\n"
-		"       Each edit point marks the END of a syllable\n"
-		"       and the final syllable is AFTER the last edit.\n"
-		"\n"
-		"To ensure to target the VERY LAST syllable, the value \"-1\" can be used.\n"
-		"\n"
-		"\n"
-		"\n"
-		"\n" 
-		"PARAMETERS\n"
-		"\n"
-		"\n"
-		"WSIZE   Size of envelope-search window to AUTOfind syllabs in file0, in mS (try 50).\n"
-		"\n"
-		"SPLICE  Splice length for extracting and joining syllables (try 15).\n"
-		"\n"
-		"OFFSET  Number of syllables at start of infile0 to output unchanged.\n"
-		"\n" 
-		"N       N means write 1 original (file0) syllable for every N new syllabs inserted\n"
-		"\n" 
-		"        ...... EXCEPT IF flag \"-k\" is set, when ......\n"
-		"\n" 
-		"        N means KEEP N original (file0) syllables for every 1 new syllab inserted.\n"
-		"\n"
-		"GAIN    Gain of inserted syllables (Range -96dB to 0dB).\n"
-		"\n" 
-		"SEED    Initialisation for random reorderings, or permutations.\n"
-		"        If Seed > 0, using SAME seed AGAIN gives IDENTICAL random output.\n"
-		"\n" 
-		"Parameters N and GAIN may vary over time.\n"
-		"\n" 
-		"\n"
-		"\n"
-		"\n" 
-		"\n"
-		"\n"
-		"\n"
-		"FOR MORE INFORMATION ----- hit any key on keyboard\n"
-		"\n" 
-		"\n");
-	}
-	_getch();
-	while(!kbhit())
-		;
-	if(kbhit()) {
-		fprintf(stderr,
-		"\n"
-		"\n"
-		"EXAMPLE USAGE:\n"
-		"\n" 
-		"          For N=2 (i.e. REPLACE or KEEP 2 in 3 syllables)\n"
-		"          AND 9 Original Syllables =  ---------\n"
-		"\n" 
-		"No flags:      Keep 1, Replace (N=)2  -XX-XX-XX\n"
-		"\n" 
-		"-k flags:      Keep (N=)2, Replace 1  --X--X--X\n"
-		"\n" 
-		"-i flag:       Keep 1, Inject (N=)2   -XX-XX-XX-XX-XX-XX-XX-XX-XX\n"
-		"\n" 
-		"-i & -k flags: Keep (N=)2, Inject 1   --X--X--X--X-\n"
-		"\n" 
-		"\n" 
-		"FLAGS.\n"
-		"\n" 
-		"-r      RAND: Select next inserted syllable ENTIRELY at random.\n"
-		"\n" 
-		"-k      KEEP:  N becomes count of syllabs to KEEP rather than to REPLACE or INJECT.\n"
-		"\n" 
-		"-i      INJECT new syllable(s) BETWEEN existing infile0 syllables.\n"
-		"        Default : new syllabs OVERWRITE existing syllables, and are resized to fit.\n"
-		"\n" 
-		"FOLLOWING FLAG ONLY RELEVANT where you REPLACE the original syllables.\n"
-		"\n" 
-		"-o      ORIGINAL SIZE: Don't Resize new syllable to size of originals.\n"
-		"        (Output file will therefore not be same length/rhythm as infile0).\n"
-		"\n" 
-		"FOLLOWING FLAGS ONLY RELEVANT where you REPLACE or MIX INTO the original syllables.\n"
-		"\n" 
-		"-t      TRANSPOSE: If Resizing, Transpose/Time-stretch new syllab to adjust length.\n"
-		"        Default: Cut to Size or Pad with Silence.\n"
-		"\n" 
-		"-e      Follow the ENVELOPE of the the original syllables in file0\n"
-		"        by scaling level of inserted syllab to that of replaced/mixed-into syllable.\n"
-		"        This scaling is independent of the \"GAIN\" value (which is ALSO applied).\n" 
-		"\n" 
-		"\n" 
-		"\n" 
-		"\n" 
-			"FOR MORE INFORMATION ----- hit any key on keyboard\n"
-		"\n");
-	}
-	_getch();
-	while(!kbhit())
-		;
-	if(kbhit()) {
-		fprintf(stderr,
-		"CONTOUR TYPES.\n"
-		"\n"
-		"                                        _\n"
-		"                                     / | |    _\n"
-		"      _ ................ Add ..... /   |_|   | |\n"
-		"     | |                               | |   | |\n"
-		"     | |                     _         | |   | |\n"
-		"     | |    _               | |        | |   |_|\n"
-		"     | |_  | |         _    | |        | |_  | |\n"
-		"    _| | |_| |_   +   | |   | |   =   _| | |_| |_\n"	
-		"   | | | | | | |     _| |___| |_     | | | | | | |\n"
-		"\n"
-		"\n"
-		"\n"
-		"\n"
-		"                         Gain+          _\n"
-		"      _ ................ Add ..... ../ |_|\n"
-		"     | |                               | |    _\n"
-		"     | |                   .....       | |   | |\n"
-		"     | |    _                          | |   |_|\n"
-		"     | |_  | |       .....  ._.        | |_  | |\n"
-		"    _| | |_| |_   +   ._.   | |   =   _| | |_| |_\n"	
-		"   | | | | | | |     _| |___| |_     | | | | | | |\n"
-		"\n"
-		"\n"
-		"\n"
-		"\n"
-		"                                        _\n"
-		"                                     / | |\n"
-		"                                    /  | |\n"
-		"                                   /   | |\n"
-		"                                  /    | |\n"
-		"                                 /     | |\n"
-		"      _ .... -e ...... _ ..Add../      |_|    _\n"
-		"     | |  Envelope    |^|              | |   | |\n"
-		"     | |              |^|  .....       | |   | |\n"
-		"     | |    _ ........|^|... _ ...     | |   |_|\n"
-		"     | |_  | |        |^|   | |        | |_  | |\n"
-		"    _| | |_| |_  +    |_|   | |   =   _| | |_| |_\n"	
-		"   | | | | | | |     _| |___| |_     | | | | | | |\n"
-		"\n");
-	}
-	return(USAGE_ONLY);
+    if(!strcmp(str,"extspeak")) {
+        fprintf(stderr,
+        "\nUSAGE:  extspeak extspeak 1-18 infile0 infile1 [infile2..] outfile params\n"
+        "PARAMS for each mode\n"
+        "1)          wsize splice offset N gain seed [-t] [-e] [-k] [-i] [-o] [-r]\n"
+        "2)          wsize splice offset N gain seed [-t] [-e] [-k] [-i] [-o] \n"
+        "3)  pattern wsize splice offset N gain      [-t] [-e] [-k] [-i] [-o] \n"
+        "4)          wsize splice offset N gain seed [-t] [-e] [-k]           [-r]\n"
+        "5)          wsize splice offset N gain seed [-t] [-e] [-k]\n"
+        "6)  pattern wsize splice offset N gain      [-t] [-e] [-k]\n"
+        "7)  cuts          splice offset N gain seed [-t] [-e] [-k] [-i] [-o] [-r]\n"
+        "8)  cuts          splice offset N gain seed [-t] [-e] [-k] [-i] [-o] \n"
+        "9)  cutspat       splice offset N gain      [-t] [-e] [-k] [-i] [-o] \n"
+        "10) cuts          splice offset N gain seed [-t] [-e] [-k]           [-r]\n"
+        "11) cuts          splice offset N gain seed [-t] [-e] [-k]\n"
+        "12) cutspat       splice offset N gain      [-t] [-e] [-k]\n"
+        "13) cuts+targets  splice          gain seed [-t] [-e]           [-o] [-r]\n"
+        "14) cuts+targets  splice          gain seed [-t] [-e]           [-o]\n"
+        "15) cuts+tgts+pat splice          gain      [-t] [-e]           [-o]\n"
+        "16) cuts+targets  splice          gain seed [-t] [-e]                [-r]\n"
+        "17) cuts+targets  splice          gain seed [-t] [-e]\n"
+        "18) cuts+tgts+pat splice          gain      [-t] [-e]\n"
+        "MODES 1-3,6-9   REPLACE  - or INJECT BETWEEN - syllabs of infile0 ...\n"
+        "MODES 12-15     REPLACE SPECIFIED syllabs of infile0 ...\n"
+        "MODES 4-6,10-12 MIX INTO selected syllabs of infile0 ...\n"
+        "MODES 16-18     MIX INTO SPECIFIED syllabs of infile0 ...\n"
+        "      ... NEW SYLLABLES, each taken from one of the other input files.\n"
+        "MODES 1/4/7/10/13/16  Select syllabs from each file in turn OR (-r) at random.\n"
+        "MODES 2/5/8/11/14/17  Rand-permute order of syllabs. Once ALL used, permute again.\n"
+        "MODES 3/6/9/12/15/18  Select infile following specified ordering-pattern.\n"
+        "\n"
+        "PATTERN Pattern in a Textfile : the specific sequence of syllables to be inserted.\n"
+        "        e.g. \"1 5 2\" means, use infile1 infile5 infile2 in that order (then repeat).\n"
+        "CUTS    Modes 7,8,10,11 List of Times, in a Textfile : location of syllable-starts\n"
+        "        in infile0 (zero time, and time at very end of file, not required).\n"
+        "CUTSPAT Modes 9 and 12 List of Times, in a Textfile : location of syllable-starts\n"
+        "        FOLLOWED BY single line with \"#\", followed by PATTERN Data (see above).\n"
+        "CUTS+TARGETS    List of Times, in a Textfile : location of syllable-starts\n"
+        "        FOLLOWED BY single line with \"#\", followed by SYLLABLES TO TARGET Data.\n"
+        "CUTS+TGTS+PAT   List of Times, in a Textfile : location of syllable-starts\n"
+        "        FOLLOWED BY single line with \"#\", followed by SYLLABLES TO TARGET Data\n"
+        "        FOLLOWED BY single line with \"#\", followed by PATTERN Data (see above).\n"
+        "If there is NO CUTS/CUTSPAT, infile0 divided into \"syllables\" by automatic process.\n"
+        "\n"
+        "FOR MORE INFORMATION ----- hit Enter to continue\n");
+        getchar();
+
+        fprintf(stderr,
+        "\n"
+        "In \"Syllables to Target\" data, the COUNT OF SYLLABLES in infile0\n"
+        "is ONE MORE than the number of edit-points you have listed\n"
+        "(assuming there are no edits at zero or at the file end).\n"
+        "\n"
+        "       Each edit point marks the END of a syllable\n"
+        "       and the final syllable is AFTER the last edit.\n"
+        "\n"
+        "To ensure to target the VERY LAST syllable, the value \"-1\" can be used.\n"
+        "\n"
+        "\n"
+        "PARAMETERS\n"
+        "\n"
+        "WSIZE   Size of envelope-search window to AUTOfind syllabs in file0, in mS (try 50).\n"
+        "SPLICE  Splice length for extracting and joining syllables (try 15).\n"
+        "OFFSET  Number of syllables at start of infile0 to output unchanged.\n"
+        "N       N means write 1 original (file0) syllable for every N new syllabs inserted\n"
+        "        ...... EXCEPT IF flag \"-k\" is set, when ......\n"
+        "        N means KEEP N original (file0) syllables for every 1 new syllab inserted.\n"
+        "GAIN    Gain of inserted syllables (Range -96dB to 0dB).\n"
+        "SEED    Initialisation for random reorderings, or permutations.\n"
+        "        If Seed > 0, using SAME seed AGAIN gives IDENTICAL random output.\n"
+        "Parameters N and GAIN may vary over time.\n"
+        "\n"
+        "FOR MORE INFORMATION ----- hit Enter to continue\n");
+        getchar();
+
+        fprintf(stderr,
+        "\n"
+        "EXAMPLE USAGE:\n"
+        "          For N=2 (i.e. REPLACE or KEEP 2 in 3 syllables)\n"
+        "          AND 9 Original Syllables =  ---------\n"
+        "\n"
+        "No flags:      Keep 1, Replace (N=)2  -XX-XX-XX\n"
+        "-k flags:      Keep (N=)2, Replace 1  --X--X--X\n"
+        "-i flag:       Keep 1, Inject (N=)2   -XX-XX-XX-XX-XX-XX-XX-XX-XX\n"
+        "-i & -k flags: Keep (N=)2, Inject 1   --X--X--X--X-\n"
+        "\n"
+        "FLAGS.\n"
+        "-r      RAND: Select next inserted syllable ENTIRELY at random.\n"
+        "-k      KEEP:  N becomes count of syllabs to KEEP rather than to REPLACE or INJECT.\n"
+        "-i      INJECT new syllable(s) BETWEEN existing infile0 syllables.\n"
+        "        Default : new syllabs OVERWRITE existing syllables, and are resized to fit.\n"
+        "\n"
+        "FOLLOWING FLAG ONLY RELEVANT where you REPLACE the original syllables.\n"
+        "-o      ORIGINAL SIZE: Don't Resize new syllable to size of originals.\n"
+        "        (Output file will therefore not be same length/rhythm as infile0).\n"
+        "\n"
+        "FOLLOWING FLAGS ONLY RELEVANT where you REPLACE or MIX INTO the original syllables.\n"
+        "-t      TRANSPOSE: If Resizing, Transpose/Time-stretch new syllab to adjust length.\n"
+        "        Default: Cut to Size or Pad with Silence.\n"
+        "-e      Follow the ENVELOPE of the the original syllables in file0\n"
+        "        by scaling level of inserted syllab to that of replaced/mixed-into syllable.\n"
+        "        This scaling is independent of the \"GAIN\" value (which is ALSO applied).\n"
+        "\n"
+        "FOR MORE INFORMATION ----- hit Enter to continue\n");
+        getchar();
+
+        fprintf(stderr,
+        "CONTOUR TYPES.\n"
+        "\n"
+        "                                        _\n"
+        "                                     / | |    _\n"
+        "      _ ................ Add ..... /   |_|   | |\n"
+        "     | |                               | |   | |\n"
+        "     | |                     _         | |   | |\n"
+        "     | |    _               | |        | |   |_|\n"
+        "     | |_  | |         _    | |        | |_  | |\n"
+        "    _| | |_| |_   +   | |   | |   =   _| | |_| |_\n"
+        "   | | | | | | |     _| |___| |_     | | | | | | |\n"
+        "\n"
+        "                         Gain+          _\n"
+        "      _ ................ Add ..... ../ |_|\n"
+        "     | |                               | |    _\n"
+        "     | |                   .....       | |   | |\n"
+        "     | |    _                          | |   |_|\n"
+        "     | |_  | |       .....  ._.        | |_  | |\n"
+        "    _| | |_| |_   +   ._.   | |   =   _| | |_| |_\n"
+        "   | | | | | | |     _| |___| |_     | | | | | | |\n"
+        "\n"
+        "                                        _\n"
+        "                                     / | |\n"
+        "                                    /  | |\n"
+        "                                   /   | |\n"
+        "                                  /    | |\n"
+        "                                 /     | |\n"
+        "      _ .... -e ...... _ ..Add../      |_|    _\n"
+        "     | |  Envelope    |^|              | |   | |\n"
+        "     | |              |^|  .....       | |   | |\n"
+        "     | |    _ ........|^|... _ ...     | |   |_|\n"
+        "     | |_  | |        |^|   | |        | |_  | |\n"
+        "    _| | |_| |_  +    |_|   | |   =   _| | |_| |_\n"
+        "   | | | | | | |     _| |___| |_     | | | | | | |\n"
+        "\n");
+    } else {
+        fprintf(stdout,"Unknown option '%s'\n", str);
+        return USAGE_ONLY;
+    }
+    return USAGE_ONLY;
 }
 
 int usage3(char *str1,char *str2)
@@ -1557,7 +1507,7 @@ int get_the_mode_from_cmdline(char *str,dataptr dz)
 
 /****************************** EXTSPEAK *********************************/
 
-int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz) 
+int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 {
 	int exit_status, chans = dz->infile->channels, srate = dz->infile->srate, orig, done;
 	float *ibuf = dz->sampbuf[0], *obuf = dz->sampbuf[dz->infilecnt], *ovflwbuf = dz->sampbuf[dz->infilecnt + 1];
@@ -1603,7 +1553,7 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 		Nmaxd = dz->param[XSPK_N];
 	if(dz->vflag[XSPK_KEEP])								// One inserted item for every N origs
 		max_inserts_per_orig = 1;							//	Max possible 1 for every 1
-	else 
+	else
 		max_inserts_per_orig = (int)ceil(Nmaxd);			//	Max possible = max_inserts_per_orig
 	patternsize = (dz->trofcnt+1) * max_inserts_per_orig;	//	Max possible pattern size
 
@@ -1628,9 +1578,9 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 		thistrofat = trof[m];
 		peaklen = thistrofat;			//	We must be at start of file : therefore no obufpos baktrak & no upsplice
 		for(k = 0, j = peaklen - 1; k < thistrofat; k++,j--) {
-			if (j < splicelen) 
+			if (j < splicelen)
 				obuf[obufpos] = (float)(ibuf[k] * splicebuf[splicend--] * normaliser);	//	do downslice
-			else																	
+			else
 				obuf[obufpos] = (float)(ibuf[k] * normaliser);							//  else copy input
 			if(++obufpos >= dz->buflen * 2) {
 				if((exit_status = write_samps(obuf,dz->buflen,dz))<0)
@@ -1653,7 +1603,7 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 		if((exit_status = read_values_from_all_existing_brktables(time,dz))<0)
 			return exit_status;
 		gain = dz->param[XSPK_GAIN];
-		if(lasttrofat > 0) {			//	If we're NOT at file start	
+		if(lasttrofat > 0) {			//	If we're NOT at file start
 			obufpos -= splicelen;		//	baktrak to splice to end of last segment written
 			peaklen += splicelen;		//	and length of peak is therefore one splicelen longer
 			upsplice = splicelen;
@@ -1668,9 +1618,9 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 			for(k = 0, j = peaklen - 1, m = thistrofat - peaklen; k < peaklen; k++,m++,j--) {
 				if(k < upsplice)
 					val = ibuf[m] * splicebuf[k];							//	do upslice
-				else if (j < splicelen) 
+				else if (j < splicelen)
 					val = ibuf[m] * splicebuf[splicend--];					//	do downslice
-				else																	
+				else
 					val = ibuf[m];											//  else as is
 				obuf[obufpos] = (float)(obuf[obufpos] + (val * normaliser));//	then normalise and add to buffer
 				if(++obufpos >= dz->buflen * 2) {
@@ -1682,7 +1632,7 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 				}
 			}
 
-			for(z = 0; z < dz->iparam[XSPK_N]; z++) {	//	Then Add N NEW syllables		
+			for(z = 0; z < dz->iparam[XSPK_N]; z++) {	//	Then Add N NEW syllables
 				if((dz->mode >= 3 && dz->mode < 6) || dz->mode >= 9 || !dz->vflag[XSPK_INJECT]) {
 					if(++n > dz->trofcnt) {				//	Advance count of original syllables
 						done = 1;						//	and If out of original syllables, quit
@@ -1698,7 +1648,7 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 				patno = pattern[patterncnt++];
 				if((dz->mode < 3 || (dz->mode >= 6 && dz->mode < 9)) && dz->vflag[XSPK_ORISZ])	//	IF not Resizing : write-in ALL of new syllable
 					peaklen = dz->insams[patno];			//	ELSE it's truncated/extended to size of original syllable
-				splicend = peaklen - 1; 
+				splicend = peaklen - 1;
 				if((exit_status = insert_new_syllable(peaklen,patno,splicelen,gain,origlevel,normaliser,&obufpos,obuf,ovflwbuf,dz))<0)
 					return exit_status;
 			}
@@ -1708,9 +1658,9 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 				for(k = 0, j = peaklen - 1, m = thistrofat - peaklen; k < peaklen; k++,m++,j--) {
 					if(k < upsplice)
 						val = ibuf[m] * splicebuf[k];							//	do upslice
-					else if (j < splicelen) 
+					else if (j < splicelen)
 						val = ibuf[m] * splicebuf[splicend--];					//	do downslice
-					else																	
+					else
 						val = ibuf[m];											//  else as is
 					obuf[obufpos] = (float)(obuf[obufpos] + (val * normaliser));//	then normalise and add to buffer
 					if(++obufpos >= dz->buflen * 2) {
@@ -1732,7 +1682,7 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 				orig = 0;							//	Reset orig-syllabs counter
 			}
 			break;
-		}				
+		}
 		if(done)
 			break;
 	}
@@ -1745,7 +1695,7 @@ int extspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 				
 /****************************** EXTTARGETSPEAK *********************************/
 
-int exttargetspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz) 
+int exttargetspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 {
 	int exit_status, chans = dz->infile->channels, srate = dz->infile->srate;
 	float *ibuf = dz->sampbuf[0], *obuf = dz->sampbuf[dz->infilecnt], *ovflwbuf = dz->sampbuf[dz->infilecnt + 1];
@@ -1810,7 +1760,7 @@ int exttargetspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 				return exit_status;
 		}
 		gain = dz->param[XSPK_GAIN];
-		if(lasttrofat > 0) {			//	If we're NOT at file start	
+		if(lasttrofat > 0) {			//	If we're NOT at file start
 			obufpos -= splicelen;		//	baktrak to splice to end of last segment written
 			peaklen += splicelen;		//	and length of peak is therefore one splicelen longer
 			upsplice = splicelen;
@@ -1819,11 +1769,11 @@ int exttargetspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 		splicend = splicelen - 1;
 		if(dz->vflag[XSPK_ENV])
 			origlevel = origmax[n];
-		if(target_cnt < dz->targetcnt && n == target[target_cnt]) {	
+		if(target_cnt < dz->targetcnt && n == target[target_cnt]) {
 			patno = pattern[patterncnt++];
 			if((dz->mode < 15) && dz->vflag[XSPK_ORISZ])	//	IF not Resizing : write-in ALL of new syllable
 				peaklen = dz->insams[patno];			//	ELSE it's truncated/extended to size of original syllable
-			splicend = peaklen - 1; 
+			splicend = peaklen - 1;
 			if((exit_status = insert_new_syllable(peaklen,patno,splicelen,gain,origlevel,normaliser,&obufpos,obuf,ovflwbuf,dz))<0)
 				return exit_status;
 			target_cnt++;
@@ -1831,9 +1781,9 @@ int exttargetspeak(int XSPK_RRND,int XSPK_ORISZ,dataptr dz)
 			for(k = 0, j = peaklen - 1, m = thistrofat - peaklen; k < peaklen; k++,m++,j--) {
 				if(k < upsplice)
 					val = ibuf[m] * splicebuf[k];							//	do upslice
-				else if (j < splicelen) 
+				else if (j < splicelen)
 					val = ibuf[m] * splicebuf[splicend--];					//	do downslice
-				else																	
+				else
 					val = ibuf[m];											//  else as is
 				obuf[obufpos] = (float)(obuf[obufpos] + (val * normaliser));//	then normalise and add to buffer
 				if(++obufpos >= dz->buflen * 2) {
@@ -1872,7 +1822,7 @@ int extract_env_from_sndfile(dataptr dz)
 			return(SYSTEM_ERROR);
 		}
 		if(sloom)
-			display_virtual_time(dz->total_samps_read,dz);		
+			display_virtual_time(dz->total_samps_read,dz);
 		if((exit_status = getenv_of_buffer(dz->ssampsread,&envptr,dz))<0)
 			return exit_status;
 	}
@@ -1922,7 +1872,7 @@ double getmaxsamp(int startsamp, int sampcnt,float *buffer)
 	int  i, endsamp = startsamp + sampcnt;
 	double thisval, thismaxsamp = 0.0;
 	for(i = startsamp; i<endsamp; i++) {
-		if((thisval =  fabs(buffer[i]))>thismaxsamp)		   
+		if((thisval =  fabs(buffer[i]))>thismaxsamp)
 			thismaxsamp = thisval;
 	}
 	return thismaxsamp;
@@ -1944,7 +1894,7 @@ int exttrofsget(dataptr dz)
 	envend = dz->fptr[1];
 					//	 2 gpsplices     * chans;
 	p = env+1;
- 	q = env;    
+ 	q = env;
 	if (*p > *q)
  		upwards = TRUE;
  	else
@@ -1987,7 +1937,7 @@ int exttrofsget(dataptr dz)
 	trof = dz->lparray[0];
 	dz->trofcnt = troffcnt;
  	p = env+1;
- 	q = env;    
+ 	q = env;
 	env_cnt = 0;
 	if (*p > *q)
  		upwards = TRUE;
@@ -2061,7 +2011,7 @@ int create_sndbufs_for_extspeak(dataptr dz)
 	}
 	/* minobufsize = 2 * sizeof splice */
 	minobufsize = ((int)ceil((dz->param[XSPK_SPLEN] * MS_TO_SECS) * 2.0 * srate) + safety) * chans;
-	minobufsize = max(minobufsize,512 * chans); 
+	minobufsize = max(minobufsize,512 * chans);
 	bigbufsize  = 0;
 	for(n = 0; n < dz->infilecnt; n++)
 		bigbufsize += dz->insams[n];
@@ -2075,7 +2025,7 @@ int create_sndbufs_for_extspeak(dataptr dz)
 	for(n=0,k=1;n<dz->infilecnt;n++,k++)								//	Inbufs = size of infles
 		dz->sbufptr[k] = dz->sampbuf[k] = dz->sampbuf[n] + dz->insams[n];
 	dz->sbufptr[k] = dz->sampbuf[k] = dz->sampbuf[n] + minobufsize;		// outbuf and ovflwbuf are minobufsize length
-	k++;											
+	k++;
 	n++;
 	dz->sbufptr[k] = dz->sampbuf[k] = dz->sampbuf[n] + minobufsize;
 	dz->buflen = minobufsize;
@@ -2099,7 +2049,7 @@ int istrof(float *env,float *envend,float *q,int width)
  	downq = max(env,downq);
  	for(r = downq; r<=upq; r++) {
  		if(*q > *r)
- 			return(FALSE);		
+ 			return(FALSE);
  	}
  	return(TRUE);			/* if r is minimum of all in peak, return 1 */
  }
@@ -2199,7 +2149,7 @@ void randperm(int z,int setlen,dataptr dz)
  */
 
 void hinsert(int z,int m,int t,int setlen,dataptr dz)
-{   
+{
 	hshuflup(z,t+1,setlen,dz);
 	dz->iparray[z][t+1] = m;
 }
@@ -2259,7 +2209,7 @@ int generate_xspk_pattern(int XSPK_RRND,int patternsize,dataptr dz)
 		} else {					//	No flags set : seq of infiles, (repeated) e.g. for 3 files 1 2 3 1 2 3 ....
 			while(patterncnt < patternsize) {
 				for(n = 0; n < syllabcnt; n++) {
-					pattern[patterncnt] = n + 1; 
+					pattern[patterncnt] = n + 1;
 					if(++patterncnt >= patternsize) {
 							done = 1;
 							break;
@@ -2394,7 +2344,7 @@ int store_patterndatafile_name(int *cmdlinecnt,char ***cmdline,dataptr dz)
 	dz->all_words = 0;
 	if((exit_status = store_filename(filename,dz))<0)
 		return(exit_status);
-	(*cmdline)++;		
+	(*cmdline)++;
 	(*cmdlinecnt)--;
 	return(FINISHED);
 }
@@ -2437,18 +2387,18 @@ int insert_new_syllable(int peaklen,int patno,int splicelen,double gain,double o
 					memcpy((char *)obuf,(char *)ovflwbuf,dz->buflen * sizeof(float));
 					memset((char *)ovflwbuf,0,dz->buflen * sizeof(float));
 					*obufpos -= dz->buflen;
-				}				
+				}
 			}
 			break;
 		case(1):						//	TRANSPOSE
-			flpos = 0.0;															//	Flincr increments as GPsampcnt		
+			flpos = 0.0;															//	Flincr increments as GPsampcnt
 			flincr = (double)(dz->insams[patno])/(double)peaklen;
-			flpos = 0.0;															//	Flincr increments as GPsampcnt		
-			for(k = 0,gpsmpcnt = 0,j = peaklen - chans;k < peaklen;gpsmpcnt++,k+=chans,j-=chans) { 
+			flpos = 0.0;															//	Flincr increments as GPsampcnt
+			for(k = 0,gpsmpcnt = 0,j = peaklen - chans;k < peaklen;gpsmpcnt++,k+=chans,j-=chans) {
 				flpos = ((double)k/(double)peaklen) * (double)(dz->insams[patno]/chans);
 				m = (int)floor(flpos);											//	Find the fractional part of the GPchans-xnt
 				frac = flpos - (double)m;										//	Convert to the (channel-base) in the true sampcnt;
-				m *= chans;														
+				m *= chans;
 				for(c = 0; c < chans; c++) {									//	Do interp between ALL channels
 					z = m + chans;
 					val = ibuf[m];
@@ -2461,7 +2411,7 @@ int insert_new_syllable(int peaklen,int patno,int splicelen,double gain,double o
 					else														//	just add, and normalise
 						val = origibuf[ibufpos++] + (gain * val);
 					obuf[*obufpos] = (float)(obuf[*obufpos] + (val * normaliser));
-					m++;														
+					m++;
 					(*obufpos)++;
 				}
 				if(*obufpos >= dz->buflen * 2) {
@@ -2480,12 +2430,12 @@ int insert_new_syllable(int peaklen,int patno,int splicelen,double gain,double o
 	case(0):						//	CUT OR PAD WITH ZEROS
 		for(k = 0, j = peaklen - 1; k < peaklen; k++,j--) {
 			if(k >= dz->insams[patno])												// add nothing into existing buffer
-				;															
+				;
 			else if(k < splicelen)													//	do upslice
 				obuf[*obufpos] = (float)(obuf[*obufpos] + (gain * (ibuf[k] * splicebuf[k])));
 			else if (j < splicelen)													//	do downslice
 				obuf[*obufpos] = (float)(obuf[*obufpos] + (gain * (ibuf[k] * splicebuf[splicend--])));
-			else																
+			else
 				obuf[*obufpos] = (float)(obuf[*obufpos] + (gain * ibuf[k]));		//	just copy
 			if(++(*obufpos) >= dz->buflen * 2) {
 				if((exit_status = write_samps(obuf,dz->buflen,dz))<0)
@@ -2493,21 +2443,21 @@ int insert_new_syllable(int peaklen,int patno,int splicelen,double gain,double o
 				memcpy((char *)obuf,(char *)ovflwbuf,dz->buflen * sizeof(float));
 				memset((char *)ovflwbuf,0,dz->buflen * sizeof(float));
 				*obufpos -= dz->buflen;
-			}				
+			}
 		}
 		break;
 	case(1):						//	TRANSPOSE
-		for(k = 0,gpsmpcnt = 0,j = peaklen - chans;k < peaklen;gpsmpcnt++,k+=chans,j-=chans) { 
+		for(k = 0,gpsmpcnt = 0,j = peaklen - chans;k < peaklen;gpsmpcnt++,k+=chans,j-=chans) {
 			flpos = ((double)k/(double)peaklen) * (double)(dz->insams[patno]/chans);
 			m = (int)floor(flpos);											//	Find the fractional part of the GPchans-xnt
 			frac = flpos - (double)m;										//	Convert to the (channel-base) in the true sampcnt;
-			m *= chans;														
+			m *= chans;
 			for(c = 0; c < chans; c++) {									//	Do interp between ALL channels
 				z = m + chans;
 				val = ibuf[m];
 				diff = ibuf[z] - ibuf[m];
 				val  += (diff * frac);
-				if(k < splicelen) 
+				if(k < splicelen)
 					obuf[*obufpos] = (float)(obuf[*obufpos] + (gain * val * splicebuf[k]));
 				else if (j < splicelen)										//	do upslice
 					obuf[*obufpos] = (float)(obuf[*obufpos] + (gain * val * splicebuf[splicend--]));
@@ -2549,7 +2499,7 @@ int handle_the_extra_infiles(int *cmdlinecnt,char ***cmdline,dataptr dz)
 }
 
 /************************** GET_INT_FROM_WITHIN_STRING **************************
- * takes a pointer TO A POINTER to a string. If it succeeds in finding 
+ * takes a pointer TO A POINTER to a string. If it succeeds in finding
  * aN INT it returns the int value (*val), and it's new position in the
  * string (*str).
  */
@@ -2572,7 +2522,7 @@ int get_int_from_within_string(char **str,int *val,int minus_one_ok)
 	if(!isdigit(*p))
 		return(FALSE);
 	has_digits = TRUE;
-	p++;	
+	p++;
 	while(!isspace(*p) && *p!=NEWLINE && *p!=ENDOFSTR) {
 		if(isdigit(*p))
 			has_digits = TRUE;
@@ -2593,7 +2543,7 @@ int open_checktype_getsize_and_compare_header(char *filename,int fileno,fileptr 
 	double maxamp, maxloc;
 	int maxrep;
 	int getmax = 0, getmaxinfo = 0;
-	fileptr fp1 = dz->infile; 
+	fileptr fp1 = dz->infile;
 
 	if((dz->ifd[fileno] = sndopenEx(filename,0,CDP_OPEN_RDONLY)) < 0) {
 		sprintf(errstr,"cannot open input file %s to read data.\n",filename);
@@ -2699,7 +2649,7 @@ int find_normaliser(double *normaliser,int samps_per_sec,int splicelen,dataptr d
 						return exit_status;
 				}
 				patno = pattern[patterncnt++];
-				if(dz->vflag[XSPK_ENV]) 
+				if(dz->vflag[XSPK_ENV])
 					thislevel = origlevel[n] + (origlevel[n] * dz->param[XSPK_GAIN]);					//	File0-level + (scaled fileN-level X gain)
 				else
 					thislevel = origlevel[n] + (syllmax[patno] * dz->param[XSPK_GAIN]);					//	File0-level + (fileN-level X gain)
@@ -2723,7 +2673,7 @@ int find_normaliser(double *normaliser,int samps_per_sec,int splicelen,dataptr d
 						return exit_status;
 				}
 				patno = pattern[patterncnt++];		//	Add JUST 1 NEW syllable
-				if(dz->vflag[XSPK_ENV]) 
+				if(dz->vflag[XSPK_ENV])
 					thislevel = origlevel[n] + (origlevel[n] * dz->param[XSPK_GAIN]);				//	File0-level + (scaled fileN-level X gain)
 				else
 					thislevel = origlevel[n] + (syllmax[patno] * dz->param[XSPK_GAIN]);				//	File0-level + (fileN-level X gain)
@@ -2731,7 +2681,7 @@ int find_normaliser(double *normaliser,int samps_per_sec,int splicelen,dataptr d
 				orig = 0;							//	Reset orig-syllabs counter
 			}
 			break;
-		}				
+		}
 		if(done)
 			break;
 	}
@@ -2767,7 +2717,7 @@ int find_normaliser_target(double *normaliser,int samps_per_sec,int splicelen,da
 					return exit_status;
 			}
 			patno = pattern[patterncnt++];
-			if(dz->vflag[XSPK_ENV]) 
+			if(dz->vflag[XSPK_ENV])
 				thislevel = origlevel[n] + (origlevel[n] * dz->param[XSPK_GAIN]);					//	File0-level + (scaled fileN-level X gain)
 			else
 				thislevel = origlevel[n] + (syllmax[patno] * dz->param[XSPK_GAIN]);					//	File0-level + (fileN-level X gain)
@@ -2811,7 +2761,7 @@ double dbtolevel(double val)
 	if(isneg)
 		val = 1.0/val;
 	return(val);
-}	
+}
 
 /******************************** GETCUTDATA ***********************/
 
@@ -2894,7 +2844,7 @@ int getcutdata(int *cmdlinecnt,char ***cmdline,dataptr dz)
 	else
 		trof[troffcnt] = dz->insams[0];
 	dz->trofcnt = troffcnt;
-	(*cmdline)++;		
+	(*cmdline)++;
 	(*cmdlinecnt)--;
 	return FINISHED;
 }
@@ -3054,7 +3004,7 @@ int get_cutpat_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
 		trof[troffcnt] = dz->insams[0];
 	dz->trofcnt = troffcnt;
 	dz->itemcnt = patterncnt;
-	(*cmdline)++;		
+	(*cmdline)++;
 	(*cmdlinecnt)--;
 	return(FINISHED);
 }
@@ -3249,7 +3199,7 @@ int get_cuttarg_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
 	for(n = 0; n < target_cnt;n++)					//	Make targets count from zero
 		target[n]--;
 	dz->targetcnt = target_cnt;
-	(*cmdline)++;		
+	(*cmdline)++;
 	(*cmdlinecnt)--;
 	return(FINISHED);
 }
@@ -3295,7 +3245,7 @@ int get_cuttapa_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
 					if(!isspace(*q)) {
 						if(gothash)
 							sprintf(errstr,"Spurious characters found on second \"#\" line in file %s\n",filename);
-						else 
+						else
 							sprintf(errstr,"Spurious characters found on first \"#\" line in file %s\n",filename);
 						if(fclose(dz->fp)<0) {
 							fprintf(stdout,"WARNING: Failed to close input textfile %s.\n",filename);
@@ -3457,7 +3407,7 @@ int get_cuttapa_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
 		for(n = 0, k = patterncnt; k < dz->trofcnt+1;n++,k++)
 			pattern[k] = pattern[n % patterncnt];
 	}
-	(*cmdline)++;		
+	(*cmdline)++;
 	(*cmdlinecnt)--;
 	return(FINISHED);
 }
