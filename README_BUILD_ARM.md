@@ -5,15 +5,20 @@ Requisitos
 •	Xcode Command Line Tools
 •	PortAudio (solo requerido si usas los módulos paprogs)
 	
-```brew install cmake portaudio```
+```
+brew install cmake portaudio
+```
 
 ## Instrucciones de compilación
 
 ````
 git clone https://github.com/cjitter/CDP8-arm.git
+````
 cd CDP8-arm
+````
 cmake -B build -DCMAKE_BUILD_TYPE=Release
-cmake --build build
+````
+make --build build
 ````
 
 Opcional: puedes añadir -jN para compilar en paralelo (N = núcleos, e.g. -j4).
@@ -22,9 +27,17 @@ Opcional: puedes añadir -jN para compilar en paralelo (N = núcleos, e.g. -j4).
 
 PortAudio solo es necesario si deseas compilar y usar los programas paplay, pvplay, recsf, etc., que requieren captura/reproducción de audio en tiempo real. Si no planeas usar estos módulos, puedes ignorar su instalación.
 
+Algunos módulos (como paplay, paudition, paview, etc.) requieren PortAudio.
+
+Para compilar estos módulos, edita el CMakeLists.txt y cambia esta línea (aprox. línea 210):
+
+option(USE_LOCAL_PORTAUDIO "Build and use PA programs" OFF)
+option(USE_LOCAL_PORTAUDIO "Build and use PA programs" ON)
+
 #### Estructura destacada
 
 •	dev/ — código fuente principal
 •	libaaio/ — biblioteca auxiliar descomprimida automáticamente
 •	build/ — carpeta de salida de compilación
+•	externals/portaudio — cabeceras necesarios para compilar paprogs
 •	Release/ — binarios generados

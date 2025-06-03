@@ -136,6 +136,7 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR})
 include_directories(./dev/include)
 include_directories(./dev/newinclude)
 
+include_directories(${CMAKE_SOURCE_DIR}/externals/portaudio)
 
 # -----------------------------
 # PORTAUDIO (usando Brew)
@@ -202,7 +203,6 @@ message(STATUS "BUILD_LIB_DIR set to ${BUILD_LIB_DIR}")
 TEST_BIG_ENDIAN(BIG_ENDIAN)
 SET(BUILD_SHARED_LIBS OFF)
 
-
 # -----------------------------
 # PAPROGS (PortAudio programs)
 # -----------------------------
@@ -211,31 +211,55 @@ option(USE_LOCAL_PORTAUDIO "Build and use PA programs" OFF)
 
 if(USE_LOCAL_PORTAUDIO)
   message(STATUS "paprogs to be built")
+
+  # Cabeceras internas de PortAudio para RingBuffer
+  include_directories(${CMAKE_SOURCE_DIR}/externals/portaudio)
+
+  # Busca PortAudio instalado en el sistema
+  find_path(PORTAUDIO_INCLUDE_DIR portaudio.h
+    PATHS /opt/homebrew/include /usr/local/include /usr/include
+  )
+
+  find_library(PORTAUDIO_LIBRARY
+    NAMES portaudio
+    PATHS /opt/homebrew/lib /usr/local/lib /usr/lib
+  )
+
+  if(PORTAUDIO_INCLUDE_DIR AND PORTAUDIO_LIBRARY)
+    message(STATUS "PortAudio encontrado en: ${PORTAUDIO_INCLUDE_DIR}")
+    include_directories(${PORTAUDIO_INCLUDE_DIR})
+    list(APPEND LIBCDP_LIBS ${PORTAUDIO_LIBRARY})
+
+    # Añadir biblioteca interna para RingBuffer
+    add_library(portaudio_ringbuffer STATIC
+      ${CMAKE_SOURCE_DIR}/externals/portaudio/pa_ringbuffer.c
+    )
+    target_include_directories(portaudio_ringbuffer PUBLIC
+      ${CMAKE_SOURCE_DIR}/externals/portaudio
+    )
+
+    # Añadir esta lib al resto
+    list(APPEND LIBCDP_LIBS portaudio_ringbuffer)
+  else()
+    message(FATAL_ERROR "No se encontró PortAudio. Instálalo con: brew install portaudio")
+  endif()
 else()
   message(STATUS "paprogs not built")
 endif()
-
-set(HEADERS_TO_CHECK
-  unistd.h io.h fcntl.h stdint.h
-  sys/time.h sys/types.h termios.h
-  values.h winsock.h sys/socket.h
-  dirent.h)
-
-foreach(header ${HEADERS_TO_CHECK})
-  string(TOUPPER ${header} tmp)
-  string(REGEX REPLACE [./] "_" upper_header ${tmp})
-  check_include_file(${header} HAVE_${upper_header})
-endforeach()
-
 
 # -----------------------------
 # LIBRERÍAS CDP
 # -----------------------------
 
-set(LIBCDP_LIBS ${PORTAUDIO_LIBRARY})
+set(LIBCDP_LIBS)
 
 if(AAIOLIB)
   list(APPEND LIBCDP_LIBS ${AAIOLIB})
+endif()
+
+if(USE_LOCAL_PORTAUDIO)
+  list(APPEND LIBCDP_LIBS ${PORTAUDIO_LIBRARY})
+  list(APPEND LIBCDP_LIBS portaudio_ringbuffer)
 endif()
 
 if(WIN32)
