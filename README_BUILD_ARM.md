@@ -1,43 +1,70 @@
-# Construcción de CDP8 en macOS ARM (Apple Silicon)
+Guía Simplificada para la Construción de CDP8 en macOS arm64
+Este documento proporciona una guía concisa para compilar el proyecto CDP8 en un Mac con Apple Silicon (arm64).
 
-Requisitos
-•	CMake ≥ 3.16
-•	Xcode Command Line Tools
-•	PortAudio (solo requerido si usas los módulos paprogs)
-	
-```
+1. Requisitos Previos
+Asegúrate de tener lo siguiente instalado:
+
+CMake: Versión 3.16 o superior.
+
+Xcode Command Line Tools: Se pueden instalar ejecutando xcode-select --install en la terminal.
+
+PortAudio (Opcional): Solo si necesitas compilar y usar los módulos paprogs que manejan audio en tiempo real (ej. paplay, pvplay).
+
+Puedes instalar CMake y PortAudio usando Homebrew:
+
 brew install cmake portaudio
-```
 
-## Instrucciones de compilación
+2. Pasos de Compilación
+Abre tu terminal y sigue estos pasos:
 
-````
-git clone https://github.com/cjitter/CDP8-arm.git
-````
+Clonar el repositorio:
+
+git clone [https://github.com/cjitter/CDP8-arm.git](https://github.com/cjitter/CDP8-arm.git)
+
+Navegar al directorio del proyecto:
+
 cd CDP8-arm
-````
+
+Configurar el proyecto con CMake:
+
 cmake -B build -DCMAKE_BUILD_TYPE=Release
-````
+
+Compilar el código:
+
 make --build build
-````
 
-Opcional: puedes añadir -jN para compilar en paralelo (N = núcleos, e.g. -j4).
+Opcional (compilación más rápida): Puedes usar múltiples núcleos de tu procesador añadiendo la opción -jN al comando make (donde N es el número de núcleos, por ejemplo, -j8):
 
-### Soporte para PortAudio
+make --build build -j8
 
-PortAudio solo es necesario si deseas compilar y usar los programas paplay, pvplay, recsf, etc., que requieren captura/reproducción de audio en tiempo real. Si no planeas usar estos módulos, puedes ignorar su instalación.
+3. Soporte Opcional para PortAudio
+Si necesitas los programas que utilizan PortAudio (como paplay, paudition, paview, etc.):
 
-Algunos módulos (como paplay, paudition, paview, etc.) requieren PortAudio.
+Edita el archivo CMakeLists.txt que se encuentra en la raíz del proyecto.
 
-Para compilar estos módulos, edita el CMakeLists.txt y cambia esta línea (aprox. línea 210):
+Busca la línea (aproximadamente la línea 210) que dice:
 
 option(USE_LOCAL_PORTAUDIO "Build and use PA programs" OFF)
+
+Cámbiala a:
+
 option(USE_LOCAL_PORTAUDIO "Build and use PA programs" ON)
 
-#### Estructura destacada
+Guarda el archivo CMakeLists.txt.
 
-•	dev/ — código fuente principal
-•	libaaio/ — biblioteca auxiliar descomprimida automáticamente
-•	build/ — carpeta de salida de compilación
-•	externals/portaudio — cabeceras necesarios para compilar paprogs
-•	Release/ — binarios generados
+Vuelve a ejecutar los pasos de configuración y compilación (pasos 3 y 4 de la sección anterior).
+
+Si no necesitas estos módulos de audio en tiempo real, puedes omitir esta sección.
+
+4. Estructura del Proyecto (Destacada)
+Una vez compilado, encontrarás la siguiente estructura de directorios relevante:
+
+dev/ — Contiene el código fuente principal del proyecto.
+
+libaaio/ — Es una biblioteca auxiliar que se descomprime automáticamente durante el proceso.
+
+build/ — Es la carpeta donde se guardan los archivos generados durante la compilación.
+
+externals/portaudio/ — Contiene las cabeceras necesarias si compilas con soporte para PortAudio.
+
+Release/ — Aquí se encuentran los binarios (ejecutables) finales generados.
