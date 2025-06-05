@@ -235,9 +235,11 @@ int filter_process(dataptr dz)
                 dz->parray[FLT_LASTFVAL][n] = dz->parray[FLT_FRQ][n];
                 dz->parray[FLT_LASTAVAL][n] = dz->parray[FLT_AMP][n];
             }
+            dz->iparam[FLT_FRQ_INDEX] = dz->iparam[FLT_CNT];
+            dz->iparam[FLT_TIMES_CNT] = 1;
         }
-        dz->iparam[FLT_FRQ_INDEX] = dz->iparam[FLT_CNT];
-        dz->iparam[FLT_TIMES_CNT] = 1;
+//        dz->iparam[FLT_FRQ_INDEX] = dz->iparam[FLT_CNT]; // RWD June 2025 moved up; only for varybanks.
+//        dz->iparam[FLT_TIMES_CNT] = 1;
         filter_tail = 0;
         tail_extend = 0;
         sndendset   = 0;
