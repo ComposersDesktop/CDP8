@@ -23,8 +23,6 @@ Release
 cmake_install.cmake
 CMakeFiles/
 CMakeCache.txt
-Makefile
-Makefile.*
 cmake_install.cmake
 /cmake_uninstall.cmake
 CTestTestfile.cmake
