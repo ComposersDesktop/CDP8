@@ -274,7 +274,7 @@ extern int sampsize[];
 #define sizeof_WFMTEX (40)
 
 
-#ifdef linux
+#ifdef __GLIBC__
 #define POS64(x) (x.__pos)
 #else
 #define POS64(x) (x)

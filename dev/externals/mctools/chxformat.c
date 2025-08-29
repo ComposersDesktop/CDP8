@@ -41,7 +41,7 @@ char* guidnames[] = {"PCM","PCM FLOAT","AMB PCM","AMB FLOAT"};
 #define REVWBYTES(t)    ( (((t)&0xff) << 8) | (((t)>>8) &0xff) )
 #define TAG(a,b,c,d)    ( ((a)<<24) | ((b)<<16) | ((c)<<8) | (d) )
 
-#ifdef linux
+#ifdef __GLIBC__
 #define POS64(x) (x.__pos)
 #else
 #define POS64(x) (x)
