@@ -41,8 +41,8 @@
 #ifdef unix
 #include <unistd.h>
 #define O_BINARY (0)
-#define _S_IWRITE S_IWRITE
-#define _S_IREAD  S_IREAD
+#define _S_IWRITE S_IWUSR
+#define _S_IREAD  S_IRUSR
 #endif
 
 #ifdef _DEBUG

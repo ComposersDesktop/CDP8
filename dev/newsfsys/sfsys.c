@@ -188,8 +188,8 @@ int CDP_COM_READY = 0;   /*global flag, ah well...(define in alias.h will access
 #define _O_CREAT        O_CREAT
 #define _O_TRUNC        O_TRUNC
 #define _O_EXCL         O_EXCL
-#define _S_IWRITE       S_IWRITE
-#define _S_IREAD        S_IREAD
+#define _S_IWRITE       S_IWUSR
+#define _S_IREAD        S_IRUSR
 
 #define chsize  ftruncate
 #endif
