@@ -41,7 +41,6 @@ extern "C"
 #include <string.h>
 #include <time.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
 
 
 #ifdef _DEBUG
@@ -108,14 +107,17 @@ void usage(const char *progname)
 
 
 double
-timer()
+timer() //TODO: Refactor duplicated code
 {
-	struct timeb now;
+	struct timespec   ts;
 	double secs, ticks;	
-	ftime(&now);
-	ticks = (double)now.millitm/(1000.0);
-	secs = (double) now.time;
-
+	clock_gettime(CLOCK_REALTIME, &ts); //TODO: Handle this erroring
+	ticks = (double) ts.tv_nsec*1e-9; /* I hope the
+  added resolution won't break anything in the rest of the
+  program... Please don't break anything in the rest of the
+  program. pls? :> */
+	secs  = (double) ts.tv_sec;
+  
 	return secs + ticks;
 }
 
