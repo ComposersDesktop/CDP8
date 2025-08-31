@@ -41,7 +41,6 @@ extern "C"
 #include <string.h>
 #include <time.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
 
 
 #ifdef _DEBUG
