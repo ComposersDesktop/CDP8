@@ -36,7 +36,6 @@
 #include <math.h>
 #include <time.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
 #include <portsf.h>
 
 #define VERSION "Revision: 2.1.1 2020 "

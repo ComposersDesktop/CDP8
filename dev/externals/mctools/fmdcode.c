@@ -25,7 +25,6 @@
 #include <math.h>
 #include <memory.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
 #include <portsf.h>
 #include "fmdcode.h"
 

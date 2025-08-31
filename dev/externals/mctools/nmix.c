@@ -25,7 +25,6 @@
 #include <string.h>
 #include <math.h>
 #include <memory.h>
-#include <sys/timeb.h>
 #include "portsf.h"
 
 #ifdef unix
