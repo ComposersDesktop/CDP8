@@ -31,6 +31,7 @@
 #include <ctype.h>
 #ifdef _WIN32
 #include <malloc.h>			//RWD.6.5.99
+#include <sys/timeb.h>
 #endif
 #include <string.h>
 #include <math.h>

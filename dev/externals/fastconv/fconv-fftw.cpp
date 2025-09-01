@@ -43,6 +43,10 @@ extern "C"
 #include <sys/types.h>
 
 
+#ifdef _WIN32
+#define <sys/timeb.h>
+#endif
+
 #ifdef _DEBUG
 #include <assert.h>
 #endif
@@ -115,17 +119,23 @@ void usage(const char *progname)
 double
 timer() //TODO: Refactor duplicated code
 {
-	struct timespec   ts;
 	double secs, ticks;	
+
+#ifdef _WIN32
+  struct timeb     now;
+  ftime(&now);
+  ticks = (double) now.millitm*1e-4;
+  secs  = (double) now.time;
+#else
+  struct timespec  ts;
 	clock_gettime(CLOCK_REALTIME, &ts); //TODO: Handle this erroring
-	ticks = (double) ts.tv_nsec*1e-9; /* I hope the
-  added resolution won't break anything in the rest of the
-  program... Please don't break anything in the rest of the
-  program. pls? :> */
+	ticks = (double) ts.tv_nsec*1e-9; 
 	secs  = (double) ts.tv_sec;
-  
+#endif
+
 	return secs + ticks;
 }
+
 
 void			
 stopwatch(int flag) 

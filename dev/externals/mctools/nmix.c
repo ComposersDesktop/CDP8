@@ -27,6 +27,10 @@
 #include <memory.h>
 #include "portsf.h"
 
+#ifdef _WIN32
+#include <sys/timeb.h>
+#endif
+
 #ifdef unix
 /* in portsf.lib */
 extern int stricmp(const char *a, const char *b);
