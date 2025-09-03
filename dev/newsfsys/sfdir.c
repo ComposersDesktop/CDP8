@@ -46,7 +46,7 @@
 #include "scandir.h"
 #endif
 
-#if defined WIN32 || defined linux
+#if defined WIN32 || defined linux || defined __APPLE__
 static int
 selfn(const struct dirent *d)
 #else
