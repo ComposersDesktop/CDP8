@@ -20,6 +20,9 @@ Windows:  install the Msys/MinGW linux-like environment.
    
  You will also need the Directx9 SDK dx9mgw.zip for MinGW, provided in the /externals directory.
  (from https://download.tuxfamily.org/allegro/)
+
+One installed, go to directory Msys/1.0/ and run the .bat file. This launches a version 
+of the Windows CMD terminal configured for Mingw, with access to many standard unix commands, etc.
  
  Currently we only build 32bit CDP binaries, under this older version of MinGW.
   
