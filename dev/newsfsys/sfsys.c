@@ -6795,7 +6795,7 @@ int cdp_round(double fval)
 {
 #if defined _WIN32  && defined _MSC_VER
     return asm_round(fval);
-#elseif defined unix
+#elif defined unix
     return (int) lround(fval);
 #else
     int k;
