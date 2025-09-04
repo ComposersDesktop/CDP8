@@ -1031,7 +1031,7 @@ int main(int argc,char **argv)
 
     /* memory playback mode? */
     if(playtype == PLAY_SFILE && nFramesToPlay <= ringframelen){
-        sfdata.membuf =  (float *) PaUtil_AllocateMemory(nFramesToPlay * sizeof(float) * /*inchans*/ outchans);
+        sfdata.membuf =  (float *) PaUtil_AllocateZeroInitializedMemory(nFramesToPlay * sizeof(float) * /*inchans*/ outchans);
         if( sfdata.membuf == NULL )   {
             puts("Could not allocate memory play buffer.\n");
             goto error;
@@ -1048,7 +1048,7 @@ int main(int argc,char **argv)
             ringframelen <<= 1;
         printf("File buffer size set to %ld sample frames\n",ringframelen);
         // NB ring buffer sized for decoded data, hence outchans here; otherwise inchans = outchans
-        sfdata.ringbufData = (float *) PaUtil_AllocateMemory( ringframelen * sizeof(float) * outchans); /* From now on, recordedSamples is initialised. */
+        sfdata.ringbufData = (float *) PaUtil_AllocateZeroInitializedMemory( ringframelen * sizeof(float) * outchans); /* From now on, recordedSamples is initialised. */
         if( sfdata.ringbufData == NULL )   {
             puts("Could not allocate play buffer.\n");
             goto error;
@@ -1062,7 +1062,7 @@ int main(int argc,char **argv)
     
     
     /* create input side workspace buffer, used for both soundfiles and analysis files! */
-    sfdata.inbuf = (float *) PaUtil_AllocateMemory(ringframelen * sizeof(float) * inchans);
+    sfdata.inbuf = (float *) PaUtil_AllocateZeroInitializedMemory(ringframelen * sizeof(float) * inchans);
     if(sfdata.inbuf==NULL){
         puts("No memory for read buffer\n");
         goto error;
@@ -1070,8 +1070,8 @@ int main(int argc,char **argv)
     sfdata.inbuflen = ringframelen;
     
     if(playtype == PLAY_PVXFILE && (inchans==2)){
-        sfdata.outbuf_l = (float *) PaUtil_AllocateMemory(ringframelen * sizeof(float) );
-        sfdata.outbuf_r = (float *) PaUtil_AllocateMemory(ringframelen * sizeof(float) );
+        sfdata.outbuf_l = (float *) PaUtil_AllocateZeroInitializedMemory(ringframelen * sizeof(float) );
+        sfdata.outbuf_r = (float *) PaUtil_AllocateZeroInitializedMemory(ringframelen * sizeof(float) );
         
     }
     
