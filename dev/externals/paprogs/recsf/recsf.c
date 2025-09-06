@@ -691,7 +691,7 @@ int main(int argc,char **argv)
         ringframelen <<= 1;
     printf("File buffer size = %ld\n",ringframelen);
     // NB ring buffer sized for decoded data, hence outchans here; otherwise inchans = outchans
-    sfdata.ringbufData = (float *) PaUtil_AllocateMemory( ringframelen * sizeof(float) * props.chans); /* From now on, recordedSamples is initialised. */
+    sfdata.ringbufData = (float *) PaUtil_AllocateZeroInitializedMemory( ringframelen * sizeof(float) * props.chans); /* From now on, recordedSamples is initialised. */
     if( sfdata.ringbufData == NULL )   {
         puts("Could not allocate play buffer.\n");
         goto error;
