@@ -10,7 +10,7 @@ if(APPLE)
   link_directories (/usr/local/lib)
   find_library(PA NAMES libportaudio.a)
   find_library(AAIOLIB NAMES libaaio.a)
-  set(EXTRA_LIBRARIES1 portsf pthread portaudio  ${AAIOLIB} ${PA}  ${COREAUDIOLIB} ${AUDIOTOOLBOX} ${AULIB} ${CARBONLIB} ${CORESERV} ${EXTRA_LIBRARIES})
+  set(EXTRA_LIBRARIES1 portsf pthread ${AAIOLIB} ${PA}  ${COREAUDIOLIB} ${AUDIOTOOLBOX} ${AULIB} ${CARBONLIB} ${CORESERV} ${EXTRA_LIBRARIES})
   
 else()
   if(MINGW)
