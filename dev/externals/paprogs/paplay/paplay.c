@@ -51,7 +51,6 @@
 #ifdef unix
 
 #include <sys/types.h>
-#include <sys/timeb.h>
 #endif
 
 #include <signal.h>
