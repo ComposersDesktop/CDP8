@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2020 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -144,7 +144,7 @@ int get_max_samp(int ifd,int force_read)
     int totalsamps = 0;
     int mins;
     double sec;
-    int total_got = 0;
+//    int total_got = 0;
     int j;
 
     switch(force_read) {
@@ -161,7 +161,7 @@ int get_max_samp(int ifd,int force_read)
     }
     /* read and find maximum */
     while( (got = fgetfbufEx(bigfbuf,(int) buflen,ifd,0)) > 0 ) {
-        total_got += got;
+//        total_got += got;
         find_fmax(bigfbuf,got,totalsamps);
         totalsamps += got;
     }
