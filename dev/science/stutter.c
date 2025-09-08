@@ -1171,13 +1171,13 @@ int stutter(dataptr dz)
     obuf = dz->sampbuf[n];
     memset((char *)obuf,0,dz->buflen * sizeof(float));
 
-    seg_groupings_cnt = dz->itemcnt + 1;
+//    seg_groupings_cnt = dz->itemcnt + 1;
 //    next_groupings_end = seg_groupings_cnt; // NOT USED
     for(n=0,m=0;n < dz->segcnt;n++,m+=2) {              //  Cut all segments, noting their (grouped) length
         start_read = (int)round(inseg[m] * srate) * chans;
         if(n == dz->segcnt - 1 || (int)round(inseg[m+2] * srate) * chans == 0) {
             samps_to_read = dz->insams[0] - start_read;
-            seg_groupings_cnt--;
+ //           seg_groupings_cnt--;
 //            next_groupings_end += seg_groupings_cnt;
         }
         else {
