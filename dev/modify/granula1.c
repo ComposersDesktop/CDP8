@@ -173,7 +173,7 @@ int granula_process(dataptr dz)
     } while(exit_status==CONTINUE);
 
     vals_to_write = maxwrite - dz->fptr[GRS_LBUF];
-    while(vals_to_write > dz->iparam[GRS_LONGS_BUFLEN]) {                      
+    while(vals_to_write > dz->iparam[GRS_LONGS_BUFLEN]) {
 // TW REVISED July 2004
 //      if((exit_status = write_samps_granula(dz->buflen,&nctr,dz))<0)
         if((exit_status = write_samps_granula(dz->iparam[GRS_LONGS_BUFLEN],&nctr,dz))<0)
@@ -267,7 +267,7 @@ int renormalise(int nctr,dataptr dz)
 {
     int exit_status;
     long n, m = 0;
-    long total_samps_read = 0;
+//    long total_samps_read = 0;
     long samp_total = dz->total_samps_written, samps_remaining/* , last_total_samps_read*/;
     double min_norm  = dz->parray[GRS_NORMFACT][0]; /* 1 */
     float  *s = NULL;
@@ -282,10 +282,10 @@ int renormalise(int nctr,dataptr dz)
     }
     else {
         sprintf(errstr, "WARNING: Can't read infile properties for normalization.\n");
-        return SYSTEM_ERROR;    
+        return SYSTEM_ERROR;
     }
     
-//TW NEW MECHANISM writes renormalised vals from original file created (tempfile) into true outfile     
+//TW NEW MECHANISM writes renormalised vals from original file created (tempfile) into true outfile
     if(sndcloseEx(dz->ifd[0]) < 0) {
         sprintf(errstr, "WARNING: Can't close input soundfile\n");
         return(SYSTEM_ERROR);
@@ -328,7 +328,7 @@ int renormalise(int nctr,dataptr dz)
     display_virtual_time(0L,dz);                    /* works on dz->total_samps_read here, so param irrelevant */
 /* RWD nov 2010 hack, part 2: do this multipLy only if infile is mono */
     if(inchans ==1)
-        dz->buflen *= dz->iparam[GRS_OUTCHANS];         /* 6 */                                             
+        dz->buflen *= dz->iparam[GRS_OUTCHANS];         /* 6 */
     m = 0;                                          /* 7 */
     cnt = dz->buflen;
     while(dz->total_samps_read + dz->buflen < samp_total) {
@@ -336,7 +336,7 @@ int renormalise(int nctr,dataptr dz)
             close_and_delete_tempfile(dz->outfilename,dz);
             return(exit_status);
         }                                           /* 8 */
-        total_samps_read += dz->ssampsread;
+ //       total_samps_read += dz->ssampsread;
         if(min_norm < 1.0) {
             nf  = (dz->parray[GRS_NORMFACT])[m];
             for(n=0;n<cnt;n++)                          /* 9 */
@@ -447,7 +447,7 @@ int granulate(int *thissnd,long *aipc,long *aopc,float **iiiiptr,float **LLLLptr
         *maxwrite -= dz->iparam[GRS_LONGS_BUFLEN];
     }
 
-    istep_per_chan    = set_instep(ostep_per_chan,dz);  
+    istep_per_chan    = set_instep(ostep_per_chan,dz);
     if(istep_per_chan==0 && dz->iparam[GRS_OUTLEN]==0) {
         sprintf(errstr,"velocity or instep has become so small that file will be infinitely long!!\n"
                        "Try slightly increasing your very small values.\n");
@@ -466,19 +466,19 @@ int granulate(int *thissnd,long *aipc,long *aopc,float **iiiiptr,float **LLLLptr
 
     absiicnt_per_chan = absicnt_per_chan;
     if(dz->iparray[GRS_FLAGS][G_RANGE_FLAG]) {
-        rang_per_chan      = set_range(absiicnt_per_chan,dz);       /* RESET iiptr etc WITHIN SEARCHRANGE */    
+        rang_per_chan      = set_range(absiicnt_per_chan,dz);       /* RESET iiptr etc WITHIN SEARCHRANGE */
         absiicnt_per_chan -= rang_per_chan;
         iiptr             -= rang_per_chan * dz->iparam[GRS_INCHANS];
     }
     switch(dz->process) {
-    case(BRASSAGE): 
-        endbufptr   = dz->sbufptr[GRS_BUF];     
-        startbufptr = dz->sampbuf[GRS_BUF];     
-        break;      
-    case(SAUSAGE):  
-        endbufptr   = dz->sbufptr[SAUS_BUF(*thissnd)];  
-        startbufptr = dz->sampbuf[SAUS_BUF(*thissnd)];      
-        break;      
+    case(BRASSAGE):
+        endbufptr   = dz->sbufptr[GRS_BUF];
+        startbufptr = dz->sampbuf[GRS_BUF];
+        break;
+    case(SAUSAGE):
+        endbufptr   = dz->sbufptr[SAUS_BUF(*thissnd)];
+        startbufptr = dz->sampbuf[SAUS_BUF(*thissnd)];
+        break;
     }
     if(iiptr >= endbufptr) {
         while(iiptr >= endbufptr) {
@@ -496,7 +496,7 @@ int granulate(int *thissnd,long *aipc,long *aopc,float **iiiiptr,float **LLLLptr
             if(dz->ssampsread<=0)
                 return(FINISHED);
                     /* READ SAMPS, WRAP BACK POINTER */
-            iiptr -= dz->buflen;    
+            iiptr -= dz->buflen;
             iptr  -= dz->buflen;
         }
     } else if(iiptr < startbufptr) {                                /* IF RANGE TAKES US BAK OUT OF THIS BUF, */
@@ -564,7 +564,7 @@ int granulate(int *thissnd,long *aipc,long *aopc,float **iiiiptr,float **LLLLptr
             position  -= (double)chana; //  position is relative position between 2 adjacent out-chans
             chanb = chana + 1;          //  chanb is adjacent to chana
             if(chana > dz->out_chans)   //  chana beyond last lspkr wraps around to 1st lspkr
-                chana = 1;      
+                chana = 1;
             else if(chana < 1)          //  chana below 1st loudspeaker wraps around to last-lspkr
                 chana = dz->out_chans;
             if((exit_status = write_multichan_grain(position,chana,chanb,maxwrite,&Fptr,&FFptr,gsize_per_chan,nctr,dz))<0)
@@ -587,7 +587,7 @@ int granulate(int *thissnd,long *aipc,long *aopc,float **iiiiptr,float **LLLLptr
             return(exit_status);
         break;
     case(SAUSAGE):
-        if(resetskip && (exit_status = reset_sausage(*thissnd,resetskip,dz))<0) 
+        if(resetskip && (exit_status = reset_sausage(*thissnd,resetskip,dz))<0)
             return(exit_status);
         break;
     }
@@ -609,9 +609,9 @@ int granulate(int *thissnd,long *aipc,long *aopc,float **iiiiptr,float **LLLLptr
 #else
     Fptr += ostep_per_chan * dz->iparam[GRS_OUTCHANS];  /* Move forward in output buffer, which can be mono, spatialised-stereo or multichannel */
 #endif
-        
-            /*      so we don't lose first grain */
-    absocnt_per_chan += ostep_per_chan;     
+
+    /*      so we don't lose first grain */
+    absocnt_per_chan += ostep_per_chan;
 
     *aipc = absicnt_per_chan;   /* RETURN VALUES OF RETAINED VARIABLES */
     *aopc = absocnt_per_chan;
@@ -1010,13 +1010,13 @@ void do_esplice(int gsize_per_chan,dataptr dz,int espl)
     if(k==0)
         return;
     val = 0.0;
-    length = (double) k;    
+    length = (double) k;
     if(!dz->vflag[GRS_EXPON]) {
         dif = 1.0/length;
         lastsum = dif;
         *--gbufptr = (float)val;
         gbufptr--;
-        *gbufptr = (float) /*round*/(*gbufptr * lastsum);   
+        *gbufptr = (float) /*round*/(*gbufptr * lastsum);
         for(n=k-3;n>=0;n--) {
             val = lastsum + dif;
             lastsum = val;
@@ -1030,7 +1030,7 @@ void do_esplice(int gsize_per_chan,dataptr dz,int espl)
         lastval = dif;
         *--gbufptr = (float)val;
         gbufptr--;
-        *gbufptr = (float) /*round*/(*gbufptr * lastval); 
+        *gbufptr = (float) /*round*/(*gbufptr * lastval);
         for(n=k-3;n>=0;n--) {
             newsum =lastsum + twodif;
             val = lastval + newsum + dif;
@@ -1072,9 +1072,9 @@ int make_grain(float *b,float **iiptr,float aamp,int gsize_per_chan,double *tran
                 for(n=0;n<real_gsize;n++) {
                     *gbufptr++ = interp_gval_with_amp(s,flcnt_frac,dz->iparam[GRS_INCHANS],aamp);
                     flcnt += *transpos;  
-                    iicnt = (long)flcnt;                
+                    iicnt = (long)flcnt;
                     s = b + iicnt;
-                    flcnt_frac = flcnt - (double) iicnt;                
+                    flcnt_frac = flcnt - (double) iicnt;
                 }
             } else {            /* do truncate as originally */
                 for(n=0;n<real_gsize;n++){
@@ -1110,9 +1110,9 @@ int make_grain(float *b,float **iiptr,float aamp,int gsize_per_chan,double *tran
                 for(n=0;n<real_gsize;n++) {
                     *gbufptr++ = interp_gval(s,flcnt_frac,dz->iparam[GRS_INCHANS]);
                     flcnt += *transpos;  
-                    iicnt = (long)flcnt;                
+                    iicnt = (long)flcnt;
                     s = b + iicnt;
-                    flcnt_frac = flcnt - (double)iicnt;             
+                    flcnt_frac = flcnt - (double)iicnt;
                 }
             }   
         }
@@ -1138,7 +1138,7 @@ int make_stereo_grain(float *b,float **iiptr,float aamp,int gsize_per_chan,doubl
                 return(0);
             for(n=0;n<real_gsize;n++)   /* COPY GRAIN TO GRAINBUF & RE-LEVEL ETC */
                 *gbufptr++ = (*s++ * aamp);
-        } else {            
+        } else {
             iicnt = (s - b)/2;
             *transpos = set_dvalue(dz->iparray[GRS_FLAGS][G_PITCH_FLAG],GRS_PITCH,GRS_HPITCH,GRS_PRANGE,dz);
             *transpos = pow(2.0,*transpos);
@@ -1154,7 +1154,7 @@ int make_stereo_grain(float *b,float **iiptr,float aamp,int gsize_per_chan,doubl
                     iicnt = round(flcnt);
                     s = b + (iicnt * 2);
                 }
-            } else {            
+            } else {
                 flcnt_frac = flcnt - (double)iicnt;
                 for(n=0;n<gsize_per_chan;n++) {
                     *gbufptr++ = interp_gval_with_amp(s,flcnt_frac,dz->iparam[GRS_INCHANS],aamp);
@@ -1163,9 +1163,9 @@ int make_stereo_grain(float *b,float **iiptr,float aamp,int gsize_per_chan,doubl
                     flcnt += *transpos;  
                     iicnt = (long)flcnt;
                     s = b + (iicnt * 2);
-                    flcnt_frac = flcnt - (double) iicnt;                
+                    flcnt_frac = flcnt - (double) iicnt;
                 }
-            }                      
+            }
         }
     } else {        /* NO CHANGE IN AMPLITUDE */
         if(!dz->iparray[GRS_FLAGS][G_PITCH_FLAG]) {
@@ -1187,9 +1187,9 @@ int make_stereo_grain(float *b,float **iiptr,float aamp,int gsize_per_chan,doubl
                     s++;
                     *gbufptr++ = interp_gval(s,flcnt_frac,dz->iparam[GRS_INCHANS]);
                     flcnt += *transpos;  
-                    iicnt = (long)flcnt;                
+                    iicnt = (long)flcnt;
                     s = b + (iicnt * 2);
-                    flcnt_frac = flcnt - (double)iicnt;             
+                    flcnt_frac = flcnt - (double)iicnt;
                 }
             } else {            /* do truncate as originally */
                 for(n=0;n<gsize_per_chan;n++){
@@ -1248,12 +1248,12 @@ int make_multichan_grain(float *b,float **iiptr,float aamp,int gsize_per_chan,do
                         *gbufptr++ = interp_gval_with_amp(s,flcnt_frac,dz->iparam[GRS_INCHANS],aamp);
                         s++;
                     }
-                    flcnt += *transpos;  
+                    flcnt += *transpos;
                     iicnt = (long)flcnt;
                     s = b + (iicnt * chans);
-                    flcnt_frac = flcnt - (double) iicnt;                
+                    flcnt_frac = flcnt - (double) iicnt;
                 }
-            }                      
+            }
         }
     } else {        /* NO CHANGE IN AMPLITUDE */
         if(!dz->iparray[GRS_FLAGS][G_PITCH_FLAG]) {
@@ -1275,10 +1275,10 @@ int make_multichan_grain(float *b,float **iiptr,float aamp,int gsize_per_chan,do
                         *gbufptr++ = interp_gval(s,flcnt_frac,dz->iparam[GRS_INCHANS]);
                         s++;
                     }
-                    flcnt += *transpos;  
-                    iicnt = (long)flcnt;                
+                    flcnt += *transpos;
+                    iicnt = (long)flcnt;
                     s = b + (iicnt * chans);
-                    flcnt_frac = flcnt - (double)iicnt;             
+                    flcnt_frac = flcnt - (double)iicnt;
                 }
             } else {            /* do truncate as originally */
                 for(n=0;n<gsize_per_chan;n++){
@@ -1320,7 +1320,7 @@ int write_grain(float **maxwrite,float **Fptr, float **FFptr,int gsize_per_chan,
         memmove((char *)dz->fptr[GRS_LBUF],(char *)dz->fptr[GRS_LBUFEND],
             (size_t)dz->iparam[GRS_LBUF_SMPXS] * sizeof(float));
         memset((char *)dz->fptr[GRS_LBUFMID],0,dz->iparam[GRS_LONGS_BUFLEN] * sizeof(float));
-        ffptr -= dz->iparam[GRS_LONGS_BUFLEN];  
+        ffptr -= dz->iparam[GRS_LONGS_BUFLEN];
         fptr  -= dz->iparam[GRS_LONGS_BUFLEN];
         *maxwrite -= dz->iparam[GRS_LONGS_BUFLEN];  /* APRIL 1996 */
         for(n = 0; n < exess; n++)
@@ -1557,14 +1557,14 @@ void do_stereo_etab_splice(int gsize_per_chan,dataptr dz)
 {
     long n, k = dz->iparam[GRS_ESPLICE];
     double *d;
-    float *gbufptr = dz->extrabuf[GRS_GBUF] + ((gsize_per_chan - k) * 2);   
+    float *gbufptr = dz->extrabuf[GRS_GBUF] + ((gsize_per_chan - k) * 2);
     if(k==0)
         return;
     d = dz->parray[GRS_ESPLICETAB];
     for(n=0;n<k;n++) {
-        *gbufptr = (float) /*round*/(*gbufptr * *d); 
+        *gbufptr = (float) /*round*/(*gbufptr * *d);
         gbufptr++;
-        *gbufptr = (float) /*round*/(*gbufptr * *d); 
+        *gbufptr = (float) /*round*/(*gbufptr * *d);
         gbufptr++;
         d++;
     }
@@ -1591,9 +1591,9 @@ void do_stereo_esplice(int gsize_per_chan,dataptr dz,int espl)
         gbufptr--;
         *gbufptr = (float)val;
         gbufptr--;
-        *gbufptr = (float) /*round*/(*gbufptr * lastsum);   
+        *gbufptr = (float) /*round*/(*gbufptr * lastsum);
         gbufptr--;
-        *gbufptr = (float) /*round*/(*gbufptr * lastsum);   
+        *gbufptr = (float) /*round*/(*gbufptr * lastsum);
         for(n=k-3;n>=0;n--) {
             val = lastsum + dif;
             lastsum = val;
@@ -1650,14 +1650,14 @@ void do_multichan_btab_splice(dataptr dz)
 {
     long n, j, k = dz->iparam[GRS_BSPLICE];
     double *d;
-    float *gbufptr = dz->extrabuf[GRS_GBUF];   
+    float *gbufptr = dz->extrabuf[GRS_GBUF];
     
     if(k==0)
         return;
     d = dz->parray[GRS_BSPLICETAB];
     for(n=0;n<k;n++) {
         for(j=0;j<dz->iparam[GRS_INCHANS];j++) {
-            *gbufptr = (float)/*round*/(*gbufptr * *d); 
+            *gbufptr = (float)/*round*/(*gbufptr * *d);
             gbufptr++;
         }
         d++;
@@ -1726,7 +1726,7 @@ void do_multichan_etab_splice(int gsize_per_chan,dataptr dz)
     long n, j, k = dz->iparam[GRS_ESPLICE];
     double *d;
     int chans = dz->iparam[GRS_INCHANS];
-    float *gbufptr = dz->extrabuf[GRS_GBUF] + ((gsize_per_chan - k) * chans);   
+    float *gbufptr = dz->extrabuf[GRS_GBUF] + ((gsize_per_chan - k) * chans);
     if(k==0)
         return;
     d = dz->parray[GRS_ESPLICETAB];
@@ -1762,7 +1762,7 @@ void do_multichan_esplice(int gsize_per_chan,dataptr dz,int espl)
         }
         for(j=0;j<chans;j++) {
             gbufptr--;
-            *gbufptr = (float) /*round*/(*gbufptr * lastsum);   
+            *gbufptr = (float) /*round*/(*gbufptr * lastsum);
         }
         for(n=k-3;n>=0;n--) {
             val = lastsum + dif;
@@ -1833,8 +1833,8 @@ int set_range(int absiicnt,dataptr dz)
 
 /*************************** SET_OUTSTEP ******************************/
 
-int set_outstep(int gsize_per_chan,dataptr dz)      
-{                           
+int set_outstep(int gsize_per_chan,dataptr dz)
+{
     double dens;
     int val = 0;
     /* TW 4 :2002 */
@@ -1863,7 +1863,7 @@ int set_outstep(int gsize_per_chan,dataptr dz)
 
 /*************************** SET_INSTEP ******************************/
 
-int set_instep(int ostep_per_chan,dataptr dz)   
+int set_instep(int ostep_per_chan,dataptr dz)
 {                                               /* rwd: added range error traps */
     double velocity;
     int istep_per_chan = 0;
@@ -2340,9 +2340,6 @@ int sausage_preprocess(dataptr dz)
     dz->iparray[SAUS_PERM][0] = dz->infilecnt + 1;  /* impossible value to initialise perm */
 
     return create_sized_outfile(dz->outfilename,dz);
-
-
-
     /*return(FINISHED);*/
 }
 
@@ -2378,8 +2375,6 @@ int create_sausage_buffers(dataptr dz)
 //      bufdivisor += 1 + lfactor;                  /*                    2nd OUT, 2nd long OUT */
         bufdivisor += 2;                            /*                    2nd OUT, 2nd LBUF OUT */
 
-
-    
     this_bloksize = standard_block;
     for(;;) {
         if((exit_status = grab_an_appropriate_block_of_sausage_memory(&this_bloksize,standard_block,bufdivisor,dz))<0)
@@ -2413,27 +2408,26 @@ int create_sausage_buffers(dataptr dz)
             continue;
         break;
     }
-                /* DIVIDE UP ALLOCATED MEMORY IN SPECIALISED BUFFERS */ 
-                                                                    
-    if(dz->iparam[GRS_CHANNELS]) {                                  /* sbuf : extra stereo input buffer, if required */                      
-        dz->sampbuf[SAUS_SBUF]   = dz->bigbuf;                                   
-        dz->sampbuf[SAUS_BUF(0)] = dz->sampbuf[SAUS_SBUF] + stereo_buflen + stereo_bufxs;            
-    } else                                               
-        dz->sampbuf[SAUS_BUF(0)] = dz->bigbuf;                      
-    dz->sbufptr[SAUS_BUF(0)]  = dz->sampbuf[SAUS_BUF(0)] + dz->buflen;  
-    dz->sampbuf[SAUS_IBUF(0)] = dz->sampbuf[SAUS_BUF(0)] + dz->iparam[GRS_BUF_SMPXS]; 
-    tailend                   = dz->sbufptr[SAUS_BUF(0)] + dz->iparam[GRS_BUF_SMPXS];  
+                /* DIVIDE UP ALLOCATED MEMORY IN SPECIALISED BUFFERS */
+    if(dz->iparam[GRS_CHANNELS]) {                                  /* sbuf : extra stereo input buffer, if required */
+        dz->sampbuf[SAUS_SBUF]   = dz->bigbuf;
+        dz->sampbuf[SAUS_BUF(0)] = dz->sampbuf[SAUS_SBUF] + stereo_buflen + stereo_bufxs;
+    } else
+        dz->sampbuf[SAUS_BUF(0)] = dz->bigbuf;
+    dz->sbufptr[SAUS_BUF(0)]  = dz->sampbuf[SAUS_BUF(0)] + dz->buflen;
+    dz->sampbuf[SAUS_IBUF(0)] = dz->sampbuf[SAUS_BUF(0)] + dz->iparam[GRS_BUF_SMPXS];
+    tailend                   = dz->sbufptr[SAUS_BUF(0)] + dz->iparam[GRS_BUF_SMPXS];
     for(n=1;n<dz->infilecnt;n++) {
         dz->sampbuf[SAUS_BUF(n)]  = tailend;                                   /* Lbuf: buffer for calculations */
         dz->sbufptr[SAUS_BUF(n)]  = dz->sampbuf[SAUS_BUF(n)] + dz->buflen;  
-        dz->sampbuf[SAUS_IBUF(n)] = dz->sampbuf[SAUS_BUF(n)] + dz->iparam[GRS_BUF_SMPXS]; 
-        tailend                   = dz->sbufptr[SAUS_BUF(n)] + dz->iparam[GRS_BUF_SMPXS]; 
+        dz->sampbuf[SAUS_IBUF(n)] = dz->sampbuf[SAUS_BUF(n)] + dz->iparam[GRS_BUF_SMPXS];
+        tailend                   = dz->sbufptr[SAUS_BUF(n)] + dz->iparam[GRS_BUF_SMPXS];
     }
-    dz->fptr[GRS_LBUF]     = tailend;                                  
+    dz->fptr[GRS_LBUF]     = tailend;
     dz->fptr[GRS_LBUFEND]  = dz->fptr[GRS_LBUF] + dz->iparam[GRS_LONGS_BUFLEN];
     dz->fptr[GRS_LTAILEND] = dz->fptr[GRS_LBUFEND] + dz->iparam[GRS_LBUF_SMPXS];
     dz->fptr[GRS_LBUFMID]  = dz->fptr[GRS_LBUF]    + dz->iparam[GRS_LBUF_SMPXS];
-    dz->sampbuf[SAUS_OBUF]  = /*(short *)*/(dz->fptr[GRS_LTAILEND]);                    
+    dz->sampbuf[SAUS_OBUF]  = /*(short *)*/(dz->fptr[GRS_LTAILEND]);
 
                                 /* INITIALISE BUFFERS */
 
@@ -2488,33 +2482,32 @@ int create_sausage_buffers(dataptr dz)
         if(dz->iparam[GRS_CHANNELS]) {
             multichan_buflen = dz->buflen * chans;
             multichan_bufxs  = dz->iparam[GRS_BUF_SMPXS] * chans;
-        }                                        
+        }
         dz->iparam[GRS_LONGS_BUFLEN] = outbuflen;           /* Longs buffer is same size as obuf */
         if(dz->iparam[GRS_LBUF_SMPXS] > dz->iparam[GRS_LONGS_BUFLEN])
             continue;
         break;
     }
-                /* DIVIDE UP ALLOCATED MEMORY IN SPECIALISED BUFFERS */ 
-                                                                    
-    if(dz->iparam[GRS_CHANNELS]) {                                  /* sbuf : extra stereo input buffer, if required */                      
-        dz->sampbuf[SAUS_SBUF]   = dz->bigbuf;                                   
-        dz->sampbuf[SAUS_BUF(0)] = dz->sampbuf[SAUS_SBUF] + multichan_buflen + multichan_bufxs;          
-    } else                                               
-        dz->sampbuf[SAUS_BUF(0)] = dz->bigbuf;                      
-    dz->sbufptr[SAUS_BUF(0)]  = dz->sampbuf[SAUS_BUF(0)] + dz->buflen;  
-    dz->sampbuf[SAUS_IBUF(0)] = dz->sampbuf[SAUS_BUF(0)] + dz->iparam[GRS_BUF_SMPXS]; 
-    tailend                   = dz->sbufptr[SAUS_BUF(0)] + dz->iparam[GRS_BUF_SMPXS];  
+                /* DIVIDE UP ALLOCATED MEMORY IN SPECIALISED BUFFERS */
+    if(dz->iparam[GRS_CHANNELS]) {                                  /* sbuf : extra stereo input buffer, if required */
+        dz->sampbuf[SAUS_SBUF]   = dz->bigbuf;
+        dz->sampbuf[SAUS_BUF(0)] = dz->sampbuf[SAUS_SBUF] + multichan_buflen + multichan_bufxs;
+    } else
+        dz->sampbuf[SAUS_BUF(0)] = dz->bigbuf;
+    dz->sbufptr[SAUS_BUF(0)]  = dz->sampbuf[SAUS_BUF(0)] + dz->buflen;
+    dz->sampbuf[SAUS_IBUF(0)] = dz->sampbuf[SAUS_BUF(0)] + dz->iparam[GRS_BUF_SMPXS];
+    tailend                   = dz->sbufptr[SAUS_BUF(0)] + dz->iparam[GRS_BUF_SMPXS];
     for(n=1;n<dz->infilecnt;n++) {
         dz->sampbuf[SAUS_BUF(n)]  = tailend;                                   /* Lbuf: buffer for calculations */
-        dz->sbufptr[SAUS_BUF(n)]  = dz->sampbuf[SAUS_BUF(n)] + dz->buflen;  
-        dz->sampbuf[SAUS_IBUF(n)] = dz->sampbuf[SAUS_BUF(n)] + dz->iparam[GRS_BUF_SMPXS]; 
-        tailend                   = dz->sbufptr[SAUS_BUF(n)] + dz->iparam[GRS_BUF_SMPXS]; 
+        dz->sbufptr[SAUS_BUF(n)]  = dz->sampbuf[SAUS_BUF(n)] + dz->buflen;
+        dz->sampbuf[SAUS_IBUF(n)] = dz->sampbuf[SAUS_BUF(n)] + dz->iparam[GRS_BUF_SMPXS];
+        tailend                   = dz->sbufptr[SAUS_BUF(n)] + dz->iparam[GRS_BUF_SMPXS];
     }
-    dz->fptr[GRS_LBUF]     = tailend;                                  
+    dz->fptr[GRS_LBUF]     = tailend;
     dz->fptr[GRS_LBUFEND]  = dz->fptr[GRS_LBUF] + dz->iparam[GRS_LONGS_BUFLEN];
     dz->fptr[GRS_LTAILEND] = dz->fptr[GRS_LBUFEND] + dz->iparam[GRS_LBUF_SMPXS];
     dz->fptr[GRS_LBUFMID]  = dz->fptr[GRS_LBUF]    + dz->iparam[GRS_LBUF_SMPXS];
-    dz->sampbuf[SAUS_OBUF]  = /*(short *)*/(dz->fptr[GRS_LTAILEND]);                    
+    dz->sampbuf[SAUS_OBUF]  = /*(short *)*/(dz->fptr[GRS_LTAILEND]);
 
                                 /* INITIALISE BUFFERS */
 
@@ -2524,7 +2517,7 @@ int create_sausage_buffers(dataptr dz)
 
 #endif
 
-/*  INPUT BUFFERS :-        
+/*  INPUT BUFFERS :-
  *
  *  |-----------BUFLEN-----------|
  *
@@ -2542,7 +2535,7 @@ int create_sausage_buffers(dataptr dz)
  *  Lbuf       Lbufmid    Lbufend
  *  |____________|_______________|_Lbuf_smpxs_|
  *                               /
- *  |_Lbuf_smpxs_|         <<-COPY___________/  
+ *  |_Lbuf_smpxs_|         <<-COPY___________/
  *
  */
 
