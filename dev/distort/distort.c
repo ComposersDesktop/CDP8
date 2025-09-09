@@ -489,8 +489,8 @@ int exaggerate(int lastzero,int thiszero,int phase,float *b,double powfac)
 {
 	int exit_status;
 	int n = lastzero + 1;
-	double lastmax, thismax, thismin;
-	int   lastpos, thispos, minpos;
+	double lastmax, thismax/*, thismin*/;
+	int   lastpos, thispos /*, minpos*/;
 	int OK = 1;
 	switch(phase) {
 	case(1):
@@ -512,8 +512,8 @@ int exaggerate(int lastzero,int thiszero,int phase,float *b,double powfac)
 				}
 			}
 			if(OK) {
-				thismin = (double)b[n-1];
-				minpos  = n-1;
+//				thismin = (double)b[n-1];
+//				minpos  = n-1;
 				while(b[n] >= b[n-1])
 					n++;
 				thismax = (double)b[n-1];
@@ -551,8 +551,8 @@ int exaggerate(int lastzero,int thiszero,int phase,float *b,double powfac)
 				}
 			}
 			if(OK) {
-				thismin = (double)b[n-1];
-				minpos  = n-1;
+//				thismin = (double)b[n-1];
+//				minpos  = n-1;
 				while(b[n] <= b[n-1])
 					n++;
 				thismax = (double)b[n-1];
