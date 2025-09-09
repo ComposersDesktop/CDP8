@@ -150,7 +150,7 @@ int gain_process(dataptr dz)
         }
     }
     if(clipsamps && (numclipped > 0))
-        sprintf(errstr, "WARNING: %ld samples were clipped.\n", numclipped);
+        sprintf(errstr, "WARNING: %d samples were clipped.\n", numclipped);
     dz->peak_fval = peakval;
     /*will get written to header automatically*/
     return(FINISHED);
