@@ -353,6 +353,7 @@ static void prepare_pvfmt(WAVEFORMATEX *pfmt,DWORD chans, DWORD srate,
     pfmt->wFormatTag        = WAVE_FORMAT_EXTENSIBLE;
     pfmt->nChannels         = (WORD) chans;
     pfmt->nSamplesPerSec    = srate;
+    pfmt->nBlockAlign       = 0;  /* decl to please gcc */
     switch(stype){
     case(STYPE_16):
         pfmt->wBitsPerSample = (WORD)16;
