@@ -1033,7 +1033,7 @@ int check_panorama_param_validity_and_consistency(dataptr dz)
     double *lspkrpos,/* *pos, */ rightmost, leftmost, anglestep;
     int n;
     if(dz->mode == 0) {                         //  Set lspkr positions for mode 0
-        if((dz->parray = (double **)malloc(2 * sizeof(double *)))==NULL) {
+        if((dz->parray = (double **)malloc(3 * sizeof(double *)))==NULL) {
             sprintf(errstr,"INSUFFICIENT MEMORY for position storage arrays.\n");
             return(MEMORY_ERROR);
         }
