@@ -1641,7 +1641,7 @@ int allocate_spectrum_buffer(dataptr dz)
 
 int handle_the_special_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
 {
-    int cnt, linecnt;
+    int cnt/*, linecnt*/;
     char *filename = (*cmdline)[0];
     FILE *fp;
     double *p, dummy;
@@ -1687,7 +1687,7 @@ int handle_the_special_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
     }
     cnt -= 4;
     fseek(fp,0,0);
-    linecnt = 1;
+//    linecnt = 1;
     p = dz->parray[0];
     while(fgets(temp,200,fp)==temp) {
         q = temp;
@@ -1696,7 +1696,7 @@ int handle_the_special_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
         while(get_float_with_e_from_within_string(&q,p)) {
             p++;
         }
-        linecnt++;
+//        linecnt++;
     }
     if(fclose(fp)<0) {
         fprintf(stdout,"WARNING: Failed to close file %s.\n",filename);
@@ -1811,7 +1811,7 @@ int spectrum(int *perm,dataptr dz)
     double thistime, dfade, frq, chbot, harmamp, spreaddnratio = 0.0, spreadupratio = 0.0, fader;
     double orig_brightness, pkaspect, pkwidth, pkfrq, pkoffset;
     float orig_frequency;
-    int *peaked, peakcnt, orig_peakcnt;
+    int *peaked, peakcnt/*, orig_peakcnt*/;
 
     /* ESTABLISH BRKPOINT TABLE OF TRUE AMPLITUDE ENVELOPE OF INPUT DATA */
 
@@ -1868,7 +1868,7 @@ int spectrum(int *perm,dataptr dz)
             for(cc = 0; cc < dz->clength; cc++)
                 peaked[cc] = 0;
             peakcnt = 0;
-            orig_peakcnt = 0;
+//            orig_peakcnt = 0;
             for(cc = 0, vc = 0; cc < dz->clength; cc++, vc +=2) {
                 if(peaked[cc]) {
                     if(cc > 0) {                                            //  IF already a marked peak (i.e. a harmonic of a previous peak)
@@ -1975,7 +1975,7 @@ int spectrum(int *perm,dataptr dz)
                     dz->bigfbuf[FREQ] = (float)dz->parray[0][vc];
                     peaked[cc] = 1;
                     pkwidth = 0.0;
-                    orig_peakcnt++;
+  //                  orig_peakcnt++;
                     peakcnt++;
                     switch(dz->iparam[SPEKTYPE]) {
                     case(0):    //    Brightness defined by brightness-rolloff param
@@ -2080,7 +2080,7 @@ int spectrum(int *perm,dataptr dz)
         for(cc = 0; cc < dz->clength; cc++)
             peaked[cc] = 0;
         peakcnt = 0;
-        orig_peakcnt = 0;
+ //       orig_peakcnt = 0;
         for(cc = 0, vc = 0; cc < dz->clength; cc++, vc +=2) {
             if(peaked[cc]) {
                 if(cc > 0) {                                            //  IF already a marked peak (i.e. a harmonic of a previous peak)
@@ -2189,7 +2189,7 @@ int spectrum(int *perm,dataptr dz)
                 peaked[cc] = 1;
                 pkwidth = 0.0;
                 //aspindx = (orig_peakcnt * 2) + 1;
-                orig_peakcnt++;
+  //              orig_peakcnt++;
                 peakcnt++;
                 switch(dz->iparam[SPEKTYPE]) {
                 case(0):    //    Brightness defined by brightness-rolloff param
@@ -2304,7 +2304,7 @@ int spectrum(int *perm,dataptr dz)
         for(cc = 0; cc < dz->clength; cc++)
             peaked[cc] = 0;
         peakcnt = 0;
-        orig_peakcnt = 0;
+  //      orig_peakcnt = 0;
         for(cc = 0, vc = 0; cc < dz->clength; cc++, vc +=2) {
             if(peaked[cc]) {
                 if(cc > 0) {                                            //  IF already a marked peak (i.e. a harmonic of a previous peak)
@@ -2413,7 +2413,7 @@ int spectrum(int *perm,dataptr dz)
                 peaked[cc] = 1;
                 pkwidth = 0.0;
                 //aspindx = (orig_peakcnt * 2) + 1;
-                orig_peakcnt++;
+   //             orig_peakcnt++;
                 peakcnt++;
                 switch(dz->iparam[SPEKTYPE]) {
                 case(0):    //    Brightness defined by brightness-rolloff param
