@@ -177,8 +177,7 @@ int make_textfile(char *filename)
     int total_samps_got;
     int gpcnt, sampout /*, sampouttrue */;
 
-    /*RWD*/
-    int linecount = 0;
+//    int linecount = 0;
 
     /* check header first */
     FILE *fp;
@@ -264,7 +263,7 @@ int make_textfile(char *filename)
                     gpsample1 /= (double)zoomfact;
                     sampout = (short)round(gpsample0 * FLOATSTEREOSCALE); 
                     
-                    linecount++;
+ //                   linecount++;
                     if(fprintf(fp,"%lf %d\n",gpsample0,sampout) < 0) {
                         fclose(fp);
                         fprintf(stdout, "ERROR: Failed to complete data write to Sound Loom display file 'cdptest00.txt'\n");
@@ -273,7 +272,7 @@ int make_textfile(char *filename)
                     }
                     sampout = (short)round(gpsample1 * FLOATSTEREOSCALE);
                     
-                    linecount++;
+ //                   linecount++;
                     if(fprintf(fp,"%lf %d\n",gpsample1,sampout) < 0) {
                         fclose(fp);
                         fprintf(stdout, "ERROR: Failed to complete data write to Sound Loom display file 'cdptest00.txt'\n");
@@ -290,7 +289,7 @@ int make_textfile(char *filename)
                 gpsample1 /= (double)gpcnt;
                 sampout = (short)round(gpsample0 * FLOATSTEREOSCALE);
                 
-                linecount++;
+//                linecount++;
                 if(fprintf(fp,"%lf %d\n",gpsample0,sampout) < 0) {
                     fclose(fp);
                     fprintf(stdout, "ERROR: Failed to complete data write to Sound Loom display file 'cdptest00.txt'\n");
@@ -300,7 +299,7 @@ int make_textfile(char *filename)
 //                sampouttrue = (short)round(gpsample1);
                 sampout = (short)round(gpsample1 * FLOATSTEREOSCALE);
                 
-                linecount++;
+//                linecount++;
                 if(fprintf(fp,"%lf %d\n",gpsample1,sampout) < 0) {
                     fclose(fp);
                     fprintf(stdout, "ERROR: Failed to complete data write to Sound Loom display file 'cdptest00.txt'\n");
