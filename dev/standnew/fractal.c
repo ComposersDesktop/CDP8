@@ -1976,7 +1976,7 @@ int create_fractal_sndbufs(dataptr dz)
         if (dz->mode == 1)  //  Mode 1, source file is used as a table to read cyclically
             bigbufsize = dz->insams[0] * sizeof(float);
         else
-            bigbufsize = (int)Malloc(-1);
+            bigbufsize = (int)(size_t) Malloc(-1);
      secsize = bigbufsize/framesize;
         if(secsize * framesize < bigbufsize) {
             secsize++;
