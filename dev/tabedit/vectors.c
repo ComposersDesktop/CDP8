@@ -413,7 +413,8 @@ int do_outfile(char *argv)
 char *exmalloc(int n)
 {
     char *p;
-    if((p = (char *)malloc(n))==NULL) {
+    //RWD 2025 move to calloc to pacify gcc on Linux, but probably good idea anyway
+    if((p = (char *)calloc(n,sizeof(char)))==NULL) {
         sprintf(errstr,"ERROR: memory allocation failed.\n");
         do_error();
     }
