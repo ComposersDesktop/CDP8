@@ -227,12 +227,13 @@ int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, do
         fflush(stdout);
         return(MEMORY_ERROR);
     }
-    if((*x = (double *)malloc(cnt/2 * sizeof(double)))==NULL) {
+    //RWD 2025 move to calloc, to pacify gcc Linux
+    if((*x = (double *)calloc(cnt/2, sizeof(double)))==NULL) {
         fprintf(stdout,"INSUFFICIENT MEMORY for storing x-coords of input data.\n");
         fflush(stdout);
         return(MEMORY_ERROR);
     }
-    if((*y = (double *)malloc(cnt/2 * sizeof(double)))==NULL) {
+    if((*y = (double *)calloc(cnt/2, sizeof(double)))==NULL) {
         fprintf(stdout,"INSUFFICIENT MEMORY for storing y-coords of input data.\n");
         fflush(stdout);
         return(MEMORY_ERROR);
