@@ -132,7 +132,7 @@ int do_musunits(dataptr dz)
         sprintf(errstr,"Unknown mode in do_musunits()\n");
         return(PROGRAM_ERROR);
     }
-    sprintf(errstr,"%s",errstr);
+//    sprintf(errstr,"%s",errstr); //RWD 2025 think this is probably unintended
     print_outmessage_flush(errstr);
     return(exit_status);
 }
