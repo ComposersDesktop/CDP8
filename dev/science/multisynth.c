@@ -464,7 +464,8 @@ int set_param_data(aplptr ap, int special_data,int maxparamcnt,int paramcnt,char
     ap->param_cnt      = (char)paramcnt;
     ap->max_param_cnt  = (char)maxparamcnt;
     if(ap->max_param_cnt>0) {
-        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+1)))==NULL) {    
+    //RWD 2025 was ap->max_param_cnt+1
+        if((ap->param_list = (char *)malloc((size_t)(ap->max_param_cnt+2)))==NULL) {    
             sprintf(errstr,"INSUFFICIENT MEMORY: for param_list\n");
             return(MEMORY_ERROR);
         }
