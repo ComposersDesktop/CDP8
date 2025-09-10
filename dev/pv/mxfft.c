@@ -84,20 +84,20 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
     for (j=3,jj=9; jj<=k; j+=2,jj=j*j)
         for (; !(k%jj); nfac[++m]=j,k/=jj);
 
-        if (k<=4){
-            kt = m;
-            nfac[m+1] = k;
-            if(k != 1) 
-            m++;
+    if (k<=4){
+        kt = m;
+        nfac[m+1] = k;
+        if(k != 1) 
+          m++;
     }
     else{
         if(k%4==0){
-        nfac[++m]=2;
-        k/=4;
+          nfac[++m]=2;
+          k/=4;
         }
 
         kt = m;
-            maxp = max((kt+kt+2),(k-1));
+        maxp = max((kt+kt+2),(k-1));
         for(j=2; j<=k; j=1+((j+1)/2)*2)
             if(k%j==0){
                 nfac[++m]=j;
@@ -106,17 +106,17 @@ int fft_(float *a, float *b, int nseg, int n, int nspn, int isn)
     }
     if(m <= kt+1) 
         maxp = m + kt + 1;
-        if(m+kt > 15) {
-            sprintf(errstr,"FFT parameter n has more than 15 factors : %d", n);
-            return(DATA_ERROR);
+    if(m+kt > 15) {
+        sprintf(errstr,"FFT parameter n has more than 15 factors : %d", n);
+        return(DATA_ERROR);
     }
-        if(kt!=0){
-            j = kt;
+    if(kt!=0){
+        j = kt;
         while(j)
             nfac[++m]=nfac[j--];
     }
     maxf = nfac[m-kt];
-        if(kt > 0) 
+    if(kt > 0) 
         maxf = max(nfac[kt],maxf);
 
 /*  allocate workspace - assume no errors! */
