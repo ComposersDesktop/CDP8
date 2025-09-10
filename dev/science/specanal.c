@@ -3828,7 +3828,7 @@ int smooth_and_output_tempered_pitch(dataptr dz)
 
 int smooth_and_output_varying_hf(dataptr dz) 
 {
-    int exit_status, reranged[8], lastpitch[8], thispitch[8], does_repeat;
+    int exit_status, reranged[8] = {0}, lastpitch[8], thispitch[8], does_repeat;
     int n, m, t, k, f, omitsum = 0, hfrepet;
     int itemp, peakcnt, omit[8];
     double transittime, temp;
