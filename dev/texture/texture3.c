@@ -172,7 +172,7 @@ int do_simple_hftexture(dataptr dz)
     int hsindex;
     noteptr tsetnote = tset->firstnote;
     noteptr nextnote;
-    double thistime, thispitch = -1.0 /* , lastpitch = -1.0 */ ;
+    double thistime, thispitch  = -1.0 /* , lastpitch = -1.0 */ ; //RWD use init val to pacify gcc.
     noteptr thishfnote = hfmotif->firstnote;
     noteptr thishsnote = hfmotif->firstnote;
     double thishftime,nexthftime,thishstime,nexthstime,thisamp,thisdur;
