@@ -1,8 +1,10 @@
 find_library(ALSA_LIBRARY alsa)
-
 add_subdirectory(cdp2k)
 add_subdirectory(newsfsys)
 add_subdirectory(pvxio2)
+if(NOT WIN32)
+    add_subdirectory(aaio)
+endif()
 add_subdirectory(blur)
 add_subdirectory(cdparams)
 add_subdirectory(cdparams_other)
