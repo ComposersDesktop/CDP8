@@ -1,6 +1,5 @@
 # RWD version for newsfsys with PVOC EX support
-#cmake_minimum_required(VERSION 2.8.3)
-cmake_minimum_required(VERSION 3.5.0)
+cmake_minimum_required(VERSION 3.5)
 
 project (CDP)
 
@@ -154,14 +153,14 @@ if(APPLE)
     set(CS_FRAMEWORK_DEST "${CMAKE_INSTALL_PREFIX}")
   endif()
 
-  set(DEFAULT_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.8.sdk/)
+  set(DEFAULT_OSX_SYSROOT /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.9.sdk/)
 
   if(NOT CMAKE_OSX_SYSROOT AND EXISTS ${DEFAULT_OSX_SYSROOT})
     set(CMAKE_OSX_SYSROOT ${DEFAULT_OSX_SYSROOT})
   endif()
 
    if(EXISTS ${CMAKE_OSX_SYSROOT})
-    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.8)
+    set(CMAKE_OSX_DEPLOYMENT_TARGET 10.9)
   endif()
 
 endif()
@@ -196,10 +195,11 @@ if(USE_LOCAL_PORTAUDIO)
 else()
   message(STATUS "paprogs not built")
 endif()
-  
+# RWD Sept 2025 added sys/ioctl.h etc for libaaio  
 set(HEADERS_TO_CHECK
     unistd.h io.h fcntl.h stdint.h
-    sys/time.h sys/types.h termios.h
+    sys/time.h sys/types.h termios.h 
+    sys/ioctl.h sys/wait.h
     values.h winsock.h sys/socket.h
     dirent.h )
 
