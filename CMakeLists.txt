@@ -214,9 +214,10 @@ endforeach()
 ##set(LIBCDP_CFLAGS -D__BUILDING_LIBCDP)
 
 include_directories(./dev/include)
+
 #RWD for PVOCEX support
 include_directories(./dev/newinclude)
-
+include_directories(include)
 #if(WIN32)
     include_directories(${PORTAUDIO_INCLUDE_DIRECTORY})
 #endif(WIN32)
