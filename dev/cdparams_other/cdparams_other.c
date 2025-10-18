@@ -7004,7 +7004,7 @@ int filetype,int linecnt,double duration,aplptr ap)
     case(SPEKLINE):
         if(mode == 0) {
             ap->lo[SPEKPOINTS]  = 2;
-            ap->hi[SPEKPOINTS]  = 16380;
+            ap->hi[SPEKPOINTS]  = 32768;  //RWD 2025 was 16380
             ap->lo[SPEKHARMS]   = 0;
             ap->hi[SPEKHARMS]   = 64;
             ap->lo[SPEKBRITE]   = -96;

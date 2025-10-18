@@ -154,6 +154,8 @@ static int speclines(dataptr dz);
 static int get_the_mode_from_cmdline(char *str,dataptr dz);
 static int speclinesfilt(dataptr dz);
 
+//RWD 2025 zero error checking - will already have been done!
+static int checkchans4format(int chans, const char* fname);
 /**************************************** MAIN *********************************************/
 
 int main(int argc,char *argv[])
@@ -784,12 +786,12 @@ int setup_spectrum_param_ranges_and_defaults(dataptr dz)
     // get_param_ranges()
     if(dz->process != SPEKLINE || dz->mode != 0) {
         ap->lo[SPEKPOINTS]    = 2;
-        ap->hi[SPEKPOINTS]    = 16380;        // CHANNEL CNT
+        ap->hi[SPEKPOINTS]    = 32768;        // CHANNEL CNT  // RWD 2025 was 16380
         ap->default_val[SPEKPOINTS]    = 2048;
     }
     if(dz->process == SPEKLINE && dz->mode == 0) {
         ap->lo[SPEKPOINTS]    = 2;
-        ap->hi[SPEKPOINTS]    = 16380;        // CHANNEL CNT
+        ap->hi[SPEKPOINTS]    = 32768;        // CHANNEL CNT  //RWD as above
         ap->default_val[SPEKPOINTS]    = 2048;
     }
     ap->lo[SPEKSRATE]    = 44100;
@@ -1394,6 +1396,13 @@ int check_spectrum_param_validity_and_consistency(int **perm,dataptr dz)
         sprintf(errstr,"ANALYSIS POINTS PARAMETER MUST BE A POWER OF TWO.\n");
         return(DATA_ERROR);
     }
+    //RWD 2025
+    if(checkchans4format(k,dz->outfilename) == 0) {
+        sprintf(errstr,"Requested analysis channel count %d > 8192: too large for .ana format\n",k);
+        return DATA_ERROR;
+    }
+    
+    
     if(dz->iparam[1] < 44100 || BAD_SR(dz->iparam[1])) {
         sprintf(errstr,"INVALID SAMPLE RATE ENTERED (44100,48000,88200,96000 only).\n");
         return(DATA_ERROR);
@@ -3066,4 +3075,18 @@ int speclinesfilt(dataptr dz)
         return SYSTEM_ERROR;
     }
     return FINISHED;
+}
+//RWD 2025 zero error checking - will already have been done!
+static int checkchans4format(int chans, const char* fname)
+{
+    char *lastdot;
+    
+    lastdot = strrchr(fname,'.');
+    if(chans > 8192){
+        if((_stricmp(lastdot,".wav")==0)
+           || (_stricmp(lastdot,".ana")==0))
+            return 0;
+    }
+    
+    return 1;
 }

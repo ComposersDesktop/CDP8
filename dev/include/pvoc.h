@@ -31,7 +31,7 @@
 #define DEFAULT_PVOC_CHANS      (1024)
 #define DEFAULT_WIN_OVERLAP     (3)
 #define VERY_BIG_INT            (100000000)
-#define MAX_PVOC_CHANS          (16380)
+#define MAX_PVOC_CHANS          (32768)   //RWD 2025 was 16380 
 #define PVOC_CONSTANT_A         (8.0)
 #define SAMP_TIME_STEP          (2000)
 
