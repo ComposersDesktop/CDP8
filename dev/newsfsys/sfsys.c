@@ -6399,7 +6399,14 @@ sfgetprop(int sfd, const char *propname, char *dest, int lim)
     else if(strcmp(propname, "sample type") == 0) {
         //RWD.6.99 lets accept all formats!
         //is this good for AIFF?
-        containersize = 8 * (f->fmtchunkEx.Format.nBlockAlign /         f->fmtchunkEx.Format.nChannels);
+        //RWD 2025 fix this for pvx file with large fft size
+        //possible TODO: for analysis files, report src sample type, not just 'float'
+        if (f->filetype == pvxfile) {
+           containersize = sf_getcontainersize(sfd);
+        }
+        else {
+            containersize = 8 * (f->fmtchunkEx.Format.nBlockAlign / f->fmtchunkEx.Format.nChannels);
+        }
         switch(containersize){
             case(32):
                 if(f->fmtchunkEx.Format.wFormatTag== WAVE_FORMAT_IEEE_FLOAT
