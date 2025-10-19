@@ -20,6 +20,7 @@ Release
 *.ana
 
 #Generated files if running in-source CMake build
+build*/
 cmake_install.cmake
 CMakeFiles/
 CMakeCache.txt
