@@ -252,7 +252,7 @@ endif()
 
 if(WIN32)
     message(STATUS "Building on Windows")
-    add_definitions(-DWIN32 -D_WIN32)
+    add_definitions(-DWIN32 -D_WIN32 -DENABLE_PVX -D_CRT_SECURE_NO_DEPRECATE)
 endif()
 
 #add_compiler_flags(${LIBCDP_CFLAGS} TARGETS ${CDPLIB})
