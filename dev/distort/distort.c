@@ -39,9 +39,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
-#if defined unix || defined __GNUC__
-#define round lround
-#endif
+//#if defined unix || defined __GNUC__
+#define round(x) lround((x))
+//#endif
 
 //TW COMMENT : phase as used here, with vals >1 or <-1 (meaning above zero or below zero) in intrinsically 'int' 
 //             phase is also not 'float' elsewhere, 
