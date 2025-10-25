@@ -37,9 +37,9 @@
 #include <osbind.h>
 #include <cdpmain.h>
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define omit_count  is_rectified
 #define omit_item   is_mapping

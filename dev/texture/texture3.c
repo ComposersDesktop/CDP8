@@ -37,9 +37,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define CHARBITSIZE (8)     /* number of bits in a char          */
 

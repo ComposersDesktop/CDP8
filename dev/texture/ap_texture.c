@@ -489,9 +489,9 @@ int usage1(void)
     "MORE??? ----- (hit keyboard)\n"
     "\n");
 
-    while(!kbhit())
+    while(!_kbhit())
         ;
-    if(kbhit()) {
+    if(_kbhit()) {
 #else
     "\n");
 #endif
