@@ -12,10 +12,10 @@ else()
   endif()
 endif()
 
-
 link_directories(../cdp2k ../newsfsys ../pvxio2)
+#include_directories(../newinclude /usr/local/include)
+include_directories(../newinclude)
 
-include_directories(../newinclude /usr/local/include)
 #OUT
 #add_executable(aminomap aminomap.c)
 #target_link_libraries(aminomap ${EXTRA_LIBRARIES})
@@ -214,8 +214,11 @@ target_link_libraries(splinter  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(splinter)
 
 add_executable(strands strands.c)
-target_link_libraries(strands  cdp2k sfsys pvxio2 aaio ${EXTRA_LIBRARIES})
-
+if(WIN32)
+  target_link_libraries(strands cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+else()
+  target_link_libraries(strands cdp2k sfsys pvxio2 aaio ${EXTRA_LIBRARIES})
+endif()
 my_install(strands)
 
 add_executable(stutter stutter.c)
@@ -234,8 +237,11 @@ target_link_libraries(synspline  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(synspline)
 
 add_executable(newsynth synthesis.c)
-target_link_libraries(newsynth  cdp2k sfsys pvxio2 aaio ${EXTRA_LIBRARIES})
-
+if(WIN32)
+  target_link_libraries(newsynth  cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+else()
+  target_link_libraries(newsynth  cdp2k sfsys pvxio2 aaio ${EXTRA_LIBRARIES})
+endif()
 my_install(newsynth)
 
 add_executable(tesselate tesselate.c)
