@@ -3,7 +3,7 @@
 if(APPLE)
   set(CMAKE_C_FLAGS "-O2 -Wall  -Dunix -DIS_CDPARSE")
 else()
-  if(MINGW)
+  if(MINGW OR MSVC)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32 -D_WIN32 -DIS_CDPARSE")
   else()
     set(CMAKE_C_FLAGS "-O2 -Wall -Dlinux -Dunix -DIS_CDPARSE")
