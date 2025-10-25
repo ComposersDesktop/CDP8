@@ -93,8 +93,11 @@ target_link_libraries(newmorph cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(newmorph)
 
 add_executable(newtex newtex.c)
-target_link_libraries(newtex cdp2k sfsys pvxio2 aaio ${EXTRA_LIBRARIES})
-
+if(MINGW OR MSVC)
+   target_link_libraries(newtex cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+else()
+   target_link_libraries(newtex cdp2k sfsys pvxio2 aaio ${EXTRA_LIBRARIES})
+endif()
 my_install(newtex)
 
 add_executable(packet packet.c)
