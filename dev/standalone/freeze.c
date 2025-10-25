@@ -46,9 +46,9 @@
 #include <extdcon.h>
 #include <flags.h>
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#endif
+//#endif
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif
@@ -1873,7 +1873,7 @@ int create_friterbufs(double maxpscat,dataptr dz)
 {
     size_t bigbufsize, seccnt;
     double k;
-    int extra_space, infile_space = dz->insams[0], big_buffer_size;
+    /* int */ size_t extra_space, infile_space = dz->insams[0], big_buffer_size;
     int overflowsize /*, seccnt*/;
 
     size_t framesize = F_SECSIZE * sizeof(float) * dz->infile->channels;
@@ -2031,10 +2031,10 @@ void setup_iter_process_type(int is_unity_gain,dataptr dz)
         dz->iparam[ITER_PROCESS] += FIXED_AMP;
     return;
 }
-
-
+#if 0
 #ifndef round
 int round(double a) {
     return (int)floor(a + 0.5);
 }
+#endif
 #endif
