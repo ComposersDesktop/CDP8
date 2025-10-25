@@ -66,9 +66,9 @@
 #include <string.h>
 #include <srates.h>
 
-#ifdef unix
-#define round lround
-#endif
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 //static double st_intun, st_noise;
 //static int st_wndws;

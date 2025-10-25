@@ -66,9 +66,9 @@
 #include <string.h>
 #include <srates.h>
 
-#ifdef unix
-#define round lround
-#endif
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif

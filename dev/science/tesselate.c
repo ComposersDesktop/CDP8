@@ -47,9 +47,9 @@
 #include <string.h>
 #include <srates.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 char errstr[2400];
 

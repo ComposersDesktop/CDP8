@@ -43,7 +43,7 @@
 const char* cdp_version = "6.1.0";
 
 //CDP LIB REPLACEMENTS
-static int usage();
+static int usage(void);
 static int  get_float_from_within_string(char **str,double *val);
 static int rround(double val);
 static int flteq(double f1,double f2);
@@ -452,7 +452,7 @@ int main(int argc,char *argv[])
 
 /******************************** USAGE2 ********************************/
 
-int usage()
+int usage(void)
 {
     fprintf(stderr,
     "USAGE: tsconvert indata outdata min max [-cminstep|-r|-q|-Q] [-ddur [-ftimes]] [-mmaxoutdur] [-l]\n"
