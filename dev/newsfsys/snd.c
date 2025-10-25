@@ -58,7 +58,8 @@
 # endif
 #endif
 #ifdef _WIN32
-#ifdef _MSC_VER
+# ifdef _MSC_VER
+#   if _MSC_VER <=1200
 static __inline int cdp_round(double fval)
 {
     int result;
@@ -69,6 +70,7 @@ static __inline int cdp_round(double fval)
     }
     return result;
 }
+#   endif
 #else
 # ifndef __GNUWIN32__
 static int cdp_round(double val)
@@ -740,11 +742,12 @@ sndseekEx(int fd, int dist, int whence)
         assert(pvxid >= 0);
         
         // eventually we will code this permanently...but is this the best place to put this test?
-        if(dist > 0)
-            assert(dist % (pvxdata.nAnalysisBins * 2) == 0);
+        //if(dist > 0)
+            assert(abs(dist) % (pvxdata.nAnalysisBins * 2) == 0);
 # endif
-        frameoffset = dist / (pvxdata.nAnalysisBins * 2);  //NB: always mono stream in CDP
-        
+        frameoffset = abs(dist) / (pvxdata.nAnalysisBins * 2);  //NB: always mono stream in CDP
+        if (dist < 0)
+            frameoffset = -frameoffset;
         switch(whence){
                 //set: go to "dist" samples: must be int multiple of  framesize
                 // seems never to be called for CDP ana routines, except for dist= 0
