@@ -43,7 +43,7 @@
 #define TEXTURE_SPLICELEN (15.0)        /* 15 MS */
 #define TEXTURE_SAFETY    (1.0)         /* 1 MS: min snd-dur between splices */
 #define TEXTURE_DEFAULT_DUR (10.0)
-#define DEFAULT_PITCH     (60.0)        /* middle C */
+#define DEFAULT_MIDI_PITCH     (60.0)        /* middle C */ //RWD Oct 2025 old symbol DEFAULT_PITCH now also deep inside Windows
 #define DEFAULT_HF_GPRANGE        (8.0)
 #define DEFAULT_GPSIZE    (4.0)
 #define HALF_OCTAVE               (6.0)
