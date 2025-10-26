@@ -42,6 +42,8 @@
 #include <string.h>
 #include <blur.h>
 
+#define round(x) lround((x))
+
 #define FIRST_ACCESS_OF_RANDTABLE_REACHES_END_FIRST   (1)
 #define SECOND_ACCESS_OF_RANDTABLE_REACHES_END_FIRST  (2)
 #define BOTH_ACCESSES_OF_RANDTABLE_REACH_END_TOGETHER (0)
