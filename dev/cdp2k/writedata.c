@@ -41,9 +41,9 @@
 //TW ADDED
 #include <limits.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 static int  set_output_header_properties(dataptr dz);
 static int  pt_datareduce(double **q,double sharp,double flat,double *thisarray,int *bsize);
@@ -716,7 +716,7 @@ void display_virtual_time(int samps_sent,dataptr dz)
                 break;
             case(FLTBANKV):
                 total_samps_to_write = dz->insams[0] + 
-                (round(dz->param[FILT_TAILV] * (double)dz->infile->srate) * dz->infile->channels);
+                ( round(dz->param[FILT_TAILV] * (double)dz->infile->srate) * dz->infile->channels);
                 float_time = (double)samps_sent/(double)total_samps_to_write;
                 break;
             case(FLTITER):
