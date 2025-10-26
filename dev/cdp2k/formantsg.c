@@ -39,6 +39,7 @@
 #include <speccon.h>
 #include <sfsys.h>
 
+#define round(x) lround((x))
 
 #define CHAN_SRCHRANGE_F    (4)
 
@@ -473,7 +474,7 @@ int is_harmonic(int *iratio,double frq1, double frq2)
         return(PROGRAM_ERROR);
     }
     ratio = frq1/frq2;
-    *iratio = round(ratio);
+    *iratio =  round(ratio);
     if(ratio > *iratio)
         intvl = ratio/(double)(*iratio);
     else
