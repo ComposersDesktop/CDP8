@@ -54,9 +54,9 @@
 /* WARNING: These function assumes brktables are INTERPOLATED LINEARLY */
 /* If not, function needs to take SRATE as a parameter, and compare sample-by-sample */
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define EQUIVALENT      (0)     /* brktables are identical */
 #define FIRST_LESS      (1)
@@ -1762,8 +1762,8 @@ int initialise_param_values(int process,int mode,int channels,double nyquist,flo
         default_val[TEXTURE_MINAMP]     = 64.0;
         default_val[TEXTURE_MAXDUR]     = min(ap->hi[TEXTURE_MAXDUR],TEXTURE_MAX_DUR);
         default_val[TEXTURE_MINDUR]     = max(ap->lo[TEXTURE_MINDUR],TEXTURE_MIN_DUR);
-        default_val[TEXTURE_MAXPICH]    = DEFAULT_PITCH;
-        default_val[TEXTURE_MINPICH]    = DEFAULT_PITCH;
+        default_val[TEXTURE_MAXPICH]    = DEFAULT_MIDI_PITCH;
+        default_val[TEXTURE_MINPICH]    = DEFAULT_MIDI_PITCH;
         default_val[TEX_PHGRID]         = 0.0;
         default_val[TEX_GPSPACE]        = (double)IS_STILL;
         default_val[TEX_GRPSPRANGE]     = 0.0;
@@ -1774,8 +1774,8 @@ int initialise_param_values(int process,int mode,int channels,double nyquist,flo
         default_val[TEX_GPPACKLO]       = DENSITY_DEFAULT * SECS_TO_MS;
         default_val[TEX_GPPACKHI]       = DENSITY_DEFAULT * SECS_TO_MS;
         if(mode==TEX_NEUTRAL) { /* midipitches */
-            default_val[TEX_GPRANGLO]   = DEFAULT_PITCH - HALF_OCTAVE;
-            default_val[TEX_GPRANGHI]   = DEFAULT_PITCH + HALF_OCTAVE;
+            default_val[TEX_GPRANGLO]   = DEFAULT_MIDI_PITCH - HALF_OCTAVE;
+            default_val[TEX_GPRANGHI]   = DEFAULT_MIDI_PITCH + HALF_OCTAVE;
         } else { /* notes of hfield */
             default_val[TEX_GPRANGLO]   = DEFAULT_HF_GPRANGE;
             default_val[TEX_GPRANGHI]   = DEFAULT_HF_GPRANGE;
