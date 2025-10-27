@@ -41,6 +41,8 @@
 #include <pitch.h>
 #include <memory.h>
 
+#define round(x) lround((x))
+
 static int  do_spectral_shiftp(dataptr dz);
 static int  replace_partial_by_tuned_partial(int cc,int vc,dataptr dz);
 static int  focus_partial_towards_tuned_value(int vc, int cc,dataptr dz);
