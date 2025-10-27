@@ -105,7 +105,7 @@ struct partinfo *pi = &cfg.pinfo[0];
 #define FSTVERWPREF (0x201L)
 
 void
-usage()
+usage(void)
 {
     fprintf(stderr,
 #ifdef ATARI
@@ -127,7 +127,7 @@ usage()
 }
 
 void
-isprefix()
+isprefix(void)
 {
     char buf[MAXPREFIX];
 
@@ -171,9 +171,9 @@ main(int argc, char *argv[])
 #if defined(_WIN32) || defined(__SC__)
     int cded = 0;       /* did we cd? */
     char opath[MAXPREFIX];
-    int olddrive;
-    int newdrive;
-    char *dircp;
+    int olddrive = 0;
+    int newdrive = 0;
+    char *dircp = 0;
 #endif
 
     if(sflinit("dirsf")) {
@@ -365,7 +365,7 @@ int SFCALLS
 lpr(struct sf_direct *p)
 {
     int nosec = 0;
-    int scale;
+    int scale = 0;
 
     if(!dofile(p->name))
         return 0;
