@@ -41,9 +41,9 @@
 #define ENDOFSTR        '\0'
 
 #include <sfsys.h>
-#ifdef unix
+//#ifdef unix
 #define round lround
-#endif
+//#endif
 
 
 int     strgetfloat(char **,double  *);
