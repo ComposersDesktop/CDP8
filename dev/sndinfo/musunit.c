@@ -37,9 +37,9 @@
 #include <ctype.h>
 #include <sfsys.h>
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define NOTEMIN                 ("A-4")
 #define NOTEMAX                 ("G5")

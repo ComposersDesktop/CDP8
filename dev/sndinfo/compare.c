@@ -42,6 +42,8 @@
 #include <string.h>
 #include <math.h>
 
+#define round(x) lround((x))
+
 #define SPACECNT    (32)
 
 static int  try_header(int chans,double inverse_sr,dataptr dz);
