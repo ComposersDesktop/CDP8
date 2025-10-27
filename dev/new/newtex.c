@@ -64,9 +64,8 @@
 
 #ifdef unix
 #include <aaio.h>
-#define round(x) lround((x))
 #endif
-
+#define round(x) lround((x))
 char errstr[2400];
 
 int anal_infiles = 1;
@@ -1255,7 +1254,7 @@ int usage2(char *str)
         "\n"
         "Hit key 's' to continue to \"SPACETYPE\" information, or 'e' to exit.\n");
 
-        while((k = getch())!='s' && k != 'e')
+        while((k = _getch())!='s' && k != 'e')
             ;
         if(k == 's') {
             fprintf(stderr,
