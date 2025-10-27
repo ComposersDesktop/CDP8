@@ -896,13 +896,13 @@ int pvoc_process_addon(int ifd,int ofd,int chans,int origrate,float arate,int Ml
         }
 #else
         for (i = 0; i < IOi;) { /* shift out next IOi values */
-            int j;
+            int jj;
             int todo = min(IOi-i, output+obuflen-nextOut);
             if(!outfloats(nextOut,&maxsample,&minsample,&num_overflows,todo, ofd))
                 return(0);
             i += todo;
             outCount += todo;
-            for(j = 0; j < todo; j++)
+            for(jj = 0; jj < todo; jj++)
                 *nextOut++ = 0.0f;
             if (nextOut >= (output + obuflen))
                 nextOut -= obuflen;
