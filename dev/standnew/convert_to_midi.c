@@ -43,15 +43,15 @@
 #include <math.h>
 #include <sfsys.h>   // RWD for macro defs
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#else
-# ifndef round
+//#else
+//# ifndef round
 //static int round(double d);
-static int twround(double d);   //RWD
-#define round(x) twround((x))   //RWD
-# endif
-#endif
+//static int twround(double d);   //RWD
+//#define round(x) twround((x))   //RWD
+//# endif
+//#endif
 
 
 #define MIDI_NOTE_ON    (unsigned char)144  /*  0x90 = 1001 0000 = 1001 is Note-on : 0000 is channel number */
