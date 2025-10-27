@@ -31,8 +31,9 @@
 #include <string.h>
 
 /* RWD March 2012 changed sndsize to sndsizeEx */
-#define	FAILED		(-1)
-#define SUCCEEDED	(0)
+/* RWD Oct 2025 these symbols also now used in Windows*/
+#define	FFAILED		(-1)
+#define FSUCCEEDED	(0)
 
 static int readfhead(int ifd);
 const char* cdp_version = "7.1.0";
@@ -52,18 +53,18 @@ int main(int argc, char *argv[])
 	if(argc!=2) {
 		fprintf(stdout,"ERROR: Insufficient params:: vuform formantfile.\n");
 		fflush(stdout);
-		return(FAILED);
+		return(FFAILED);
 	}
 	if((ifd = sndopenEx(argv[1],0,CDP_OPEN_RDONLY)) < 0) {
 		fprintf(stdout,"ERROR: Failure to open file %s for input.\n",argv[1]);
 		fflush(stdout);
-		return(FAILED);
+		return(FFAILED);
 	}
 	len = strlen(argv[1]);
 	if((filename = (char *)malloc((len+1) * sizeof(char)))==NULL) {
 		fprintf(stdout,"ERROR: Failure to allocate memory 1.\n");
 		fflush(stdout);
-		return(FAILED);
+		return(FFAILED);
 	}
 	strcpy(filename,argv[1]);
 	p = filename;
@@ -83,31 +84,31 @@ int main(int argc, char *argv[])
 	if(k <= 0) {
 		fprintf(stdout,"ERROR: No data in file\n");
 		fflush(stdout);
-		return(FAILED);
+		return(FFAILED);
 	}
 	if((specenvcnt = readfhead(ifd)) < 0)
-		return(FAILED);
+		return(FFAILED);
 	specenvcnt *= 3;
 	if(k < specenvcnt) {
 		fprintf(stdout,"ERROR: Too little data in file\n");
 		fflush(stdout);
-		return(FAILED);
+		return(FFAILED);
 	}
 	if((buf = (float *)malloc(specenvcnt * sizeof(float)))==NULL) {
 		fprintf(stdout,"ERROR: Failure to allocate memory 2.\n");
 		fflush(stdout);
-		return(FAILED);
+		return(FFAILED);
 	}
 	if(fgetfbufEx(buf,specenvcnt,ifd,0) < 0) {
 		fprintf(stdout,"ERROR: Can't read samples from file.\n");
 		fflush(stdout);
-		return(FAILED);
+		return(FFAILED);
 	}
 	sndcloseEx(ifd);
 	if((fp = fopen(filename,"w"))==NULL) {
 		fprintf(stdout,"ERROR: Can't open outputfile\n");
 		fflush(stdout);
-		return(FAILED);
+		return(FFAILED);
 	}
 	specenvcnt /= 3;
 	sprintf(out,"%d\n",specenvcnt);
@@ -119,7 +120,7 @@ int main(int argc, char *argv[])
 		fputs(out,fp);
 	}
 	fclose(fp);
-	return(SUCCEEDED);
+	return(FSUCCEEDED);
 }
 
 
