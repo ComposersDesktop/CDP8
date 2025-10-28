@@ -144,10 +144,10 @@ extern char *  sferrstr(void);
 /*
  *  return the numeric error indication.
  */
-extern int  sferrno();
+extern int  sferrno(void);   //RWD Oct 2025 addewd void
 
 
-extern int sfinit();     /* deprecated */
+extern int sfinit(void);     /* deprecated */
 #define sfexit exit      /* deprecated */
 
 /*
@@ -391,6 +391,7 @@ void Mfree(void *);
 
 /*CDP98: now a func, so can round negative numbers properly!*/
 /* NB in WIN32 sfsys.c: this is implemented in asssembler for great speed! */
+//RWD Oct 2025: should no longer be needed as lround() now available across platforms
 extern int cdp_round(double val);
 /* unix math.h does not include these macros */
 #ifndef __cplusplus
