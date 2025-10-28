@@ -122,7 +122,7 @@ extern  const GUID KSDATAFORMAT_SUBTYPE_PVOC;
 
 /* pvoc file handling functions */
     /* NB: frame count always disregards chans */
-const char *pvoc_errorstr();
+const char *pvoc_errorstr(void);
 int32_t init_pvsys(void);
 int32_t  pvoc_createfile(const char *filename, 
                      DWORD fftlen,DWORD overlap, DWORD chans,
