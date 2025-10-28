@@ -745,9 +745,8 @@ sndseekEx(int fd, int dist, int whence)
         //if(dist > 0)
             assert(abs(dist) % (pvxdata.nAnalysisBins * 2) == 0);
 # endif
-        frameoffset = abs(dist) / (pvxdata.nAnalysisBins * 2);  //NB: always mono stream in CDP
-        if (dist < 0)
-            frameoffset = -frameoffset;
+        //RWD Oct 2025, can't divide signed val by unsigned val. No warning, but CPU goes nuts!
+        frameoffset = dist / (int) (pvxdata.nAnalysisBins * 2);  //NB: always mono stream in CDP
         switch(whence){
                 //set: go to "dist" samples: must be int multiple of  framesize
                 // seems never to be called for CDP ana routines, except for dist= 0
