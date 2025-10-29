@@ -232,8 +232,8 @@ static int32_t write_fmt(int fd, int byterev,const WAVEFORMATEX *pfmt)
     else {
        if(write(fd,(char *) &(pfmt->wFormatTag),sizeof(WORD)) != sizeof(WORD)
             || write(fd,(char *) &(pfmt->nChannels),sizeof(WORD)) != sizeof(WORD)
-            ||_write(fd,(char *) &(pfmt->nSamplesPerSec),sizeof(DWORD)) != sizeof(DWORD)
-            ||_write(fd,(char *) &(pfmt->nAvgBytesPerSec),sizeof(DWORD)) != sizeof(DWORD)
+            || write(fd,(char *) &(pfmt->nSamplesPerSec),sizeof(DWORD)) != sizeof(DWORD)
+            || write(fd,(char *) &(pfmt->nAvgBytesPerSec),sizeof(DWORD)) != sizeof(DWORD)
             || write(fd,(char *) &(pfmt->nBlockAlign),sizeof(WORD)) != sizeof(WORD)
             || write(fd,(char *) &(pfmt->wBitsPerSample),sizeof(WORD)) != sizeof(WORD)
             || write(fd,(char *) &(pfmt->cbSize),sizeof(WORD)) != sizeof(WORD))
@@ -915,7 +915,7 @@ static int32_t pvoc_readheader(int32_t ifd,WAVEFORMATPVOCEX *pWfpx)
                     return 0;
                 }
 
-            files[ifd]->datachunkoffset = _lseek(files[ifd]->fd,0,SEEK_CUR);
+            files[ifd]->datachunkoffset = lseek(files[ifd]->fd,0,SEEK_CUR);
             files[ifd]->curpos = files[ifd]->datachunkoffset;
             /* not m/c frames, for now */
             files[ifd]->nFrames = size / files[ifd]->pvdata.dwFrameAlign;
@@ -990,7 +990,7 @@ static int32_t pvoc_writeheader(int ofd)
         return 0;
     }
     /* we need to record where we are, as we may have to update fmt data before file close */
-    files[ofd]->fmtchunkoffset = _lseek(files[ofd]->fd,0,SEEK_CUR);
+    files[ofd]->fmtchunkoffset = lseek(files[ofd]->fd,0,SEEK_CUR);
     
     if(write_fmt(files[ofd]->fd,files[ofd]->do_byte_reverse,&(files[ofd]->fmtdata)) != SIZEOF_WFMTEX){
         pv_errstr = "\npvsys: error writing fmt chunk";
