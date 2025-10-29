@@ -25,8 +25,11 @@
 #include <string.h>
 #include <math.h>
 #include <memory.h>
-#include <sys/timeb.h>
 #include "portsf.h"
+
+#ifdef _WIN32
+#include <sys/timeb.h>
+#endif
 
 #ifdef unix
 /* in portsf.lib */

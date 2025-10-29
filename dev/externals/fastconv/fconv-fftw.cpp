@@ -41,8 +41,11 @@ extern "C"
 #include <string.h>
 #include <time.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
 
+
+#ifdef _WIN32
+#define <sys/timeb.h>
+#endif
 
 #ifdef _DEBUG
 #include <assert.h>
@@ -114,13 +117,21 @@ void usage(const char *progname)
 
 
 double
-timer()
+timer() //TODO: Refactor duplicated code
 {
-	struct timeb now;
 	double secs, ticks;	
-	ftime(&now);
-	ticks = (double)now.millitm/(1000.0);
-	secs = (double) now.time;
+
+#ifdef _WIN32
+  struct timeb     now;
+  ftime(&now);
+  ticks = (double) now.millitm*1e-4;
+  secs  = (double) now.time;
+#else
+  struct timespec  ts;
+	clock_gettime(CLOCK_REALTIME, &ts); //TODO: Handle this erroring
+	ticks = (double) ts.tv_nsec*1e-9; 
+	secs  = (double) ts.tv_sec;
+#endif
 
 	return secs + ticks;
 }

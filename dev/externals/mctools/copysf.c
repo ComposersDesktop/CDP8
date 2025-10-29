@@ -31,12 +31,12 @@
 #include <ctype.h>
 #ifdef _WIN32
 #include <malloc.h>			//RWD.6.5.99
+#include <sys/timeb.h>
 #endif
 #include <string.h>
 #include <math.h>
 #include <time.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
 #include <portsf.h>
 
 #define VERSION "Revision: 2.1.1 2020 "

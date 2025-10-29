@@ -25,9 +25,12 @@
 #include <math.h>
 #include <memory.h>
 #include <sys/types.h>
-#include <sys/timeb.h>
 #include <portsf.h>
 #include "fmdcode.h"
+
+#ifdef _WIM32
+#include <sys/timeb.h>
+#endif
 
 #ifdef unix
 /* in portsf.lib */
