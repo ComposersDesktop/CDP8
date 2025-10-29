@@ -14,11 +14,11 @@ else()
 endif()
 
 include_directories(../newinclude)
-
+#RWD 2025 pvx file handling now always in pvxio2
 if(MINGW OR MSVC)
    set(SFSYS_SRCS sfsys.c snd.c sfdir.c osbind.c props.c shortcuts.c scandir.c alias.c ieee80.c)
 else()
-   set(SFSYS_SRCS sfsys.c snd.c sfdir.c osbind.c props.c ieee80.c pvfileio.c)
+   set(SFSYS_SRCS sfsys.c snd.c sfdir.c osbind.c props.c ieee80.c)
 endif()
 
 add_library(sfsys ${SFSYS_SRCS})
