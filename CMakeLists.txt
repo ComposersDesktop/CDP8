@@ -12,8 +12,8 @@ endif()
 message(STATUS "${CMAKE_HOME_DIRECTORY}")
 message(STATUS "installing to ${CMAKE_INSTALL_PREFIX}")
 
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -std=c++11 -stdlib=libc++")
-set(CMAKE_C_FLAGS_RELEASE "-O3 ")
+set(CMAKE_CXX_FLAGS_RELEASE "-O2 -std=c++11 -stdlib=libc++")
+set(CMAKE_C_FLAGS_RELEASE "-O2 ")
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 # Project definitions
@@ -252,7 +252,13 @@ endif()
 
 if(WIN32)
     message(STATUS "Building on Windows")
-    add_definitions(-DWIN32 -D_WIN32 -DENABLE_PVX -D_CRT_SECURE_NO_DEPRECATE)
+    if(MSVC)
+     add_definitions(-DWIN32 -D_WIN32 -DENABLE_PVX -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS /wd5040 /wd4710 /wd5045 /wd4711 /wd4820 /wd4668 /wd4738)
+    else()
+     add_definitions(-DWIN32 -D_WIN32 -DENABLE_PVX)
+    endif()
+    #RWD for MSVC
+#    add_compiler_flags( /wd5040)
 endif()
 
 #add_compiler_flags(${LIBCDP_CFLAGS} TARGETS ${CDPLIB})
