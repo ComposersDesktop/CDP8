@@ -137,10 +137,10 @@ static int32_t write_guid(int32_t fd,int32_t byterev,const GUID *pGuid)
         guid.Data2 = REVWBYTES(pGuid->Data2);
         guid.Data3 = REVWBYTES(pGuid->Data3);
         memcpy((char *) (guid.Data4),(char *) (pGuid->Data4),8);
-        written = _write(fd,(char *) &guid,sizeof(GUID));
+        written = write(fd,(char *) &guid,sizeof(GUID));
     }
     else
-        written = _write(fd,(char *) pGuid,sizeof(GUID));
+        written = write(fd,(char *) pGuid,sizeof(GUID));
 
     return written;
 
@@ -188,10 +188,10 @@ static int32_t write_pvocdata(int32_t fd,int32_t byterev,const PVOCDATA *pData)
         //data.fWindowParam = * (float *) &dwval;
         data.fWindowParam = ssamp.fsamp;
         
-        written = _write(fd,(char *) &data,sizeof(PVOCDATA));
+        written = write(fd,(char *) &data,sizeof(PVOCDATA));
     }
     else
-        written = _write(fd,(char *) pData,sizeof(PVOCDATA));
+        written = write(fd,(char *) pData,sizeof(PVOCDATA));
 
     return written;
 
@@ -218,25 +218,25 @@ static int32_t write_fmt(int fd, int byterev,const WAVEFORMATEX *pfmt)
         fmt.wBitsPerSample  = REVWBYTES(pfmt->wBitsPerSample);
         fmt.cbSize          = REVWBYTES(pfmt->cbSize);
 
-        if(_write(fd,(char *) &(fmt.wFormatTag),sizeof(WORD)) != sizeof(WORD)
-            || _write(fd,(char *) &(fmt.nChannels),sizeof(WORD)) != sizeof(WORD)
-            || _write(fd,(char *) &(fmt.nSamplesPerSec),sizeof(DWORD)) != sizeof(DWORD)
-            || _write(fd,(char *) &(fmt.nAvgBytesPerSec),sizeof(DWORD)) != sizeof(DWORD)
-            || _write(fd,(char *) &(fmt.nBlockAlign),sizeof(WORD)) != sizeof(WORD)
-            || _write(fd,(char *) &(fmt.wBitsPerSample),sizeof(WORD)) != sizeof(WORD)
-            || _write(fd,(char *) &(fmt.cbSize),sizeof(WORD)) != sizeof(WORD))
+        if(write(fd,(char *) &(fmt.wFormatTag),sizeof(WORD)) != sizeof(WORD)
+            || write(fd,(char *) &(fmt.nChannels),sizeof(WORD)) != sizeof(WORD)
+            || write(fd,(char *) &(fmt.nSamplesPerSec),sizeof(DWORD)) != sizeof(DWORD)
+            || write(fd,(char *) &(fmt.nAvgBytesPerSec),sizeof(DWORD)) != sizeof(DWORD)
+            || write(fd,(char *) &(fmt.nBlockAlign),sizeof(WORD)) != sizeof(WORD)
+            || write(fd,(char *) &(fmt.wBitsPerSample),sizeof(WORD)) != sizeof(WORD)
+            || write(fd,(char *) &(fmt.cbSize),sizeof(WORD)) != sizeof(WORD))
 
         return 0;
 
     }
     else {
-       if(_write(fd,(char *) &(pfmt->wFormatTag),sizeof(WORD)) != sizeof(WORD)
-            || _write(fd,(char *) &(pfmt->nChannels),sizeof(WORD)) != sizeof(WORD)
-            || _write(fd,(char *) &(pfmt->nSamplesPerSec),sizeof(DWORD)) != sizeof(DWORD)
-            || _write(fd,(char *) &(pfmt->nAvgBytesPerSec),sizeof(DWORD)) != sizeof(DWORD)
-            || _write(fd,(char *) &(pfmt->nBlockAlign),sizeof(WORD)) != sizeof(WORD)
-            || _write(fd,(char *) &(pfmt->wBitsPerSample),sizeof(WORD)) != sizeof(WORD)
-            || _write(fd,(char *) &(pfmt->cbSize),sizeof(WORD)) != sizeof(WORD))
+       if(write(fd,(char *) &(pfmt->wFormatTag),sizeof(WORD)) != sizeof(WORD)
+            || write(fd,(char *) &(pfmt->nChannels),sizeof(WORD)) != sizeof(WORD)
+            ||_write(fd,(char *) &(pfmt->nSamplesPerSec),sizeof(DWORD)) != sizeof(DWORD)
+            ||_write(fd,(char *) &(pfmt->nAvgBytesPerSec),sizeof(DWORD)) != sizeof(DWORD)
+            || write(fd,(char *) &(pfmt->nBlockAlign),sizeof(WORD)) != sizeof(WORD)
+            || write(fd,(char *) &(pfmt->wBitsPerSample),sizeof(WORD)) != sizeof(WORD)
+            || write(fd,(char *) &(pfmt->cbSize),sizeof(WORD)) != sizeof(WORD))
 
         return 0;
     }
@@ -254,12 +254,12 @@ static int32_t pvoc_writeWindow(int32_t fd,int32_t byterev,float *window,DWORD l
         for(i=0;i < length; i++){
             lval = *lp++;
             lval = REVDWBYTES(lval);
-            if(_write(fd,(char *)&lval,sizeof(int32_t)) != sizeof(int32_t))
+            if(write(fd,(char *)&lval,sizeof(int32_t)) != sizeof(int32_t))
                 return 0;
         }
     }
     else{
-        if(_write(fd,(char *) window,length * sizeof(float)) != (int32_t)(length*sizeof(float)))
+        if(write(fd,(char *) window,length * sizeof(float)) != (int32_t)(length*sizeof(float)))
             return 0;
     }
 
@@ -274,14 +274,14 @@ static int32_t pvoc_readWindow(int fd, int byterev, float *window,DWORD length)
         int32_t got,oval,lval, *lp = (int32_t *) window;
 #ifdef SINGLE_FLOAT 
         for(i=0;i < length;i++){
-            if(_read(fd,(char *)&lval,sizeof(int32_t)) != sizeof(int32_t))
+            if(read(fd,(char *)&lval,sizeof(int32_t)) != sizeof(int32_t))
                 return 0;
             oval = REVDWBYTES(lval);
             *lp++ = oval;
         }
 #else
         /* read whole block then swap...should be faster */
-        got = _read(fd,(char *) window,length * sizeof(float));
+        got = read(fd,(char *) window,length * sizeof(float));
         if(got != (int)(length * sizeof(float)))
             return 0;
         /* then byterev */
@@ -294,7 +294,7 @@ static int32_t pvoc_readWindow(int fd, int byterev, float *window,DWORD length)
 #endif
     }
     else{
-        if(_read(fd,(char *) window,length * sizeof(float)) != (int)(length * sizeof(float)))
+        if(read(fd,(char *) window,length * sizeof(float)) != (int)(length * sizeof(float)))
             return 0;
     }
 
@@ -493,7 +493,7 @@ int32_t  pvoc_createfile(const char *filename,
     }
 
 
-    pfile->fd = _open(filename,O_BINARY | O_CREAT | O_RDWR | O_TRUNC,_S_IWRITE | _S_IREAD);
+    pfile->fd = open(filename,O_BINARY | O_CREAT | O_RDWR | O_TRUNC,_S_IWRITE | _S_IREAD);
     if(pfile->fd < 0){
         free(pname);        
         if(pfile->customWindow)
@@ -513,7 +513,7 @@ int32_t  pvoc_createfile(const char *filename,
     files[i] = pfile;
 
     if(!pvoc_writeheader(i)) {
-        _close(pfile->fd);
+        close(pfile->fd);
         remove(pfile->name);
         free(pfile->name);
         if(pfile->customWindow)
@@ -619,7 +619,7 @@ int32_t pvoc_openfile(const char *filename,PVOCDATA *data,WAVEFORMATEX *fmt)
         pv_errstr = "\npvsys: no memory";
         return -1;
     }
-    pfile->fd = _open(filename,O_BINARY | O_RDONLY,_S_IREAD);
+    pfile->fd = open(filename,O_BINARY | O_RDONLY,_S_IREAD);
     if(pfile->fd < 0){
         free(pname);
         free(pfile);
@@ -639,7 +639,7 @@ int32_t pvoc_openfile(const char *filename,PVOCDATA *data,WAVEFORMATEX *fmt)
     files[i] = pfile;
 
     if(!pvoc_readheader(i,&wfpx)){
-        _close(pfile->fd);
+        close(pfile->fd);
         free(pfile->name);
         if(pfile->customWindow)
             free(pfile->customWindow);
@@ -667,13 +667,13 @@ static int32_t pvoc_readfmt(int32_t fd,int32_t byterev,WAVEFORMATPVOCEX *pWfpx)
     assert(pWfpx);
 #endif
 
-    if(_read(fd,(char *) &(pWfpx->wxFormat.Format.wFormatTag),sizeof(WORD)) != sizeof(WORD)
-        || _read(fd,(char *) &(pWfpx->wxFormat.Format.nChannels),sizeof(WORD)) != sizeof(WORD)
-        || _read(fd,(char *) &(pWfpx->wxFormat.Format.nSamplesPerSec),sizeof(DWORD)) != sizeof(DWORD)
-        || _read(fd,(char *) &(pWfpx->wxFormat.Format.nAvgBytesPerSec),sizeof(DWORD)) != sizeof(DWORD)
-        || _read(fd,(char *) &(pWfpx->wxFormat.Format.nBlockAlign),sizeof(WORD)) != sizeof(WORD)
-        || _read(fd,(char *) &(pWfpx->wxFormat.Format.wBitsPerSample),sizeof(WORD)) != sizeof(WORD)
-        || _read(fd,(char *) &(pWfpx->wxFormat.Format.cbSize),sizeof(WORD)) != sizeof(WORD)){
+    if(read(fd,(char *) &(pWfpx->wxFormat.Format.wFormatTag),sizeof(WORD)) != sizeof(WORD)
+        || read(fd,(char *) &(pWfpx->wxFormat.Format.nChannels),sizeof(WORD)) != sizeof(WORD)
+        || read(fd,(char *) &(pWfpx->wxFormat.Format.nSamplesPerSec),sizeof(DWORD)) != sizeof(DWORD)
+        || read(fd,(char *) &(pWfpx->wxFormat.Format.nAvgBytesPerSec),sizeof(DWORD)) != sizeof(DWORD)
+        || read(fd,(char *) &(pWfpx->wxFormat.Format.nBlockAlign),sizeof(WORD)) != sizeof(WORD)
+        || read(fd,(char *) &(pWfpx->wxFormat.Format.wBitsPerSample),sizeof(WORD)) != sizeof(WORD)
+        || read(fd,(char *) &(pWfpx->wxFormat.Format.cbSize),sizeof(WORD)) != sizeof(WORD)){
         pv_errstr = "\npvsys: error reading Source format data";
         return 0;
     }
@@ -707,9 +707,9 @@ static int32_t pvoc_readfmt(int32_t fd,int32_t byterev,WAVEFORMATPVOCEX *pWfpx)
         return 0;
     }
 
-    if(_read(fd,(char *) &(pWfpx->wxFormat.Samples.wValidBitsPerSample),sizeof(WORD)) != sizeof(WORD)
-        || _read(fd,(char *) &(pWfpx->wxFormat.dwChannelMask),sizeof(DWORD)) != sizeof(DWORD)
-        || _read(fd,(char *) &(pWfpx->wxFormat.SubFormat),sizeof(GUID)) != sizeof(GUID)){
+    if_read(fd,(char *) &(pWfpx->wxFormat.Samples.wValidBitsPerSample),sizeof(WORD)) != sizeof(WORD)
+        || read(fd,(char *) &(pWfpx->wxFormat.dwChannelMask),sizeof(DWORD)) != sizeof(DWORD)
+        || read(fd,(char *) &(pWfpx->wxFormat.SubFormat),sizeof(GUID)) != sizeof(GUID)){
         pv_errstr = "\npvsys: error reading Extended format data";
         return 0;
     }
@@ -735,9 +735,9 @@ static int32_t pvoc_readfmt(int32_t fd,int32_t byterev,WAVEFORMATPVOCEX *pWfpx)
         return 0;
     }
 
-    if(_read(fd,(char *) &(pWfpx->dwVersion),sizeof(DWORD)) != sizeof(DWORD)
-        || _read(fd,(char *) &(pWfpx->dwDataSize),sizeof(DWORD)) != sizeof(DWORD)
-        || _read(fd,(char *) &(pWfpx->data),sizeof(PVOCDATA)) != sizeof(PVOCDATA)){
+    if(read(fd,(char *) &(pWfpx->dwVersion),sizeof(DWORD)) != sizeof(DWORD)
+        || read(fd,(char *) &(pWfpx->dwDataSize),sizeof(DWORD)) != sizeof(DWORD)
+        || read(fd,(char *) &(pWfpx->data),sizeof(PVOCDATA)) != sizeof(PVOCDATA)){
         pv_errstr = "\npvsys: error reading Extended pvoc format data";
         return 0;
     }
@@ -815,8 +815,8 @@ static int32_t pvoc_readheader(int32_t ifd,WAVEFORMATPVOCEX *pWfpx)
     size += sizeof(PVOCDATA);
 #endif
 
-    if(_read(files[ifd]->fd,(char *) &tag,sizeof(DWORD)) != sizeof(DWORD)
-        || _read(files[ifd]->fd,(char *) &size,sizeof(DWORD)) != sizeof(DWORD)){
+    if(read(files[ifd]->fd,(char *) &tag,sizeof(DWORD)) != sizeof(DWORD)
+        || read(files[ifd]->fd,(char *) &size,sizeof(DWORD)) != sizeof(DWORD)){
         pv_errstr = "\npvsys: error reading header";
         return 0;
     }
@@ -834,7 +834,7 @@ static int32_t pvoc_readheader(int32_t ifd,WAVEFORMATPVOCEX *pWfpx)
         return 0;
     }
     riffsize = size;
-    if(_read(files[ifd]->fd,(char *) &tag,sizeof(DWORD)) != sizeof(DWORD)){
+    if(read(files[ifd]->fd,(char *) &tag,sizeof(DWORD)) != sizeof(DWORD)){
         pv_errstr = "\npvsys: error reading header";
         return 0;
     }
@@ -849,8 +849,8 @@ static int32_t pvoc_readheader(int32_t ifd,WAVEFORMATPVOCEX *pWfpx)
     riffsize -= sizeof(DWORD);
     /*loop for chunks */
     while(riffsize > 0){
-        if(_read(files[ifd]->fd,(char *) &tag,sizeof(DWORD)) != sizeof(DWORD)
-            || _read(files[ifd]->fd,(char *) &size,sizeof(DWORD)) != sizeof(DWORD)){
+        if(read(files[ifd]->fd,(char *) &tag,sizeof(DWORD)) != sizeof(DWORD)
+            || read(files[ifd]->fd,(char *) &size,sizeof(DWORD)) != sizeof(DWORD)){
             pv_errstr = "\npvsys: error reading header";
             return 0;
         }
@@ -925,7 +925,7 @@ static int32_t pvoc_readheader(int32_t ifd,WAVEFORMATPVOCEX *pWfpx)
         default:
             /* skip any onknown chunks */
             riffsize -= 2 * sizeof(DWORD);
-            if(_lseek(files[ifd]->fd,size,SEEK_CUR) < 0){
+            if(lseek(files[ifd]->fd,size,SEEK_CUR) < 0){
                 pv_errstr = "\npvsys: error skipping unknown WAVE chunk";
                 return 0;
             }
@@ -960,8 +960,8 @@ static int32_t pvoc_writeheader(int ofd)
     if(!files[ofd]->do_byte_reverse)
         tag = REVDWBYTES(tag);
 
-    if(_write(files[ofd]->fd,&tag,sizeof(int32_t)) != sizeof(int32_t)
-        || _write(files[ofd]->fd,&size,sizeof(int32_t)) != sizeof(int32_t)) {
+    if(write(files[ofd]->fd,&tag,sizeof(int32_t)) != sizeof(int32_t)
+        || write(files[ofd]->fd,&size,sizeof(int32_t)) != sizeof(int32_t)) {
         pv_errstr = "\npvsys: error writing header";
         return 0;
     }
@@ -969,7 +969,7 @@ static int32_t pvoc_writeheader(int ofd)
     tag = TAG('W','A','V','E');
     if(!files[ofd]->do_byte_reverse)
         tag = REVDWBYTES(tag);
-    if(_write(files[ofd]->fd,&tag,sizeof(int32_t)) != sizeof(int32_t)){
+    if(write(files[ofd]->fd,&tag,sizeof(int32_t)) != sizeof(int32_t)){
         pv_errstr = "\npvsys: error writing header";
         return 0;
     }
@@ -984,8 +984,8 @@ static int32_t pvoc_writeheader(int ofd)
         size = REVDWBYTES(size);
     if(!files[ofd]->do_byte_reverse)
         tag = REVDWBYTES(tag);
-    if(_write(files[ofd]->fd,(char *)&tag,sizeof(int32_t)) != sizeof(int32_t)
-        || _write(files[ofd]->fd,(char *)&size,sizeof(int32_t)) != sizeof(int32_t)) {
+    if(write(files[ofd]->fd,(char *)&tag,sizeof(int32_t)) != sizeof(int32_t)
+        || write(files[ofd]->fd,(char *)&size,sizeof(int32_t)) != sizeof(int32_t)) {
         pv_errstr = "\npvsys: error writing header";
         return 0;
     }
@@ -1001,13 +1001,13 @@ static int32_t pvoc_writeheader(int ofd)
     if(files[ofd]->do_byte_reverse)
         validbits = REVWBYTES(validbits);
 
-    if(_write(files[ofd]->fd,(char *) &validbits,sizeof(WORD)) != sizeof(WORD)){
+    if(write(files[ofd]->fd,(char *) &validbits,sizeof(WORD)) != sizeof(WORD)){
         pv_errstr = "\npvsys: error writing fmt chunk";
         return 0;
     }
     /* we will take this from a WAVE_EX file, in due course */
     size = 0;   /*dwChannelMask*/
-    if(_write(files[ofd]->fd,(char *)&size,sizeof(DWORD)) != sizeof(DWORD)){
+    if(write(files[ofd]->fd,(char *)&size,sizeof(DWORD)) != sizeof(DWORD)){
         pv_errstr = "\npvsys: error writing fmt chunk";
         return 0;
     }
@@ -1023,8 +1023,8 @@ static int32_t pvoc_writeheader(int ofd)
         size = REVDWBYTES(size);
     }
 
-    if(_write(files[ofd]->fd,&version,sizeof(int32_t)) != sizeof(int32_t)
-        || _write(files[ofd]->fd,&size,sizeof(int32_t)) != sizeof(int32_t)){
+    if(write(files[ofd]->fd,&version,sizeof(int32_t)) != sizeof(int32_t)
+        || write(files[ofd]->fd,&size,sizeof(int32_t)) != sizeof(int32_t)){
         pv_errstr = "\npvsys: error writing fmt chunk";
         return 0;
     }
@@ -1046,8 +1046,8 @@ static int32_t pvoc_writeheader(int ofd)
             size = REVDWBYTES(size);
         else
             tag = REVDWBYTES(tag);
-        if(_write(files[ofd]->fd,(char *)&tag,sizeof(int32_t)) != sizeof(int32_t)
-            || _write(files[ofd]->fd,(char *)&size,sizeof(int32_t)) != sizeof(int32_t)) {
+        if(write(files[ofd]->fd,(char *)&tag,sizeof(int32_t)) != sizeof(int32_t)
+            || write(files[ofd]->fd,(char *)&size,sizeof(int32_t)) != sizeof(int32_t)) {
             pv_errstr = "\npvsys: error writing header";
             return 0;
         }
@@ -1064,7 +1064,7 @@ static int32_t pvoc_writeheader(int ofd)
     tag = TAG('d','a','t','a');
     if(!files[ofd]->do_byte_reverse)
         tag = REVDWBYTES(tag);
-    if(_write(files[ofd]->fd,&tag,sizeof(int32_t)) != sizeof(int32_t)){
+    if(write(files[ofd]->fd,&tag,sizeof(int32_t)) != sizeof(int32_t)){
         pv_errstr = "\npvsys: write error writing header";
         return 0;
     }
@@ -1072,7 +1072,7 @@ static int32_t pvoc_writeheader(int ofd)
     /* we need to update size later on...*/
 
     size = 0;
-    if(_write(files[ofd]->fd,&size,sizeof(int32_t)) != sizeof(int32_t)){
+    if(write(files[ofd]->fd,&size,sizeof(int32_t)) != sizeof(int32_t)){
         pv_errstr = "\npvsys: write error writing header";
         return 0;
     }
@@ -1098,7 +1098,7 @@ static int32_t pvoc_updateheader(int ofd)
     assert(!files[ofd]->readonly);
 #endif
     datasize = files[ofd]->curpos - files[ofd]->datachunkoffset;
-    pos = _lseek(files[ofd]->fd,files[ofd]->datachunkoffset-sizeof(DWORD),SEEK_SET);
+    pos = lseek(files[ofd]->fd,files[ofd]->datachunkoffset-sizeof(DWORD),SEEK_SET);
     if(pos != files[ofd]->datachunkoffset-sizeof(DWORD)){
         pv_errstr = "\npvsys: seek error updating data chunk";
         return 0;
@@ -1106,7 +1106,7 @@ static int32_t pvoc_updateheader(int ofd)
 
     if(files[ofd]->do_byte_reverse)
         datasize = REVDWBYTES(datasize);
-    if(_write(files[ofd]->fd,(char *) &datasize,sizeof(DWORD)) != sizeof(DWORD)){
+    if(write(files[ofd]->fd,(char *) &datasize,sizeof(DWORD)) != sizeof(DWORD)){
         pv_errstr = "\npvsys: write error updating data chunk";
         return 0;
     }
@@ -1115,12 +1115,12 @@ static int32_t pvoc_updateheader(int ofd)
     riffsize = files[ofd]->curpos - 2* sizeof(DWORD);
     if(files[ofd]->do_byte_reverse)
         riffsize = REVDWBYTES(riffsize);
-    pos = _lseek(files[ofd]->fd,sizeof(DWORD),SEEK_SET);
+    pos = lseek(files[ofd]->fd,sizeof(DWORD),SEEK_SET);
     if(pos != sizeof(DWORD)){
         pv_errstr = "\npvsys: seek error updating riff chunk";
         return 0;
     }
-    if(_write(files[ofd]->fd,(char *) &riffsize,sizeof(DWORD)) != sizeof(DWORD)){
+    if_write(files[ofd]->fd,(char *) &riffsize,sizeof(DWORD)) != sizeof(DWORD)){
         pv_errstr = "\npvsys: write error updating riff chunk";
         return 0;
     }
@@ -1132,7 +1132,7 @@ static int32_t pvoc_updateheader(int ofd)
 #endif
         WORD validbits;
         
-        pos = _lseek(files[ofd]->fd,files[ofd]->fmtchunkoffset,SEEK_SET);
+        pos = lseek(files[ofd]->fd,files[ofd]->fmtchunkoffset,SEEK_SET);
         if(pos != (DWORD) files[ofd]->fmtchunkoffset){
             pv_errstr = "\npvsys: seek error updating fmt data";
             return 0;
@@ -1149,11 +1149,11 @@ static int32_t pvoc_updateheader(int ofd)
         if(files[ofd]->do_byte_reverse)
             validbits = REVWBYTES(validbits);
         
-        if(_write(files[ofd]->fd,(char *) &validbits,sizeof(WORD)) != sizeof(WORD)){
+        if(write(files[ofd]->fd,(char *) &validbits,sizeof(WORD)) != sizeof(WORD)){
             pv_errstr = "\npvsys: error writing extended fmt chunk";
             return 0;
         }
-        pos = _lseek(files[ofd]->fd,files[ofd]->propsoffset,SEEK_SET);
+        pos = lseek(files[ofd]->fd,files[ofd]->propsoffset,SEEK_SET);
         if(pos != (DWORD) files[ofd]->propsoffset){
             pv_errstr = "\npvsys: seek error updating pvx data";
             return 0;
@@ -1165,7 +1165,7 @@ static int32_t pvoc_updateheader(int ofd)
             return 0;
         }
     }
-    /*pos*/ longpos = _lseek(files[ofd]->fd, 0, SEEK_END);
+    /*pos*/ longpos = lseek(files[ofd]->fd, 0, SEEK_END);
     if(/*pos*/ longpos  < 0) {
         pv_errstr = "\npvsys: seek error seeking to end of file";
         return 0;
@@ -1211,7 +1211,7 @@ int32_t pvoc_closefile(int ofd)
         if(!pvoc_updateheader(ofd))
             return 0;
     }
-    _close(files[ofd]->fd);
+    close(files[ofd]->fd);
     if(files[ofd]->to_delete && !(files[ofd]->readonly))
         remove(files[ofd]->name);
 
@@ -1265,7 +1265,7 @@ int32_t pvoc_putframes(int ofd,const float *frame,int32_t numframes)
         for(i=0;i < towrite; i++){
             temp = *lfp++;
             temp = REVDWBYTES(temp);
-            if(_write(files[ofd]->fd,(char *) &temp,sizeof(int32_t)) != sizeof(int32_t)){
+            if(write(files[ofd]->fd,(char *) &temp,sizeof(int32_t)) != sizeof(int32_t)){
                 pv_errstr = "\npvsys: error writing data";
                 return 0;
             }
@@ -1273,7 +1273,7 @@ int32_t pvoc_putframes(int ofd,const float *frame,int32_t numframes)
         }
     }
     else {
-        if(_write(files[ofd]->fd,(char *) frame,towrite * sizeof(float)) != (int32_t)(towrite * sizeof(float))){
+        if(write(files[ofd]->fd,(char *) frame,towrite * sizeof(float)) != (int32_t)(towrite * sizeof(float))){
             pv_errstr = "\npvsys: error writing data";
             return 0;
         }
@@ -1311,7 +1311,7 @@ int32_t pvoc_getframes(int32_t ifd,float *frames,DWORD nframes)
         lfp = (int32_t *) frames;
 #ifdef SINGLE_FLOAT
         for(i=0;i < toread;i++){
-            if((got=_read(files[ifd]->fd,(char *) &temp,sizeof(int32_t))) <0){
+            if((got=read(files[ifd]->fd,(char *) &temp,sizeof(int32_t))) <0){
                 pv_errstr = "\npvsys: error reading data";
                 return rc;
             }
@@ -1324,7 +1324,7 @@ int32_t pvoc_getframes(int32_t ifd,float *frames,DWORD nframes)
         }
 #else
         /* much faster on G4!!! */
-        got = _read(files[ifd]->fd,(char *)frames,toread * sizeof(float));
+        got = read(files[ifd]->fd,(char *)frames,toread * sizeof(float));
         if(got < 0){
             pv_errstr = "\npvsys: error reading data";
             return rc;
@@ -1345,7 +1345,7 @@ int32_t pvoc_getframes(int32_t ifd,float *frames,DWORD nframes)
         rc = nframes;   /*RWD 4:2002 */
     }
     else{
-        if((got = _read(files[ifd]->fd,(char *)frames,toread * sizeof(float))) < (int32_t)(toread * sizeof(float))){
+        if((got = read(files[ifd]->fd,(char *)frames,toread * sizeof(float))) < (int32_t)(toread * sizeof(float))){
             if(got < 0){
                 pv_errstr = "\npvsys: error reading data";
                 return rc;
@@ -1394,7 +1394,7 @@ int32_t pvoc_rewind(int32_t ifd,int32_t skip_first_frame)
         skipsize =  files[ifd]->pvdata.dwFrameAlign * skipframes;
         pos += skipsize;
     }
-    if(_lseek(fd,pos,SEEK_SET) != pos ) {
+    if(lseek(fd,pos,SEEK_SET) != pos ) {
         pv_errstr = "\npvsys: error rewinding file";
         return rc;
     }
@@ -1462,7 +1462,7 @@ int32_t pvoc_seek_mcframe(int32_t ifd, int32_t offset, int32_t mode)
             break;
         }
         rawoffset += files[ifd]->datachunkoffset;
-        if (_lseek(files[ifd]->fd, rawoffset, SEEK_SET) != (long)rawoffset) {
+        if (lseek(files[ifd]->fd, rawoffset, SEEK_SET) != (long)rawoffset) {
             pv_errstr = "\npvsys: seek error, SEEK_SET";
             return -1;
         }
@@ -1480,7 +1480,7 @@ int32_t pvoc_seek_mcframe(int32_t ifd, int32_t offset, int32_t mode)
         fprintf(stderr, "pvoc_seek_mcframe: fd = %d\n", ifd);
 #endif
         //NB not relative to datachunkoffset in this case
-        if (_lseek(files[ifd]->fd, rawoffset, SEEK_END) < 0) {
+        if (lseek(files[ifd]->fd, rawoffset, SEEK_END) < 0) {
             pv_errstr = "\npvsys: seek error, SEEK_END";
             return -1;
         }
@@ -1505,7 +1505,7 @@ int32_t pvoc_seek_mcframe(int32_t ifd, int32_t offset, int32_t mode)
             return rc;
         }
         rawoffset = offset * mcframealign;
-        if (_lseek(files[ifd]->fd, rawoffset, SEEK_CUR) < 0) {
+        if (lseek(files[ifd]->fd, rawoffset, SEEK_CUR) < 0) {
             pv_errstr = "\npvsys: seek error, SEEK_CUR";
             return -1;
         }
