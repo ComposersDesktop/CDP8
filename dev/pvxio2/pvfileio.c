@@ -707,7 +707,7 @@ static int32_t pvoc_readfmt(int32_t fd,int32_t byterev,WAVEFORMATPVOCEX *pWfpx)
         return 0;
     }
 
-    if_read(fd,(char *) &(pWfpx->wxFormat.Samples.wValidBitsPerSample),sizeof(WORD)) != sizeof(WORD)
+    if(read(fd,(char *) &(pWfpx->wxFormat.Samples.wValidBitsPerSample),sizeof(WORD)) != sizeof(WORD)
         || read(fd,(char *) &(pWfpx->wxFormat.dwChannelMask),sizeof(DWORD)) != sizeof(DWORD)
         || read(fd,(char *) &(pWfpx->wxFormat.SubFormat),sizeof(GUID)) != sizeof(GUID)){
         pv_errstr = "\npvsys: error reading Extended format data";
@@ -1120,7 +1120,7 @@ static int32_t pvoc_updateheader(int ofd)
         pv_errstr = "\npvsys: seek error updating riff chunk";
         return 0;
     }
-    if_write(files[ofd]->fd,(char *) &riffsize,sizeof(DWORD)) != sizeof(DWORD)){
+    if(write(files[ofd]->fd,(char *) &riffsize,sizeof(DWORD)) != sizeof(DWORD)){
         pv_errstr = "\npvsys: write error updating riff chunk";
         return 0;
     }
