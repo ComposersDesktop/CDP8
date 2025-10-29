@@ -1029,7 +1029,7 @@ static int32_t pvoc_writeheader(int ofd)
         return 0;
     }
 /* RWD new 2022 so we can update all pvocex props on closing new file */
-    files[ofd]->propsoffset = _lseek(files[ofd]->fd,0,SEEK_CUR);
+    files[ofd]->propsoffset = lseek(files[ofd]->fd,0,SEEK_CUR);
     
     if(write_pvocdata(files[ofd]->fd,files[ofd]->do_byte_reverse,&(files[ofd]->pvdata)) != sizeof(PVOCDATA)){
         pv_errstr = "\npvsys: error writing fmt chunk";
@@ -1076,7 +1076,7 @@ static int32_t pvoc_writeheader(int ofd)
         pv_errstr = "\npvsys: write error writing header";
         return 0;
     }
-    files[ofd]->datachunkoffset = _lseek(files[ofd]->fd,0,SEEK_CUR);
+    files[ofd]->datachunkoffset = lseek(files[ofd]->fd,0,SEEK_CUR);
 
     files[ofd]->curpos = files[ofd]->datachunkoffset;
     return 1;
