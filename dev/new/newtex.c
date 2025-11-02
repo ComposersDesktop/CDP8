@@ -1254,7 +1254,7 @@ int usage2(char *str)
         "\n"
         "Hit key 's' to continue to \"SPACETYPE\" information, or 'e' to exit.\n");
 
-        while((k = _getch())!='s' && k != 'e')
+        while((k = getch())!='s' && k != 'e')
             ;
         if(k == 's') {
             fprintf(stderr,
