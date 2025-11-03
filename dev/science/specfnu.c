@@ -4179,7 +4179,7 @@ int formants_see(dataptr dz)
  
 int formants_seepks(dataptr dz)
 {
-    int n, k, pad, trofcnt = 0, peakcnt = 0, rising = 0, done = 0, vc = 0, localmaxat = 0, localminat = 0;
+    int n, k, pad, trofcnt = 0, /*peakcnt = 0,*/ rising = 0, done = 0, vc = 0, localmaxat = 0, localminat = 0;
     double lastamp, localmax, localmin;
     char temp[200], temp2[200];
     temp[0] = ENDOFSTR;
@@ -4221,7 +4221,7 @@ int formants_seepks(dataptr dz)
                     for(k = 0;k < pad;k++)
                         strcat(temp2," ");
                     strcat(temp,temp2);
-                    peakcnt++;
+//                    peakcnt++;
 //                    thisminamp = dz->specenvamp[n];
                     rising = 0;
                 }
