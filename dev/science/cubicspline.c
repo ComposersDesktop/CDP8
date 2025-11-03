@@ -193,7 +193,7 @@ int usage1(void)
 
 int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, double **x, double **y,int *itemcnt)
 {
-    int cnt, linecnt;
+    int cnt/*, linecnt*/;
 //    int arraycnt;
     double *p, dummy;
     char temp[200], *q;
@@ -239,7 +239,7 @@ int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, do
         return(MEMORY_ERROR);
     }
     fseek(fpi,0,0);
-    linecnt = 1;
+//    linecnt = 1;
     p = *parray;
     while(fgets(temp,200,fpi)==temp) {
         q = temp;
@@ -248,7 +248,7 @@ int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, do
         while(get_float_with_e_from_within_string(&q,p)) {
             p++;
         }
-        linecnt++;
+//        linecnt++;
     }
     if(fclose(fpi)<0) {
         fprintf(stdout,"WARNING: Failed to close input data file.\n");
