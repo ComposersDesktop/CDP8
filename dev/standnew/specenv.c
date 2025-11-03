@@ -1260,7 +1260,7 @@ int inner_loop
 int do_specenv(dataptr dz)
 {
     int exit_status, cc, vc, cnt, botchan, topchan, bwidth_in_chans;
-    int n, samps_read1, samps_read2, wcnt;
+    int n, samps_read1, samps_read2 /*, wcnt*/;
     float *ibuf1, *ibuf2, *obuf;
     float topfreq, botfreq, frq, specfrq, up_specfrq, dn_specfrq, loamp, hiamp, amp1 = 0.0, amp2;
     double diff, ratio, pch, up_specpch, dn_specpch, ampdiff, ampstep, maxiamp = 0.0, maxiamp2 = 0.0, maxoamp = 0.0;
@@ -1271,7 +1271,7 @@ int do_specenv(dataptr dz)
     obuf  = dz->flbufptr[SE_OBUF];
 
     //  READ A WINDOW FROM EACH FILE
-    wcnt = 0;
+ //   wcnt = 0;
     while((samps_read1 = fgetfbufEx(ibuf1, dz->buflen,dz->ifd[0],0)) > 0) {
         if(samps_read1 < 0) {
             sprintf(errstr,"Failed to read data from first input file.\n");
@@ -1391,7 +1391,7 @@ int do_specenv(dataptr dz)
         }
         if((exit_status = write_samps(obuf,dz->wanted,dz))<0)
             return(exit_status);
-        wcnt++;
+//        wcnt++;
     }
     return FINISHED;
 }
