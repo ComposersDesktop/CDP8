@@ -3074,7 +3074,7 @@ int do_specpedal(dataptr dz)
 {
     int exit_status, wc, /*done,*/ windows_in_buf, wastuned = 0, tuned = 0;
     int samps_read;
-    double time = 0.0, totalamp = 0.0;
+    double /* time = 0.0,*/ totalamp = 0.0;
     float maxamp;
     chvptr *partials;
 //    done = 0;
@@ -3092,14 +3092,14 @@ int do_specpedal(dataptr dz)
         for(wc=0; wc<windows_in_buf; wc++, dz->total_windows++) {
             if(dz->total_windows == 0) {
                 dz->flbufptr[0] += dz->wanted;
-                time += dz->frametime;
+//                time += dz->frametime;
                 continue;
             }
             if((exit_status = get_totalamp_and_maxamp(&totalamp,&maxamp,dz->flbufptr[0],dz->wanted))<0)
                 return(exit_status);
             if(totalamp <= 0.0) {
                 dz->flbufptr[0] += dz->wanted;
-                time += dz->frametime;
+//                time += dz->frametime;
                 continue;
             }
             if((exit_status = get_peaks(dz))<0)
@@ -3110,7 +3110,7 @@ int do_specpedal(dataptr dz)
             
             dz->flbufptr[0] += dz->wanted;
 
-            time += dz->frametime;
+//            time += dz->frametime;
         }
         if((exit_status = write_samps(dz->bigfbuf,samps_read,dz))<0)
             return(exit_status);
