@@ -1598,7 +1598,7 @@ int renormalise(int nctr,dataptr dz)
 {
     int exit_status;
     int n, m = 0;
-    int total_samps_read = 0;
+//    int total_samps_read = 0;
     int samp_total = dz->total_samps_written, samps_remaining;
     double min_norm  = dz->parray[WRAP_NORMFACT][0];        /* 1 */
     float  *s = NULL;
@@ -1664,7 +1664,7 @@ int renormalise(int nctr,dataptr dz)
             close_and_delete_tempfile(dz->outfilename,dz);
             return(exit_status);
         }                                                                                       /* 8 */
-        total_samps_read += dz->ssampsread;
+//        total_samps_read += dz->ssampsread;
         if(min_norm < 1.0) {
             nf  = (dz->parray[WRAP_NORMFACT])[m];
             for(n=0;n<cnt;n++)                                                      /* 9 */
