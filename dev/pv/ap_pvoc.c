@@ -47,6 +47,8 @@
 #include <string.h>
 #include <math.h>
 
+//RWD 2025 zero error checking - will already have been done!
+static int checkchans4format(int chans, const char* fname);
 /***************************************************************************************/
 /****************************** FORMERLY IN aplinit.c **********************************/
 /***************************************************************************************/
@@ -387,14 +389,24 @@ int check_param_validity_and_consistency(dataptr dz)
 	int M, D, win_overlap;
 	float arate;
 	int srate;
-
-	switch(dz->process) {
+    //RWD 2025
+    const char* ofname = 0;
+	
+    switch(dz->process) {
 	case(PVOC_ANAL):
+        //RWD 2025 to trap excessive fft sizes for .ana
+        ofname = dz->outfilename;
+ 
 		chans = dz->infile->channels;
 		srate = dz->infile->srate;
 		win_overlap = dz->iparam[PVOC_WINOVLP_INPUT]-1;
 		chancnt = dz->iparam[PVOC_CHANS_INPUT];
 		chancnt = chancnt + (chancnt%2);
+            //RWD 2025
+        if(checkchans4format(chancnt,ofname) == 0) {
+            sprintf(errstr,"Requested analysis channel count %d > 8192: too large for .ana format\n",chancnt);
+            return DATA_ERROR;
+        }
 		switch(win_overlap) {
 			case 0:	M = 4*chancnt;		break;
 			case 1:	M = 2*chancnt;		break;
@@ -448,3 +460,17 @@ int inner_loop
 	return(FINISHED);
 }
 
+//RWD 2025 zero error checking - will already have been done!
+static int checkchans4format(int chans, const char* fname)
+{
+    char *lastdot;
+    
+    lastdot = strrchr(fname,'.');
+    if(chans > 8192){
+        if((_stricmp(lastdot,".wav")==0)
+           || (_stricmp(lastdot,".ana")==0))
+            return 0;
+    }
+    
+    return 1;
+}
