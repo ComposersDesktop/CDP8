@@ -1446,7 +1446,7 @@ int32_t pvoc_framepos(int32_t ifd)
 int32_t pvoc_seek_mcframe(int32_t ifd, int32_t offset, int32_t mode)
 {
  //   DWORD mcframealign;
-    DWORD rawoffset;
+    int32_t rawoffset;  /* RWD need to be signed to work for to and fro seeks*/
     int32_t rc = -1;
     int32_t mcframealign;
     int32_t pvxcur = 0;
