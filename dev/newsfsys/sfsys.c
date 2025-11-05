@@ -339,8 +339,8 @@ typedef struct {
 } WAVEFORMATEXTENSIBLE, *PWAVEFORMATEXTENSIBLE;
 #endif
 
-
-const static GUID  KSDATAFORMAT_SUBTYPE_PCM = {0x00000001,0x0000,0x0010,
+// RWD For WIN32, link with ksuser.dll
+const /* static */ GUID  KSDATAFORMAT_SUBTYPE_PCM = {0x00000001,0x0000,0x0010,
                                                             {0x80,
                                                             0x00,
                                                             0x00,
@@ -350,7 +350,7 @@ const static GUID  KSDATAFORMAT_SUBTYPE_PCM = {0x00000001,0x0000,0x0010,
                                                             0x9b,
                                                             0x71}};
 
-const static GUID  KSDATAFORMAT_SUBTYPE_IEEE_FLOAT = {0x00000003,0x0000,0x0010,
+const /* static */ GUID  KSDATAFORMAT_SUBTYPE_IEEE_FLOAT = {0x00000003,0x0000,0x0010,
                                                             {0x80,
                                                             0x00,
                                                             0x00,
@@ -6785,7 +6785,7 @@ sfdirprop(int sfd, int (*func)(char *propname, int propsize))
 //CDP98
 
 
-#if defined _WIN32 && defined _MSC_VER
+#if 0
 static int asm_round(double fval)
 {
     int result;
@@ -6797,20 +6797,11 @@ static int asm_round(double fval)
     return (long) result;
 }
 #endif
-    
+//RFWD don't need this any more. "Deprecated".    
 int cdp_round(double fval)
 {
-#if defined _WIN32  && defined _MSC_VER
-    return asm_round(fval);
-#elif defined unix
-    return (int) lround(fval);
-#else
-    int k;
-    k = (int)(fabs(fval)+0.5);
-    if(fval < 0.0)
-        k = -k;
-    return k;
-#endif
+    return lround(fval);
+
 }
 
 int sfformat(int sfd, fileformat *pfmt)
