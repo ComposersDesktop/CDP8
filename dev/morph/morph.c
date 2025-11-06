@@ -39,9 +39,9 @@
 #include <sfsys.h>
 #include <string.h>
 #include <morph.h>
-
+//RWD  set different name here : IN now used in Windows (MSVC)
 #define BEFORE 	(0)
-#define	IN		(1)
+#define	_IN_		(1)
 #define	AFTER	(2)
 
 #define NO_NORMALISE    (0)
@@ -345,7 +345,7 @@ int do_specbridge(dataptr dz)
 	int where;
 
 	if(dz->total_windows < dz->iparam[BRG_SWIN])		where = BEFORE;
-	else if(dz->total_windows < dz->iparam[BRG_INTPEND])	where = IN;
+	else if(dz->total_windows < dz->iparam[BRG_INTPEND])	where = _IN_;
 	else		            							 where = AFTER;
 	switch(where) {
 	case(BEFORE):	/***  BEFORE START OF INTERPOLATION ***/
@@ -365,10 +365,10 @@ int do_specbridge(dataptr dz)
 			return(PROGRAM_ERROR);
 		}
 		break;
-	case(IN):		/********  INTERPOLATION PROPER ********/
+	case(_IN_):		/********  INTERPOLATION PROPER ********/
 		dz->param[BRG_SF2] += dz->param[BRG_FSTEP];
 		dz->param[BRG_SA2] += dz->param[BRG_ASTEP];
-		if((exit_status = do_interpolation(IN,dz))<0)
+		if((exit_status = do_interpolation(_IN_,dz))<0)
 			return(exit_status);
 		break;
 	case(AFTER):	/***  TAIL ***/
@@ -604,7 +604,7 @@ int set_normalisation_type(int *normalisation_type,int where,double *normaliser,
 			else 
 				*normaliser = sum1/sum2;
 			break;
-		case(IN):
+		case(_IN_):
 			if(flteq(sum2,0.0))
 				*normaliser = 0.0;
 			else if(flteq(sum1,0.0))
@@ -641,7 +641,7 @@ int set_normalisation_type(int *normalisation_type,int where,double *normaliser,
 			else 
 				*normaliser = sum2/sum1;
 			break;
-		case(IN):
+		case(_IN_):
 			if(flteq(sum1,0.0))
 				*normaliser = 0.0;
 			else if(flteq(sum2,0.0))
