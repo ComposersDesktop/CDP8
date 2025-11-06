@@ -19,6 +19,13 @@
  */
  
 /* MODULE FOR REVERB.EXE */
+/* RWD Nov 2025 moved to top to avoid low-level cpp lib definition ambiguities in MinGW */
+extern "C" {
+#include <sfsys.h>
+#include <osbind.h>
+#include <cdplib.h>	   //NB requires stdio.h etc - time to change this?
+}
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -39,11 +46,7 @@ using namespace std;
   then we set igain = g(1 - filtgain), officially...
 
   */
-extern "C" {
-#include <sfsys.h>
-#include <osbind.h>
-#include <cdplib.h>	   //NB requires stdio.h etc - time to change this?
-}
+
 #include "reverberator.h"
 #include <string.h>
 void usage(void);
