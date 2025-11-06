@@ -116,7 +116,8 @@ if(WIN32)
         advapi32
         shell32
         oleaut32
-        uuid)
+        uuid
+	ksuser)
     else()
       set(EXTRA_LIBRARIES "m")
 endif(WIN32)
@@ -253,12 +254,10 @@ endif()
 if(WIN32)
     message(STATUS "Building on Windows")
     if(MSVC)
-     add_definitions(-DWIN32 -D_WIN32 -DENABLE_PVX -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS /wd5040 /wd4710 /wd5045 /wd4711 /wd4820 /wd4668 /wd4738)
+     add_definitions(-DWIN32 -D_WIN32 -DENABLE_PVX -D_CRT_SECURE_NO_DEPRECATE -D_CRT_SECURE_NO_WARNINGS /wd5040 /wd4710 /wd5045 /wd4711 /wd4820 /wd4668 /wd4738 /wd4996)
     else()
      add_definitions(-DWIN32 -D_WIN32 -DENABLE_PVX)
     endif()
-    #RWD for MSVC
-#    add_compiler_flags( /wd5040)
 endif()
 
 #add_compiler_flags(${LIBCDP_CFLAGS} TARGETS ${CDPLIB})
