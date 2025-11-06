@@ -301,7 +301,8 @@ extern int sf_getpvxfno(int sfd);     /* RWD: pvsys has separate list of files, 
 /* RWD  reduced property size, to assist bad unix progs to read soundifles! */
 /* also, we are reducing dependency on CDP props, through new file formats */
 #define PROPSIZE    (800)       /* size of the property area in hdrs */
-#ifndef _WINNT_                 
+//#ifndef _WINNT_ 
+#ifndef MSC_VER               
 # ifdef MAXSHORT
 #  undef MAXSHORT
 # endif
