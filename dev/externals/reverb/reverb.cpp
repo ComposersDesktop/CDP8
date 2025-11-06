@@ -22,6 +22,7 @@
 /* RWD Nov 2025 moved to top to avoid low-level cpp lib definition ambiguities in MinGW */
 extern "C" {
 #include <sfsys.h>
+#include <stddef.h>
 #include <osbind.h>
 #include <cdplib.h>	   //NB requires stdio.h etc - time to change this?
 }
