@@ -38,6 +38,10 @@
 #include <sfsys.h>
 #include <osbind.h>
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 static int      do_cycle_tele(int n,int current_buf,int *obufpos,dataptr dz);
 static int      do_cycle_tele_crosbuf(int n,int cycleno_in_group_at_bufcros,int current_buf,int *obufpos,dataptr dz);
 static int get_longcycle(int,dataptr);

@@ -380,7 +380,7 @@ int specshuffle(dataptr dz)
         permcnt++;
     }
     if(dz->flbufptr[1] > dz->flbufptr[2])
-        return write_samps(dz->flbufptr[2],(dz->flbufptr[1] - dz->flbufptr[2]),dz);
+        return (int) write_samps(dz->flbufptr[2],(dz->flbufptr[1] - dz->flbufptr[2]),dz);
     return(FINISHED);
 
 }
@@ -1163,7 +1163,7 @@ int flush_outbuf(dataptr dz)
     int samps_to_write;
     if(dz->flbufptr[1] != dz->flbufptr[2]) {
         samps_to_write = dz->flbufptr[1] - dz->flbufptr[2];
-        if((exit_status = write_samps(dz->flbufptr[2],samps_to_write,dz))<0)
+        if((exit_status = (int) write_samps(dz->flbufptr[2],samps_to_write,dz))<0)
             return(exit_status);
     }
     return(FINISHED);

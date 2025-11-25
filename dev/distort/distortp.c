@@ -39,9 +39,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 static int get_distort(int oldlen,int *pos_in_cycle_group,double *last_transpos,double *next_transpos,
                        double *transpos_step,int *thiscyclelen,int *init,dataptr dz);
@@ -127,7 +127,7 @@ int distort_pitch(dataptr dz)
         current_inbuf_pos = 0;
     } while(dz->ssampsread>0);
     if(dz->sbufptr[1]!=dz->sampbuf[1])
-        return write_samps(dz->sampbuf[1],dz->sbufptr[1] - dz->sampbuf[1],dz);
+        return (int) write_samps(dz->sampbuf[1],dz->sbufptr[1] - dz->sampbuf[1],dz);
     return(FINISHED);
 }
 

@@ -41,6 +41,10 @@
 #define FIRST_FILE      (0)
 #define SECOND_FILE     (1)
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 static int get_initial_phases_for_resize(float *samplebuf0,int sampcnt0,float *samplebuf1,int sampcnt1,int *initial_phase);
 static int read_samps_cc(int k,int current_buf,int *bsamps_left,int *samps_read,int *in_samps,dataptr dz);
 static int get_cycles_and_resize(int *,int *,int *,int *,int *,int *,int *,int *,dataptr);

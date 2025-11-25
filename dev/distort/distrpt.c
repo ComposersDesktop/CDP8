@@ -40,6 +40,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 static int      do_repeat(int current_buf,int incycles_start,int incycles_end,int *obufpos,dataptr dz);
 static int      do_repeat_bufcros(int current_buf,int incycles_start,int incycles_end,int *obufpos,dataptr dz);
