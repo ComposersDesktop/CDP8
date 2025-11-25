@@ -96,6 +96,10 @@ add_executable(fractal fractal.c)
 target_link_libraries(fractal cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(fractal)
 
+add_executable(frfractal frfractal.c)
+target_link_libraries(frfractal cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+my_install(frfractal)
+
 # OUT ?
 add_executable(fturanal fturanal.c)
 target_link_libraries(fturanal cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
