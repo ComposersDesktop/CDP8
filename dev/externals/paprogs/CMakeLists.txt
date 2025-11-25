@@ -1,4 +1,4 @@
-
+add_subdirectory(portaudio)
 add_subdirectory(listaudevs)
 add_subdirectory(paplay)
 add_subdirectory(pvplay)
