@@ -126,7 +126,7 @@
 #define IS_ORN_OR_MTF   (0xC0)  /* -------- 11------ */
 
 
-extern  int texflag;            /* bitflag for type of texture */
+//extern  int texflag;            /* bitflag for type of texture */
 
 
 #define MAXNAMECNT      (9)
