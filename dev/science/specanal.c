@@ -106,9 +106,9 @@
 #define pitchcnt    temp_sampsize
 static double quartertone;
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif
