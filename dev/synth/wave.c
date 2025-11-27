@@ -48,6 +48,10 @@
 #include <limits.h>
 #include <filetype.h>
 
+//#ifdef unix 
+#define round(x) lround((x))
+//#endif
+
 static int  gentable(int tabsize,dataptr dz);
 static int  gen_wave(int sampdur,double sr,dataptr dz);
 static int  gen_silence(int sampdur,dataptr dz);
