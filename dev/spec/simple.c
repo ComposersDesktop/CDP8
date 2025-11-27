@@ -46,6 +46,10 @@
 #define NOISEFILE       (1)
 #define COMPAREFILE     (2)
 
+ //#ifdef unix 
+#define round(x) lround((x))
+//#endif
+
 static int  copy_cut_samps(int startwindow,int *endwindow,int windows_per_buf,int endchunksize,dataptr dz);
 static int  outer_clean_loop(int whichfile,int no_of_marked_channels,dataptr dz);
 static int  adjust_noise_level(dataptr dz);
