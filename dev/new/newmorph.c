@@ -50,9 +50,9 @@
 // #include <modeno.h>
  #include <ctype.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 char errstr[2400];
 const char* cdp_version = "7.1.0";
