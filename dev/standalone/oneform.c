@@ -1076,7 +1076,7 @@ int get_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 
 /******************************** USAGE ********************************/
 
-int usage1()
+int usage1(void)
 {
     fprintf(stderr,
             "\nOPERATIONS WITH SINGLE FORMANTS\n\n"
