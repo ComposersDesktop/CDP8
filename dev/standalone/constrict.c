@@ -1309,7 +1309,7 @@ int constrict(dataptr dz)
 int create_constrict_sndbufs(dataptr dz)
 {
     int n;
-    size_t bigbufsize;
+    int bigbufsize;
     int framesize;
     framesize = F_SECSIZE * dz->infile->channels;
     if(dz->sbufptr == 0 || dz->sampbuf==0) {
