@@ -42,9 +42,9 @@
 #include <string.h>
 #include <strange.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define	RATIO_LIMIT 			 (20.0)	   /* Max ratio actual chanamp allowed to exceed
 											  formant derived amp for frq */
