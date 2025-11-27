@@ -1405,14 +1405,14 @@ void pancalc(double position,double *leftgain,double *rightgain)
 }
 
 /************************************ CERACU *******************************/
-
+//RWD Nov 2025  changed var from unsigned int to __int64 so can be signed, for tests below
 int ceracu(dataptr dz)
 {
     int exit_status, chans = dz->iparam[CER_OCHANS], k, samps_left, insampcnt = dz->insams[0], mins = 0, hrs = 0;
     float *ibuf = dz->sampbuf[0], *obuf = dz->sampbuf[1];
     double maxsamp = 0.0, normaliser, srate = (double)dz->infile->srate, secs = 0.0;
     int n, nn, m, lmst, rmst, ptrcnt, samps_read, bas, opos;
-    unsigned int outcnt, mintotalout;
+    /* unsigned int*/ __int64 outcnt, mintotalout;
     int *iptr = dz->iparray[4], *cyclen = dz->iparray[0], *orig_cyclen = dz->iparray[1], *lmost = dz->iparray[2], *rmost = dz->iparray[3];
     double *llev = dz->parray[0], *rlev = dz->parray[1];
     if((samps_read  = fgetfbufEx(dz->sampbuf[0], insampcnt,dz->ifd[0],0))<0) {
@@ -1720,7 +1720,7 @@ int ceracu(dataptr dz)
 int create_ceracu_sndbufs(dataptr dz)
 {
     int n, safety = 4;
-    unsigned int bigbufsize = 0;
+    /*unsigned*/ int bigbufsize = 0;   //RWD Nov 2025 otherwise test belowis  meaningless
     float *bottom;
     dz->bufcnt = 2;
     if((dz->sampbuf = (float **)malloc(sizeof(float *) * (dz->bufcnt+1)))==NULL) {
