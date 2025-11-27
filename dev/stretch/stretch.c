@@ -40,6 +40,10 @@
 #include <string.h>
 #include <stretch.h>
 
+ //#ifdef unix 
+#define round(x) lround((x))
+//#endif
+
 static int  	do_constant_timestretch(int *thatwindow,dataptr dz);
 static int  	do_timevariable_timestretch(int *thatwindow,dataptr dz);
 static int  	do_timestretching(int *thatwindow,int count,dataptr dz);
