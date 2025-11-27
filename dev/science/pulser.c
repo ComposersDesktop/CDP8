@@ -49,9 +49,9 @@
 
 //static int testflag;
 
-#if defined unix || defined __GNUC__
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define srcsamps rampbrksize
 #define counted is_rectified
