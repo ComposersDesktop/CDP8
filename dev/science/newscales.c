@@ -781,7 +781,7 @@ int usage3(char *str1,char *str2)
 {
     return(FINISHED);
 }
-int usage1()
+int usage1(void)
 {
     return(FINISHED);
 }
