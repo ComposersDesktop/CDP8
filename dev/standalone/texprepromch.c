@@ -41,9 +41,9 @@
 #include <cdpmain.h>
 #include <standalone.h>
 
-#if defined unix || defined __GNUC__
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif
