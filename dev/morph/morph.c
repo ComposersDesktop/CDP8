@@ -48,6 +48,10 @@
 #define NORMALISE_FILE1 (1)
 #define NORMALISE_FILE2 (2)
 
+//#ifdef unix 
+#define round(x) lround((x))
+//#endif
+
 static int  read_two_individual_input_windows(dataptr dz);
 static int  establish_glide_ratios(dataptr dz);
 static int  establish_temporary_file_for_offsetting(dataptr dz);
