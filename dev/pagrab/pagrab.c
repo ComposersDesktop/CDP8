@@ -223,7 +223,7 @@ int get_big_buf(void)
 
 /**************************** MAKE TEXTFILE *****************************/
 
-int make_outfile(int del,char *filename)
+int make_outfile(int idel,char *filename)
 {
     int samplen, total_windowsgot_got, samps_remain;
     int got, sampsgot, windowsgot, bufcnt;
@@ -262,14 +262,14 @@ int make_outfile(int del,char *filename)
         for(n=0;n<windowsgot;n++) {                 /* for every window */
             total_windowsgot_got++;                 /* count the windows */
             if(total_windowsgot_got <= startwin) {  /* if not at 1st window to display, continue */
-                if(del)
+                if(idel)
                     if(write_window(totchans,rbuf,bufcnt)<0)
                         return -1;
                 bufcnt += channels;
                 continue;
             }
             else if(total_windowsgot_got > endwin) {            /* if beyond last window to display, quit */
-                if(del) {
+                if(idel) {
                     if(write_window(totchans,rbuf,bufcnt)<0)
                         return -1;
                     bufcnt += channels;
@@ -282,7 +282,7 @@ int make_outfile(int del,char *filename)
 //            changrpcnt = 0;                         /* count of set-of-channels to group together for display */
 //            channelmax = 0.0;
             for(channel_cnt=0;channel_cnt < startchan;channel_cnt++) {
-                if(del) {
+                if(idel) {
                     osambuf[obufcnt++] = rbuf[bufcnt++];
                     osambuf[obufcnt++] = rbuf[bufcnt++];
                     if(obufcnt >= obuflen) {
@@ -300,7 +300,7 @@ int make_outfile(int del,char *filename)
                 }
             }
             for(displayed_channel_cnt = 0; displayed_channel_cnt < channelstoshow; displayed_channel_cnt++) {
-                if(del) {
+                if(idel) {
                     osambuf[obufcnt++] = 0.0;
                     bufcnt++;
                     osambuf[obufcnt++] = rbuf[bufcnt++];
@@ -319,7 +319,7 @@ int make_outfile(int del,char *filename)
             }
             channel_cnt += displayed_channel_cnt;
             while(channel_cnt < totchans) {
-                if(del) {
+                if(idel) {
                     osambuf[obufcnt++] = rbuf[bufcnt++];
                     osambuf[obufcnt++] = rbuf[bufcnt++];
                     if(obufcnt >= obuflen) {
