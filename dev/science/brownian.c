@@ -1048,7 +1048,7 @@ int get_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 
 /******************************** USAGE1 ********************************/
 
-int usage1()
+int usage1(void)
 {
     usage2("motion");
     return(USAGE_ONLY);
