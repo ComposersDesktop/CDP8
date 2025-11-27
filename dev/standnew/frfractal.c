@@ -191,7 +191,7 @@ int main(int argc,char *argv[])
         sprintf(errstr,"INSUFFICIENT MEMORY establishing sample buffers.\n");
         return(MEMORY_ERROR);
     }
-    if((dz->sbufptr = (float **)malloc(sizeof(float *) * dz->bufcnt))==NULL) {
+    if((dz->sbufptr = (float **)malloc(sizeof(float *) * (dz->bufcnt+1)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY establishing sample buffer pointers.\n");
         return(MEMORY_ERROR);
     }
