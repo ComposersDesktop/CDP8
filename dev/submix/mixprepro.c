@@ -36,9 +36,9 @@
 #include <mix.h>
 #include <sfsys.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 static int  do_refill_acts(dataptr dz);
 static void sort_actions(dataptr dz);
