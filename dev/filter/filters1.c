@@ -40,6 +40,10 @@
 #include <filters.h>
 #include <logic.h>
 
+ //#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 static int    readsamps_with_wrap(dataptr dz);
 static double get_gain(dataptr dz);
 static double get_pshift(dataptr dz);
