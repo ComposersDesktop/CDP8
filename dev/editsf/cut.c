@@ -47,9 +47,9 @@
 
 #include <osbind.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define UPSLOPE     (0)
 #define DOWNSLOPE   (1)
