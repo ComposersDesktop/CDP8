@@ -33,6 +33,10 @@
 #include <arrays.h>
 #include <sfsys.h>
 
+//#ifdef unix 
+#define round(x) lround((x))
+//#endif
+
 static int  get_grain_envelope(dataptr dz);
 static int  convert_arraytimelist_to_abs_samplecnts(double *thisarray,int thissize,dataptr dz);
 static int  convert_gate_time_to_abs_samplecnts(int paramno,dataptr dz);
