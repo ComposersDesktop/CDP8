@@ -48,6 +48,10 @@
 #define OUTBUF_START    (1)
 #define OUTBUF_END              (2)
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 static int  init_outbuf
         (int startsamp,int *is_simple,int *write_offset,int *samp_offset,int *samps_left_to_process,dataptr dz);
 static int  init_brkpnts
