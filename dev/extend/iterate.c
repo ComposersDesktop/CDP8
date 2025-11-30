@@ -40,7 +40,9 @@
 #include <osbind.h>
 #include <limits.h>
 
-
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 static int  read_the_input_snd(dataptr dz);
 static int  new_read_the_input_snd(int samplen,int wrap,dataptr dz);
