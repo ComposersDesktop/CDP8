@@ -44,9 +44,9 @@
 #include <string.h>
 #include <srates.h>
 
-#ifdef unix
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 /* RWD keep this? */
 #define SAMPLE_T float
