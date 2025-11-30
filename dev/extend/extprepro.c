@@ -37,11 +37,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
-#if defined  unix || defined __GNUC__
+//#if defined  unix
 #define round(x) lround((x))
-#else
-#define round(x) cdp_round((x))
-#endif
+//#endif
 
 #define RANDSET     (32)  /* reduce no.of segs to small finite no, so start and end seg have chance to be chosen */
 #define FORWARDS    (1)
@@ -319,7 +317,7 @@ int eliminate_n_steps(int *this_zigtime,int *next_zigtime,int **ziglistend,int *
 {
     int *here  = this_zigtime + 1;
     int *there = next_zigtime;
-    int elimination_cnt = next_zigtime - this_zigtime - 1;
+    int elimination_cnt = (int)( next_zigtime - this_zigtime - 1);
     while(there < *ziglistend) {
         *here = *there;
         here++;
