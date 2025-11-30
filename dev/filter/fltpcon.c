@@ -39,6 +39,9 @@
 #include <math.h>
 #include <string.h>
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 static int  force_start_and_end_val(int paramno,dataptr dz);
 static void initialise_filter_table_read(int param,dataptr dz);
