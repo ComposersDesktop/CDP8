@@ -49,9 +49,9 @@
 #include <math.h>
 #include <srates.h>
 
-#if defined unix || defined __GNUC__
+ //#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 static int eliminate_octave_duplications(dataptr dz);
 static int check_for_invalid_data(int k,dataptr dz);
