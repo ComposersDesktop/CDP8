@@ -488,9 +488,10 @@ static int psf_wordsize(psf_stype type)
 }
 
 
-#if defined _WIN32 && defined _MSC_VER
+#ifdef _MSC_VER
+#  if(_MSC_VER <= 1200)
 /* fast convergent rounding */
-__inline long psf_round(double fval)
+__inline int psf_round(double fval)
 {
     int result;
     _asm{
@@ -501,18 +502,18 @@ __inline long psf_round(double fval)
     return result;
 }
 
-#else
+#  else
 /* slow convergent rounding ! */
 /* TODO: implement IEEE round-to-even */
-long psf_round(double val);
-
-long psf_round(double val)
+int psf_round(double val);
+# endif 
+int psf_round(double val)
 {
     long k;
     k = (long)(fabs(val)+0.5);
     if(val < 0.0)
         k = -k;
-    return k;
+    return (int) k;
 }
 #endif
 
