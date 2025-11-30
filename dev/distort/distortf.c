@@ -40,6 +40,10 @@
 
 #define FCYCBUF (2)
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 static void do_fractal(int grouplen,int current_buf,dataptr dz);
 static void do_fractal_crosbuf(int grouplen,int bufcros_cycle,int current_buf,dataptr dz);
 static int      get_scaled_halfcycle(int n,int *cnt,float **buf,int *bufpos,int *grouplen,int *current_buf,
