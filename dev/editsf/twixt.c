@@ -62,9 +62,9 @@ TO SPLICE BETWEEN A SERIES OF INFILES USING A LIST OF GIVEN TIMES
 #include <sfsys.h>
 #include <osbind.h>
 
-#if defined unix || defined __GNUC__ 
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 static void GetTimes(int fileno,int n,double *lasttime, double *nexttime,dataptr dz);
 static int  do_output(int fileno,int n,int limit,double lasttime,double nexttime,
