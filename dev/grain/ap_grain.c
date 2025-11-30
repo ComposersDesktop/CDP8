@@ -51,9 +51,9 @@
 #define FSECSIZE (256)
 #define maxtime scalefact
 
-#ifdef unix
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 static int  create_grain_sndbufs(dataptr dz);
 static void establish_grain_envelope_windowsize_in_samps(dataptr dz);
