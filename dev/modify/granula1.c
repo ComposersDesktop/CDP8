@@ -65,9 +65,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
-#ifdef unix
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define SAUS_SBUF       (0)
 #define SAUS_OBUF       (1)
