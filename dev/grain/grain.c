@@ -36,6 +36,10 @@
 
 #include <sfsys.h>
 
+//#ifdef unix 
+#define round(x) lround((x))
+//#endif
+
 static int  grains(int *ibufposition,int bufno,int *crosbuf,int *inithole,int *grainstart,int * is_first_grain,
             int *gapcnt,int *holecnt,int *obufpos,int *graincnt,int chans,int *grainadjusted,
             double samptotime,double **env,double **envstep,double *envel_val,int winsize,dataptr dz);
