@@ -37,13 +37,9 @@
 /*RWD*/
 #include <string.h>
 
-#ifndef cdp_round
-extern int cdp_round(double a);
-#endif
-
-#if defined unix || defined __GNUC__
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define MINUS96DB (0.000016)
 
