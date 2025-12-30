@@ -225,7 +225,7 @@ doseek(struct sndfile *sf, long dist, int whence)
 
 #ifdef FILE64_WIN
 static __int64
-doseekEx(struct sndfile *sf, __int64 dist, int whence)
+doseekEx(struct sndfile *sf, __int64_t dist, int whence)
 {
         return sfseek_buffered(sf->fd, dist, whence);
 }
@@ -237,7 +237,7 @@ doseekEx(struct sndfile *sf, __int64 dist, int whence)
 //{
 //      return sfseek_buffered(sf->fd, dist, whence);
 //}
-static __int64 doseekEx(struct sndfile *sf, __int64 dist, int whence)
+static __int64_t doseekEx(struct sndfile *sf, __int64_t dist, int whence)
 {
         return sfseek_buffered(sf->fd, dist, whence);
 }
@@ -614,7 +614,7 @@ sndcreat_formatted(const char *fn, int size, int stype,int channels,
         sf->samptype = stype;
         /*RWD NB sampsize[]  - no slot for 24bit size yet*/
 
-        if((sf->fd = sfcreat_formatted(fn, size*sampsize[stype], (__int64 *)0,channels,srate,
+        if((sf->fd = sfcreat_formatted(fn, size*sampsize[stype], (__int64_t *)0,channels,srate,
                 stype,mode)) < 0) {
 
                 freesndfd(fd);
@@ -698,7 +698,7 @@ sndcreat_ex(const char *name, int size,SFPROPS *props,int min_header,cdp_create_
         smpsize = sampsize[sf->samptype];
 
         /*need to return to outsize: size / smpsize - check this...*/
-    if((sf->fd = sfcreat_ex(name, (__int64)size*smpsize, (__int64 *)0,
+    if((sf->fd = sfcreat_ex(name, (__int64)size*smpsize, (__int64_t *)0,
                         props,min_header,mode)) < 0) {
 
                 freesndfd(fd);
@@ -734,7 +734,7 @@ sndcloseEx(int fd)
 {
         register struct sndfile *sf;
         int rc = 0;
-        __int64 length, pos;
+        __int64_t length, pos;
 
         if(!mapsndfd(&fd))
                 return -1;
@@ -816,13 +816,13 @@ sndseekEx(int fd, int dist, int whence)
         register struct sndfile *sf;
         long bufsize;
 #ifdef FILE64_WIN
-        __int64 secpos;
-        __int64 newpos;
-        __int64 gotpos;
+        __int64_t secpos;
+        __int64_t newpos;
+        __int64_t gotpos;
 #else
-        __int64 secpos;
-        __int64 newpos = 0;
-        __int64 gotpos;
+        __int64_t secpos;
+        __int64_t newpos = 0;
+        __int64_t gotpos;
 #endif
         if(!mapsndfd(&fd))
             return -1;
@@ -853,7 +853,7 @@ sndseekEx(int fd, int dist, int whence)
         /*RWD.6.99 still need to do this - not a SECSIZE calc, but just cdp_round to our buffersize*/
         secpos = (newpos/bufsize)*bufsize;              /* cdp_round down */
 
-/*RWD 2007: NB for FILE64_WIN doseekEx takes and returns __int64 */
+/*RWD 2007: NB for FILE64_WIN doseekEx takes and returns __int64_t */
         if((gotpos = doseekEx(sf, secpos, 0)) < 0)/*NB seek might be truncated */        /*gotpos = non-size-specific*/
                 return -1;
 
@@ -896,16 +896,16 @@ sndtell(int fd)
 }
 
 /*RWD 2007 FIXME for 64bit reads: */
-/* doseekEx must return unsigned long, or __int64 value */
+/* doseekEx must return unsigned long, or __int64_t value */
 int
 sndtellEx(int fd)
 {
         struct sndfile *sf;
 #ifdef FILE64_WIN
-        __int64 off;
+        __int64_t off;
 #else
         //long off;
-    __int64  off;
+    __int64_t  off;
 #endif
 
         if(!mapsndfd(&fd))

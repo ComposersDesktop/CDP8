@@ -1412,7 +1412,7 @@ int ceracu(dataptr dz)
     float *ibuf = dz->sampbuf[0], *obuf = dz->sampbuf[1];
     double maxsamp = 0.0, normaliser, srate = (double)dz->infile->srate, secs = 0.0;
     int n, nn, m, lmst, rmst, ptrcnt, samps_read, bas, opos;
-    /* unsigned int*/ __int64 outcnt, mintotalout;
+    /* unsigned int*/ __int64_t outcnt, mintotalout;
     int *iptr = dz->iparray[4], *cyclen = dz->iparray[0], *orig_cyclen = dz->iparray[1], *lmost = dz->iparray[2], *rmost = dz->iparray[3];
     double *llev = dz->parray[0], *rlev = dz->parray[1];
     if((samps_read  = fgetfbufEx(dz->sampbuf[0], insampcnt,dz->ifd[0],0))<0) {
