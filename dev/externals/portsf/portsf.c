@@ -507,6 +507,7 @@ __inline int psf_round(double fval)
 /* TODO: implement IEEE round-to-even */
 int psf_round(double val);
 # endif 
+# else
 int psf_round(double val)
 {
     long k;

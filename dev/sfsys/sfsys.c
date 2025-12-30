@@ -446,12 +446,12 @@ struct sf_file {
         int bitmask;
     fpos_t datachunkoffset;
 #ifdef FILE64_WIN
-        __int64 datachunksize;
-        __int64 sizerequested;
+        __int64_t datachunksize;
+        __int64_t sizerequested;
 #else
 /* typedef from long long */
-    __int64 datachunksize;
-        __int64 sizerequested;
+    __int64_t datachunksize;
+        __int64_t sizerequested;
 #endif
         int extrachunksizes;
         struct aiffchunk *aiffchunks;
@@ -561,7 +561,7 @@ static int check_guid(struct sf_file *f)
 
 #if defined CDP99 && defined _WIN32
 #ifdef FILE64_WIN
-static int w_ch_size(HANDLE fh,__int64 size)
+static int w_ch_size(HANDLE fh,__int64_t size)
 #else
 static int w_ch_size(HANDLE fh,DWORD size)
 #endif
@@ -1156,7 +1156,7 @@ rdwavhdr(struct sf_file *f)
         DWORD factsize = 0;
         DWORD peak_version;
 #ifdef FILE64_WIN
-        LARGE_INTEGER pos64;   /* pos64.QuadPart is __int64 */
+        LARGE_INTEGER pos64;   /* pos64.QuadPart is __int64_t */
 #endif
     fpos_t bytepos;
 
@@ -4377,10 +4377,10 @@ sfcreat(const char *name, int size, int *outsize)
 /*RWD 2007: change size params to __int64 */
 #ifdef  FILE64_WIN
 int
-sfcreat_formatted(const char *name, __int64 size, __int64 *outsize,int channels,
+sfcreat_formatted(const char *name, __int64_t size, __int64_t *outsize,int channels,
                                   int srate, int stype,cdp_create_mode mode)
 #else
-int sfcreat_formatted(const char *name,  __int64 size,  __int64 *outsize,int channels,
+int sfcreat_formatted(const char *name,  __int64_t size,  __int64_t *outsize,int channels,
                                   int srate, int stype,cdp_create_mode mode)
 
 #endif
@@ -4392,9 +4392,9 @@ int sfcreat_formatted(const char *name,  __int64 size,  __int64 *outsize,int cha
     char *ext_default = "wav";
 /*RWD 2007 */
 #ifdef FILE64_WIN
-        /*unsigned long*/__int64 freespace = getdrivefreespace(name) - LEAVESPACE;
+        /*unsigned long*/__int64_t freespace = getdrivefreespace(name) - LEAVESPACE;
 #else
-    __int64 freespace = getdrivefreespace(name) - LEAVESPACE;
+    __int64_t freespace = getdrivefreespace(name) - LEAVESPACE;
 #endif
         if((sfpath = mksfpath(name)) == NULL)
                 return -1;
@@ -4628,11 +4628,11 @@ int sfcreat_formatted(const char *name,  __int64 size,  __int64 *outsize,int cha
 
 #ifdef FILE64_WIN
 int
-sfcreat_ex(const char *name, __int64 size, __int64 *outsize,SFPROPS *props,int min_header,cdp_create_mode mode)
+sfcreat_ex(const char *name, __int64_t size, __int64_t *outsize,SFPROPS *props,int min_header,cdp_create_mode mode)
 
 #else
 int
-sfcreat_ex(const char *name, __int64 size, __int64 *outsize,SFPROPS *props,int min_header,cdp_create_mode mode)
+sfcreat_ex(const char *name, __int64_t size, __int64_t *outsize,SFPROPS *props,int min_header,cdp_create_mode mode)
 #endif
 {
         int i, rc;
@@ -4971,19 +4971,19 @@ sfcreat_ex(const char *name, __int64 size, __int64 *outsize,SFPROPS *props,int m
 //will need sndrecreat_formatted eventually, NB set buffer size for 24bit formats!
 #ifdef FILE64_WIN
 int
-sfrecreat_formatted(int sfd, __int64 size, __int64 *outsize,int channels,
+sfrecreat_formatted(int sfd, __int64_t size, __int64_t *outsize,int channels,
                                   int srate, int stype)
 
 #else
 int
-sfrecreat_formatted(int sfd, __int64 size, __int64 *outsize,int channels,
+sfrecreat_formatted(int sfd, __int64_t size, __int64_t *outsize,int channels,
                                   int srate, int stype)
 #endif
 {
         int rc;
         struct sf_file *f;
     char *ext_default = "wav";
-        __int64 freespace;
+        __int64_t freespace;
 
         //might as well validate the params
         if(channels < 1 || srate <= 0)
@@ -5143,7 +5143,7 @@ sfgetwordsize(int sfd)
 }
 
 #ifdef FILE64_WIN
-__int64 sfgetdatasize(int sfd)
+__int64_t sfgetdatasize(int sfd)
 #else
 __int64
 sfgetdatasize(int sfd)
@@ -5179,7 +5179,7 @@ sfread(int sfd, char *buf, int cnt)
         struct sf_file *f;
         short *sp;
         DWORD *dp;
-        __int64 remain;
+        __int64_t remain;
         int i;
         //int got = 0;
 
@@ -5253,7 +5253,7 @@ sfwrite(int sfd, char *outbuf, int cnt)
 {
         struct sf_file *f;
         int i;
-    __int64 remain;
+    __int64_t remain;
         short *ssp, *sdp;
         DWORD *dsp, *ddp;
         char *buf = outbuf;
@@ -5415,12 +5415,12 @@ sfread_buffered(int sfd, char *buf, int lcnt)
     short *sp;
     DWORD *dp;
 #ifdef FILE64_WIN
-    __int64 remain,i;
-    __int64 cnt = lcnt;  /*RWD 2007: lcnt used some places below */
+    __int64_t remain,i;
+    __int64_t cnt = lcnt;  /*RWD 2007: lcnt used some places below */
     long containersize;
 #else
-    __int64 remain;
-     __int64 cnt = lcnt;
+    __int64_t remain;
+     __int64_t cnt = lcnt;
     int i,containersize;
 #endif
 
@@ -5511,8 +5511,8 @@ sfwrite_buffered(int sfd, char *outbuf, int lcnt)
     struct sf_file *f;
 
         //unsigned int remain, cnt = lcnt;  /* RWD Feb 2010 */
-    __int64 remain;
-    __int64 cnt = lcnt;
+    __int64_t remain;
+    __int64_t cnt = lcnt;
 
         short *ssp, *sdp;
         DWORD *dsp, *ddp;
@@ -5627,11 +5627,11 @@ sfwrite_buffered(int sfd, char *outbuf, int lcnt)
 #ifdef FILE64_WIN
 /* RWD 2007 remember dist can be negative... */
 __int64
-sfseek_buffered(int sfd, __int64 dist, int whence)
+sfseek_buffered(int sfd, __int64_t dist, int whence)
 {
         struct sf_file *f;
-        /*unsigned long*/__int64 newpos = 0;
-        __int64 i64size;
+        /*unsigned long*/__int64_t newpos = 0;
+        __int64_t i64size;
         LARGE_INTEGER pos64;
 
         if((f = findfile(sfd)) == 0)
@@ -5697,11 +5697,11 @@ sfseek_buffered(int sfd, __int64 dist, int whence)
 
 #else
 __int64
-sfseek_buffered(int sfd, __int64 dist, int whence)
+sfseek_buffered(int sfd, __int64_t dist, int whence)
 {
         struct sf_file *f;
-        __int64 newpos = 0;    // allow max seek distance 2GB
-        __int64 size;
+        __int64_t newpos = 0;    // allow max seek distance 2GB
+        __int64_t size;
     fpos_t bytepos;
 
         if((f = findfile(sfd)) == 0)
@@ -6245,7 +6245,7 @@ aiffupdate98(time_t thistime,struct sf_file *f)
         /*RWD AIFF requires pad byte at end, for 8bit and 24bit sample types*/
         else {
 #ifdef FILE64_WIN
-                __int64 size = f->datachunkoffset +  (f->datachunksize+1)&~1;
+                __int64_t size = f->datachunkoffset +  (f->datachunksize+1)&~1;
 #else
                 DWORD size = POS64(f->datachunkoffset) +  ((f->datachunksize+1)&~1);
 #endif
@@ -6358,10 +6358,10 @@ sfsize(int sfd)
 
 #ifdef FILE64_WIN
 int
-sfadjust(int sfd, __int64 delta)
+sfadjust(int sfd, __int64_t delta)
 {
         struct sf_file *f;
-        __int64 newsize;
+        __int64_t newsize;
 
         if(delta > 0) {
                 rsferrno = ESFBADPARAM;
@@ -6420,10 +6420,10 @@ sfadjust(int sfd, __int64 delta)
 
 #else
 int
-sfadjust(int sfd, __int64 delta)
+sfadjust(int sfd, __int64_t delta)
 {
         struct sf_file *f;
-        __int64 newsize;
+        __int64_t newsize;
 
 #ifdef _DEBUG
     fprintf(stder,"in sfadjust()\n");

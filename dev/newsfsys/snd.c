@@ -254,7 +254,7 @@ doseek(struct sndfile *sf, int dist, int whence)
 //{
 //      return sfseek_buffered(sf->fd, dist, whence);
 //}
-static __int64 doseekEx(struct sndfile *sf, __int64 dist, int whence)
+static __int64_t doseekEx(struct sndfile *sf, __int64_t dist, int whence)
 {
     return sfseek_buffered(sf->fd, dist, whence);
 }
@@ -536,7 +536,7 @@ sndcreat_formatted(const char *fn, int size, int stype,int channels,
        we have to rely on sfputprop("original sampsize" being set by program
      */
     /* if pvx file, sets sffile->pvxfileno (which may be 0 ), but returns sf id (which may be 1) */
-    if((sf->fd = sfcreat_formatted(fn, size*sampsize[stype], (__int64 *)0,channels,srate,
+    if((sf->fd = sfcreat_formatted(fn, size*sampsize[stype], (__int64_t *)0,channels,srate,
                     stype,mode)) < 0) {
         freesndfd(fd);
         return -1;
@@ -602,7 +602,7 @@ sndcreat_ex(const char *name, int size,SFPROPS *props,int min_header,cdp_create_
 
         /*need to return to outsize: size / smpsize - check this...*/
 
-    if((sf->fd = sfcreat_ex(name, (__int64)size *smpsize, (__int64 *)0,
+    if((sf->fd = sfcreat_ex(name, (__int64)size *smpsize, (__int64_t *)0,
                         props,min_header,mode)) < 0) {
                 freesndfd(fd);
                 return -1;
@@ -620,7 +620,7 @@ sndcloseEx(int fd)
 {
     register struct sndfile *sf;
     int rc = 0;
-    __int64 length, pos;
+    __int64_t length, pos;
 
     if(!mapsndfd(&fd))
         return -1;
@@ -721,9 +721,9 @@ sndseekEx(int fd, int dist, int whence)
 {
     register struct sndfile *sf;
     long bufsize;
-    __int64 secpos;
-    __int64 newpos = 0;
-    __int64 gotpos;
+    __int64_t secpos;
+    __int64_t newpos = 0;
+    __int64_t gotpos;
 
     if(!mapsndfd(&fd))
         return -1;
@@ -849,7 +849,7 @@ sndtellEx(int fd)
 {
     struct sndfile *sf;
         //long off;
-    __int64  off;
+    __int64_t  off;
 
     if(!mapsndfd(&fd))      //strips SNDFDBASE: fd = 0
         return -1;

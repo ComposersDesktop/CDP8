@@ -130,7 +130,7 @@ getdrivefreespace(const char *path)
     DWORD bytespersector;
     DWORD freeclusters;
     DWORD totclusters;
-    __int64 freesectors;    /*RWD Jan 2014 */
+    __int64_t freesectors;    /*RWD Jan 2014 */
 
     char pbuf[4];
 
