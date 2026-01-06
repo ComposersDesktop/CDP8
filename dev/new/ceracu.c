@@ -40,6 +40,10 @@
 #include <osbind.h>
 #include <standalone.h>
 #include <ctype.h>
+#ifdef linux
+#include <stdint.h>
+#include <sys/vfs.h>
+#endif
 #include <sfsys.h>
 #include <string.h>
 #include <srates.h>
@@ -52,7 +56,9 @@
 #ifdef unix
 #define round(x) lround((x))
 #endif
-
+#ifndef WIN32
+typedef long long __int64;
+#endif
 char errstr[2400];
 
 int anal_infiles = 1;
