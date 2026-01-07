@@ -3715,3 +3715,4 @@ void bounce_off_src_end_if_necessary(int *here,int thisdur,int sndlen)
         *here = max(0,*here);   //  SAFETY
     }
 }
+
