@@ -1,11 +1,8 @@
-# CMakeLists.txt for libaaio.a. NB  NOT on Windows!
+# CMakeLists.txt for the getch and kbhit functions found on Windows for posix
 
 set(CMAKE_C_FLAGS "-O -Wall ")
 
 include_directories(../newinclude)
-# original distribution just uses aaio.c. 
-# but also provides aaio1.c and aaio2.c as alternatives.
-# this will itself include aaio1.c
-set(AAIOLIB_SRCS aaio.c)
+set(AAIOLIB_SRCS aaio_replacement.c)
 
 add_library(aaio ${AAIOLIB_SRCS})
