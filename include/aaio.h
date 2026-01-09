@@ -27,8 +27,6 @@
 #ifndef _L_AAIO_
 #define _L_AAIO_
 
-#define AAIO_VERSION 0.3.0
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -63,53 +61,8 @@ int getche(void);
  */
 int kbhit(void);
 
-/**
- * Perform a hard reset of the terminal to cause it to go back to its 
- * original state.
- *
- * @return -1 on error, 0 on success.
- * @see reset(1)
- * @see aaio_reset
- */
 int aaio_hard_reset(void);
 
-/**
- * Reset the terminal to the state it was in when aaio_grant_tty_lock was
- * called.
- * 
- * @deprecated There is no need to use the aaio_grant_tty_lock and
- * aaio_reset functions as of version 0.2.0 an later. The speedup thay
- * can achieve is reduced to an insignificant level. The functionality
- * may be removed in later versions of the library.
- *
- * @return -1 on error, 0 on success.
- * @see aaio_hard_reset
- * @see aaio_grant_tty_lock
- */
-int aaio_reset(void);
-
-/**
- * Allow the aaio functions (getch, getche and kbhit) to "abuse" the terminal
- * (i.e. change the terminal settings without resetting them. This gives a
- * boost to performance that can be usefull in some cases. Most often,
- * however, it is not necessary or recomended to grant the tty lock to aaio.
- *
- * If the lock has been granted aaio_reset must be called before program 
- * exit to reset the terminal to its original state.
- *
- * @deprecated There is no need to use the aaio_grant_tty_lock and
- * aaio_reset functions as of version 0.2.0 an later. The speedup thay
- * can achieve is reduced to an insignificant level. The functionality
- * may be removed in later versions of the library.
- *
- * @return -1 on error, 0 on success.
- * @note The aaio library does not really get a lock on the tty, others may
- * change the tty settings, however this will corrupt the aaio library and
- * can cause undefined results.
- * @see aaio_reset
- */
-int aaio_grant_tty_lock(void);
-  
 /**
  * Flush any remaining characters from the stdandard input.
  * 
@@ -121,5 +74,4 @@ int aaio_flush(void);
 }
 #endif
 
-#endif
-
+#endif //_L_AAIO_

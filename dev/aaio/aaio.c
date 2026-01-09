@@ -27,22 +27,11 @@
 #include "aaio.h"
 
 #include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
 
 #include <unistd.h>
 #include <termios.h>
 
 #include <sys/ioctl.h>
-
-#ifdef HAVE_SYS_FILIO_H
-//needed on solaris to get FIONREAD
-#include <sys/filio.h>
-#endif
-
-#ifndef RESET_PATH
-#define RESET_PATH "/usr/bin/reset"
-#endif
 
 static const int NOECHO = 0;
 
@@ -138,25 +127,6 @@ int kbhit(void)
     return -1;
 
   return i;
-}
-
-int aaio_hard_reset(void)
-{
-  if(system(RESET_PATH))
-    return -1;
-  
-  return 0;
-}
-
-int aaio_reset(void)
-{
-  return 0;
-}
-
-
-int aaio_grant_tty_lock(void)
-{
-  return 0;
 }
 
 int aaio_flush(void)
