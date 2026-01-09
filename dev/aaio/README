@@ -69,10 +69,3 @@ iD8DBQFCHuXui6ECThHTSIkRAk9qAKCVs7kMSUtv5YhljeQsAA52EcjTFgCeNflz
 w0lAUG3zeHQcJ+7t6tpce4s=
 =qlVs
 -----END PGP SIGNATURE-----
- 
-
-Installation
-------------
-
-See the file INSTALL for detailed instructions but basically it is
-./configure && make && sudo make install
