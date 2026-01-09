@@ -16,7 +16,7 @@
 	See the GNU Lesser General Public License for more details.
 
 	You should have received a copy of the GNU Lesser General Public License  
-	along with this software (see the top-level file COPYING); if not, write to  
+	along with this software (see the top-level file LICENSE); if not, write to  
 	the Free Software  Foundation, Inc., 51 Franklin St, Fifth Floor,  
 	Boston, MA 02110-1301 USA
 	
