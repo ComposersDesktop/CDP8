@@ -280,7 +280,8 @@ extern int sampsize[];
 #define sizeof_WFMTEX (40)
 
 
-#ifdef linux
+//#ifdef linux
+#ifdef __GLIBC__
 #define POS64(x) (x.__pos)
 #else
 #define POS64(x) (x)
@@ -6797,7 +6798,7 @@ static int asm_round(double fval)
     return (long) result;
 }
 #endif
-//RFWD don't need this any more. "Deprecated".    
+//RWD don't need this any more. "Deprecated".    
 int cdp_round(double fval)
 {
     return lround(fval);
