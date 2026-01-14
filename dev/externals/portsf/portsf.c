@@ -90,7 +90,8 @@ int stricmp(const char *a, const char *b);
 int strnicmp(const char *a, const char *b, const int length);
 #endif
 
-#ifdef linux
+//#ifdef linux
+#ifdef __GLIBC__
 #define POS64(x) (x.__pos)
 #else
 #define POS64(x) (x)
@@ -488,34 +489,19 @@ static int psf_wordsize(psf_stype type)
 }
 
 
-#ifdef _MSC_VER
-#  if(_MSC_VER <= 1200)
-/* fast convergent rounding */
-__inline int psf_round(double fval)
-{
-    int result;
-    _asm{
-        fld fval
-        fistp   result
-        mov eax,result
-    }
-    return result;
-}
 
-#  else
-/* slow convergent rounding ! */
-/* TODO: implement IEEE round-to-even */
-int psf_round(double val);
-# endif 
 int psf_round(double val)
 {
     long k;
+#if 0
     k = (long)(fabs(val)+0.5);
     if(val < 0.0)
         k = -k;
+#endif
+    k = lround(val);
     return (int) k;
 }
-#endif
+
 
 #ifndef WIN32
 int stricmp(const char *a, const char *b)
