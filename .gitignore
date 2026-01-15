@@ -34,3 +34,10 @@ CPackConfig.cmake
 CPackSourceConfig.cmake
 /CMakeCache.txt
 Custom.cmake
+
+.cache/
+# created by for example 
+#cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+# used by clangd lsp
+compile_commands.json 
+.cache/
