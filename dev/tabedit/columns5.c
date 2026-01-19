@@ -950,7 +950,7 @@ void format_vals(void)
     int n, m, OK = 1;
     double d = (double)cnt/(double)ifactor;
     int rowcnt = cnt/ifactor;
-    char ctemp[64];
+    char ctemp[64] = {0};
 
     errstr[0] = ENDOFSTR;
     if(d > (double)rowcnt)
@@ -998,7 +998,7 @@ void column_format_vals(void)
 
     double d = (double)cnt/(double)ifactor;
     int rowcnt = cnt/ifactor;
-    char ctemp[64];
+    char ctemp[64] = {0};
     errstr[0] = ENDOFSTR;
     if(d > (double)rowcnt)
         rowcnt++;
@@ -2865,7 +2865,7 @@ void format_strs(void)
     int n, m, OK = 1;
     double d = (double)stringscnt/(double)ifactor;
     int rowcnt = stringscnt/ifactor;
-    char ctemp[64];
+    char ctemp[64] = {0};
     errstr[0] = ENDOFSTR;
     if(d > (double)rowcnt)
         rowcnt++;
@@ -2896,7 +2896,7 @@ void column_format_strs(void)
 
     double d = (double)stringscnt/(double)ifactor;
     int rowcnt = stringscnt/ifactor;
-    char ctemp[64];
+    char ctemp[64] = {0};
     errstr[0] = ENDOFSTR;
     if(d > (double)rowcnt)
         rowcnt++;
