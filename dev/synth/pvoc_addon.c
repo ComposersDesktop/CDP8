@@ -597,13 +597,13 @@ int pvoc_process_addon(unsigned int samps_so_far,dataptr dz)
         }
 #else
         for (i = 0; i < IOi;) { /* shift out next IOi values */
-            int j;
+            int jj;
             int todo = min(IOi-i, output+obuflen-nextOut);
                 if((exit_status = outfloats(nextOut,&maxsample,&minsample,&num_overflows,todo, dz))<0)
                 return(exit_status);
             i += todo;
             outCount += todo;
-            for(j = 0; j < todo; j++)
+            for(jj = 0; jj < todo; jj++)
                 *nextOut++ = 0.0f;
             if (nextOut >= (output + obuflen))
                 nextOut -= obuflen;

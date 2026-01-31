@@ -57,7 +57,7 @@ int genimpframe2(int ifd, double*** outbufs, double* rms,int imchans, double sca
     double* ampsum = 0;
     double  maxrmsfac = 0.0;
 #ifdef _DEBUG
-    double *re,*im,*mag;
+    double *re,*im,*mag, maxampsum;
 #endif
 	inframes = psf_sndSize(ifd);  // m/c frames
 	if(inframes <= 0)

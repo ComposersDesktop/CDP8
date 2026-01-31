@@ -39,9 +39,9 @@
 #include <assert.h>
 #endif
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#endif
+//#endif
 
 static int setup_splice(int st_splicecnt,double **splicebuf);
 static int generate_origdur_and_frq(double **origdur,double **origfrq,dataptr dz);

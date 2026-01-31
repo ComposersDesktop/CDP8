@@ -39,9 +39,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
-#if defined unix || defined __GNUC__
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define SAFETY   ((long)4096)
 #define OSAFETY  ((long)256)

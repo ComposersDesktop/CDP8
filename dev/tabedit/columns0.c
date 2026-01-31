@@ -32,6 +32,10 @@
 
 #define STACK_WITH_OVERLAP 1111
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 void    usage(void), logo(void);
 
 static void read_flags(char *,char *);
@@ -53,15 +57,15 @@ static void flag_only_takes_no_params(char flag);
 static void unknown_flag_or_bad_param(void);
 static void no_value_with_flag(char flag,int ro);
 static void no_value_with_flag_only(char flag);
-static void no_value_required_with_flag(char flag,int ro);
+static void no_value_required_with_flag(char flag,int i_ro);
 static void no_value_required_with_flag_only(char flag);
 static void read_flags_data_error(char *str);
 static void unknown_flag_string(char *flagstr);
 
 static void check_for_columnextract(char *argv1,int *argc,char *argv[]);
 static int valid_call_for_multicol_input(char flag,int ro);
-static int noro(int ro);
-static void output_multicol_data();
+static int noro(int i_ro);
+static void output_multicol_data(void);
 
 int     cnt = 0, firstcnt, arraysize = BIGARRAY, infilecnt, outfilecnt, colcnt, thecol, allcols = 1;
 double  *number, *permm, *permmm, factor, scatter, *pos, *outcoldata;
@@ -2504,7 +2508,7 @@ void do_string_params(char *argv[],int pcnt)
 
 /********************************* READ_DATA *********************************/
 
-void read_data(char *startarg,char *endarg,int *ro)
+void read_data(char *startarg,char *endarg,int *i_ro)
 {
     /* READ THE (FIRST) FILE DATA */
     if(!strncmp(endarg,"-th",3) || !strncmp(endarg,"-tM",3))
@@ -2532,9 +2536,9 @@ void read_data(char *startarg,char *endarg,int *ro)
     } else if(!strncmp(endarg,"-DB",3))
         do_DB_infile(startarg);                                         /* DB info in file */
     else if(!strcmp(endarg,"-c"))
-        *ro = ENDOFSTR;                                                         /* COUNT only, option */
+        *i_ro = ENDOFSTR;                                                         /* COUNT only, option */
     else if(!strcmp(endarg,"-cl"))
-        *ro = 'l';                                                                      /* COUNT lines, option */
+        *i_ro = 'l';                                                                      /* COUNT lines, option */
     else
         do_infile(startarg);                                            /* read numeric values */
 }
@@ -2580,40 +2584,40 @@ int option_takes_data_and_has_extra_params(char *agv)
 
 /********************************* CHECK_EXCEPTIONAL_PROCESSES ********************************/
 
-void check_exceptional_processes(int ro,int argc)
+void check_exceptional_processes(int i_ro,int argc)
 {
     if(!sloom && !sloombatch) {
-        if(flag=='H' && (ro==ENDOFSTR || ro=='r') && cnt>1) {
+        if(flag=='H' && (ro==ENDOFSTR || i_ro=='r') && cnt>1) {
             fprintf(stderr,"Too many values in file for H");
-            if(ro=='r')
+            if(i_ro=='r')
                 fprintf(stderr,"r");
             fprintf(stderr," flag.\n");
             exit(1);
         }
 
-        if((flag=='J' || (flag=='C' && (ro == ENDOFSTR || ro == 'c'))) && argc<4) {
+        if((flag=='J' || (flag=='C' && (i_ro == ENDOFSTR || i_ro == 'c'))) && argc<4) {
             fprintf(stderr,"Flags J & C need at least 2 input files.\n");
             exit(1);
         }
-        if(((flag=='S' && ro==ENDOFSTR) || flag=='N') && argc!=4) {
+        if(((flag=='S' && i_ro==ENDOFSTR) || flag=='N') && argc!=4) {
             fprintf(stderr,"flags S & N or Nr need 1 infilename & 1 generic outfilename.\n");
             exit(1);
         }
     } else {
-        if(flag=='H' && (ro==ENDOFSTR || ro=='r') && cnt>1) {
+        if(flag=='H' && (i_ro==ENDOFSTR || i_ro=='r') && cnt>1) {
             fprintf(stdout,"ERROR: Too many values in file this option.\n");
             fflush(stdout);
             exit(1);
         }
         if((flag=='J' || flag=='j'
-            || (flag == 'W' && ro == 'b')
-            || (flag=='e' && (ro == 's' || ro == 'i' || ro == 'A' || ro == 'S' || ro == 'w' || ro == 'W' || ro == 'L' || ro == 'Q' || ro == 'X' || ro == 'Y'))
-            || (flag == 'A' && ro == 'e')) && argc<4) {
+            || (flag == 'W' && i_ro == 'b')
+            || (flag=='e' && (i_ro == 's' || i_ro == 'i' || i_ro == 'A' || i_ro == 'S' || i_ro == 'w' || i_ro == 'W' || i_ro == 'L' || i_ro == 'Q' || i_ro == 'X' || i_ro == 'Y'))
+            || (flag == 'A' && i_ro == 'e')) && argc<4) {
             fprintf(stdout,"ERROR: This option needs at least 2 input files.\n");
             fflush(stdout);
             exit(1);
         }
-        if(((flag=='S' && ro==ENDOFSTR) || flag=='N') && argc!=4) {
+        if(((flag=='S' && i_ro==ENDOFSTR) || flag=='N') && argc!=4) {
             fprintf(stdout,"ERROR: These options need 1 infilename & 1 generic outfilename.\n");
             fflush(stdout);
             exit(1);
@@ -2623,7 +2627,7 @@ void check_exceptional_processes(int ro,int argc)
 
 /********************************* HANDLE_MULTIFILE_PROCESSES_AND_THE_OUTPUT_FILE ********************************/
 
-void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,char **argv)
+void handle_multifile_processes_and_the_output_file(int argc, char cflag,int i_ro,char **argv)
 {
     int joico = 0, colcnt2 = 0;
 
@@ -2633,13 +2637,13 @@ void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,c
             firstcnt = cnt;
             infilecnt = argc-2;
             do_other_stringline_infiles(argv,'J');
-        } else if(flag=='C' && (ro == ENDOFSTR || ro == 'c')) {
+        } else if(cflag=='C' && (i_ro == ENDOFSTR || i_ro == 'c')) {
             joico = 1;
             firstcnt = cnt;
             infilecnt = argc-2;
             do_other_infiles(argv);
-        } else if(flag =='j') {
-            if(ro == 0) {
+        } else if(cflag =='j') {
+            if(i_ro == 0) {
                 infilecnt = 2;
                 colcnt2 = do_other_stringline_infile(argv[2]);
                 if(colcnt != colcnt2) {
@@ -2647,14 +2651,14 @@ void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,c
                     fflush(stdout);
                     exit(1);
                 }
-            } else if(ro =='j') {
+            } else if(i_ro =='j') {
                 infilecnt = argc-2;
                 do_other_stringline_infiles(argv,'j');
             }
-        } else if(flag =='W' && ro == 'b') {
+        } else if(cflag =='W' && i_ro == 'b') {
             infilecnt = argc-2;
             do_other_stringline_infiles(argv,'W');
-        } else if(flag =='K' && ro == 'b') {
+        } else if(cflag =='K' && i_ro == 'b') {
             infilecnt = argc-3;
             do_other_infiles(argv);
         } else {
@@ -2663,7 +2667,7 @@ void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,c
                 fflush(stdout);
                 exit(1);
             }
-            if(flag!='S' && flag!='N') {
+            if(cflag!='S' && flag!='N') {
                 /*RWD*/         if(!strcmp(argv[2],"con") || !strcmp(argv[2],"CON"))
                     fp[1]=stdout;
                 else if(allcols == 1)
@@ -2673,7 +2677,7 @@ void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,c
             }
         }
     } else {
-        if(flag=='A' && ro == 'e') {
+        if(cflag=='A' && i_ro == 'e') {
             joico = 1;
             infilecnt = argc-2;
             if((file_cnt = (int *)malloc(infilecnt * sizeof(int)))==NULL) {
@@ -2683,28 +2687,28 @@ void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,c
             }
             file_cnt[0] = cnt;
             do_other_infiles(argv);
-        } else if(flag=='J') {
+        } else if(cflag=='J') {
             joico = 1;
             firstcnt = cnt;
             infilecnt = argc-2;
             do_other_stringline_infiles(argv,'J');
-        } else if(flag=='C' && (ro == ENDOFSTR || ro == 'c')) {
+        } else if(cflag=='C' && (i_ro == ENDOFSTR || i_ro == 'c')) {
             joico = 1;
             firstcnt = cnt;
             infilecnt = argc-2;
             do_other_infiles(argv);
-        } else if(flag =='e'
-                  && (ro == 's' || ro == 'i' || ro == 'a' || ro == 'A' || ro == 'S' || ro == 'w' || ro == 'W' || ro == 'L' || ro == 'Q'
-                      || ro == 'X' || ro == 'm' || ro =='Y')) {
+        } else if(cflag =='e'
+                  && (i_ro == 's' || i_ro == 'i' || i_ro == 'a' || i_ro == 'A' || i_ro == 'S' || i_ro == 'w' || i_ro == 'W' || i_ro == 'L' || i_ro == 'Q'
+                      || i_ro == 'X' || i_ro == 'm' || i_ro =='Y')) {
             firstcnt = cnt;
             infilecnt = 2;
             do_other_infiles(argv);
-        } else if(flag =='w' && (ro == 't' || ro == 'o')) {
+        } else if(cflag =='w' && (i_ro == 't' || i_ro == 'o')) {
             firstcnt = cnt;
             infilecnt = 2;
             do_other_infiles(argv);
-        } else if(flag =='j') {
-            if(ro == 0) {
+        } else if(cflag =='j') {
+            if(i_ro == 0) {
                 infilecnt = 2;
                 colcnt2 = do_other_stringline_infile(argv[2]);
                 if(colcnt != colcnt2) {
@@ -2712,14 +2716,14 @@ void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,c
                     fflush(stdout);
                     exit(1);
                 }
-            } else if(ro =='j') {
+            } else if(i_ro =='j') {
                 infilecnt = argc-2;
                 do_other_stringline_infiles(argv,'j');
             }
-        } else if(flag =='W' && ro == 'b') {
+        } else if(cflag =='W' && i_ro == 'b') {
             infilecnt = argc-2;
             do_other_stringline_infiles(argv,'W');
-        } else if(flag =='K' && ro == 'b') {
+        } else if(cflag =='K' && i_ro == 'b') {
             infilecnt = argc-3;
             do_other_infiles(argv);
         } else if(!joico) {
@@ -2728,7 +2732,7 @@ void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,c
                 fflush(stdout);
                 exit(1);
             }
-            if(flag!='S' && flag!='N') {
+            if(cflag!='S' && cflag!='N') {
                 if(allcols == 1)
                     do_outfile(argv[2]);
                 else
@@ -2741,9 +2745,9 @@ void handle_multifile_processes_and_the_output_file(int argc, char flag,int ro,c
 /********************************* ERROR_REPORTING ********************************/
 
 
-void cant_read_numeric_value(char flag,int ro) {
+void cant_read_numeric_value(char cflag,int i_ro) {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"Cannot read numerical value with flag %c%c\n",flag,ro);
+        fprintf(stderr,"Cannot read numerical value with flag %c%c\n",cflag,i_ro);
     else {
         fprintf(stdout,"ERROR: Cannot read numerical value.\n");
         fflush(stdout);
@@ -2751,9 +2755,9 @@ void cant_read_numeric_value(char flag,int ro) {
     exit(1);
 }
 
-void cant_read_numeric_value_with_flag_only(char flag) {
+void cant_read_numeric_value_with_flag_only(char cflag) {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"Cannot read numerical value with flag %c\n",flag);
+        fprintf(stderr,"Cannot read numerical value with flag %c\n",cflag);
     else {
         fprintf(stdout,"ERROR: Cannot read numerical value.\n");
         fflush(stdout);
@@ -2761,10 +2765,10 @@ void cant_read_numeric_value_with_flag_only(char flag) {
     exit(1);
 }
 
-void unknown_flag_only(char flag)
+void unknown_flag_only(char cflag)
 {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"Unknown flag -%c\n",flag);
+        fprintf(stderr,"Unknown flag -%c\n",cflag);
     else {
         fprintf(stdout,"ERROR: Unknown option.\n");
         fflush(stdout);
@@ -2772,10 +2776,10 @@ void unknown_flag_only(char flag)
     exit(1);
 }
 
-void unknown_flag(char flag,int ro)
+void unknown_flag(char cflag,int i_ro)
 {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"Unknown flag -%c%c\n",flag,ro);
+        fprintf(stderr,"Unknown flag -%c%c\n",cflag,i_ro);
     else {
         fprintf(stdout,"ERROR: Unknown option.\n");
         fflush(stdout);
@@ -2794,10 +2798,10 @@ void cannot_read_flags(char *flagstr)
     exit(1);
 }
 
-void flag_takes_no_params(char flag,int ro)
+void flag_takes_no_params(char cflag,int i_ro)
 {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"flag -%c%c does not take a parameter\n",flag,ro);
+        fprintf(stderr,"flag -%c%c does not take a parameter\n",cflag,i_ro);
     else {
         fprintf(stdout,"ERROR: This option does not take a parameter\n");
         fflush(stdout);
@@ -2805,10 +2809,10 @@ void flag_takes_no_params(char flag,int ro)
     exit(1);
 }
 
-void flag_only_takes_no_params(char flag)
+void flag_only_takes_no_params(char cflag)
 {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"flag -%c does not take a parameter\n",flag);
+        fprintf(stderr,"flag -%c does not take a parameter\n",cflag);
     else {
         fprintf(stdout,"ERROR: This option does not take a parameter\n");
         fflush(stdout);
@@ -2827,10 +2831,10 @@ void unknown_flag_or_bad_param(void)
     exit(1);
 }
 
-void no_value_with_flag(char flag,int ro)
+void no_value_with_flag(char cflag,int i_ro)
 {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"No value supplied with flag -%c%c\n",flag,ro);
+        fprintf(stderr,"No value supplied with flag -%c%c\n",cflag,i_ro);
     else {
         fprintf(stdout,"ERROR: No value supplied with this option\n");
         fflush(stdout);
@@ -2838,10 +2842,10 @@ void no_value_with_flag(char flag,int ro)
     exit(1);
 }
 
-void no_value_with_flag_only(char flag)
+void no_value_with_flag_only(char cflag)
 {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"No value supplied with flag -%c\n",flag);
+        fprintf(stderr,"No value supplied with flag -%c\n",cflag);
     else {
         fprintf(stdout,"ERROR: No value supplied with this option\n");
         fflush(stdout);
@@ -2849,10 +2853,10 @@ void no_value_with_flag_only(char flag)
     exit(1);
 }
 
-void no_value_required_with_flag(char flag,int ro)
+void no_value_required_with_flag(char cflag,int i_ro)
 {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"No parameter required with flag %c%c.\n",flag,ro);
+        fprintf(stderr,"No parameter required with flag %c%c.\n",cflag,i_ro);
     else {
         fprintf(stdout,"ERROR: No parameter required with this option.\n");
         fflush(stdout);
@@ -2860,10 +2864,10 @@ void no_value_required_with_flag(char flag,int ro)
     exit(1);
 }
 
-void no_value_required_with_flag_only(char flag)
+void no_value_required_with_flag_only(char cflag)
 {
     if(!sloom && !sloombatch)
-        fprintf(stderr,"No parameter required with flag %c\n",flag);
+        fprintf(stderr,"No parameter required with flag %c\n",cflag);
     else {
         fprintf(stdout,"ERROR: No parameter required with this option.\n");
         fflush(stdout);
@@ -3016,114 +3020,114 @@ void check_for_columnextract(char *argv1,int *argc,char *argv[])
 
 /********************************** VALID_CALL_FOR_MULTICOL_INPUT **********************************/
 
-int valid_call_for_multicol_input(char flag,int ro)
+int valid_call_for_multicol_input(char cflag,int i_ro)
 {
-    switch(flag) {
+    switch(cflag) {
     case('A'):
-        if(ro == 's')
+        if(i_ro == 's')
             return 1;
-        if(noro(ro))
+        if(noro(i_ro))
             return 1;
         break;
     case('D'):
-        if(ro == 'B')
+        if(i_ro == 'B')
             return 1;
         break;
     case('I'):
-        if(ro == 'r')
+        if(i_ro == 'r')
             return 1;
         break;
     case('M'):
-        if(ro == 'h')
+        if(i_ro == 'h')
             return 1;
-        if(ro == 'm')
+        if(i_ro == 'm')
             return 1;
-        if(ro == 't')
+        if(i_ro == 't')
             return 1;
         break;
     case('P'):
-        if(noro(ro))
+        if(noro(i_ro))
             return 1;
         break;
     case('R'):
-        if(noro(ro))
+        if(noro(i_ro))
             return 1;
-        if(ro == 'A' || ro == 'a' || ro == 'm' || ro == 'o' || ro == 's')
+        if(i_ro == 'A' || i_ro == 'a' || i_ro == 'm' || i_ro == 'o' || i_ro == 's')
             return 1;
         break;
     case('S'):
-        if(ro == 'L')
+        if(i_ro == 'L')
             return 1;
         break;
     case('T'):
-        if(ro == 'c' || ro == 'h' || ro == 'M' || ro == 'l')
+        if(i_ro == 'c' || i_ro == 'h' || i_ro == 'M' || i_ro == 'l')
             return 1;
         break;
     case('a'):
-        if(noro(ro))
+        if(noro(i_ro))
             return 1;
         break;
     case('b'):
-        if(ro == 'g' || ro == 'l')
+        if(i_ro == 'g' || i_ro == 'l')
             return 1;
         break;
     case('d'):
-        if(noro(ro))
+        if(noro(i_ro))
             return 1;
-        if(ro == 'b')
+        if(i_ro == 'b')
             return 1;
         break;
     case('f'):
-        if(ro == 'l')
+        if(i_ro == 'l')
             return 1;
         break;
     case('h'):
-        if(ro == 'M')
+        if(i_ro == 'M')
             return 1;
         break;
     case('i'):
-        if(ro == 'L' || ro == 'M' || ro == 'a' || ro == 'h' || ro == 'm' || ro == 'l')
+        if(i_ro == 'L' || i_ro == 'M' || i_ro == 'a' || i_ro == 'h' || i_ro == 'm' || i_ro == 'l')
             return 1;
         break;
     case('l'):
-        if(ro == 'i')
+        if(i_ro == 'i')
             return 1;
         break;
     case('m'):
-        if(noro(ro))
+        if(noro(i_ro))
             return 1;
-        if(ro == 'M' || ro == 'g' || ro == 'l')
+        if(i_ro == 'M' || ro == 'g' || ro == 'l')
             return 1;
         break;
     case('o'):
     case('q'):
-        if(noro(ro))
+        if(noro(i_ro))
             return 1;
         break;
     case('r'):
-        if(ro == 'S' || ro == 'm' || ro == 'r')
+        if(i_ro == 'S' || i_ro == 'm' || i_ro == 'r')
             return 1;
         break;
     case('s'):
-        if(ro == 'l' || ro == 't')
+        if(i_ro == 'l' || i_ro == 't')
             return 1;
         break;
     case('t'):
-        if(ro == 'M' || ro == 'h')
+        if(i_ro == 'M' || i_ro == 'h')
             return 1;
         break;
     }
     return 0;
 }
 
-int noro(int ro)
+int noro(int i_ro)
 {
-    if(ro == ENDOFSTR || ro == '.' || ro == '-' || isdigit(ro))
+    if(i_ro == ENDOFSTR || i_ro == '.' || i_ro == '-' || isdigit(i_ro))
         return 1;
     return 0;
 }
 
-void output_multicol_data()
+void  output_multicol_data(void)
 {
     int xcnt;
     int this_column;

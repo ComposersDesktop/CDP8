@@ -56,9 +56,9 @@
         added error return if inout more than 2 chans
 */
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define DELAY_BUFLEN    (4096)
 #define ROOTLEN_DELBUF  (2)

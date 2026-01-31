@@ -44,9 +44,9 @@
 #include <string.h>
 #include <srates.h>
 
-#if defined unix || defined __GNUC__
+ //#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif
@@ -1738,7 +1738,7 @@ int generate_enveloped_output(int envcnt,int outcnt,dataptr dz)
 {
     int exit_status, j, k, kk, finished = 0, mstep;
     float *ibuf = dz->sampbuf[0], *obuf1 = dz->sampbuf[1], *obuf2 = dz->sampbuf[2];
-    int obufpos = 0, obufstart_in_file, obufend_in_file, n, m, outsamptime, seekback, chwidth, halfchwidth, centring, peakadj = 0;
+    int obufpos = 0, /*obufstart_in_file,*/ obufend_in_file, n, m, outsamptime, seekback, chwidth, halfchwidth, centring, peakadj = 0;
     int startupsplice, endupsplice, startdownsplice, enddownsplice, splice_steps, envlen;
     int ibufpos, ibufstart_in_file, insamptime, readend_of_file, readlen;
     double srate = (double)dz->infile->srate;
@@ -1753,7 +1753,7 @@ int generate_enveloped_output(int envcnt,int outcnt,dataptr dz)
     if((exit_status = read_samps(ibuf,dz))<0)
         return(exit_status);
     ibufstart_in_file = 0;
-    obufstart_in_file  = 0;
+//    obufstart_in_file  = 0;
     obufend_in_file    = dz->buflen;
     envlen = envcnt * 2;
     if(dz->brksize[PKCH_MISS] > 0) {
@@ -1811,7 +1811,7 @@ int generate_enveloped_output(int envcnt,int outcnt,dataptr dz)
             memcpy((char *)obuf1,(char *)obuf2,dz->buflen * sizeof(float));
             memset((char *)obuf2,0,dz->buflen * sizeof(float));
             obufend_in_file   += dz->buflen;
-            obufstart_in_file += dz->buflen;
+//            obufstart_in_file += dz->buflen;
         }
         obufpos = outsamptime % dz->buflen;
         if((insamptime = (int)round(dz->env[m] * srate) * chans) >= dz->insams[0]) {

@@ -37,9 +37,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#endif
+//#endif
 
 /**** ALL FUNCTIONS WHICH ARE GLOBAL TO ALL PROCESS FUNCTIONS TYPES ***/
 
@@ -1464,11 +1464,13 @@ void hshuflup(int k,int *perm,int permlen)
         i--;
     }
 }
-
-#ifndef round
+//RWD OCT 2025 no longer needed
+#if 0
+# ifndef round
 
 int round(double a)
 {
     return (int)floor(a + 0.5);
 }
+# endif
 #endif

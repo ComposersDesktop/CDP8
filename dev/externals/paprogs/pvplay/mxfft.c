@@ -31,7 +31,7 @@
 #include <pvoc.h>
 #include <math.h>           /*RWD*/
 
-int fft_(),fftmx(),reals_();
+// int fft_(),fftmx(),reals_();
 
 /*
  *-----------------------------------------------------------------------

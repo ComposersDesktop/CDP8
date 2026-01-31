@@ -1,6 +1,6 @@
 Building CDP.
 
-This assumes general familiarity with the command line, and with 
+This assumes general familiarity with command line work, and with 
 standard build tools. 
 
 All platforms: the CDP programs use the CMake system for building makefiles:
@@ -8,7 +8,7 @@ https://cmake.org/install/
 
 Windows: the Windows version of CMake is required: this includes the 
  required Generator to create MinGW Makefiles.
-It is included in a full installation of Visual Studio. 
+It is included in a full installation of Visual Studio (free Community Edition). 
 Otherwise, it is available from the main cmake site: https://cmake.org/download/.
 
 Mac users may prefer to use homebrew. Once installed, use:
@@ -20,13 +20,15 @@ Windows:  install the Msys/MinGW linux-like environment.
    
  You will also need the Directx9 SDK dx9mgw.zip for MinGW, provided in the /externals directory.
  (from https://download.tuxfamily.org/allegro/)
+
+  One installed, go to directory Msys/1.0/ and run the .bat file. This launches a version 
+  of the Windows CMD terminal configured for Mingw, with access to many standard unix commands, etc.
  
- Currently we only build 32bit CDP binaries, under this older version of MinGW.
+ Currently we only build 32bit Windows binaries, under this older version of MinGW.
   
  Git: this is not needed simply to build the programs, 
  but recommended if you want to pick up updates, bugfixes, etc, easily:
  https://gitforwindows.org/
- 
  
  
 MacOS:    install Xcode along with the command line tools. This should also install Git.
@@ -36,25 +38,39 @@ MacOS:    install Xcode along with the command line tools. This should also inst
 Linux:     we assume everything you need is already present!
 
 
+Before Builing CDP.
 
-Currently, one or two third-party libraries need to be built 
-before commencing the main CDP build.
-
-1: aaiolib (Linux and MacOS):  emulation of Windows keyboard functions (getch etc)
-    unpack, then ./configure; sudo make install
-
-
-2: portaudio (for the CDP play/record programs: paplay, pvplay, recsf, listaudevs).
+  The external portaudio library needs to be built 
+  before commencing the main CDP build. This is required for the CDP play/record programs: 
+   paplay, pvplay, recsf, listaudevs.
 
    NB: for Windows ASIO support, the Steinberg dev tools ASIOSDK2 is also needed.
 
-    see the applicable "pa...build.txt" under the externals directory.
-            
-             
+   See the applicable "pa...build.txt" for your platform under the externals directory.
+   Note that for all platforms some special configuration settings must be used.
+
+  Note: portaudio is under continuing development. We advise just downloading the listed
+  "stable" version v19.7. It is also possible to obtain the latest sources (towards v19.8) 
+  directly from github. We are investigating this for possible absorption into the CMake system. 
+  However, there are some anomalies compared to the "stable" code set, as can be expected
+  in development code, including function name changes, and possible bugs yet to be fixed.
+
+  Currently, we require access to some "private" portaudio source files. That is to say, for functions
+  used by portaudio itself, but not supported in the main public header file "portaudio.h". 
+  These files may in principle change at any time.
+
+  Also currently, we require portaudio to be built and installed systemwide, mostly for the benefit of CMake.
+  This is not always ideal for users, and is an aspect under review. Those familiar with CMake and the function 
+  of the relevant CMakeLists.txt files will know how to edit them to use a local build of portaudio.
+
+           
 To Build the CDP programs
   
    The canonical approach with CMake is to create a top-level "build" directory 
-   (the directory containing the top-level "CMakeLists.txt" )
+   (the directory containing the top-level "CMakeLists.txt" ):
+ 
+   [in CDP8 directory]:
+   mkdir build
    
    then:
 
@@ -69,12 +85,13 @@ To Build the CDP programs
    
    then, to build the whole package:
    
+   MacOS, Linux:
       make
 
    MinGW: 
       mingw32-make
    
-   All compiled programs will be written to the top-level Release/ directory.
+   All compiled programs will be written to the top-level NewRelease/ directory. 
 
    
 
@@ -91,7 +108,8 @@ and fill in the form as indicated.
 
 Information on any updates to the github repositories will be posted to this list.
 
-
+This document revised:
+Richard Dobson September 11, 2025. 
 
 
 

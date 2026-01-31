@@ -22,9 +22,11 @@
  *
  */
 
-
-
 #include <columns.h>
+
+ //#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 void sort_numbers(int *);
 
@@ -68,18 +70,18 @@ void remove_frq_pitchclass_duplicates(void)
 
 /***************************** COUNT_ITEMS ****************************/
 
-void count_items(char *filename)
+void count_items(char *fname)
 {
     char *p;
-    char temp[10000];
+    char ctemp[10000];
     cnt = 0;
-    if((fp[0] = fopen(filename,"r"))==NULL) {
-        fprintf(stdout,"ERROR: Cannot open infile %s\n",filename);
+    if((fp[0] = fopen(fname,"r"))==NULL) {
+        fprintf(stdout,"ERROR: Cannot open infile %s\n",fname);
         fflush(stdout);
         exit(1);
     }
-    while(fgets(temp,200,fp[0])!=NULL) {
-        p = temp;
+    while(fgets(ctemp,200,fp[0])!=NULL) {
+        p = ctemp;
         if(ro=='l') {
             cnt++;
         } else {
@@ -249,12 +251,12 @@ void rotate_partition_values_to_files(void)
 
 /************************* JOIN_FILES_AS_COLUMNS ************************/
 
-void join_files_as_columns(char *filename)
+void join_files_as_columns(char *fname)
 {
     int n, m;
-    char temp[64];
+    char ctemp[64];
     if(!sloom) {
-        if((fp[0] = fopen(filename,"w"))==NULL) {
+        if((fp[0] = fopen(fname,"w"))==NULL) {
             fprintf(stdout,"Cannot reopen infile1 to write data.\n");
             fflush(stdout);
             exit(1);
@@ -263,11 +265,11 @@ void join_files_as_columns(char *filename)
     errstr[0] = ENDOFSTR;
     for(n=0;n<firstcnt;n++) {
         for(m=0;m<infilecnt-1;m++) {
-            sprintf(temp,"%.5lf ",number[n + (firstcnt * m)]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"%.5lf ",number[n + (firstcnt * m)]);
+            strcat(errstr,ctemp);
         }
-        sprintf(temp,"%.5lf ",number[n + (firstcnt * m)]);
-        strcat(errstr,temp);
+        sprintf(ctemp,"%.5lf ",number[n + (firstcnt * m)]);
+        strcat(errstr,ctemp);
         if(!sloom)
             fprintf(fp[0],"%s\n",errstr);
         else
@@ -282,37 +284,37 @@ void join_files_as_columns(char *filename)
 void join_files_as_rows(void)
 {
     int n, m, locnt = cnt/colcnt, totcnt = (cnt + stringscnt)/colcnt;
-    char temp[64];
+    char ctemp[64];
     errstr[0] = ENDOFSTR;
     for(n=0;n<ifactor;n++) {
         sprintf(errstr,"INFO: ");
         for(m = 0; m < colcnt-1; m++) {
-            sprintf(temp,"%s ",strings[(n * colcnt) + m]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"%s ",strings[(n * colcnt) + m]);
+            strcat(errstr,ctemp);
         }
-        sprintf(temp,"%s",strings[(n * colcnt) + m]);
-        strcat(errstr,temp);
+        sprintf(ctemp,"%s",strings[(n * colcnt) + m]);
+        strcat(errstr,ctemp);
         fprintf(stdout,"%s\n",errstr);
     }
     for(n=locnt;n<totcnt;n++) {
         sprintf(errstr,"INFO: ");
         for(m = 0; m < colcnt-1; m++) {
-            sprintf(temp,"%s ",strings[(n * colcnt) + m]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"%s ",strings[(n * colcnt) + m]);
+            strcat(errstr,ctemp);
         }
-        sprintf(temp,"%s",strings[(n * colcnt) + m]);
-        strcat(errstr,temp);
+        sprintf(ctemp,"%s",strings[(n * colcnt) + m]);
+        strcat(errstr,ctemp);
         fprintf(stdout,"%s\n",errstr);
     }
 
     for(n=ifactor;n<locnt;n++) {
         sprintf(errstr,"INFO: ");
         for(m = 0; m < colcnt-1; m++) {
-            sprintf(temp,"%s ",strings[(n * colcnt) + m]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"%s ",strings[(n * colcnt) + m]);
+            strcat(errstr,ctemp);
         }
-        sprintf(temp,"%s",strings[(n * colcnt) + m]);
-        strcat(errstr,temp);
+        sprintf(ctemp,"%s",strings[(n * colcnt) + m]);
+        strcat(errstr,ctemp);
         fprintf(stdout,"%s\n",errstr);
     }
     fflush(stdout);
@@ -323,7 +325,7 @@ void join_files_as_rows(void)
 void join_many_files_as_rows(void)
 {
     int i, n, m, rowcnt, bas;
-    char temp[200];
+    char ctemp[200];
 
     bas = 0;
     for(i = 0;i < infilecnt; i++) {                 /* for each file */
@@ -331,8 +333,8 @@ void join_many_files_as_rows(void)
         for(n=0;n<rowcnt;n++) {                         /*      for each row in file */
             sprintf(errstr,"INFO: ");
             for(m=0;m<colcnt;m++) {                 /* foreach column in row */
-                sprintf(temp,"%s ",strings[bas + (n * colcnt) + m]);
-                strcat(errstr,temp);
+                sprintf(ctemp,"%s ",strings[bas + (n * colcnt) + m]);
+                strcat(errstr,ctemp);
             }
             fprintf(stdout,"%s\n",errstr);
         }
@@ -344,13 +346,13 @@ void join_many_files_as_rows(void)
 /************************* JOIN_MANY_FILES_AS_COLUMNS ************************/
 
 
-void join_many_files_as_columns(char *filename,int insert)
+void join_many_files_as_columns(char *fname,int insert)
 {
     int i, n, m, rowcnt, bas;
-    char temp[200], *p;
+    char ctemp[200], *p;
 
     if(!sloom) {
-        if((fp[0] = fopen(filename,"w"))==NULL) {
+        if((fp[0] = fopen(fname,"w"))==NULL) {
             fprintf(stdout,"Cannot reopen infile1 to write data.\n");
             fflush(stdout);
             exit(1);
@@ -374,19 +376,19 @@ void join_many_files_as_columns(char *filename,int insert)
 
             colcnt = cntr[0]/rowcnt;                /*      Number of columns in file */
             for(m=0;m<ifactor;m++) {                        /* foreach column in row */
-                sprintf(temp,"%s ",strings[(n * colcnt) + m]);
-                strcat(errstr,temp);
+                sprintf(ctemp,"%s ",strings[(n * colcnt) + m]);
+                strcat(errstr,ctemp);
             }
             colcnt = cntr[1]/rowcnt;                /*      Number of columns in file1 */
             for(m=0;m<colcnt;m++) {                 /* foreach column in row */
-                sprintf(temp,"%s ",strings[cntr[0] + (n * colcnt) + m]);
-                strcat(errstr,temp);
+                sprintf(ctemp,"%s ",strings[cntr[0] + (n * colcnt) + m]);
+                strcat(errstr,ctemp);
             }
             colcnt = cntr[0]/rowcnt;                /*      Number of columns in file */
 
             for(m=ifactor;m<colcnt;m++) {                   /* foreach column in row */
-                sprintf(temp,"%s ",strings[(n * colcnt) + m]);
-                strcat(errstr,temp);
+                sprintf(ctemp,"%s ",strings[(n * colcnt) + m]);
+                strcat(errstr,ctemp);
             }
 
             fprintf(stdout,"%s\n",p);
@@ -404,8 +406,8 @@ void join_many_files_as_columns(char *filename,int insert)
             for(i = 0;i < infilecnt; i++) {         /* for each file */
                 colcnt = cntr[i]/rowcnt;                /*      Number of columns in file */
                 for(m=0;m<colcnt;m++) {                 /* foreach column in row */
-                    sprintf(temp,"%s ",strings[bas + (n * colcnt) + m]);
-                    strcat(errstr,temp);
+                    sprintf(ctemp,"%s ",strings[bas + (n * colcnt) + m]);
+                    strcat(errstr,ctemp);
                 }
                 bas += cntr[i];                                 /* set bas to start of next file's numbers */
             }
@@ -419,11 +421,11 @@ void join_many_files_as_columns(char *filename,int insert)
 
 /************************ CONCATENATE_FILES ****************************/
 
-void concatenate_files(char *filename)
+void concatenate_files(char *fname)
 {
     int n;
     if(!sloom) {
-        if((fp[0] = fopen(filename,"w"))==NULL) {
+        if((fp[0] = fopen(fname,"w"))==NULL) {
             fprintf(stdout,"Cannot reopen infile1 to write data.\n");
             fflush(stdout);
             exit(1);
@@ -440,11 +442,11 @@ void concatenate_files(char *filename)
 
 /************************ CONCATENATE_FILES_CYCLICALLY ****************************/
 
-void concatenate_files_cyclically(char *filename)
+void concatenate_files_cyclically(char *fname)
 {
     int n, m;
     if(!sloom) {
-        if((fp[0] = fopen(filename,"w"))==NULL) {
+        if((fp[0] = fopen(fname,"w"))==NULL) {
             fprintf(stdout,"Cannot reopen infile1 to write data.\n");
             fflush(stdout);
             exit(1);

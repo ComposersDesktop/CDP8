@@ -184,7 +184,7 @@ main(int argc,char* argv[])
 
 
 void
-usage()
+usage(void)
 {
     fprintf(stderr,"CDP Release 5 2005\n");
     fprintf(stderr,"USAGE:\tdshift [-dN] infile outfile [distance between speakers]\n\n");
@@ -201,7 +201,7 @@ usage()
 }
 
 void*
-getbpbuf()
+getbpbuf(void)
 {
     size_t size = MAXMEMORY;
     void *p;
@@ -290,10 +290,14 @@ input(char *inname,char *outname)
     }
     for( total=0 ; total< maxentr ; total++ )
     {
-        fscanf(ifp,"%lf%lf",&(bp[total].time),&(bp[total].param));
-        if(bp[total].time < 0 || feof(ifp) != 0 )
+        int got;
+        got = fscanf(ifp,"%lf%lf",&(bp[total].time),&(bp[total].param));
+        
+        if(got < 2 || bp[total].time < 0.0 || feof(ifp) != 0 )
             break;
     }
+    //RWD
+    fprintf(stderr,"read %ld breakpoints\n",total);
     fclose(ifp);
 
     if((ofp=fopen(outname,"wa")) == NULL )

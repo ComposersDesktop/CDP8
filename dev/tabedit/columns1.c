@@ -28,6 +28,10 @@
 
 #include <columns.h>
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 #define CALCLIM                 0.001
 #define M                       7
 #define NSTACK                  50
@@ -107,7 +111,7 @@ int     stringstoresize = 0, stringstart = 0;
 
 int timevents(double intime0,double intime1,double insize0,double insize1)
 {
-    int    number;
+    int    inumber;
     double fnum, fnumber, error;
     double lobound, hibound, duration;
     if(flteq(insize0,0.0) || flteq(insize1,0.0)) {
@@ -120,13 +124,13 @@ int timevents(double intime0,double intime1,double insize0,double insize1)
         do_error();
     }
     if(fabs(insize1-insize0)<CALCLIM)                       /* 1 */
-        return(number = samesize(intime0,intime1,insize0,insize1,duration));
+        return(inumber = samesize(intime0,intime1,insize0,insize1,duration));
     fnum     = cntevents(duration,insize0,insize1); /* 2 */
-    number   = round(fnum);
-    if(number<=1)                                   /* 3 */
+    inumber   = round(fnum);
+    if(inumber<=1)                                   /* 3 */
         return(1);
-    pos = (double *)exmalloc((number+1) * sizeof(double));
-    fnumber = (double)(number);                             /* 4 */
+    pos = (double *)exmalloc((inumber+1) * sizeof(double));
+    fnumber = (double)(inumber);                             /* 4 */
     error   = fabs(fnum - fnumber);
     lobound = insize1;                                      /* 5 */
     hibound = insize1;
@@ -141,9 +145,9 @@ int timevents(double intime0,double intime1,double insize0,double insize1)
     } else {
         insize1 = (hibound+lobound)/2;
     }                                               /* 7 */
-    getetime(intime0,intime1,insize0,insize1,number);
-    pos[number] = intime1;
-    return(number+1);
+    getetime(intime0,intime1,insize0,insize1,inumber);
+    pos[inumber] = intime1;
+    return(inumber+1);
 }
 
 /*************************** CNTEVENTS *****************************/
@@ -171,16 +175,16 @@ double cntevents(double dur,double s0,double s1)
 int samesize
 (double intime0,double intime1,double insize0,double insize1,double duration)
 {
-    int     number;
+    int     inumber;
     double fnum, size;                                      /* 1 */
     size   = (insize0+insize1)/2;
     fnum   = duration/size;
-    number = round(fnum);
-    size   = duration/(double)(number);
-    pos     = (double *)exmalloc((number+1) * sizeof(double));
-    approxtimes(intime0,size,number);
-    pos[number] = intime1;
-    return(number+1);
+    inumber = round(fnum);
+    size   = duration/(double)inumber;
+    pos     = (double *)exmalloc((inumber+1) * sizeof(double));
+    approxtimes(intime0,size,inumber);
+    pos[inumber] = intime1;
+    return(inumber+1);
 }
 
 /************************ APPROXTIME ***************************
@@ -188,11 +192,11 @@ int samesize
  * Calculate time-positions of equally spaced events.
  */
 
-void approxtimes(double intime0,double size,int number)
+void approxtimes(double intime0,double size,int inumber)
 {   int k;
     double *q = pos;
     *q++ = intime0;
-    for(k=1;k<number;k++) {
+    for(k=1;k<inumber;k++) {
         *q = *(q-1) + size;
         q++;
     }
@@ -203,11 +207,11 @@ void approxtimes(double intime0,double size,int number)
  * Calculate time-positions of events that vary in size between s0 and s1.
  */
 
-void getetime(double t0,double t1,double s0,double s1,int number)
+void getetime(double t0,double t1,double s0,double s1,int inumber)
 {   int n;
     double sdiff = s1-s0, tdiff = t1-t0, d1, d2, d3, *q = pos;
     *q++ = t0;
-    for(n=1;n<number;n++)   {
+    for(n=1;n<inumber;n++)   {
         d1      = sdiff/tdiff;
         d1   *= (double)n;
         d1    = exp(d1);
@@ -822,9 +826,9 @@ void bellperm3(void)
 
 void swap(double *d0,double *d1)
 {
-    double temp = *d0;
+    double dtemp = *d0;
     *d0 = *d1;
-    *d1 = temp;
+    *d1 = dtemp;
 }
 
 /**************************** FLTEQ *******************************/
@@ -982,16 +986,16 @@ void prnt_pitchclass(int z,int oct)
     }
 }
 
-
+//RWD Nov 2025 nb this func uses global var 'number' (columns.h), TODO: make local, somehow!
 void bublsort(void) {
     int n, m;
-    double temp;
+    double dtemp;
     for(n=0;n<cnt-1;n++) {
         for(m = n; m<cnt; m++) {
             if(number[m] < number[n]) {
-                temp = number[n];
+                dtemp = number[n];
                 number[n] = number[m];
-                number[m] = temp;
+                number[m] = dtemp;
             }
         }
     }

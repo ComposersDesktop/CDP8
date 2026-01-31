@@ -1076,7 +1076,7 @@ int get_process_no(char *prog_identifier_from_cmdline,dataptr dz)
 
 /******************************** USAGE ********************************/
 
-int usage1()
+int usage1(void)
 {
     fprintf(stderr,
             "\nOPERATIONS WITH SINGLE FORMANTS\n\n"
@@ -1695,7 +1695,7 @@ int normalise_in_file(double normaliser,dataptr dz)
 {
     int exit_status;
     int vc;
-    int bufcnt = 0;
+//    int bufcnt = 0;
     int total_samps_to_write = dz->total_samps_written;
     int samps_to_write;
     float *bufend;
@@ -1752,7 +1752,7 @@ int normalise_in_file(double normaliser,dataptr dz)
             }
         }
         total_samps_to_write -= samps_to_write;
-        bufcnt++;
+ //       bufcnt++;
     }
     close_and_delete_tempfile(dz->outfilename,dz);
     return(FINISHED);

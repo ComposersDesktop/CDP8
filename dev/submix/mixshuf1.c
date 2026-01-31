@@ -239,7 +239,7 @@ int delete_times(double *timestor,double *timediff,dataptr dz)
 {
     int n, m, k;
     int del_lines = dz->iparam[MSH_ENDLINE] - dz->iparam[MSH_STARTLINE];
-    int new_total_wordcnt = 0, current_word_to_copy, total_wordcnt, oldwordcnt;
+    int new_total_wordcnt = 0, current_word_to_copy, /*total_wordcnt,*/ oldwordcnt;
     char **wordcopy;
 
     if((wordcopy = (char **)malloc(dz->all_words * sizeof(char *)))==NULL) {
@@ -267,14 +267,13 @@ int delete_times(double *timestor,double *timediff,dataptr dz)
         timediff[n] = timediff[m];                              /* adjust times: by shuffling down timediffs */
     for(n=0;n<dz->iparam[MSH_STARTLINE];n++)
         new_total_wordcnt += dz->wordcnt[n];
-    total_wordcnt =  new_total_wordcnt;
-    for(n=dz->iparam[MSH_STARTLINE];n<dz->linecnt;n++)
-        total_wordcnt += dz->wordcnt[n];
+//    total_wordcnt =  new_total_wordcnt;
+//    for(n=dz->iparam[MSH_STARTLINE];n<dz->linecnt;n++)
+//        total_wordcnt += dz->wordcnt[n];
     current_word_to_copy =  new_total_wordcnt;
     for(n=dz->iparam[MSH_STARTLINE];n<dz->iparam[MSH_ENDLINE];n++)
         current_word_to_copy += dz->wordcnt[n];
     for(n=dz->iparam[MSH_STARTLINE],m = dz->iparam[MSH_ENDLINE]; m < dz->linecnt; n++,m++) {
-
         for(k=0;k<dz->wordcnt[m];k++)
             dz->wordstor[new_total_wordcnt++] = dz->wordstor[current_word_to_copy++];
         dz->wordcnt[n] = dz->wordcnt[m];

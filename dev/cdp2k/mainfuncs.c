@@ -1629,7 +1629,7 @@ DO FORMANT FILES HAVE TO HAVE ONE CHANNEL ????? YES
     switch(dz->process) {
     case(PVOC_ANAL): case(PVOC_SYNTH):  case(PVOC_EXTRACT):
         dz->outfilesize = sndsizeEx(dz->ofd);
-        dz->total_samps_written = 0L;
+        dz->total_samps_written = 0;
         break;
     default:
         switch(dz->process_type) {
@@ -1827,7 +1827,7 @@ int establish_peak_status(dataptr dz)
         switch(dz->process) {
 //sound or pseudosnd output
         case(FMNTSEE):  case(FORMSEE):  case(PVOC_SYNTH):
-        case(LEVEL):    case(P_SEE):    
+        case(LEVEL):    case(P_SEE):
 // 2010
         case(MTON):     case(FLUTTER):
         case(SETHARES): case(MCHSHRED):
@@ -1841,7 +1841,7 @@ int establish_peak_status(dataptr dz)
     }
 //spectral output
     switch(dz->process) {   
-    case(P_SYNTH):  case(P_INSERT): case(P_PTOSIL): case(P_NTOSIL): case(P_SINSERT):    
+    case(P_SYNTH):  case(P_INSERT): case(P_PTOSIL): case(P_NTOSIL): case(P_SINSERT):
     case(P_GEN):    case(P_INTERP): case(MAKE2):    case(ANALENV):  case(FREEZE2):
     case(PVOC_ANAL):    case(MAKE): case(ENVSYN):
 // 2010
@@ -1849,6 +1849,9 @@ int establish_peak_status(dataptr dz)
     case(SPEC_REMOVE):  case(SPECROSS):     case(SPECLEAN):     case(SPECTRACT):
     case(BRKTOPI):      case(SPECSLICE):
     case(TUNEVARY):                 /* RWD Nov 21, may need to add other progs here... */
+/* RWD 2023 here we go...*/
+    case(SPECANAL): case(FRACSPEC): case(FTURANAL): case(SPECRAND): case(SPECSQZ):
+    case(SPECMORPH): case(SPECULATE): case(SPECTUNE): case(SPECFOLD): case(CALTRAIN):
         dz->needpeaks = 0;
         return FINISHED;
 
@@ -1856,7 +1859,7 @@ int establish_peak_status(dataptr dz)
 // 2010
     switch(dz->process) {
     case(PTOBRK):
-    case(RMRESP):   
+    case(RMRESP):
     case(MULTIMIX): 
         dz->needpeaks = 0;
         return FINISHED;

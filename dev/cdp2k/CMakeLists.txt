@@ -1,7 +1,7 @@
 if(APPLE)
   set(CMAKE_C_FLAGS "-O -Wall  -Dunix")
 else()
-  if(MINGW)
+  if(MINGW OR MSVC)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32 -D_WIN32")
   else()
     set(CMAKE_C_FLAGS "-O2 -Wall -DCDP97 -Dunix -Dlinux -D_X86_")

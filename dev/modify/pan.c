@@ -40,9 +40,9 @@
 //TW UPDATE
 #include <osbind.h>
 
-#if defined unix || defined __GNUC__
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 //TW UPDATES
 #define SMALLARRAY      20

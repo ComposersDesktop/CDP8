@@ -52,9 +52,9 @@
 
 #include <srates.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 int randcuts_pconsistency(dataptr dz);
 int syllabs_pconsistency(dataptr dz);

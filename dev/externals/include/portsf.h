@@ -53,9 +53,10 @@ OTHER DEALINGS IN THE SOFTWARE.
 extern "C" {    
 #endif     
 /* compatible with <windows.h> */
+#ifndef DWORD
 typedef unsigned MYLONG DWORD;
 typedef unsigned short WORD;
-
+#endif
 /* NB: AIFF spec always illustrates chunksize as (signed) long; 
    even though nFrames is always unsigned long!
    So we make everything DWORD here.

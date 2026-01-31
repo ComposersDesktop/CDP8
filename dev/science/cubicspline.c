@@ -193,7 +193,7 @@ int usage1(void)
 
 int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, double **x, double **y,int *itemcnt)
 {
-    int cnt, linecnt;
+    int cnt/*, linecnt*/;
 //    int arraycnt;
     double *p, dummy;
     char temp[200], *q;
@@ -227,18 +227,19 @@ int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, do
         fflush(stdout);
         return(MEMORY_ERROR);
     }
-    if((*x = (double *)malloc(cnt/2 * sizeof(double)))==NULL) {
+    //RWD 2025 move to calloc, to pacify gcc Linux
+    if((*x = (double *)calloc(cnt/2, sizeof(double)))==NULL) {
         fprintf(stdout,"INSUFFICIENT MEMORY for storing x-coords of input data.\n");
         fflush(stdout);
         return(MEMORY_ERROR);
     }
-    if((*y = (double *)malloc(cnt/2 * sizeof(double)))==NULL) {
+    if((*y = (double *)calloc(cnt/2, sizeof(double)))==NULL) {
         fprintf(stdout,"INSUFFICIENT MEMORY for storing y-coords of input data.\n");
         fflush(stdout);
         return(MEMORY_ERROR);
     }
     fseek(fpi,0,0);
-    linecnt = 1;
+//    linecnt = 1;
     p = *parray;
     while(fgets(temp,200,fpi)==temp) {
         q = temp;
@@ -247,7 +248,7 @@ int handle_the_special_data(FILE *fpi, double **parray, double **secondderiv, do
         while(get_float_with_e_from_within_string(&q,p)) {
             p++;
         }
-        linecnt++;
+//        linecnt++;
     }
     if(fclose(fpi)<0) {
         fprintf(stdout,"WARNING: Failed to close input data file.\n");

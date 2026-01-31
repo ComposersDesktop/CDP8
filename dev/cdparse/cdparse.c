@@ -1889,7 +1889,7 @@ int extract_value_pair(int *n,double *time, double *val,double *maxval,double *m
 
 void utol(char *str)
 {
-    int n, k = strlen(str);
+    int n, k = (int) strlen(str);
     for(n=0;n<k;n++) {
         if(str[n] >= 'A' && str[n] <= 'Z')
             str[n] += UPPER_TO_LOWER_CASE;
@@ -1907,13 +1907,14 @@ void maxsamp(int ifd,double *maxamp,double *maxloc,int *maxrep)
     double maxdamp = 0.0;
     float *bigbuf, *fbuf;
     int repeats = 0;            /* counts how many times the max repeats    */
-    int bufsize;
+    size_t bufsize;
 
     *maxrep = -1;   /* flags that maxamp and maxloc are not found */
     *maxamp = 0.0;
     *maxloc = 0.0;
 
-    if((bufsize =(int) (long)Malloc(-1)) < sizeof(float))
+ //   if((bufsize =(int) (long)Malloc(-1)) < sizeof(float))
+    if ((bufsize = (size_t) Malloc(-1)) < sizeof(float))
         return;
     /*bufsize = (bufsize/SECSIZE)*SECSIZE;  */  /* round to sector boundary */
     bufsize /= sizeof(float);
@@ -1921,7 +1922,7 @@ void maxsamp(int ifd,double *maxamp,double *maxloc,int *maxrep)
         return;
     fbuf = (float *)bigbuf;
 
-    while((got = fgetfbufEx(bigbuf,bufsize,ifd,0)) > 0 ) {
+    while((got = fgetfbufEx(bigbuf,(int) bufsize,ifd,0)) > 0 ) {
         samps      = got;
         for( i=0 ; i<samps ; i++ ) {
             if(smpflteq(fbuf[i],maxdamp) || smpflteq(-fbuf[i],maxdamp))

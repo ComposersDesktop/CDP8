@@ -13,6 +13,7 @@
 /bin
 *.exe
 Release
+NewRelease
 .DS_Store
 *.xcodeproj
 
@@ -20,6 +21,7 @@ Release
 *.ana
 
 #Generated files if running in-source CMake build
+build*/
 cmake_install.cmake
 CMakeFiles/
 CMakeCache.txt
@@ -30,3 +32,10 @@ CPackConfig.cmake
 CPackSourceConfig.cmake
 /CMakeCache.txt
 Custom.cmake
+
+.cache/
+# created by for example 
+#cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+# used by clangd lsp
+compile_commands.json 
+.cache/

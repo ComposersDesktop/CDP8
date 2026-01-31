@@ -47,9 +47,9 @@
 #define SHRLEVLIM (0.95)
 #define MINUS60DB (0.001)
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define    maxival scalefact
 

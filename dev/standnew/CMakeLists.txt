@@ -1,14 +1,14 @@
 if(APPLE)
   set(CMAKE_C_FLAGS "-O2 -Wall -Dunix")
   link_directories (/usr/local/lib)
-  find_library(AAIOLIB NAMES libaaio.a)
+#  find_library(AAIOLIB NAMES libaaio.a)
 else()
-  if(MINGW)
+  if(MINGW OR MSVC)
     set(CMAKE_C_FLAGS "-O2 -Wall -DWIN32")
   else()
     set(CMAKE_C_FLAGS "-O2 -Wall -Dlinux -Dunix")
     link_directories (/usr/local/lib)
-    find_library(AAIOLIB NAMES libaaio.a)
+#    find_library(AAIOLIB NAMES libaaio.a)
   endif()
 endif()
 
@@ -89,12 +89,16 @@ my_install(envspeak)
 
 #waiting for code fix from TW
 #add_executable(extspeak extspeak.c)
-#target_link_libraries(extspeak cdp2k sfsys pvxio2 ${AAIOLIB} ${EXTRA_LIBRARIES})
+#target_link_libraries(extspeak cdp2k sfsys pvxio2 aaio ${EXTRA_LIBRARIES})
 #my_install(extspeak)
 
 add_executable(fractal fractal.c)
 target_link_libraries(fractal cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
 my_install(fractal)
+
+add_executable(frfractal frfractal.c)
+target_link_libraries(frfractal cdp2k sfsys pvxio2 ${EXTRA_LIBRARIES})
+my_install(frfractal)
 
 # OUT ?
 add_executable(fturanal fturanal.c)

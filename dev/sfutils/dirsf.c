@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Martin Atkins, Richard Dobson and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Martin Atkins, Richard Dobson and Composers Desktop Project Ltd
  * http://people.bath.ac.uk/masrwd
  * http://www.composersdesktop.com
  *
@@ -105,7 +105,7 @@ struct partinfo *pi = &cfg.pinfo[0];
 #define FSTVERWPREF (0x201L)
 
 void
-usage()
+usage(void)
 {
     fprintf(stderr,
 #ifdef ATARI
@@ -127,7 +127,7 @@ usage()
 }
 
 void
-isprefix()
+isprefix(void)
 {
     char buf[MAXPREFIX];
 
@@ -167,12 +167,13 @@ main(int argc, char *argv[])
 {
     int rc = SFDIR_NOTFOUND; /* a guess, to suppress warning */
     int option = 0;
-    int cded = 0;       /* did we cd? */    
+        
 #if defined(_WIN32) || defined(__SC__)
+    int cded = 0;       /* did we cd? */
     char opath[MAXPREFIX];
-    int olddrive;
-    int newdrive;
-    char *dircp;
+    int olddrive = 0;
+    int newdrive = 0;
+    char *dircp = 0;
 #endif
 
     if(sflinit("dirsf")) {
@@ -182,11 +183,13 @@ main(int argc, char *argv[])
     if(sfverno() < FSTVERWPREF)
         fprintf(stderr, "cdfs: warning, installed sfsys does not support prefixes\n");
     isprefix();
+#ifdef ATARI
     if(argc > 1 && strcmp(argv[1], "-g") == 0) {
         preflg = SFDIR_IGPREFIX;
         argc--;
         argv++;
     }
+#endif
     if(argc > 1 && argv[1][0] == '-')
         switch(argv[1][1]) {
         case 'l':       
@@ -207,7 +210,6 @@ main(int argc, char *argv[])
         if(argc < 3)
             usage(); 
 #if defined(unix)
-        cded++;
         if(chdir(argv[2]) < 0) {
             fprintf(stderr, "dirsf: can't change directory\n");
             exit(1);
@@ -300,19 +302,14 @@ dofile(char *name)
 int SFCALLS
 pr(struct sf_direct *dirp)
 {
-#ifdef NOTDEF
-    if(dofile(dirp->name))
-        printf("%s\n", dirp->name);
-#else
-    if(dofile(dirp->name))
+    if(dofile(dirp->name)) {
 #ifdef _WIN32
         if(dirp->is_shortcut)
             printf("%s\t\t%s\n",dirp->name,dirp->targetname);
         else
 #endif
-            printf("%s\n", dirp->name);
-
-#endif
+        printf("%s\n", dirp->name);
+    }
     return 0;
 }
 
@@ -368,7 +365,7 @@ int SFCALLS
 lpr(struct sf_direct *p)
 {
     int nosec = 0;
-    int scale;
+    int scale = 0;
 
     if(!dofile(p->name))
         return 0;

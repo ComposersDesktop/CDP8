@@ -64,9 +64,8 @@
 
 #ifdef unix
 #include <aaio.h>
-#define round(x) lround((x))
 #endif
-
+#define round(x) lround((x))
 char errstr[2400];
 
 int anal_infiles = 1;

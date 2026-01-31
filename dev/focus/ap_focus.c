@@ -49,13 +49,9 @@
 #include <math.h>
 #include <srates.h>
 
-#ifndef cdp_round
-extern int cdp_round(double a);
-#endif
-
-#if defined unix || defined __GNUC__
+ //#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 /********************************************************************************************/
 /********************************** FORMERLY IN pconsistency.c ******************************/

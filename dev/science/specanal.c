@@ -106,9 +106,9 @@
 #define pitchcnt    temp_sampsize
 static double quartertone;
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif
@@ -163,6 +163,8 @@ static int check_specanal_param_validity_and_consistency2(dataptr dz);
 static int get_tempered_hf(float *averages, float *averages2, float *averages3, dataptr dz);
 static int smooth_and_output_varying_hf(dataptr dz);
 static int rerange_outofrange_pitch(int strandindex,int eventindex,dataptr dz);
+//RWD 2025 trap oversize channel count for .ana format
+static int checkchans4format(int chans, const char* fname);
 
 /**************************************** MAIN *********************************************/
 
@@ -1137,6 +1139,11 @@ int check_specanal_param_validity_and_consistency(dataptr dz)
     dz->is_mapping = 0;
     (dz->iparam[SA_WINOVLP])--;
     dz->iparam[SA_CHANS] = dz->iparam[SA_CHANS] + (dz->iparam[SA_CHANS]%4); // Force number of chans to be divisible by 4 (FFT happens twice for cepstrum)
+    //RWD 2025
+    if(checkchans4format(dz->iparam[SA_CHANS],dz->outfilename) == 0) {
+        sprintf(errstr,"Requested analysis channel count %d > 8192: too large for .ana format\n",dz->iparam[SA_CHANS]);
+        return DATA_ERROR;
+    }
     dz->wanted = dz->iparam[SA_CHANS] + 2;
     if(dz->mode == SA_FORMANTS) {   
         if((exit_status = sa_initialise_specenv(dz)) < 0)
@@ -1320,7 +1327,7 @@ int usage2(char *str)
         "INF         A Mono soundfile.\n"
         "TXTOFIL(S)  (Generic) name for text output file(s).\n"
         "ANALOFIL    Analysis output file.\n"
-        "CHS         Number of analysis points : a multiple of 4 (4 - 16380).\n"
+        "CHS         Number of analysis points : a multiple of 4 (4 - 32768).\n"    //RWD 2025 was 16380
         "OVLP        analysis window overlap (1-4), for PVOC analysis.\n"
         "FBANDS      Number of formant peaks to find.\n"
         "-n          Normalise output display.\n"
@@ -3828,7 +3835,7 @@ int smooth_and_output_tempered_pitch(dataptr dz)
 
 int smooth_and_output_varying_hf(dataptr dz) 
 {
-    int exit_status, reranged[8], lastpitch[8], thispitch[8], does_repeat;
+    int exit_status, reranged[8] = {0}, lastpitch[8], thispitch[8], does_repeat;
     int n, m, t, k, f, omitsum = 0, hfrepet;
     int itemp, peakcnt, omit[8];
     double transittime, temp;
@@ -4162,4 +4169,18 @@ int rerange_outofrange_pitch(int strandindex,int eventindex,dataptr dz)
     pitchindex = (eventindex * 2) + 1;
     dz->parray[strandindex][pitchindex] = newpitch;
     return FINISHED;
+}
+//RWD 2025 zero error checking - will already have been done!
+static int checkchans4format(int chans, const char* fname)
+{
+    char *lastdot;
+    
+    lastdot = strrchr(fname,'.');
+    if(chans > 8192){
+        if((_stricmp(lastdot,".wav")==0)
+           || (_stricmp(lastdot,".ana")==0))
+            return 0;
+    }
+    
+    return 1;
 }

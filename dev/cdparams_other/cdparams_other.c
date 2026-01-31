@@ -105,11 +105,11 @@ static int set_legal_option_and_variant_structure2(int process,int mode,aplptr a
 char errstr[1000];
 char paramstr[6000];
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#else
-#define round(x) cdp_round((x))
-#endif
+//#else
+//#define round(x) cdp_round((x))
+//#endif
 
 int sloom = 1;
 int sloombatch = 0;
@@ -7004,7 +7004,7 @@ int filetype,int linecnt,double duration,aplptr ap)
     case(SPEKLINE):
         if(mode == 0) {
             ap->lo[SPEKPOINTS]  = 2;
-            ap->hi[SPEKPOINTS]  = 16380;
+            ap->hi[SPEKPOINTS]  = 32768;  //RWD 2025 was 16380
             ap->lo[SPEKHARMS]   = 0;
             ap->hi[SPEKHARMS]   = 64;
             ap->lo[SPEKBRITE]   = -96;
@@ -9109,8 +9109,8 @@ int initialise_param_values2(int process,int mode,int channels,double nyquist,fl
         default_val[TEXTURE_MINAMP]     = 64.0;
         default_val[TEXTURE_MAXDUR]     = min(ap->hi[TEXTURE_MAXDUR],TEXTURE_MAX_DUR);
         default_val[TEXTURE_MINDUR]     = max(ap->lo[TEXTURE_MINDUR],TEXTURE_MIN_DUR);
-        default_val[TEXTURE_MAXPICH]    = DEFAULT_PITCH;
-        default_val[TEXTURE_MINPICH]    = DEFAULT_PITCH;
+        default_val[TEXTURE_MAXPICH]    = DEFAULT_MIDI_PITCH;
+        default_val[TEXTURE_MINPICH]    = DEFAULT_MIDI_PITCH;
         default_val[TEXTURE_OUTCHANS]   = 8;
         default_val[TEXTURE_ATTEN]      = 1.0;
         default_val[TEXTURE_POS]        = TEX_CENTRE;

@@ -42,9 +42,9 @@
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 static int  copygrain_from_elsewhere(int len,int k,int *obufposition,dataptr dz);
 static int store_the_grain_time(int grainstart,int *graincnt,int crosbuf,double samptotime,int init,dataptr dz);

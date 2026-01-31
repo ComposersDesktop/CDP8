@@ -50,6 +50,10 @@
 #include <math.h>
 #include <ctype.h>
 
+ //#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 /*
 
   PRESCALE PULSE-ENVELOPE FILE BETWEEN 0 and 1 in time and copy into parray[PULSENV]

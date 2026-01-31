@@ -1081,7 +1081,8 @@ int create_subtract_sndbufs(dataptr dz)
     int n;
     int shortbuf = F_SECSIZE * 256, bigbufsize;
     dz->bufcnt = 1 + dz->infile->channels;
-    if((dz->sampbuf = (float **)malloc(sizeof(float *) * 3))==NULL) {
+    //RWD alloc was 3, changed to 4, though last one set to NULL.
+    if((dz->sampbuf = (float **)malloc(sizeof(float *) * 4))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY establishing sample buffers.\n");
         return(MEMORY_ERROR);
     }
@@ -1091,7 +1092,7 @@ int create_subtract_sndbufs(dataptr dz)
     }
     for(n = 0;n < 3; n++)
         dz->sampbuf[n] = dz->sbufptr[n] = (float *)0;
-    dz->sampbuf[n] = (float *)0;
+    dz->sampbuf[n] = (float *)0; // RWD see above
 
     bigbufsize = dz->bufcnt * shortbuf;
     if((dz->bigbuf = (float *)malloc(bigbufsize * sizeof(float))) == NULL) {

@@ -45,9 +45,9 @@
 #include <srates.h>
 
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define MIN_ECHO_LEVEL (0.000016)
 #define ROOTLEN_DELBUF  (2)

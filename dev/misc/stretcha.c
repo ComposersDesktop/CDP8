@@ -374,7 +374,7 @@ int flteq(double a,double b)
 
  /******************************** LOGO() **********************************/
 
-void logo()
+void logo(void)
 {   printf("\t    ***************************************************\n");
     printf("\t    *           COMPOSERS DESKTOP PROJECT             *\n");
     printf("\t                    %s $Revision: 6.0.0 $\n",PROG);

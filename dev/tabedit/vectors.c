@@ -41,9 +41,9 @@
 #define ENDOFSTR        '\0'
 
 #include <sfsys.h>
-#ifdef unix
+//#ifdef unix
 #define round lround
-#endif
+//#endif
 
 
 int     strgetfloat(char **,double  *);
@@ -88,7 +88,7 @@ double *other_params;
 char **string0, **string1;
 
 int     cnt = 0, cnt2, arraysize = BIGARRAY, ifactor, flagstart;
-double  *number1, *number2, *diffs, scatter, factor, errorbnd = FLTERR;
+double  *number1, *number2,/* *diffs, scatter, */ factor, errorbnd = FLTERR;
 FILE    *fp = NULL;
 char    flag = 0, errstr[400];
 int     ro = 0;
@@ -413,7 +413,8 @@ int do_outfile(char *argv)
 char *exmalloc(int n)
 {
     char *p;
-    if((p = (char *)malloc(n))==NULL) {
+    //RWD 2025 move to calloc to pacify gcc on Linux, but probably good idea anyway
+    if((p = (char *)calloc(n,sizeof(char)))==NULL) {
         sprintf(errstr,"ERROR: memory allocation failed.\n");
         do_error();
     }
@@ -421,78 +422,81 @@ char *exmalloc(int n)
 }
 
 /********************************** READ_FLAGS *************************/
-
-void read_flags(int flagstart,int argc,char *argv[])
+/*RWD Nov 2025 renamed flagstart (global decl)  to flag_start*/
+void read_flags(int flag_start, int argc, char* argv[])
 {
-    char dummy;
+    char dummy =0;
 
-    int bas = flagstart, k;
+    int bas = flag_start, k;
 
-    while(flagstart < argc) {
-        if(sloom) {
-            if(flagstart == bas) {
-                if(*argv[flagstart]++!='-') {
-                    fprintf(stdout,"ERROR: Cannot interpret program mode\n");
+    while (flag_start < argc) {
+        if (sloom) {
+            if (flag_start == bas) {
+                if (*argv[flag_start]++ != '-') {
+                    fprintf(stdout, "ERROR: Cannot interpret program mode\n");
                     fflush(stdout);
                     usage();
                 }
-                if(sscanf(argv[flagstart]++,"%c",&dummy)!=1) {
-                    fprintf(stdout,"ERROR: Cannot interpret program mode\n");
+                if (sscanf(argv[flag_start]++, "%c", &dummy) != 1) {
+                    fprintf(stdout, "ERROR: Cannot interpret program mode\n");
                     fflush(stdout);
                     usage();
                 }
-            } else {
-                if(argc < 8)
+            }
+            else {
+                if (argc < 8)
                     dummy = 'z';
             }
-        } else {
-            if(*argv[flagstart]++!='-') {
-                fprintf(stdout,"ERROR: Cannot read flag '%s'.\n",--argv[flagstart]);
+        }
+        else {
+            if (*argv[flag_start]++ != '-') {
+                fprintf(stdout, "ERROR: Cannot read flag '%s'.\n", --argv[flag_start]);
                 fflush(stdout);
                 usage();
             }
-            if(sscanf(argv[flagstart]++,"%c",&dummy)!=1) {
-                fprintf(stdout,"ERROR: Cannot read flag '%s'\n",argv[flagstart]-2);
+            if (sscanf(argv[flag_start]++, "%c", &dummy) != 1) {
+                fprintf(stdout, "ERROR: Cannot read flag '%s'\n", argv[flag_start] - 2);
                 fflush(stdout);
                 usage();
             }
         }
-        switch(dummy) {
+        switch (dummy) {
         case('C'):
             flag = dummy;
-            ro = (int)*argv[flagstart];
-            if(ro == ENDOFSTR)
+            ro = (int)*argv[flag_start];
+            if (ro == ENDOFSTR)
                 factor = 0;
-            else if(sscanf(argv[flagstart],"%lf",&factor)!=1) {
-                fprintf(stdout,"ERROR: Cannot read error range.\n");
+            else if (sscanf(argv[flag_start], "%lf", &factor) != 1) {
+                fprintf(stdout, "ERROR: Cannot read error range.\n");
                 fflush(stdout);
                 usage();
             }
             break;
         case('M'):
             flag = dummy;
-            ro = (int)*argv[flagstart];
-            if((ro == 'o') || (ro == 'O')) {
-                argv[flagstart]++;
-                dummy = (int)*argv[flagstart];
-                if(dummy == ENDOFSTR) {
-                    fprintf(stdout,"ERROR: Cannot read start entry of morph.\n");
+            ro = (int)*argv[flag_start];
+            if ((ro == 'o') || (ro == 'O')) {
+                argv[flag_start]++;
+                dummy = (int)*argv[flag_start];
+                if (dummy == ENDOFSTR) {
+                    fprintf(stdout, "ERROR: Cannot read start entry of morph.\n");
                     fflush(stdout);
                     usage();
                 }
-                if(sscanf(argv[flagstart],"%lf",&factor)!=1) {
-                    fprintf(stdout,"ERROR: Cannot read start entry of morph.\n");
+                if (sscanf(argv[flag_start], "%lf", &factor) != 1) {
+                    fprintf(stdout, "ERROR: Cannot read start entry of morph.\n");
                     fflush(stdout);
                     usage();
                 }
-            } else {
-                if(ro == ENDOFSTR) {
-                    fprintf(stdout,"ERROR: Cannot read item to match.\n");
+            }
+            else {
+                if (ro == ENDOFSTR) {
+                    fprintf(stdout, "ERROR: Cannot read item to match.\n");
                     fflush(stdout);
                     usage();
                 }
-                if(sscanf(argv[flagstart],"%lf",&factor)!=1) {
-                    fprintf(stdout,"ERROR: Cannot read item to match.\n");
+                if (sscanf(argv[flag_start], "%lf", &factor) != 1) {
+                    fprintf(stdout, "ERROR: Cannot read item to match.\n");
                     fflush(stdout);
                     usage();
                 }
@@ -504,16 +508,17 @@ void read_flags(int flagstart,int argc,char *argv[])
             break;
         case('R'):
             flag = dummy;
-            ro = (int)*argv[flagstart];
-            switch(ro) {
+            ro = (int)*argv[flag_start];
+            switch (ro) {
             case('a'): case('m'): case('s'):
                 break;
             default:
-                if(!sloom) {
-                    fprintf(stdout,"ERROR: Unknown flag %s.\n",argv[flagstart]-2);
+                if (!sloom) {
+                    fprintf(stdout, "ERROR: Unknown flag %s.\n", argv[flag_start] - 2);
                     fflush(stdout);
-                } else {
-                    fprintf(stdout,"ERROR: Unknown program mode.\n");
+                }
+                else {
+                    fprintf(stdout, "ERROR: Unknown program mode.\n");
                     fflush(stdout);
                 }
                 usage();
@@ -521,33 +526,34 @@ void read_flags(int flagstart,int argc,char *argv[])
             break;
         case('k'):
             flag = dummy;
-            ro = (int)*argv[flagstart]++;
-            switch(ro) {
+            ro = (int)*argv[flag_start]++;
+            switch (ro) {
             case('k'):      case('d'):
-                if(sscanf(argv[flagstart],"%d",&ifactor)!=1) {
-                    fprintf(stdout,"ERROR: Cannot read cycle count.\n");
+                if (sscanf(argv[flag_start], "%d", &ifactor) != 1) {
+                    fprintf(stdout, "ERROR: Cannot read cycle count.\n");
                     fflush(stdout);
                     usage();
                 }
                 break;
             default:
-                fprintf(stdout,"ERROR: Unknown program mode.\n");
+                fprintf(stdout, "ERROR: Unknown program mode.\n");
                 fflush(stdout);
                 usage();
             }
             break;
         case('K'):
             flag = dummy;
-            ro = (int)*argv[flagstart];
-            switch(ro) {
+            ro = (int)*argv[flag_start];
+            switch (ro) {
             case('k'):      case('d'):      case('K'):      case('D'):      case('c'):      case('S'):
                 break;
             default:
-                if(!sloom) {
-                    fprintf(stdout,"ERROR: Unknown flag %s.\n",argv[flagstart]-2);
+                if (!sloom) {
+                    fprintf(stdout, "ERROR: Unknown flag %s.\n", argv[flag_start] - 2);
                     fflush(stdout);
-                } else {
-                    fprintf(stdout,"ERROR: Unknown program mode.\n");
+                }
+                else {
+                    fprintf(stdout, "ERROR: Unknown program mode.\n");
                     fflush(stdout);
                 }
                 usage();
@@ -555,42 +561,43 @@ void read_flags(int flagstart,int argc,char *argv[])
             break;
         case('l'):
             flag = dummy;
-            ro = (int)*argv[flagstart];
-            switch(ro) {
+            ro = (int)*argv[flag_start];
+            switch (ro) {
             case('a'):      case('b'):      case('s'):
                 break;
             default:
-                fprintf(stdout,"ERROR: Unknown program mode.\n");
+                fprintf(stdout, "ERROR: Unknown program mode.\n");
                 fflush(stdout);
                 usage();
             }
             break;
         case('p'):
             flag = dummy;
-            ro = (int)*argv[flagstart]++;
-            switch(ro) {
+            ro = (int)*argv[flag_start]++;
+            switch (ro) {
             case('n'):      case('y'):      case('N'):      case('Y'):
-                if(sscanf(argv[flagstart],"%lf",&factor)!=1) {
-                    fprintf(stdout,"ERROR: Cannot read parameter value.\n");
+                if (sscanf(argv[flag_start], "%lf", &factor) != 1) {
+                    fprintf(stdout, "ERROR: Cannot read parameter value.\n");
                     fflush(stdout);
                     usage();
                 }
                 errorbnd = 0.0;
                 break;
             default:
-                fprintf(stdout,"ERROR: Unknown program mode.\n");
+                fprintf(stdout, "ERROR: Unknown program mode.\n");
                 fflush(stdout);
                 usage();
             }
             break;
         case('S'): case('i'): case('o'): case('c'):
             flag = dummy;
-            if(sscanf(argv[flagstart],"%lf",&factor)!=1) {
-                if(!sloom) {
-                    fprintf(stdout,"Cannot read numerical value with flag 'S'|'i'|'o'|'c'.\n");
+            if (sscanf(argv[flag_start], "%lf", &factor) != 1) {
+                if (!sloom) {
+                    fprintf(stdout, "Cannot read numerical value with flag 'S'|'i'|'o'|'c'.\n");
                     fflush(stdout);
-                } else {
-                    fprintf(stdout,"ERROR: Cannot read parameter value.\n");
+                }
+                else {
+                    fprintf(stdout, "ERROR: Cannot read parameter value.\n");
                     fflush(stdout);
                 }
                 usage();
@@ -598,68 +605,70 @@ void read_flags(int flagstart,int argc,char *argv[])
             ifactor = round(factor);
             break;
         case('y'):
-            if(flagstart == bas) {
+            if (flag_start == bas) {
                 flag = dummy;
-                ro = (int)*argv[flagstart];
-                switch(ro) {
+                ro = (int)*argv[flag_start];
+                switch (ro) {
                 case('z'):
-                    if((other_params = (double *)malloc(4 * sizeof(double)))==NULL) {
-                        fprintf(stdout,"ERROR: Out of memory.\n");
+                    if ((other_params = (double*)malloc(4 * sizeof(double))) == NULL) {
+                        fprintf(stdout, "ERROR: Out of memory.\n");
                         fflush(stdout);
                         exit(1);
                     }
                     break;
                 default:
-                    fprintf(stdout,"ERROR: Unknown program mode.\n");
+                    fprintf(stdout, "ERROR: Unknown program mode.\n");
                     fflush(stdout);
                     usage();
                 }
-            } else {
-                k = flagstart - bas - 1;
-                if(sscanf(argv[flagstart],"%lf",other_params+k)!=1) {
-                    fprintf(stdout,"ERROR: Cannot read parameter %d\n",k+1);
+            }
+            else {
+                k = flag_start - bas - 1;
+                if (sscanf(argv[flag_start], "%lf", other_params + k) != 1) {
+                    fprintf(stdout, "ERROR: Cannot read parameter %d\n", k + 1);
                     fflush(stdout);
                     usage();
                 }
             }
             break;
         case('I'):
-            if(flagstart == bas) {
+            if (flag_start == bas) {
                 flag = dummy;
-                ro = (int)*argv[flagstart]++;
-                switch(ro) {
+                ro = (int)*argv[flag_start]++;
+                switch (ro) {
                 case(ENDOFSTR):
                     break;
                 case('P'):
-                    if((other_params = (double *)malloc(4 * sizeof(double)))==NULL) {
-                        fprintf(stdout,"ERROR: Out of memory.\n");
+                    if ((other_params = (double*)malloc(4 * sizeof(double))) == NULL) {
+                        fprintf(stdout, "ERROR: Out of memory.\n");
                         fflush(stdout);
                         exit(1);
                     }
                     break;
                 default:
-                    fprintf(stdout,"ERROR: Unknown program mode.\n");
+                    fprintf(stdout, "ERROR: Unknown program mode.\n");
                     fflush(stdout);
                     usage();
                 }
-            } else {
-                k = flagstart - bas - 1;
-                if(sscanf(argv[flagstart],"%lf",other_params+k)!=1) {
-                    fprintf(stdout,"ERROR: Cannot read parameter %d\n",k+1);
+            }
+            else {
+                k = flag_start - bas - 1;
+                if (sscanf(argv[flag_start], "%lf", other_params + k) != 1) {
+                    fprintf(stdout, "ERROR: Cannot read parameter %d\n", k + 1);
                     fflush(stdout);
                     usage();
                 }
             }
             break;
         case('e'):
-            if(!sloom) {
-                if(sscanf(argv[flagstart],"%lf",&errorbnd)!=1) {
-                    fprintf(stdout,"ERROR: Cannot read error bound with flag 'e'.\n");
+            if (!sloom) {
+                if (sscanf(argv[flag_start], "%lf", &errorbnd) != 1) {
+                    fprintf(stdout, "ERROR: Cannot read error bound with flag 'e'.\n");
                     fflush(stdout);
                     usage();
                 }
-                if(errorbnd <= 0.0) {
-                    fprintf(stdout,"ERROR: Error bound impossible.\n");
+                if (errorbnd <= 0.0) {
+                    fprintf(stdout, "ERROR: Error bound impossible.\n");
                     fflush(stdout);
                     usage();
                 }
@@ -667,30 +676,32 @@ void read_flags(int flagstart,int argc,char *argv[])
             }
             /* fall thro */
         default:
-            if(!sloom) {
-                fprintf(stdout,"Unknown flag %s.\n",--argv[flagstart]);
+            if (!sloom) {
+                fprintf(stdout, "Unknown flag %s.\n", --argv[flag_start]);
                 fflush(stdout);
                 usage();
-            } else {
-                if(sscanf(argv[flagstart],"%lf",&other_param)!=1) {
-                    fprintf(stdout,"ERROR: Unknown program parameter '%s'.\n",argv[flagstart]);
+            }
+            else {
+                if (sscanf(argv[flag_start], "%lf", &other_param) != 1) {
+                    fprintf(stdout, "ERROR: Unknown program parameter '%s'.\n", argv[flag_start]);
                     fflush(stdout);
                     usage();
                 }
-                if(flag == 'S' || flag == 'p')
+                if (flag == 'S' || flag == 'p')
                     errorbnd = other_param;
-                if(flag == 'M')
+                if (flag == 'M')
                     ifactor = round(other_param);
             }
         }
-        flagstart++;
+        flag_start++;
     }
-    if(flag==0) {
-        if(!sloom) {
-            fprintf(stdout,"ERROR: No action specified.\n");
+    if (flag == 0) {
+        if (!sloom) {
+            fprintf(stdout, "ERROR: No action specified.\n");
             fflush(stdout);
-        } else {
-            fprintf(stdout,"ERROR: No program mode specified.\n");
+        }
+        else {
+            fprintf(stdout, "ERROR: No program mode specified.\n");
             fflush(stdout);
         }
         usage();
@@ -759,11 +770,11 @@ int do_stringfile(char *argv,char ***stringptr)
 
 /**************************** FLTEQ *******************************/
 
-int flteq(double f1,double f2,double errorbnd)
+int flteq(double f1,double f2,double error_bnd)
 {
     double upperbnd, lowerbnd;
-    upperbnd = f2 + errorbnd;
-    lowerbnd = f2 - errorbnd;
+    upperbnd = f2 + error_bnd;
+    lowerbnd = f2 - error_bnd;
     if((f1>upperbnd) || (f1<lowerbnd))
         return(0);
     return(1);

@@ -66,9 +66,9 @@
 #include <string.h>
 #include <srates.h>
 
-#ifdef unix
-#define round lround
-#endif
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif
@@ -2007,14 +2007,14 @@ int specget(double *pitch,chvptr *partials,dataptr dz)
     int vc;
     chvptr here, there;
     float minamp;
-    double /* loudest_partial_frq, nextloudest_partial_frq,  lo_loud_partial, hi_loud_partial,*/ sum;
+    /* double  loudest_partial_frq, nextloudest_partial_frq,  lo_loud_partial, hi_loud_partial, sum; */
     if((exit_status = initialise_ring_vals(MAXIMI,-1.0,dz))<0)
         return(exit_status);
     if((exit_status = rectify_frqs(dz->flbufptr[0],dz))<0)
         return(exit_status);
-    sum = 0.0;
+//    sum = 0.0;
     for(vc=0;vc<dz->wanted;vc+=2) {
-        sum += dz->flbufptr[0][AMPP];
+//        sum += dz->flbufptr[0][AMPP];
         here = dz->ringhead;
         if(dz->flbufptr[0][FREQ] > SPEC_MINFRQ) {                   /* 1 */
             do {                                
@@ -3074,7 +3074,7 @@ int do_specpedal(dataptr dz)
 {
     int exit_status, wc, /*done,*/ windows_in_buf, wastuned = 0, tuned = 0;
     int samps_read;
-    double time = 0.0, totalamp = 0.0;
+    double /* time = 0.0,*/ totalamp = 0.0;
     float maxamp;
     chvptr *partials;
 //    done = 0;
@@ -3092,14 +3092,14 @@ int do_specpedal(dataptr dz)
         for(wc=0; wc<windows_in_buf; wc++, dz->total_windows++) {
             if(dz->total_windows == 0) {
                 dz->flbufptr[0] += dz->wanted;
-                time += dz->frametime;
+//                time += dz->frametime;
                 continue;
             }
             if((exit_status = get_totalamp_and_maxamp(&totalamp,&maxamp,dz->flbufptr[0],dz->wanted))<0)
                 return(exit_status);
             if(totalamp <= 0.0) {
                 dz->flbufptr[0] += dz->wanted;
-                time += dz->frametime;
+//                time += dz->frametime;
                 continue;
             }
             if((exit_status = get_peaks(dz))<0)
@@ -3110,7 +3110,7 @@ int do_specpedal(dataptr dz)
             
             dz->flbufptr[0] += dz->wanted;
 
-            time += dz->frametime;
+//            time += dz->frametime;
         }
         if((exit_status = write_samps(dz->bigfbuf,samps_read,dz))<0)
             return(exit_status);

@@ -55,12 +55,15 @@
 #define REVDWBYTES(t)   ( (((t)&0xff) << 24) | (((t)&0xff00) << 8) | (((t)&0xff0000) >> 8) | (((t)>>24) & 0xff) )
 #define REVWBYTES(t)    ( (((t)&0xff) << 8) | (((t)>>8) &0xff) )
 #define TAG(a,b,c,d)    ( ((a)<<24) | ((b)<<16) | ((c)<<8) | (d) )
-#define WAVE_FORMAT_EXTENSIBLE (0xFFFE)
+#ifndef WAVE_FORMAT_EXTENSIBLE
+# define WAVE_FORMAT_EXTENSIBLE (0xFFFE)
+#endif
 #ifndef WAVE_FORMAT_PCM
 #define WAVE_FORMAT_PCM (0x0001)
 #endif
+#ifndef WAVE_FORMAT_IEEE_FLOAT
 #define WAVE_FORMAT_IEEE_FLOAT (0x0003)
-
+#endif
 
 const GUID KSDATAFORMAT_SUBTYPE_PVOC = {
                     0x8312b9c2,
@@ -301,7 +304,7 @@ static int32_t pvoc_readWindow(int fd, int byterev, float *window,DWORD length)
 
 
 
-const char *pvoc_errorstr()
+const char *pvoc_errorstr(void)
 {
     return (const char *) pv_errstr;
 }
@@ -311,7 +314,7 @@ const char *pvoc_errorstr()
 /* thanks to the SNDAN programmers for this! */
 /* return 0 for big-endian machine, 1 for little-endian machine*/
 /* probably no good for 16bit swapping though */
-static int32_t byte_order()
+static int32_t byte_order(void)
 {
   int32_t   one = 1;
   char* endptr = (char *) &one;
@@ -353,6 +356,7 @@ static void prepare_pvfmt(WAVEFORMATEX *pfmt,DWORD chans, DWORD srate,
     pfmt->wFormatTag        = WAVE_FORMAT_EXTENSIBLE;
     pfmt->nChannels         = (WORD) chans;
     pfmt->nSamplesPerSec    = srate;
+    pfmt->nBlockAlign       = 0;  /* decl to please gcc */
     switch(stype){
     case(STYPE_16):
         pfmt->wBitsPerSample = (WORD)16;
@@ -1084,6 +1088,8 @@ static int32_t pvoc_updateheader(int ofd)
 {
     int32_t riffsize,datasize;
     DWORD pos;
+    //RWD Oct 2025 avoid singed/unsigned errors
+    long longpos;
 
 #ifdef _DEBUG   
     assert(files[ofd]);
@@ -1127,7 +1133,7 @@ static int32_t pvoc_updateheader(int ofd)
         WORD validbits;
         
         pos = lseek(files[ofd]->fd,files[ofd]->fmtchunkoffset,SEEK_SET);
-        if(pos != files[ofd]->fmtchunkoffset){
+        if(pos != (DWORD) files[ofd]->fmtchunkoffset){
             pv_errstr = "\npvsys: seek error updating fmt data";
             return 0;
         }
@@ -1148,7 +1154,7 @@ static int32_t pvoc_updateheader(int ofd)
             return 0;
         }
         pos = lseek(files[ofd]->fd,files[ofd]->propsoffset,SEEK_SET);
-        if(pos != files[ofd]->propsoffset){
+        if(pos != (DWORD) files[ofd]->propsoffset){
             pv_errstr = "\npvsys: seek error updating pvx data";
             return 0;
         }
@@ -1159,8 +1165,8 @@ static int32_t pvoc_updateheader(int ofd)
             return 0;
         }
     }
-    pos = lseek(files[ofd]->fd,0,SEEK_END);
-    if(pos < 0){
+    /*pos*/ longpos = lseek(files[ofd]->fd, 0, SEEK_END);
+    if(/*pos*/ longpos  < 0) {
         pv_errstr = "\npvsys: seek error seeking to end of file";
         return 0;
     }
@@ -1323,7 +1329,7 @@ int32_t pvoc_getframes(int32_t ifd,float *frames,DWORD nframes)
             pv_errstr = "\npvsys: error reading data";
             return rc;
         }
-        for(i=0;i < got / sizeof(float);i++){
+        for(i=0;i < got / (int32_t) sizeof(float);i++){
             temp = *lfp;
             oval = REVDWBYTES(temp);
             *lfp++ = oval;
@@ -1440,23 +1446,23 @@ int32_t pvoc_framepos(int32_t ifd)
 int32_t pvoc_seek_mcframe(int32_t ifd, int32_t offset, int32_t mode)
 {
  //   DWORD mcframealign;
-    DWORD rawoffset;
+    int32_t rawoffset;  /* RWD need to be signed to work for to and fro seeks*/
     int32_t rc = -1;
     int32_t mcframealign;
-    
+    int32_t pvxcur = 0;
     if(files[ifd]==NULL)
         return -1;
     mcframealign =  files[ifd]->pvdata.dwFrameAlign * files[ifd]->fmtdata.nChannels;
     rawoffset = offset * mcframealign;
-    switch(mode){
+    switch (mode) {
     case SEEK_SET:
-            // offset is m/c quantity, e.g. 2 * frame for stereo
-        if(offset >= (files[ifd]->nFrames / files[ifd]->fmtdata.nChannels)){
+        // offset is m/c quantity, e.g. 2 * frame for stereo
+        if (offset >= (files[ifd]->nFrames / files[ifd]->fmtdata.nChannels)) {
             pv_errstr = "\npvsys: seek target beyond end of file";
             break;
-        } 
+        }
         rawoffset += files[ifd]->datachunkoffset;
-        if(lseek(files[ifd]->fd,rawoffset,SEEK_SET) != rawoffset ) {
+        if (lseek(files[ifd]->fd, rawoffset, SEEK_SET) != (long)rawoffset) {
             pv_errstr = "\npvsys: seek error, SEEK_SET";
             return -1;
         }
@@ -1465,32 +1471,47 @@ int32_t pvoc_seek_mcframe(int32_t ifd, int32_t offset, int32_t mode)
         rc = 0;
         break;
     case SEEK_END:
-    // go to end of file + offset, offset <= 0
-        if(offset > 0){
+        // go to end of file + offset, offset <= 0
+        if (offset > 0) {
             pv_errstr = "\npvsys: seek target before start of file, offset must be <= 0";
             break;
         }
 #ifdef _DEBUG
-        fprintf(stderr,"pvoc_seek_mcframe: fd = %d\n",ifd);
+        fprintf(stderr, "pvoc_seek_mcframe: fd = %d\n", ifd);
 #endif
         //NB not relative to datachunkoffset in this case
-        if(lseek(files[ifd]->fd,rawoffset,SEEK_END) < 0){
+        if (lseek(files[ifd]->fd, rawoffset, SEEK_END) < 0) {
             pv_errstr = "\npvsys: seek error, SEEK_END";
             return -1;
         }
 #ifdef _DEBUG
-        fprintf(stderr,"pvoc_seek_mcframe: files[%d]->nFrames = %d\n",ifd,files[ifd]->nFrames);
+        fprintf(stderr, "pvoc_seek_mcframe: files[%d]->nFrames = %d\n", ifd, files[ifd]->nFrames);
 #endif
         files[ifd]->FramePos = files[ifd]->nFrames - (offset * files[ifd]->fmtdata.nChannels);
-        files[ifd]->curpos = files[ifd]->FramePos * files[ifd]->pvdata.dwFrameAlign;
+        files[ifd]->curpos = files[ifd]->datachunkoffset + files[ifd]->FramePos * files[ifd]->pvdata.dwFrameAlign;
 #ifdef _DEBUG
-        fprintf(stderr,"pvoc_seek_mcframe: got curpos = %d\n",files[ifd]->curpos);
+        fprintf(stderr, "pvoc_seek_mcframe: got curpos = %d\n", files[ifd]->curpos);
 #endif
         rc = 0;  //success!
         break;
     case SEEK_CUR:
-        // covered by pvoc_framepos(), equiv to a pvoc_tell() function.
-        pv_errstr = "\npvsys: SEEK_CUR mode not supported yet!";
+        pvxcur = pvoc_framepos(ifd);
+        if (pvxcur + offset >= files[ifd]->nFrames) {
+            pv_errstr = "\npvsys: seek target beyond end of file";
+            return rc;
+        }
+        if (pvxcur + offset < 0) {
+            pv_errstr = "\npvsys: seek target beyond start of file";
+            return rc;
+        }
+        rawoffset = offset * mcframealign;
+        if (lseek(files[ifd]->fd, rawoffset, SEEK_CUR) < 0) {
+            pv_errstr = "\npvsys: seek error, SEEK_CUR";
+            return -1;
+        }
+        files[ifd]->FramePos = pvxcur + (offset * files[ifd]->fmtdata.nChannels);
+        files[ifd]->curpos = files[ifd]->datachunkoffset + files[ifd]->FramePos * files[ifd]->pvdata.dwFrameAlign;
+        rc = 0;
         break;
     }
     return rc;

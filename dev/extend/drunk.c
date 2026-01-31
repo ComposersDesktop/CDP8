@@ -38,6 +38,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
+ //#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 int  drunk(int here,int *obufpos,int *thisbuf,int thisdur,double pregain,int *endwrite,int outbufspace,dataptr dz);
 int  do_pause(int here,int *obufpos,int *endwrite,int *thisbuf,int thisdur,double pregain,int outbufspace,dataptr dz);

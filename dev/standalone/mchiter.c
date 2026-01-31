@@ -47,9 +47,10 @@
 #include <flags.h>
 #include <extdcon.h>
 
-#if defined unix || defined __GNUC__
+ //#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
+
 #ifndef HUGE
 #define HUGE 3.40282347e+38F
 #endif
@@ -1832,7 +1833,7 @@ int create_mchiterbufs(double maxpscat,dataptr dz)
     }
     dz->buflen     = (int)(bigbufsize/sizeof(float));
     big_buffer_size = dz->buflen + extra_space;
-    if((dz->bigbuf = (float *) Malloc(big_buffer_size * sizeof(float)))==NULL) {
+    if((dz->bigbuf = (float *) Malloc((long)(big_buffer_size * sizeof(float))))==NULL) {
         sprintf(errstr, "INSUFFICIENT MEMORY to create sound buffers.\n");
         return(MEMORY_ERROR);
     }

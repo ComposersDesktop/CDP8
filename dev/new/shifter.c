@@ -1929,7 +1929,7 @@ int shifter_param_preprocess(dataptr dz)
     }
     //    2 double array for llev, rlev
 
-    if((dz->parray = (double **)malloc(sizeof(double *)))==NULL) {
+    if((dz->parray = (double **)malloc(2 * sizeof(double *)))==NULL) {
         sprintf(errstr,"INSUFFICIENT MEMORY to create doubles arrays.\n");
         return(MEMORY_ERROR);
     }

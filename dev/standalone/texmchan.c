@@ -655,8 +655,8 @@ int setup_texmchan_param_ranges_and_defaults(dataptr dz)
     ap->default_val[TEXTURE_MINAMP]         = 64.0;
     ap->default_val[TEXTURE_MAXDUR]         = min(ap->hi[TEXTURE_MAXDUR],TEXTURE_MAX_DUR);
     ap->default_val[TEXTURE_MINDUR]         = max(ap->lo[TEXTURE_MINDUR],TEXTURE_MIN_DUR);
-    ap->default_val[TEXTURE_MAXPICH]        = DEFAULT_PITCH;
-    ap->default_val[TEXTURE_MINPICH]        = DEFAULT_PITCH;
+    ap->default_val[TEXTURE_MAXPICH]        = DEFAULT_MIDI_PITCH;
+    ap->default_val[TEXTURE_MINPICH]        = DEFAULT_MIDI_PITCH;
     ap->default_val[TEXTURE_OUTCHANS]       = 4;
     /* KEEP I WHILE TESTING CODE --> */
     ap->default_val[TEX_GPSPACE]            = 0.0;

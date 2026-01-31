@@ -1336,7 +1336,7 @@ int show_devices(void)
         const PaHostApiInfo* api_info;
 #endif
         PaError  err;
-        int nOutputDevices = 0;
+ //       int nOutputDevices = 0;
         
 #ifdef USE_ASIO
         printf("For ASIO multi-channel, you may need to select the highest device no.\n");      
@@ -1358,7 +1358,7 @@ int show_devices(void)
         for( p=0; p<numDevices; p++ )
         {
             pdi = Pa_GetDeviceInfo( p );
-            nOutputDevices++;
+ //           nOutputDevices++;
             
             if( p == Pa_GetDefaultOutputDevice() ) 
                 printf("*");

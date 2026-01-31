@@ -116,8 +116,8 @@ int do_hfperm(dataptr dz)
 {
     int exit_status;
     char temp[48];
-    double **hfset = 0, **combo, secs;
-    int *combolen, combocnt = 0;
+    double **hfset = 0, **combo = 0, secs;
+    int *combolen = 0, combocnt = 0;
     int hfsetcnt = 0, hrs = 0, mins = 0;
     int *hfsetlen = 0;
     int *grping = NULL;

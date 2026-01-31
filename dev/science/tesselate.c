@@ -47,9 +47,9 @@
 #include <string.h>
 #include <srates.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 char errstr[2400];
 
@@ -1467,11 +1467,11 @@ int handle_the_special_data(char *str,dataptr dz)
         sprintf(errstr,"INSUFFICIENT MEMORY to store stagger values.\n");
         return(MEMORY_ERROR);
     }
-    if((dz->iparray = (int **)malloc(sizeof(int)))==NULL) {
+    if((dz->iparray = (int **)malloc(sizeof(int *)))==NULL) {   //RWD 2025 was just sizeof(int)
         sprintf(errstr,"INSUFFICIENT MEMORY to store integer data.\n");
         return(MEMORY_ERROR);
     }
-    if((dz->iparray[0] = (int *)malloc(dz->itemcnt * sizeof(int)))==NULL) {
+    if((dz->iparray[0] = (int *)malloc(dz->itemcnt * sizeof(int)))==NULL) {  
         sprintf(errstr,"INSUFFICIENT MEMORY to store initial-channel data.\n");
         return(MEMORY_ERROR);
     }

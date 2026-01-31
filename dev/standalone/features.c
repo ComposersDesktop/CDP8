@@ -1941,10 +1941,10 @@ int peaks_in_window(double botfrq,double intv_to_bot_of_srch,double intv_to_top_
                     double intv_to_next_window,int *lookformax,double *lastmaxamp,int *lastmaxampchan,double *lastmaxampchanfrq,
                     double *lastminamp,int *lastminampchan,double *lastminampchanfrq,int *win_peakchan,float *buf,dataptr dz)
 {
-    /* TEST */
+    /* TEST *
     static int gocnt = 0;
-    //int gocnt2 = 0;
-    /* TEST */
+    int gocnt2 = 0;
+    * TEST */
     double srchtopfrq, srchbotfrq, topfrq, minamp, maxamp, maxampchanfrq=0.0, minampchanfrq=0.0;
     int srchbotchan, srchtopchan, founddata, cc, vc, maxampchan=0, minampchan=0, peakcnt;
 
@@ -2042,9 +2042,9 @@ int peaks_in_window(double botfrq,double intv_to_bot_of_srch,double intv_to_top_
                 botfrq *= intv_to_next_window;
 #endif
             }
-        /* TEST */
+        /* TEST *
         gocnt++;
-        /* TEST */
+        * TEST */
         return peakcnt;
     }
 

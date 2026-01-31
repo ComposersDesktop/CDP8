@@ -42,6 +42,8 @@
 #include <string.h>
 #include <blur.h>
 
+#define round(x) lround((x))
+
 #define FIRST_ACCESS_OF_RANDTABLE_REACHES_END_FIRST   (1)
 #define SECOND_ACCESS_OF_RANDTABLE_REACHES_END_FIRST  (2)
 #define BOTH_ACCESSES_OF_RANDTABLE_REACH_END_TOGETHER (0)
@@ -378,7 +380,7 @@ int specshuffle(dataptr dz)
         permcnt++;
     }
     if(dz->flbufptr[1] > dz->flbufptr[2])
-        return write_samps(dz->flbufptr[2],(dz->flbufptr[1] - dz->flbufptr[2]),dz);
+        return (int) write_samps(dz->flbufptr[2],(dz->flbufptr[1] - dz->flbufptr[2]),dz);
     return(FINISHED);
 
 }
@@ -1161,7 +1163,7 @@ int flush_outbuf(dataptr dz)
     int samps_to_write;
     if(dz->flbufptr[1] != dz->flbufptr[2]) {
         samps_to_write = dz->flbufptr[1] - dz->flbufptr[2];
-        if((exit_status = write_samps(dz->flbufptr[2],samps_to_write,dz))<0)
+        if((exit_status = (int) write_samps(dz->flbufptr[2],samps_to_write,dz))<0)
             return(exit_status);
     }
     return(FINISHED);

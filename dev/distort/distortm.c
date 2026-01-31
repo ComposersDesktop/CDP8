@@ -40,6 +40,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 static int              do_multiply(int endend,int phaseswitch,int lastzero,int *output_phase,int current_buf,
                                     int *endsample,dataptr dz);

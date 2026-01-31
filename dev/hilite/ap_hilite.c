@@ -52,9 +52,9 @@
 #include <ctype.h>
 #include <srates.h>
 
-#if defined unix || defined __GNUC__
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 /********************************************************************************************/
 /********************************** FORMERLY IN pconsistency.c ******************************/

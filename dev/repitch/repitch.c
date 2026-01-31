@@ -50,9 +50,9 @@
 #include <vowels2.h>
 
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define GLARG            (0.1)  /* 2nd-derivative maximum, for smoothing */
 #define SLOPE_FUDGE  (0.2)
@@ -778,9 +778,9 @@ int is_peak_at(double frq,int window_offset,float minamp,dataptr dz)
 {
     float *thisbuf;
     int cc, vc, searchtop, searchbot;
-    if(window_offset) {                                                             /* BAKTRAK ALONG BIGBUF, IF NESS */
+    if(window_offset) {                                              /* BAKTRAK ALONG BIGBUF, IF NESS */
         thisbuf = dz->flbufptr[0] - (window_offset * dz->wanted);
-         if((int)thisbuf < 0 || thisbuf < dz->bigfbuf || thisbuf >= dz->flbufptr[1])
+         if( thisbuf < 0 ||  thisbuf < dz->bigfbuf || thisbuf >= dz->flbufptr[1])
              return(FALSE);
     } else
         thisbuf = dz->flbufptr[0];

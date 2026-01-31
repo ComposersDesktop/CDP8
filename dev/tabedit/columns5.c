@@ -27,6 +27,10 @@
 #include <columns.h>
 #include <cdplib.h>
 
+ //#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 #define MIN_TEMPO (.01666667)           /* 1 beat per hour ! */
 #define MAX_TEMPO (60000)                       /* 1 beat per millisecond ! */
 
@@ -462,18 +466,18 @@ void random_pairs_restrained(void)
 void random_scatter(void)
 {
     int n;
-    double scatter;
+    double dscatter;
     double *diffs = (double *)exmalloc((cnt-1)*sizeof(double));
     for(n=0;n<cnt-1;n++) {
         diffs[n] = number[n+1] - number[n];
         diffs[n] /= 2.0;
     }
     for(n=1;n<cnt-1;n++) {
-        scatter = ((drand48() * 2.0) - 1.0) * factor;
-        if(scatter > 0.0)
-            number[n] += diffs[n] * scatter;
+        dscatter = ((drand48() * 2.0) - 1.0) * factor;
+        if(dscatter > 0.0)
+            number[n] += diffs[n] * dscatter;
         else
-            number[n] += diffs[n-1] * scatter;
+            number[n] += diffs[n-1] * dscatter;
     }
     print_numbers();
 }
@@ -540,14 +544,14 @@ void quadratic_curve_steps(void)
     double sum, diff = number[1] - number[0];
     double step = fabs(1.0/(factor - 1.0));
     double thisstep = 0.0;
-    int cnt = 0, ifactor = round(factor);
+    int icnt = 0, i_factor = round(factor);
     if(diff>0.0)
         number[2] = 1.0/number[2];
     for(;;) {
         sum = pow(thisstep,number[2]);
         sum = (sum * diff) + number[0];
         do_valout(sum);
-        if(++cnt >= ifactor)
+        if(++icnt >= i_factor)
             break;
         thisstep += step;
     }
@@ -722,10 +726,10 @@ void change_value_of_intervals(void)
 
 void motivically_invert_midi(void)
 {
-    double factor = 2.0 * number[0];
+    double dfactor = 2.0 * number[0];
     int n;
     for(n=1;n<cnt;n++)
-        number[n] = factor - number[n];
+        number[n] = dfactor - number[n];
     print_numbers();
 }
 
@@ -733,14 +737,14 @@ void motivically_invert_midi(void)
 
 void motivically_invert_hz(void)
 {
-    double factor;
+    double dfactor;
     int n;
-    if(flteq((factor = number[0] * number[0]),0.0)) {
+    if(flteq((dfactor = number[0] * number[0]),0.0)) {
         sprintf(errstr,"First frq is zero : can't proceed.\n");
         do_error();
     }
     for(n=1;n<cnt;n++)
-        number[n] = factor/number[n];
+        number[n] = dfactor/number[n];
     print_numbers();
 }
 
@@ -819,21 +823,21 @@ void get_one_skip_n(void)
 void get_n_skip_one(void)
 {
     int m, n = 0;
-    int k, ifactor = round(factor);
+    int k, i_factor = round(factor);
 
     if(ifactor < 1) {
-        sprintf(errstr,"Invalid parameter (%d)\n",ifactor);
+        sprintf(errstr,"Invalid parameter (%d)\n",i_factor);
         do_error();
     }
     while(n<stringscnt) {
-        if((k = n + ifactor) >= stringscnt) {
+        if((k = n + i_factor) >= stringscnt) {
             for(m=n;m<stringscnt;m++)
                 do_stringout(strings[m]);
             break;
         }
         for(m=n;m<k;m++)
             do_stringout(strings[m]);
-        n+= ifactor+1;
+        n+= i_factor+1;
     }
     fflush(stdout);
 }
@@ -946,7 +950,7 @@ void format_vals(void)
     int n, m, OK = 1;
     double d = (double)cnt/(double)ifactor;
     int rowcnt = cnt/ifactor;
-    char temp[64];
+    char ctemp[64];
 
     errstr[0] = ENDOFSTR;
     if(d > (double)rowcnt)
@@ -971,7 +975,7 @@ void format_vals(void)
                 }
                 if(n+m < cnt) {
                     sprintf(temp,"%.5lf ",number[n+m]);
-                    strcat(errstr,temp);
+                    strcat(errstr,ctemp);
                 } else
                     OK = 0;
             }
@@ -994,7 +998,7 @@ void column_format_vals(void)
 
     double d = (double)cnt/(double)ifactor;
     int rowcnt = cnt/ifactor;
-    char temp[64];
+    char ctemp[64];
     errstr[0] = ENDOFSTR;
     if(d > (double)rowcnt)
         rowcnt++;
@@ -1004,7 +1008,7 @@ void column_format_vals(void)
                 fprintf(fp[1],"%.5lf ",number[m]);
             else {
                 sprintf(temp,"%.5lf ",number[m]);
-                strcat(errstr,temp);
+                strcat(errstr,ctemp);
             }
         }
         if(!sloom && !sloombatch)
@@ -2773,33 +2777,33 @@ void insert_after_val(void)
 /****************************** MIN_INTERVAL ******************************/
 
 void min_interval(int ismax) {
-    int n, pos;
+    int n, ipos;
     double min_int, max_int, this_int;
     if(cnt < 2) {
         fprintf(stdout,"ERROR: Too few values to run this process.\n");
         fflush(stdout);
         exit(1);
     }
-    pos = 1;
+    ipos = 1;
     if (ismax) {
         max_int = number[1] - number[0];
         for(n=2;n<cnt;n++) {
             if((this_int = number[n] - number[n-1]) > max_int) {
                 max_int = this_int;
-                pos = n;
+                ipos = n;
             }
         }
-        fprintf(stdout,"WARNING: Maximum interval is %lf between entries %d and %d.\n",max_int,pos,pos+1);
+        fprintf(stdout,"WARNING: Maximum interval is %lf between entries %d and %d.\n",max_int,ipos,ipos+1);
         fflush(stdout);
     } else {
         min_int = number[1] - number[0];
         for(n=2;n<cnt;n++) {
             if((this_int = number[n] - number[n-1]) < min_int) {
                 min_int = this_int;
-                pos = n;
+               ipos = n;
             }
         }
-        fprintf(stdout,"WARNING: Minimum interval is %lf between entries %d and %d.\n",min_int,pos,pos+1);
+        fprintf(stdout,"WARNING: Minimum interval is %lf between entries %d and %d.\n",min_int,ipos,ipos+1);
         fflush(stdout);
     }
 }
@@ -2807,29 +2811,29 @@ void min_interval(int ismax) {
 /****************************** INSERT_IN_ORDER ******************************/
 
 void insert_in_order(void) {
-    int n, pos = -1;
+    int n, ipos = -1;
     for(n=0;n<cnt-1;n++) {
         if(number[n+1] <= number[n]) {
             fprintf(stdout,"ERROR: column not in ascending order.\n");
             fflush(stdout);
             exit(1);
         }
-        if ((pos < 0) && (number[cnt] <= number[n])) {  /* position not found & new number goes here */
-            pos = n;
+        if ((ipos < 0) && (number[cnt] <= number[n])) {  /* position not found & new number goes here */
+            ipos = n;
         }
     }
-    if ((pos < 0) && (number[cnt] <= number[n])) {  /* position not found & new number goes here */
-        pos = n;
+    if ((ipos < 0) && (number[cnt] <= number[n])) {  /* position not found & new number goes here */
+        ipos = n;
     }
-    if(pos < 0)                     /* new number larger than all in column, goes at end */
-        pos = cnt;
-    if(pos > 0) {                   /* if new number not at start of column */
-        for(n=0;n<pos;n++)
+    if(ipos < 0)                     /* new number larger than all in column, goes at end */
+        ipos = cnt;
+    if(ipos > 0) {                   /* if new number not at start of column */
+        for(n=0;n<ipos;n++)
             fprintf(stdout,"INFO: %lf\n",number[n]);
     }                                               /* insert new number */
     fprintf(stdout,"INFO: %lf\n",number[cnt]);
-    if(pos < cnt) {                 /* if new mumber not at end of column */
-        for(n=pos;n<cnt;n++)
+    if(ipos < cnt) {                 /* if new mumber not at end of column */
+        for(n=ipos;n<cnt;n++)
             fprintf(stdout,"INFO: %lf\n",number[n]);
     }
     fflush(stdout);
@@ -2861,7 +2865,7 @@ void format_strs(void)
     int n, m, OK = 1;
     double d = (double)stringscnt/(double)ifactor;
     int rowcnt = stringscnt/ifactor;
-    char temp[64];
+    char ctemp[64];
     errstr[0] = ENDOFSTR;
     if(d > (double)rowcnt)
         rowcnt++;
@@ -2872,8 +2876,8 @@ void format_strs(void)
                 errstr[0] = ENDOFSTR;
             }
             if(n+m < stringscnt) {
-                sprintf(temp,"%s ",strings[n+m]);
-                strcat(errstr,temp);
+                sprintf(ctemp,"%s ",strings[n+m]);
+                strcat(errstr,ctemp);
             } else
                 OK = 0;
         }
@@ -2892,14 +2896,14 @@ void column_format_strs(void)
 
     double d = (double)stringscnt/(double)ifactor;
     int rowcnt = stringscnt/ifactor;
-    char temp[64];
+    char ctemp[64];
     errstr[0] = ENDOFSTR;
     if(d > (double)rowcnt)
         rowcnt++;
     for(n=0;n<rowcnt;n++) {
         for(m=n;m<stringscnt;m+=rowcnt) {
-            sprintf(temp,"%s ",strings[m]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"%s ",strings[m]);
+            strcat(errstr,ctemp);
         }
         fprintf(stdout,"INFO: %s\n",errstr);
         errstr[0] = ENDOFSTR;
@@ -3522,62 +3526,66 @@ double get_tempo(char *str)
 }
 
 /************************** GENERATE_RANDOMISED_VALS ********************************/
-
+/* RWD changed 'temp' below to 'dtemp', also declared in columns.h as char array !*/
+/* ditto 'scatter' also clashes with global decl */
 void generate_randomised_vals(void)
 {
-    double scatter = number[2], span = number[0], sum = 0.0, mean, range, *temp = NULL, d;
-    int cnt = (int)round(number[1]), n, m, j, subcnt;
+    double dscatter = number[2], span = number[0], sum = 0.0, mean, range, *dtemp = NULL, d;
+    int icnt = (int) round(number[1]), n, m, j, subcnt;
     int bigscat = 0;
-    if(scatter > 1.0)
-        bigscat = (int)round(scatter);
+    if(dscatter > 1.0)
+        bigscat = (int) round(dscatter);
     if(bigscat) {
-        if((temp = (double *)malloc(bigscat * sizeof(double)))==NULL) {
+        if((dtemp = (double *)malloc(bigscat * sizeof(double)))==NULL) {
             fprintf(stdout,"Out of memory.\n");
             fflush(stdout);
             exit(1);
         }
     }
-    if((number = (double *)realloc((char *)number,(cnt+1) * sizeof(double)))==NULL) {
+    if((number = (double *)realloc((char *)number,(icnt+1) * sizeof(double)))==NULL) {
         fprintf(stdout,"Out of memory.\n");
         fflush(stdout);
         exit(1);
     }
-    mean = span/(double)cnt;
+    mean = span/(double)icnt;
     number[0] = 0.0;
     number[cnt] = span;
 
     if(bigscat) {
-        for(n=1;n < cnt;n+= bigscat) {
-            if((subcnt = n + bigscat) > cnt)                        /* find position of last number in this pass */
-                subcnt = cnt;                                                   /* set end position of pass */
-            subcnt--;                                                                       /* allow for item already written at 1 */
+        for(n=1;n < icnt;n+= bigscat) {
+            if((subcnt = n + bigscat) > icnt)                        /* find position of last number in this pass */
+                subcnt = icnt;                                       /* set end position of pass */
+            subcnt--;                                               /* allow for item already written at 1 */
             if((subcnt %= bigscat) == 0)                            /* set size of pass */
                 subcnt = bigscat;
-            range = mean * subcnt;                                          /* set range of pass */
+            range = mean * subcnt;                                  /* set range of pass */
             for(m = 0; m < subcnt; m++)
-                temp[m] = sum + (drand48() * range);    /* generate values within this range */
+                dtemp[m] = sum + (drand48() * range);    /* generate values within this range */
             for(m=0;m < subcnt - 1; m++) {
                 for(j=1;j < subcnt; j++) {
-                    if(temp[m] > temp[j]) {                         /* sort */
-                        d = temp[j];
-                        temp[j] = temp[m];
-                        temp[m] = d;
+                    if(dtemp[m] > dtemp[j]) {                         /* sort */
+                        d = dtemp[j];
+                        dtemp[j] = dtemp[m];
+                        dtemp[m] = d;
                     }
                 }
             }
             for(m=0;m<subcnt;m++)                                           /* concatenate to list of numbers */
-                number[n+m] = temp[m];
+                number[n+m] = dtemp[m];
             sum += range;                                                           /* step over range */
         }
     } else {
-        for(n=1;n < cnt;n++) {
+        for(n=1;n < icnt;n++) {
             sum += mean;
-            number[n] = sum + (mean * randoffset(scatter));
+            number[n] = sum + (mean * randoffset(dscatter));
         }
     }
-    for(n=0;n<=cnt;n++)
+    for(n=0;n<=icnt;n++)
         fprintf(stdout,"INFO: %lf\n",number[n]);
     fflush(stdout);
+    /* RWD Nov 2025 */
+    if(dtemp != NULL)
+        free(dtemp);
 }
 
 /************************** RAND_OFFSET ********************************
@@ -3585,9 +3593,9 @@ void generate_randomised_vals(void)
  * rand number in maximal range -half to +half
  */
 
-double randoffset(double scatter)
+double randoffset(double dscatter)
 {
-    return (((drand48() * 2.0) - 1.0) * 0.5) * scatter;
+    return (((drand48() * 2.0) - 1.0) * 0.5) * dscatter;
 }
 
 /************************** GET_OFFSET ********************************/
@@ -4137,7 +4145,7 @@ void cosin_spline(void)
 
 /****************************** DISTANCE_FROM_GRID ******************************/
 
-void distance_from_grid()
+void distance_from_grid(void)
 {
     int n, m, besterror;
     double *diff = (double *)exmalloc((cnt-1)*sizeof(double));
@@ -4434,13 +4442,13 @@ void eliminate_dupltext(void)
 }
 
 /************************** RANDOM_WARP *************************/
-
+/* RWD 2025 'fp' changed to 'myfp', avoid clash with global decl  */
 void random_warp(void)
 {
     int n, wcnt;
     float *warpvals, *number2;
     double lastsum, diff, warp, dummy;
-    FILE *fp;
+    FILE *myfp;
     char *p;
     arraysize = 100;
     if((warpvals = (float *)malloc(arraysize * sizeof(float)))==NULL) {
@@ -4448,12 +4456,12 @@ void random_warp(void)
         fflush(stdout);
         return;
     }
-    if((fp = fopen(string,"r"))==NULL) {
+    if((myfp = fopen(string,"r"))==NULL) {
         sprintf(errstr,"Cannot open infile %s\n",string);
         do_error();
     }
     wcnt = 0;
-    while(fgets(temp,20000,fp)!=NULL) {
+    while(fgets(temp,20000,myfp)!=NULL) {
         p = temp;
         while(strgetfloat(&p,&dummy)) {
             warpvals[wcnt] = (float)dummy;
@@ -4468,7 +4476,7 @@ void random_warp(void)
             }
         }
     }
-    fclose(fp);
+    fclose(myfp);
     if(wcnt ==0 || (wcnt & 1)) {
         sprintf(errstr,"Invalid or missing warp data.\n");
         do_error();

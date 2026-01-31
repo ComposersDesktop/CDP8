@@ -849,8 +849,8 @@ int do_automix(dataptr dz)
 	int *activebuf, overflows = 0;
 	unsigned int max_insams = 0;
 	int *chans, n;
-
-	if((chans = (int *)malloc(dz->infilecnt * sizeof(int)))==NULL) {
+        // RWD 2025 now use calloc to pacify gcc
+	if((chans = (int *) calloc(dz->infilecnt, sizeof(int)))==NULL) {
 		sprintf(errstr,"Insufficient memory for level stores\n");
 		return(MEMORY_ERROR);
 	}

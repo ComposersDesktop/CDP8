@@ -56,9 +56,9 @@
 #include <srates.h>
 #include <vowels.h>
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 /******************************************************************************/
 /************************* FORMERLY IN procspec.c *****************************/

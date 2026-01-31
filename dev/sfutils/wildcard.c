@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Martin Atkins and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Martin Atkins and Composers Desktop Project Ltd
  * http://people.bath.ac.uk/masrwd
  * http://www.composersdesktop.com
  *
@@ -156,7 +156,7 @@ wildcomp(char *str)
                         int to = str[1];
 
                         while(from <= to)
-                            *bp++ = from++;
+                            *bp++ = (char) from++;
                         str++;
                     }
                     break;

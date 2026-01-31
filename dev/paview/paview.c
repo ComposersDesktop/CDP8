@@ -173,7 +173,7 @@ int open_in(char *name) /* opens input soundfile and gets header */
  * allocates memory for the biggest possible buffer 
  */
 
-int get_big_buf()
+int get_big_buf(void)
 {
     size_t i;
 

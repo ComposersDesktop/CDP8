@@ -119,7 +119,7 @@
 
 #define PA_DEFAULT_PVOC_CHANS   (1024)
 #define PA_VERY_BIG_INT         (100000000)
-#define PA_MAX_PVOC_CHANS       (16380)
+#define PA_MAX_PVOC_CHANS       (32768)    //RWD 2025 was 16380
 #define PA_PVOC_CONSTANT_A      (8.0)
 
 #define FILTR_DUR   (0)

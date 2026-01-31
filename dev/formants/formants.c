@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1983-2013 Trevor Wishart and Composers Desktop Project Ltd
+ * Copyright (c) 1983-2023 Trevor Wishart and Composers Desktop Project Ltd
  * http://www.trevorwishart.co.uk
  * http://www.composersdesktop.com
  *
@@ -490,7 +490,7 @@ int renormalise_formsee(dataptr dz)
 {
 	int exit_status;
 	int	 cc, vc;
-	int wc, outcnt, outbufcnt, total_samps_read;
+	int wc, outcnt, outbufcnt /* , total_samps_read */;
 	int ssampsread, total_samps_todo = dz->total_samps_written;
 	int windows_in_buf;
 	int windows_remaining = dz->wlength;
@@ -539,7 +539,7 @@ int renormalise_formsee(dataptr dz)
 	total_samps_todo = dz->total_samps_written;
 	outbufcnt				 = 0L;
 	outcnt                   = 0L;
-	total_samps_read         = 0L;
+//	total_samps_read         = 0L;
 	dz->total_samps_written  = 0L;
 	dz->total_windows		 = 0L;
 	dz->total_samps_read     = 0L;
@@ -550,7 +550,7 @@ int renormalise_formsee(dataptr dz)
 			return(SYSTEM_ERROR);
 		}  
 		dz->flbufptr[0] = dz->bigfbuf;
-		total_samps_read += dz->ssampsread;
+//		total_samps_read += dz->ssampsread;
 		ssampsread  = dz->ssampsread;
 		if(total_samps_todo - ssampsread<0) {
 			ssampsread = total_samps_todo;

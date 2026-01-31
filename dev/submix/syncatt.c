@@ -38,9 +38,9 @@
 #include <cdpmain.h>
 
 #include <sfsys.h>
-#ifdef unix
-#define round lround
-#endif
+ //#ifdef unix 
+#define round(x) lround((x))
+//#endif
 
 static int  getenvpeak(int n,int samps_per_second,
                        int windows_per_sector,int sectors_per_window,int window_size,dataptr dz);

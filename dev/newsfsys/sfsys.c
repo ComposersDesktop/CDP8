@@ -280,7 +280,8 @@ extern int sampsize[];
 #define sizeof_WFMTEX (40)
 
 
-#ifdef linux
+//#ifdef linux
+#ifdef __GLIBC__
 #define POS64(x) (x.__pos)
 #else
 #define POS64(x) (x)
@@ -339,8 +340,8 @@ typedef struct {
 } WAVEFORMATEXTENSIBLE, *PWAVEFORMATEXTENSIBLE;
 #endif
 
-
-const static GUID  KSDATAFORMAT_SUBTYPE_PCM = {0x00000001,0x0000,0x0010,
+// RWD For WIN32, link with ksuser.dll
+const /* static */ GUID  KSDATAFORMAT_SUBTYPE_PCM = {0x00000001,0x0000,0x0010,
                                                             {0x80,
                                                             0x00,
                                                             0x00,
@@ -350,7 +351,7 @@ const static GUID  KSDATAFORMAT_SUBTYPE_PCM = {0x00000001,0x0000,0x0010,
                                                             0x9b,
                                                             0x71}};
 
-const static GUID  KSDATAFORMAT_SUBTYPE_IEEE_FLOAT = {0x00000003,0x0000,0x0010,
+const /* static */ GUID  KSDATAFORMAT_SUBTYPE_IEEE_FLOAT = {0x00000003,0x0000,0x0010,
                                                             {0x80,
                                                             0x00,
                                                             0x00,
@@ -6399,7 +6400,14 @@ sfgetprop(int sfd, const char *propname, char *dest, int lim)
     else if(strcmp(propname, "sample type") == 0) {
         //RWD.6.99 lets accept all formats!
         //is this good for AIFF?
-        containersize = 8 * (f->fmtchunkEx.Format.nBlockAlign /         f->fmtchunkEx.Format.nChannels);
+        //RWD 2025 fix this for pvx file with large fft size
+        //possible TODO: for analysis files, report src sample type, not just 'float'
+        if (f->filetype == pvxfile) {
+           containersize = sf_getcontainersize(sfd);
+        }
+        else {
+            containersize = 8 * (f->fmtchunkEx.Format.nBlockAlign / f->fmtchunkEx.Format.nChannels);
+        }
         switch(containersize){
             case(32):
                 if(f->fmtchunkEx.Format.wFormatTag== WAVE_FORMAT_IEEE_FLOAT
@@ -6778,7 +6786,7 @@ sfdirprop(int sfd, int (*func)(char *propname, int propsize))
 //CDP98
 
 
-#if defined _WIN32 && defined _MSC_VER
+#if 0
 static int asm_round(double fval)
 {
     int result;
@@ -6790,20 +6798,11 @@ static int asm_round(double fval)
     return (long) result;
 }
 #endif
-    
+//RWD don't need this any more. "Deprecated".    
 int cdp_round(double fval)
 {
-#if defined _WIN32  && defined _MSC_VER
-    return asm_round(fval);
-#elseif defined unix
-    return (int) lround(fval);
-#else
-    int k;
-    k = (int)(fabs(fval)+0.5);
-    if(fval < 0.0)
-        k = -k;
-    return k;
-#endif
+    return lround(fval);
+
 }
 
 int sfformat(int sfd, fileformat *pfmt)

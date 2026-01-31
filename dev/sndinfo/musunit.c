@@ -37,9 +37,9 @@
 #include <ctype.h>
 #include <sfsys.h>
 
-#if defined unix || defined __GNUC__
+//#if defined unix || defined __GNUC__
 #define round(x) lround((x))
-#endif
+//#endif
 
 #define NOTEMIN                 ("A-4")
 #define NOTEMAX                 ("G5")
@@ -132,7 +132,7 @@ int do_musunits(dataptr dz)
         sprintf(errstr,"Unknown mode in do_musunits()\n");
         return(PROGRAM_ERROR);
     }
-    sprintf(errstr,"%s",errstr);
+//    sprintf(errstr,"%s",errstr); //RWD 2025 think this is probably unintended
     print_outmessage_flush(errstr);
     return(exit_status);
 }

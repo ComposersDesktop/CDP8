@@ -38,6 +38,8 @@
 #include <sfsys.h>
 #include <osbind.h>
 
+#define round(x) lround((x))
+
 static int      write_cycles(int *obufpos,int cyc_average,dataptr dz);
 static int distorta_func_crosbuf(int,int,int *,int,dataptr);
 static int distorta_func(int current_buf,int cyc_average,int *obufpos,dataptr dz);

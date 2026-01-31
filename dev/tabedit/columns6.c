@@ -28,6 +28,10 @@
 #include <cdplib.h>
 #include <time.h>
 
+ //#ifdef unix
+#define round(x) lround((x))
+//#endif
+
 static void sort_set(double *set,int setcnt);
 static void do_search(double thisval,double error,int **adjusted);
 static void adjust_all_vals(double thisval,double gap,int n,int m);
@@ -36,18 +40,18 @@ static void adjust_all_vals(double thisval,double gap,int n,int m);
  *
  * parameter is interval compression multiplier.
  */
-
+/* RDW Nov 2025 changed 'temp' to ctemp', avoid clash with global decl*/
 void compress_sequence(int multi)
 {
     int n;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     double interval, nunote;
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -74,17 +78,17 @@ void compress_sequence(int multi)
  *
  * parameter is transposition in semitones.
  */
-
+/*RWD Nov 2025 'temp' changed to 'ctemp'*/
 void transpose_sequence(int multi)
 {
     int n;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -109,12 +113,12 @@ void p_invertset_sequence(int multi)
     double  *set;
     int setcnt, n, gotit, q;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -191,12 +195,12 @@ void p_expandset_sequence(int multi)
     int setcnt, n, gotit, q, qn, qq, qoct;
     int m, hdcnt = ifactor;
     int lastsetpos=0, lastnusetpos=0, thissetpos, setstep;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -282,10 +286,10 @@ void p_expandset_sequence(int multi)
         sort_set(set,setcnt);
         for(n=1;n<cnt;n+=3) {
             for(q=0;q<setcnt;q++) {
-                if(flteq(number[n],set[q])) {                           /* find which set-member this is */
+                if(flteq(number[n],set[q])) {               /* find which set-member this is */
                     qn = (int)round((q+1) * factor) - 1;    /* expand set-position */
-                    if(qn >= setcnt) {                                              /* if beyond existing set */
-                        qq = qn%setcnt;                                         /* cyclically find appropriate set member */
+                    if(qn >= setcnt) {                      /* if beyond existing set */
+                        qq = qn%setcnt;                     /* cyclically find appropriate set member */
                         qoct = qn/setcnt;
                         transpos = 12.0 * qoct;
                         number[n] = set[qq] + transpos;
@@ -299,6 +303,9 @@ void p_expandset_sequence(int multi)
             fprintf(stdout,"INFO: %lf  %lf  %lf\n",number[n],number[n+1],number[n+2]);
     }
     fflush(stdout);
+    /*RWD Nov 2025*/
+    if (set != NULL)
+        free(set);
 }
 
 /************************************** P_INVERT_SEQUENCE *****************************************/
@@ -308,12 +315,12 @@ void p_invert_sequence(int multi)
     int n;
     double adjust;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -341,12 +348,12 @@ void t_reverse_sequence(int multi)
     double totaldur;
     int tend, n, te;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -378,12 +385,12 @@ void p_reverse_sequence(int multi)
     int n, pe;
     int pend;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -409,12 +416,12 @@ void a_reverse_sequence(int multi)
     int n, ae;
     int m, hdcnt = ifactor;
     int aend = cnt - 2;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -439,12 +446,12 @@ void pa_reverse_sequence(int multi)
     int n, pe;
     int pend;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -470,12 +477,12 @@ void tp_reverse_sequence(int multi)
     double totaldur;
     int tend, n, te;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -506,12 +513,12 @@ void ta_reverse_sequence(int multi)
     double totaldur;
     int tend, n, te;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -542,12 +549,12 @@ void tpa_reverse_sequence(int multi)
     double totaldur;
     int tend, te, n;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -581,12 +588,12 @@ void loop_sequence(int multi)
     int n, m, loopcnt = (int)factor;
     double lastdur = thresh, totaldur, basetime;
     int hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -630,7 +637,7 @@ void abut_sequences(int multi)
 {
     int n, m, hdcnt;
     double lasttime, time;
-    char temp[264];
+    char ctemp[264];
     if(factor <= 0.0) {
         fprintf(stdout,"ERROR: final event duration is less than or equal to zero\n");
         fflush(stdout);
@@ -640,8 +647,8 @@ void abut_sequences(int multi)
         hdcnt = ifactor;
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -665,8 +672,8 @@ void abut_sequences(int multi)
         lasttime += factor;
         for(n = cnt; n < stringscnt; n+= 3) {
             time = atof(strings[n]) + lasttime;
-            sprintf(temp,"%lf",time);
-            fprintf(stdout,"INFO: %s  %s  %s\n",temp,strings[n+1],strings[n+2]);
+            sprintf(ctemp,"%lf",time);
+            fprintf(stdout,"INFO: %s  %s  %s\n",ctemp,strings[n+1],strings[n+2]);
         }
     }
     fflush(stdout);
@@ -677,13 +684,13 @@ void abut_sequences(int multi)
 void sort_set(double *set,int setcnt)
 {
     int n, m;
-    double temp;
+    double dtemp;
     for(n=0;n<setcnt-1;n++) {
         for(m = n; m<setcnt; m++) {
             if(set[m] < set[n]) {
-                temp = set[n];
+                dtemp = set[n];
                 set[n] = set[m];
-                set[m] = temp;
+                set[m] = dtemp;
             }
         }
     }
@@ -698,12 +705,12 @@ void uptempo_sequence(int multi)
 {
     int n;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -732,12 +739,12 @@ void accel_sequence(int multi)
     double accel_step = (1.0/factor) - 1.0, lasttime;
     double convertor, frac, accel, time, dur;
     int m, hdcnt = ifactor;
-    char temp[200];
+    char ctemp[200];
     if(multi) {
         sprintf(errstr,"%lf",number[0]);
         for(n=1;n< hdcnt;n++) {lasttime = number[cnt-3];
-            sprintf(temp,"  %lf",number[n]);
-            strcat(errstr,temp);
+            sprintf(ctemp,"  %lf",number[n]);
+            strcat(errstr,ctemp);
         }
         strcat(errstr,"\n");
         fprintf(stdout,"INFO: %s\n",errstr);
@@ -770,7 +777,7 @@ void accel_sequence(int multi)
 
 /************************************** MEAN_TEMPO *****************************************/
 
-void mean_tempo()
+void mean_tempo(void)
 {
     factor = (double)(60 * (cnt-1))/(number[cnt-1] - number[0]);
     factor = (round(factor * 100.0))/100.0;
@@ -914,7 +921,7 @@ void splice_pos(void)
 
 /************************************** WARP_TIMES *****************************************/
 
-void time_warp()
+void time_warp(void)
 {
     int m, n;
     double thistime, nexttime, lasttime = 0.0, thisval, nextval, step, frac, val, sum, gap;
@@ -967,7 +974,7 @@ void time_warp()
 
 /************************************** LIST_WARP *****************************************/
 
-void list_warp()
+void list_warp(void)
 {
     int m, n;
     int sizz = firstcnt-1;
@@ -1007,7 +1014,7 @@ void list_warp()
 
 /************************************** BRKWARP_TIMES *****************************************/
 
-void brktime_warp()
+void brktime_warp(void)
 {
     int m, n;
     double thistime, nexttime, thisval, nextval, step, frac, val, gap, sum;
@@ -1052,7 +1059,7 @@ void brktime_warp()
 
 /************************************** SEQWARP_TIMES *****************************************/
 
-void seqtime_warp()
+void seqtime_warp(void)
 {
     int m, n, OK = 1;
     double thistime, nexttime, thisval, nextval, step, frac, val, gap, sum, lasttime;
@@ -1116,7 +1123,7 @@ void seqtime_warp()
 
 /************************************** BRKVAL_WARP *****************************************/
 
-void brkval_warp()
+void brkval_warp(void)
 {
     int m, n;
     double thistime, nexttime, thisval, nextval, step, frac, val;
@@ -1152,7 +1159,7 @@ void brkval_warp()
 
 /************************************** DUPLICATE_LIST_AT_STEP *****************************************/
 
-void duplicate_list_at_step()
+void duplicate_list_at_step(void)
 {
     int n, m;
     double base = 0.0;
@@ -1169,7 +1176,7 @@ void duplicate_list_at_step()
 
 /************************************ TW_PSEUDO_EXP ************************************/
 
-void tw_pseudo_exp()
+void tw_pseudo_exp(void)
 {
     double bottime = number[0];
     double toptime = number[1];
@@ -1284,7 +1291,7 @@ drand48()
 void warped_times(int isdiff)
 {
     int j, k, m, n, lastn, numcnt = cnt - firstcnt, itemp;
-    double endtime, endval, frac, val = 0.0, thistime, timediff=0.0, valdiff=0.0, sum, temp;
+    double endtime, endval, frac, val = 0.0, thistime, timediff=0.0, valdiff=0.0, sum, dtemp;
     double timestep = (double)128/48000.0;
     /* This is default window length for standard PVOC analysis under CDP, at srate 48000 (windows 1024 samps: decimation 8)*/
     /* However, the timestep, so long as sufficiently small, is not critical, except for very long time stretches */
@@ -1298,9 +1305,9 @@ void warped_times(int isdiff)
         j = k+1;
         while(m  < cnt) {
             if(number[m] < number[n]) {
-                temp = number[m];
+                dtemp = number[m];
                 number[m] = number[n];
-                number[n] = temp;
+                number[n] = dtemp;
                 itemp = perm[j];
                 perm[j] = perm[k];
                 perm[k] = itemp;
@@ -1663,7 +1670,7 @@ void sinjoin(char c)
 
 /************************************** BRKTIME_OWARP *****************************************/
 
-void brktime_owarp()
+void brktime_owarp(void)
 {
     int m, n;
     double thistime, nexttime, thisval, nextval, step, frac, val, gap, sum;

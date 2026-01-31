@@ -696,7 +696,7 @@ int pvoc_process(dataptr dz)
 			}
 #else
 			for (i = 0; i < IOi;){	/* shift out next IOi values */
-				int j;
+				int jj;
 				int todo = min(IOi-i, output+obuflen-nextOut);
 
 // NEW 2014 -->
@@ -705,7 +705,7 @@ int pvoc_process(dataptr dz)
 // <-- NEW 2014
 				i += todo;
 				outCount += todo;
-				for(j = 0; j < todo; j++)
+				for(jj = 0; jj < todo; jj++)
 					*nextOut++ = 0.0f;
 				if (nextOut >= (output + obuflen))
 					nextOut -= obuflen;

@@ -41,6 +41,9 @@
 #include <sfsys.h>
 #include <osbind.h>
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 static int  do_wrap(int samps_to_wrap,dataptr dz);
 static int  read_rest_of_file(int initial_bufsize,dataptr dz);

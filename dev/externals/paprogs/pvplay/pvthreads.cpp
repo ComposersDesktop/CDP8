@@ -60,7 +60,7 @@ unsigned int __stdcall threadFunctionReadFromRawFile(void* ptr)
     pdata->flag = 0;
     //printf("thread: from_frame = %d, to_frame = %d, current_Frame = %d\n",pdata->from_frame, pdata->to_frame, pdata->current_frame);
     while (1) {
-        ring_buffer_size_t nElementsProcessed = 0;
+//        ring_buffer_size_t nElementsProcessed = 0;
         ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferWriteAvailable(&pdata->ringbuf);
            
         if (elementsInBuffer >= pdata->ringbuf.bufferSize / 4) {
@@ -152,12 +152,12 @@ unsigned int __stdcall threadFunctionReadFromRawFile(void* ptr)
                                 /* BIG TODO: update funcs to process large frame buffer! */
                                 /* NB: ring buffer is effectively defined as raw bytes */
                                 pdata->decodefunc(&abfsamp, (float*)(ptr[i]) + (j * pdata->outchans), 1);
-                                nElementsProcessed++;
+    //                            nElementsProcessed++;
                             }
                         }
                         else {  // inchans = outchans
                             memcpy(ptr[i],pdata->inbuf,framesread * sizeof(float) * pdata->inchans);
-                            nElementsProcessed += framesread;
+  //                          nElementsProcessed += framesread;
                         }
                     }
                 }
@@ -194,7 +194,7 @@ unsigned int __stdcall threadFunctionReadFromAnalFile(void* ptr)
     pdata->flag = 0;
     
     while (1) {
-        ring_buffer_size_t nElementsProcessed = 0;
+//        ring_buffer_size_t nElementsProcessed = 0;
         ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferWriteAvailable(&pdata->ringbuf);
         
         if (elementsInBuffer >= pdata->ringbuf.bufferSize / 4) {
@@ -272,7 +272,7 @@ unsigned int __stdcall threadFunctionReadFromAnalFile(void* ptr)
                         int frameswanted = sizes[i];
                         memcpy(ptr[i],pbuf,frameswanted * sizeof(float) * pdata->inchans);
                         pbuf += frameswanted * pdata->inchans;
-                        nElementsProcessed += frameswanted;
+  //                      nElementsProcessed += frameswanted;
                     }
                 }
                 if(elementstowrite)
@@ -304,7 +304,7 @@ unsigned int __stdcall threadFunctionReadFromPVXFile(void* ptr)
     pdata->flag = 0;
 
     while (1) {
-        ring_buffer_size_t nElementsProcessed = 0;
+ //       ring_buffer_size_t nElementsProcessed = 0;
         ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferWriteAvailable(&pdata->ringbuf);
 
         // we remember that an element is a frame (mono or stereo)
@@ -382,7 +382,7 @@ unsigned int __stdcall threadFunctionReadFromPVXFile(void* ptr)
                             int frameswanted = sizes[i];
                             memcpy(ptr[i],pbuf,frameswanted * sizeof(float) * pdata->inchans);
                             pbuf += frameswanted * pdata->inchans;
-                            nElementsProcessed += frameswanted;
+//                            nElementsProcessed += frameswanted;
                         }
                     }
                     if(elementstowrite)
@@ -469,7 +469,7 @@ unsigned int __stdcall threadFunctionReadFromPVXFile(void* ptr)
                             int frameswanted = sizes[i];
                             memcpy(ptr[i],pbuf,frameswanted * sizeof(float) * pdata->inchans);
                             pbuf += frameswanted * pdata->inchans;
-                            nElementsProcessed += frameswanted;
+ //                           nElementsProcessed += frameswanted;
                         }
                     }
                     if(elementstowrite)

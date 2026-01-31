@@ -2476,7 +2476,7 @@ int create_sndbufs_for_envel(dataptr dz)
     
     {  // RWD 13/23: debugging, looking for use of uninitialized memory
         unsigned int fbufsize = bigbufsize / sizeof(float);
-        int i;
+        unsigned int i;
         for(i=0; i < fbufsize;i++)
             dz->bigbuf[i] = 0.0f;  // set to 1.0 to show anomalies
     }

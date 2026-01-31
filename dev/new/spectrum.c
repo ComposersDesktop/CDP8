@@ -103,9 +103,9 @@
 #include <standalone.h>
 
 
-#ifdef unix
+//#ifdef unix
 #define round(x) lround((x))
-#endif
+//#endif
 
 char errstr[2400];
 
@@ -154,6 +154,8 @@ static int speclines(dataptr dz);
 static int get_the_mode_from_cmdline(char *str,dataptr dz);
 static int speclinesfilt(dataptr dz);
 
+//RWD 2025 zero error checking - will already have been done!
+static int checkchans4format(int chans, const char* fname);
 /**************************************** MAIN *********************************************/
 
 int main(int argc,char *argv[])
@@ -784,12 +786,12 @@ int setup_spectrum_param_ranges_and_defaults(dataptr dz)
     // get_param_ranges()
     if(dz->process != SPEKLINE || dz->mode != 0) {
         ap->lo[SPEKPOINTS]    = 2;
-        ap->hi[SPEKPOINTS]    = 16380;        // CHANNEL CNT
+        ap->hi[SPEKPOINTS]    = 32768;        // CHANNEL CNT  // RWD 2025 was 16380
         ap->default_val[SPEKPOINTS]    = 2048;
     }
     if(dz->process == SPEKLINE && dz->mode == 0) {
         ap->lo[SPEKPOINTS]    = 2;
-        ap->hi[SPEKPOINTS]    = 16380;        // CHANNEL CNT
+        ap->hi[SPEKPOINTS]    = 32768;        // CHANNEL CNT  //RWD as above
         ap->default_val[SPEKPOINTS]    = 2048;
     }
     ap->lo[SPEKSRATE]    = 44100;
@@ -1394,6 +1396,13 @@ int check_spectrum_param_validity_and_consistency(int **perm,dataptr dz)
         sprintf(errstr,"ANALYSIS POINTS PARAMETER MUST BE A POWER OF TWO.\n");
         return(DATA_ERROR);
     }
+    //RWD 2025
+    if(checkchans4format(k,dz->outfilename) == 0) {
+        sprintf(errstr,"Requested analysis channel count %d > 8192: too large for .ana format\n",k);
+        return DATA_ERROR;
+    }
+    
+    
     if(dz->iparam[1] < 44100 || BAD_SR(dz->iparam[1])) {
         sprintf(errstr,"INVALID SAMPLE RATE ENTERED (44100,48000,88200,96000 only).\n");
         return(DATA_ERROR);
@@ -1641,7 +1650,7 @@ int allocate_spectrum_buffer(dataptr dz)
 
 int handle_the_special_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
 {
-    int cnt, linecnt;
+    int cnt/*, linecnt*/;
     char *filename = (*cmdline)[0];
     FILE *fp;
     double *p, dummy;
@@ -1687,7 +1696,7 @@ int handle_the_special_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
     }
     cnt -= 4;
     fseek(fp,0,0);
-    linecnt = 1;
+//    linecnt = 1;
     p = dz->parray[0];
     while(fgets(temp,200,fp)==temp) {
         q = temp;
@@ -1696,7 +1705,7 @@ int handle_the_special_data(int *cmdlinecnt,char ***cmdline,dataptr dz)
         while(get_float_with_e_from_within_string(&q,p)) {
             p++;
         }
-        linecnt++;
+//        linecnt++;
     }
     if(fclose(fp)<0) {
         fprintf(stdout,"WARNING: Failed to close file %s.\n",filename);
@@ -1811,7 +1820,7 @@ int spectrum(int *perm,dataptr dz)
     double thistime, dfade, frq, chbot, harmamp, spreaddnratio = 0.0, spreadupratio = 0.0, fader;
     double orig_brightness, pkaspect, pkwidth, pkfrq, pkoffset;
     float orig_frequency;
-    int *peaked, peakcnt, orig_peakcnt;
+    int *peaked, peakcnt/*, orig_peakcnt*/;
 
     /* ESTABLISH BRKPOINT TABLE OF TRUE AMPLITUDE ENVELOPE OF INPUT DATA */
 
@@ -1868,7 +1877,7 @@ int spectrum(int *perm,dataptr dz)
             for(cc = 0; cc < dz->clength; cc++)
                 peaked[cc] = 0;
             peakcnt = 0;
-            orig_peakcnt = 0;
+//            orig_peakcnt = 0;
             for(cc = 0, vc = 0; cc < dz->clength; cc++, vc +=2) {
                 if(peaked[cc]) {
                     if(cc > 0) {                                            //  IF already a marked peak (i.e. a harmonic of a previous peak)
@@ -1975,7 +1984,7 @@ int spectrum(int *perm,dataptr dz)
                     dz->bigfbuf[FREQ] = (float)dz->parray[0][vc];
                     peaked[cc] = 1;
                     pkwidth = 0.0;
-                    orig_peakcnt++;
+  //                  orig_peakcnt++;
                     peakcnt++;
                     switch(dz->iparam[SPEKTYPE]) {
                     case(0):    //    Brightness defined by brightness-rolloff param
@@ -2080,7 +2089,7 @@ int spectrum(int *perm,dataptr dz)
         for(cc = 0; cc < dz->clength; cc++)
             peaked[cc] = 0;
         peakcnt = 0;
-        orig_peakcnt = 0;
+ //       orig_peakcnt = 0;
         for(cc = 0, vc = 0; cc < dz->clength; cc++, vc +=2) {
             if(peaked[cc]) {
                 if(cc > 0) {                                            //  IF already a marked peak (i.e. a harmonic of a previous peak)
@@ -2189,7 +2198,7 @@ int spectrum(int *perm,dataptr dz)
                 peaked[cc] = 1;
                 pkwidth = 0.0;
                 //aspindx = (orig_peakcnt * 2) + 1;
-                orig_peakcnt++;
+  //              orig_peakcnt++;
                 peakcnt++;
                 switch(dz->iparam[SPEKTYPE]) {
                 case(0):    //    Brightness defined by brightness-rolloff param
@@ -2304,7 +2313,7 @@ int spectrum(int *perm,dataptr dz)
         for(cc = 0; cc < dz->clength; cc++)
             peaked[cc] = 0;
         peakcnt = 0;
-        orig_peakcnt = 0;
+  //      orig_peakcnt = 0;
         for(cc = 0, vc = 0; cc < dz->clength; cc++, vc +=2) {
             if(peaked[cc]) {
                 if(cc > 0) {                                            //  IF already a marked peak (i.e. a harmonic of a previous peak)
@@ -2413,7 +2422,7 @@ int spectrum(int *perm,dataptr dz)
                 peaked[cc] = 1;
                 pkwidth = 0.0;
                 //aspindx = (orig_peakcnt * 2) + 1;
-                orig_peakcnt++;
+   //             orig_peakcnt++;
                 peakcnt++;
                 switch(dz->iparam[SPEKTYPE]) {
                 case(0):    //    Brightness defined by brightness-rolloff param
@@ -3066,4 +3075,18 @@ int speclinesfilt(dataptr dz)
         return SYSTEM_ERROR;
     }
     return FINISHED;
+}
+//RWD 2025 zero error checking - will already have been done!
+static int checkchans4format(int chans, const char* fname)
+{
+    char *lastdot;
+    
+    lastdot = strrchr(fname,'.');
+    if(chans > 8192){
+        if((_stricmp(lastdot,".wav")==0)
+           || (_stricmp(lastdot,".ana")==0))
+            return 0;
+    }
+    
+    return 1;
 }

@@ -42,7 +42,7 @@ void 	get_dur(double *bbrk,int bbrksize,double in_dur,int mode);
 double 	cntevents(double dur,double s0,double s1);
 int 	sizeq(double f1,double f2);
 int  	get_float_from_within_string(char **str,double *val);
-double 	round(double a);
+//double 	round(double a);
 int 	flteq(double a,double b);
 const char* cdp_version = "7.1.0";
 
@@ -277,7 +277,8 @@ int  get_float_from_within_string(char **str,double *val)
 	*str = p;
 	return(1);
 }
-
+#if 0
+//RWD: not used in this file; would need to be renamed.
 double round(double a)
 {
 	int b;
@@ -290,6 +291,7 @@ double round(double a)
 	}
 	return b;
 }
+#endif
 
 int flteq(double a,double b)
 {

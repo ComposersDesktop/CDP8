@@ -221,7 +221,7 @@ static  int  threadFunctionReadFromRawFile(void* ptr)
     pdata->flag = 0;
 
     while (1) {
-        ring_buffer_size_t nElementsProcessed = 0;
+  //      ring_buffer_size_t nElementsProcessed = 0;
         ring_buffer_size_t elementsInBuffer = PaUtil_GetRingBufferWriteAvailable(&pdata->ringbuf);
 
         //memset(pdata->inbuf,0,pdata->inbuflen * sizeof(float) * pdata->inchans);
@@ -330,16 +330,16 @@ static  int  threadFunctionReadFromRawFile(void* ptr)
                                 pdata->decodefunc(&abfsamp, (float*)(ptr[i]) + (j * pdata->outchans), 1);
 
 #endif
-                                nElementsProcessed++;
+ //                               nElementsProcessed++;
                             }
                         }
                         else {  // inchans = outchans
                             memcpy(ptr[i],pdata->inbuf,framesread * sizeof(float) * pdata->inchans);
-                            nElementsProcessed += framesread;
+//                            nElementsProcessed += framesread;
                         }
                     }
                 }
-                //                assert(nElementsProcessed == itemsReadFromFile);
+                // assert(nElementsProcessed == itemsReadFromFile);
                 if(framesread)
                     PaUtil_AdvanceRingBufferWriteIndex(&pdata->ringbuf, itemsReadFromFile);
 
@@ -1536,7 +1536,7 @@ void usage(void){
         const char *apiname;
 #endif
         PaError  err;
-        int nOutputDevices = 0;
+//        int nOutputDevices = 0;
 
 #ifdef USE_ASIO
         printf("For ASIO multi-channel, you may need to select the highest device no.\n");
@@ -1564,7 +1564,7 @@ void usage(void){
                 //                      if(pdi->maxOutputChannels == 0)
                 //                              continue;
                 //#endif
-                nOutputDevices++;
+//                nOutputDevices++;
 
                 if( p == Pa_GetDefaultOutputDevice() )
                     printf("*");

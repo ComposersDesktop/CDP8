@@ -1152,7 +1152,7 @@ int stutter(dataptr dz)
     double time, segdur, dsbufpos, splic, rnd, amp, trns, frac, diff, val, srate = (double)dz->infile->srate;
     double *inseg = dz->parray[0];
     int m, n, j, k, ch, gp_mindur, gp_splicelen, gp_cutlen, gp_cutpos, start_read, samps_to_read, gp_start, ibufpos, sbufpos, gp_sbufpos, obufpos;
-    int seg_groupings_cnt, next_groupings_end;
+ //   int seg_groupings_cnt , next_groupings_end;
     int *permm, *silpermm = NULL;
 
     gp_splicelen = (int)round(STUT_SPLICE * MS_TO_SECS * srate);
@@ -1171,14 +1171,14 @@ int stutter(dataptr dz)
     obuf = dz->sampbuf[n];
     memset((char *)obuf,0,dz->buflen * sizeof(float));
 
-    seg_groupings_cnt = dz->itemcnt + 1;
-    next_groupings_end = seg_groupings_cnt;
+//    seg_groupings_cnt = dz->itemcnt + 1;
+//    next_groupings_end = seg_groupings_cnt; // NOT USED
     for(n=0,m=0;n < dz->segcnt;n++,m+=2) {              //  Cut all segments, noting their (grouped) length
         start_read = (int)round(inseg[m] * srate) * chans;
         if(n == dz->segcnt - 1 || (int)round(inseg[m+2] * srate) * chans == 0) {
             samps_to_read = dz->insams[0] - start_read;
-            seg_groupings_cnt--;
-            next_groupings_end += seg_groupings_cnt;
+ //           seg_groupings_cnt--;
+//            next_groupings_end += seg_groupings_cnt;
         }
         else {
             segdur = inseg[m+1] - inseg[m];

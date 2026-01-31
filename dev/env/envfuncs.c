@@ -41,6 +41,9 @@
 
 #include <sfsys.h>
 
+//#ifdef unix
+#define round(x) lround((x))
+//#endif
 
 #define MARGIN 	(16)
 

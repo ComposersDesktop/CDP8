@@ -45,9 +45,9 @@
 //TW UPDATE
 #include <vowels.h>
 
-#if defined unix || defined __GNUC__
+//#ifdef unix 
 #define round(x) lround((x))
-#endif
+//#endif
 
 static int  do_filtering(double frq_limit,double hifrq_limit,dataptr dz);
 static int  below_limitfrq_and_zeroed(int vc,double loskirt,dataptr dz);
