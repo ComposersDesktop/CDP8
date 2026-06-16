@@ -1,0 +1,54 @@
+name: Linux Build Check
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-linux:
+    name: Ubuntu Build (PortAudio v19.6)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Cache APT Packages
+        uses: actions/cache@v4
+        with:
+          path: /var/cache/apt/archives
+          key: ${{ runner.os }}-apt-${{ hashFiles('.github/workflows/linux-build.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake ninja-build \
+            portaudio19-dev libasound2-dev \
+            clang libc++-dev libc++abi-dev ccache
+
+      - name: Setup ccache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ccache
+          key: ${{ runner.os }}-ccache-${{ hashFiles('**/*.c', '**/*.cpp', '**/*.h') }}
+          restore-keys: |
+            ${{ runner.os }}-ccache-
+
+      - name: Configure CMake
+        # Ninja is used for faster build orchestration than standard Make.
+        run: >
+          cmake -B build -G Ninja 
+          -DCMAKE_C_COMPILER_LAUNCHER=ccache
+          -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
+          -DCMAKE_C_COMPILER=clang 
+          -DCMAKE_CXX_COMPILER=clang++ 
+          -DCMAKE_BUILD_TYPE=Release 
+
+      - name: Build Project
+        run: cmake --build build --config Release
+  
+      - name: Show ccache stats
+        run: ccache -s
